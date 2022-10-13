@@ -1,0 +1,9 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: accounts-redirectregex
+spec:
+  redirectRegex:
+    regex: "(.)*"
+    replacement: "https://uptime.timo.be/status/default"
+    permanent: false

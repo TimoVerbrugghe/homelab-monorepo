@@ -1,0 +1,58 @@
+globalArguments:
+  - "--global.sendanonymoususage=true"
+  - "--global.checknewversion=false"
+
+additionalArguments:
+  - "--serversTransport.insecureSkipVerify=true"
+
+logs:
+  general:
+    level: INFO
+  access:
+    enabled: true
+    bufferingSize: 100
+    filters: {
+      statuscodes: "400-499"
+    }
+
+
+deployment:
+  enabled: true
+  replicas: 1
+  annotations: {}
+  podAnnotations: {}
+  additionalContainers: []
+  initContainers: []
+
+ports:
+  web:
+    redirectTo: websecure
+  websecure:
+    tls:
+      enabled: true
+      
+ingressRoute:
+  dashboard:
+    enabled: false
+
+providers:
+  kubernetesCRD:
+    enabled: true
+    ingressClass: traefik-external
+  kubernetesIngress:
+    enabled: true
+    publishedService:
+      enabled: false
+
+rbac:
+  enabled: true
+
+service:
+  enabled: true
+  type: LoadBalancer
+  annotations: {}
+  labels: {}
+  spec:
+    loadBalancerIP: 192.168.0.30 # this should be an IP in the MetalLB range
+  loadBalancerSourceRanges: []
+  externalIPs: []
