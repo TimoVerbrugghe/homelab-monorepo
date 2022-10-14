@@ -1,0 +1,10 @@
+hostname: ranchertest1.timo.be
+ingress:
+  tls:
+    source: letsEncrypt
+
+letsEncrypt:
+  email: timo@hotmail.be
+  ingress:
+    class: traefik
+  environment: staging

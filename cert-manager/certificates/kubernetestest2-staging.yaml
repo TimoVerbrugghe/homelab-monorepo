@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: kubernetestest2-timo-be-staging
+  namespace: default
+spec:
+  secretName: kubernetestest2-timo-be-staging-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "kubernetestest2.timo.be"
+  dnsNames:
+  - "kubernetestest2.timo.be"

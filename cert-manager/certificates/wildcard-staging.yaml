@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-timo-be-staging
+  namespace: default
+spec:
+  secretName: wildcard-timo-be-staging-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "*.timo.be"
+  dnsNames:
+  - "*.timo.be"

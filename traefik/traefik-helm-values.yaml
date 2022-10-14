@@ -15,10 +15,9 @@ logs:
       statuscodes: "400-499"
     }
 
-
 deployment:
   enabled: true
-  replicas: 1
+  replicas: 3
   annotations: {}
   podAnnotations: {}
   additionalContainers: []
