@@ -1,5 +1,26 @@
+## Set up prerequisites
+apt-get install jq
+
 ## Set up k3s cluster
-curl -sfL https://get.k3s.io | sh -s - server --cluster-init --write-kubeconfig-mode 644 --disable traefik --disable servicelb
+k3sup install \
+	--host=timoubuntuserver \
+	--user=root \
+	--cluster \
+	--tls-san 192.168.0.20 \
+	--k3s-extra-args="--disable servicelb --disable traefik"
+
+## Install kube-vip
+## See https://kube-vip.io/docs/installation/daemonset/#kube-vip-as-ha-load-balancer-or-both for updated instructions on how to install as daemonset
+
+## Generate kube-vip manifest
+kube-vip manifest daemonset \
+    --arp \
+    --interface $INTERFACE \
+    --address $VIP \
+    --inCluster \
+    --taint \
+    --controlplane \
+    --leaderElection | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
 
 ## Make sure kubeconfig is in the user home folder
 kubectl config view --raw >~/.kube/config
