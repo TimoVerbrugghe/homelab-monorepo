@@ -1,6 +1,5 @@
 globalArguments:
   - "--global.sendanonymoususage=true"
-  - "--global.checknewversion=false"
 
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
@@ -24,12 +23,31 @@ deployment:
   initContainers: []
 
 ports:
+  traefik:
+    port: 9000
+    exposedPort: 9000
+    protocol: TCP
   web:
-    redirectTo: websecure
+    port: 8000
+    expose: true
+    exposedPort: 80
+    protocol: TCP
   websecure:
+    port: 8443
+    expose: true
+    exposedPort: 443
+    protocol: TCP
     tls:
       enabled: true
-      
+      options: ""
+      certResolver: ""
+      domains: []
+  metrics:
+    port: 9100
+    expose: false
+    exposedPort: 9100
+    protocol: TCP
+
 ingressRoute:
   dashboard:
     enabled: false
@@ -37,11 +55,13 @@ ingressRoute:
 providers:
   kubernetesCRD:
     enabled: true
-    ingressClass: traefik-external
   kubernetesIngress:
     enabled: true
     publishedService:
-      enabled: false
+      enabled: ture
+
+dashboard:
+  enabled: true
 
 rbac:
   enabled: true

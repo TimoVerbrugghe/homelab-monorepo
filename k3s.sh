@@ -3,14 +3,18 @@ apt-get install jq
 
 ## Set up k3s cluster
 k3sup install \
-	--host=timoubuntuserver \
-	--user=root \
+	--local \
 	--cluster \
 	--tls-san 192.168.0.20 \
 	--k3s-extra-args="--disable servicelb --disable traefik"
 
 ## Install kube-vip
 ## See https://kube-vip.io/docs/installation/daemonset/#kube-vip-as-ha-load-balancer-or-both for updated instructions on how to install as daemonset
+
+export INTERFACE=enp1s0
+export VIP=192.168.0.20
+KVVERSION=$(curl -sL https://api.github.com/repos/kube-vip/kube-vip/releases | jq -r ".[0].name")
+alias kube-vip="ctr image pull ghcr.io/kube-vip/kube-vip:$KVVERSION; ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:$KVVERSION vip /kube-vip"
 
 ## Generate kube-vip manifest
 kube-vip manifest daemonset \
