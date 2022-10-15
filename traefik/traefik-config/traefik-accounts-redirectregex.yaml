@@ -2,8 +2,9 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: accounts-redirectregex
+  namespace: traefik
 spec:
   redirectRegex:
     regex: "(.)*"
-    replacement: "https://uptime.timo.be/status/default"
+    replacement: "https://auth.timo.be/realms/HomeServer/account/#/security/linked-accounts"
     permanent: false

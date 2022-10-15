@@ -1,6 +1,5 @@
 globalArguments:
   - "--global.sendanonymoususage=true"
-
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
 
@@ -55,10 +54,13 @@ ingressRoute:
 providers:
   kubernetesCRD:
     enabled: true
+    namespaces: []
+    allowCrossNamespace: true
   kubernetesIngress:
     enabled: true
+    namespaces: []
     publishedService:
-      enabled: ture
+      enabled: true
 
 dashboard:
   enabled: true

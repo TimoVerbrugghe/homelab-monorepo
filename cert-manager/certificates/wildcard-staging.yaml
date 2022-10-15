@@ -11,3 +11,6 @@ spec:
   commonName: "*.timo.be"
   dnsNames:
   - "*.timo.be"
+  secretTemplate:
+    annotations:
+      kubed.appscode.com/sync: "" # Sync certificate across all namespaces

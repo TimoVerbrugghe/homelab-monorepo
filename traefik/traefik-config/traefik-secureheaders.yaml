@@ -1,7 +1,8 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: secure-headers
+  name: secureheaders
+  namespace: traefik
 spec:
   headers:
     accessControlAllowMethods:
@@ -11,7 +12,6 @@ spec:
     accessControlMaxAge: 100
     hostsProxyHeaders:
       - "X-Forwarded-Host"
-    sslRedirect: true
     browserXssFilter: true
     contentTypeNosniff: true
     forceSTSHeader: true
@@ -19,7 +19,7 @@ spec:
     stsPreload: true
     stsSeconds: 15552000
     referrerPolicy: "same-origin"
-    featurePolicy: "camera 'none'; geolocation 'none'; microphone 'none'; payment 'none'; usb 'none'; vr 'none';" 
+    permissionsPolicy: "camera 'none'; geolocation 'none'; microphone 'none'; payment 'none'; usb 'none'; vr 'none';" 
     customResponseHeaders:
       X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex,"
       server: ""
