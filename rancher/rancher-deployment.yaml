@@ -16,3 +16,4 @@ spec:
   valuesContent: |-
     hostname: ranchertest.timo.be
     replicas: 3
+    bootstrapPassword: admin

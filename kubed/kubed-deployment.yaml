@@ -1,0 +1,10 @@
+# Install kubed in kube-system namespace
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: kubed
+  namespace: kube-system
+spec:
+  chart: kubed
+  targetNamespace: kube-system
+  repo: https://charts.appscode.com/stable/
