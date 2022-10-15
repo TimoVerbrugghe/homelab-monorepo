@@ -1,0 +1,69 @@
+---
+# Creating demo namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo
+---
+# Deploying nginx in demo namespace
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nginx
+  namespace: demo
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+---
+# Exposing port 80 of nginx
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: demo
+spec:
+  selector:
+    app: nginx
+  ports:
+  - name: http
+    targetPort: 80
+    port: 80
+---
+# Allowing traefik to route to nginx pods
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nginx
+  namespace: demo
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`nginxtest.timo.be`)
+      kind: Rule
+      services:
+        - name: nginx
+          port: 80
+      middlewares:
+        - name: secureheaders
+          namespace: traefik
+        - name: ratelimit
+          namespace: traefik
+  tls:
+    secretName: wildcard-timo-be-staging-tls

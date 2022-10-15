@@ -1,0 +1,179 @@
+---
+# Creating namespace for traefik to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: traefik
+---
+# Install traefik in traefik namespace using helm
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  chart: traefik
+  targetNamespace: traefik
+  repo: https://helm.traefik.io/traefik
+  valuesContent: |-
+    globalArguments:
+      - "--global.sendanonymoususage=true"
+    additionalArguments:
+      - "--serversTransport.insecureSkipVerify=true"
+
+    logs:
+      general:
+        level: INFO
+      access:
+        enabled: true
+        bufferingSize: 100
+        filters: {
+          statuscodes: "400-499"
+        }
+
+    deployment:
+      enabled: true
+      replicas: 3
+      annotations: {}
+      podAnnotations: {}
+      additionalContainers: []
+      initContainers: []
+
+    ports:
+      traefik:
+        port: 9000
+        exposedPort: 9000
+        protocol: TCP
+      web:
+        port: 8000
+        expose: true
+        exposedPort: 80
+        protocol: TCP
+      websecure:
+        port: 8443
+        expose: true
+        exposedPort: 443
+        protocol: TCP
+        tls:
+          enabled: true
+          options: ""
+          certResolver: ""
+          domains: []
+      metrics:
+        port: 9100
+        expose: false
+        exposedPort: 9100
+        protocol: TCP
+
+    ingressRoute:
+      dashboard:
+        enabled: false
+
+    providers:
+      kubernetesCRD:
+        enabled: true
+        namespaces: []
+        allowCrossNamespace: true
+      kubernetesIngress:
+        enabled: true
+        namespaces: []
+        publishedService:
+          enabled: true
+
+    dashboard:
+      enabled: true
+
+    rbac:
+      enabled: true
+
+    service:
+      enabled: true
+      type: LoadBalancer
+      annotations: {}
+      labels: {}
+      spec:
+        loadBalancerIP: 192.168.0.30 # this should be an IP in the MetalLB range
+      loadBalancerSourceRanges: []
+      externalIPs: []
+---
+# Create middlewares for traefik, including headers, ratelimit and middlewares for routing certain apps correctly
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: secureheaders
+  namespace: traefik
+spec:
+  headers:
+    accessControlAllowMethods:
+      - "GET"
+      - "OPTIONS"
+      - "PUT"
+    accessControlMaxAge: 100
+    hostsProxyHeaders:
+      - "X-Forwarded-Host"
+    browserXssFilter: true
+    contentTypeNosniff: true
+    forceSTSHeader: true
+    stsIncludeSubdomains: true
+    stsPreload: true
+    stsSeconds: 15552000
+    referrerPolicy: "same-origin"
+    permissionsPolicy: "camera 'none'; geolocation 'none'; microphone 'none'; payment 'none'; usb 'none'; vr 'none';" 
+    customResponseHeaders:
+      X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex,"
+      server: ""
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: ratelimit
+  namespace: traefik
+spec:
+  rateLimit:
+    average: 100
+    burst: 200
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: accountsredirect
+  namespace: traefik
+spec:
+  redirectRegex:
+    regex: "(.)*"
+    replacement: "https://auth.timo.be/realms/HomeServer/account/#/security/linked-accounts"
+    permanent: false
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: statusredirect
+  namespace: traefik
+spec:
+  redirectRegex:
+    regex: "(.)*"
+    replacement: "https://uptime.timo.be/status/default"
+    permanent: false
+---
+# Deploy traefik dashboard with the middlewares
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dashboard
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`traefiktest.timo.be`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+      middlewares:
+        - name: secureheaders
+          namespace: traefik
+        - name: ratelimit
+          namespace: traefik
+  tls:
+    secretName: wildcard-timo-be-staging-tls

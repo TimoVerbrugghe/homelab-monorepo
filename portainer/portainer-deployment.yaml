@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: portainer
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: portainer
+  namespace: kube-system
+spec:
+  chart: portainer
+  targetNamespace: portainer
+  repo: https://portainer.github.io/k8s/
+  valuesContent: |-
+    replicaCount: 1
+    enterpriseEdition:
+      enabled: true
+    tls:
+      force: true
+    service:
+      type: ClusterIP
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      annotations: {}
+      hosts:
+        - host: portainertest.timo.be
+          paths: []
+      tls:
+        secretName: wildcard-timo-be-staging-tls
+    persistence:
+      size: "1Gi"
+      annotations: {}
