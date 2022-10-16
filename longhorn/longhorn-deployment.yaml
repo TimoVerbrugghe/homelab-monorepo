@@ -1,0 +1,42 @@
+---
+# Creating namespace for longhorn
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: longhorn-system
+---
+# Install longhorn in longhorn-system namespace
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: longhorn
+  namespace: kube-system
+spec:
+  chart: longhorn
+  targetNamespace: longhorn-system
+  repo: https://charts.longhorn.io
+---
+# Allowing traefik to route to longhorn
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: longhorn-ingress
+  namespace: longhorn-system
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`longhorntest.timo.be`)
+      kind: Rule
+      services:
+        - name: longhorn-frontend
+          port: 80
+      middlewares:
+        - name: secureheaders
+          namespace: traefik
+        - name: ratelimit
+          namespace: traefik
+        - name: longhornheaders
+          namespace: traefik
+  tls:
+    secretName: wildcard-timo-be-staging-tls

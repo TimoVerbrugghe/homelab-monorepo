@@ -1,5 +1,5 @@
 ## Set up prerequisites
-apt-get install jq iputils-ping
+apt-get install jq iputils-ping nfs-common
 
 ## Set up k3s cluster
 curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s - server \
@@ -36,16 +36,15 @@ kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/metallb/resources.y
 ## Installing helm
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-## Install cert-manager
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.crds.yaml
-
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/cert-manager/cert-manager-deployment.yaml
-
 ## Install kubed so that secrets can be synced across all namespaces (f.e. the certificates that cert-manager will generate)
 kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/kubed/kubed-deployment.yaml
 
+## Install cert-manager
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.crds.yaml
+kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/cert-manager/cert-manager-deployment.yaml
+
 # check deployment
-kubectl get deployment --namespace kubed -l "app.kubernetes.io/name=kubed,app.kubernetes.io/instance=kubed"
+kubectl get deployment --namespace kube-system -l "app.kubernetes.io/name=kubed,app.kubernetes.io/instance=kubed"
 
 ## Get certificates
 kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/cert-manager/secrets
@@ -53,6 +52,12 @@ kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/cert-manager/certif
 
 ## Install traefik
 kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/traefik/traefik-deployment.yaml
+
+## TEST your cluster deployment here!
+kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/nginx-demo/nginx-demo-deployment.yaml
+
+## Install longhorn
+
 
 ## Install rancher
 kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/rancher/rancher-deployment.yaml

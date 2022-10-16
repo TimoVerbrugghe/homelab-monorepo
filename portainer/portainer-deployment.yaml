@@ -22,14 +22,31 @@ spec:
     service:
       type: ClusterIP
     ingress:
-      enabled: true
-      ingressClassName: traefik
-      annotations: {}
-      hosts:
-        - host: portainertest.timo.be
-          paths: []
-      tls:
-        secretName: wildcard-timo-be-staging-tls
+      enabled: false
     persistence:
+      enabled: true
+      storageClass: longhorn
       size: "1Gi"
-      annotations: {}
+---
+# Allowing traefik to route to portainer
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: portainer
+  namespace: portainer
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`portainertest.timo.be`)
+      kind: Rule
+      services:
+        - name: portainer
+          port: 9443
+      middlewares:
+        - name: secureheaders
+          namespace: traefik
+        - name: ratelimit
+          namespace: traefik
+  tls:
+    secretName: wildcard-timo-be-staging-tls

@@ -155,6 +155,17 @@ spec:
     replacement: "https://uptime.timo.be/status/default"
     permanent: false
 ---
+# Changes in headers to make longhorn ui work
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: longhornheaders
+  namespace: traefik
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-Proto: "https"
+---
 # Deploy traefik dashboard with the middlewares
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
