@@ -64,11 +64,3 @@ kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/rancher/rancher-dep
 
 ## Check deployment
 kubectl -n cattle-system rollout status deploy/rancher
-
-K10d37c53fd136e008318eccd8ff71d77b568de3b13fe702c7f5285c097a082c3a4::server:b0bdd7b712ad5683a50d160f9d6f1f23
-
-curl -sfL https://get.k3s.io | sh -s - server \
-  --server https://192.168.0.20:6443 \
-  --token K10d37c53fd136e008318eccd8ff71d77b568de3b13fe702c7f5285c097a082c3a4::server:b0bdd7b712ad5683a50d160f9d6f1f23 \
-  --disable servicelb \
-  --disable traefik

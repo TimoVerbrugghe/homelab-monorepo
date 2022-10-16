@@ -1,0 +1,17 @@
+---
+# Install cert-manager in cert-manager namespace using helm (only using cloudflare IPs since cert-manager only needs to create wildcard certs using cloudflare)
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: descheduler
+  namespace: kube-system
+spec:
+  chart: descheduler
+  targetNamespace: kube-system
+  repo: https://kubernetes-sigs.github.io/descheduler/
+  valuesContent: |-
+    kind: Deployment
+    deschedulingInterval: 5m
+    replicas: 3
+    leaderElection: 
+      enabled: true

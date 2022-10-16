@@ -18,6 +18,10 @@ spec:
   valuesContent: |-
     installCRDs: false
     replicaCount: 3
+    webhook:
+      replicaCount: 3
+    cainjector:
+      replicaCount: 3
     extraArgs:
       - --dns01-recursive-nameservers=1.1.1.1:53
       - --dns01-recursive-nameservers-only
