@@ -15,6 +15,9 @@ spec:
   chart: longhorn
   targetNamespace: longhorn-system
   repo: https://charts.longhorn.io
+  valuesContent: |-
+    longhornUI:
+      replicas: 3
 ---
 # Allowing traefik to route to longhorn
 apiVersion: traefik.containo.us/v1alpha1
