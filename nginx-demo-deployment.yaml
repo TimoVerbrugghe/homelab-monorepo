@@ -30,6 +30,10 @@ spec:
       containers:
       - name: nginx
         image: nginx:latest
+  topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
 ---
 # Exposing port 80 of nginx
 apiVersion: v1

@@ -45,10 +45,7 @@ spec:
         exposedPort: 9000
         protocol: TCP
       web:
-        port: 8000
-        expose: true
-        exposedPort: 80
-        protocol: TCP
+        redirectTo: websecure
       websecure:
         port: 8443
         expose: true
@@ -56,12 +53,9 @@ spec:
         protocol: TCP
         tls:
           enabled: true
-          options: ""
-          certResolver: ""
-          domains: []
       metrics:
         port: 9100
-        expose: false
+        expose: true
         exposedPort: 9100
         protocol: TCP
 
@@ -187,4 +181,4 @@ spec:
         - name: ratelimit
           namespace: traefik
   tls:
-    secretName: wildcard-timo-be-staging-tls
+    secretName: wildcard-timo-be-production-tls

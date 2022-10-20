@@ -1,0 +1,111 @@
+---
+# Creating namespace for cert-manager to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager
+---
+# Install cert-manager in cert-manager namespace using helm (only using cloudflare IPs since cert-manager only needs to create wildcard certs using cloudflare)
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: cert-manager
+  namespace: kube-system
+spec:
+  chart: cert-manager
+  targetNamespace: cert-manager
+  repo: https://charts.jetstack.io
+  valuesContent: |-
+    installCRDs: true
+    replicaCount: 3
+    webhook:
+      replicaCount: 3
+    cainjector:
+      replicaCount: 3
+    extraArgs:
+      - --dns01-recursive-nameservers=1.1.1.1:53
+      - --dns01-recursive-nameservers-only
+    podDnsPolicy: None
+    podDnsConfig:
+      nameservers:
+        - "1.1.1.1"
+---
+# Create letsencrypt staging issuer
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: timo@hotmail.be
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+      - dns01:
+          cloudflare:
+            email: timo@hotmail.be
+            apiTokenSecretRef:
+              name: cloudflare-token-secret
+              key: cloudflare-token
+        selector:
+          dnsZones:
+            - "timo.be"
+---
+# Create letsencrypt production issuer
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: timo@hotmail.be
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+      - dns01:
+          cloudflare:
+            email: timo@hotmail.be
+            apiTokenSecretRef:
+              name: cloudflare-token-secret
+              key: cloudflare-token
+        selector:
+          dnsZones:
+            - "timo.be"
+---
+# Create letsencrypt staging certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-timo-be-staging
+  namespace: cert-manager
+spec:
+  secretName: wildcard-timo-be-staging-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "*.timo.be"
+  dnsNames:
+  - "*.timo.be"
+  # secretTemplate:
+  #   annotations:
+  #     kubed.appscode.com/sync: "" # Sync certificate across all namespaces
+---
+# Create letsencrypt production certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-timo-be-production
+  namespace: cert-manager
+spec:
+  secretName: wildcard-timo-be-production-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.timo.be"
+  dnsNames:
+  - "*.timo.be"
+  secretTemplate:
+    annotations:
+      kubed.appscode.com/sync: "" # Sync certificate across all namespaces

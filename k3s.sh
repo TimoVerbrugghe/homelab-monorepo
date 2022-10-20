@@ -1,12 +1,14 @@
 ## Set up prerequisites
-apt-get install jq iputils-ping nfs-common
+apt-get install jq iputils-ping nfs-common git
+
+## Copy over config.yaml
+mkdir -p /etc/rancher/k3s
+mkdir -p /var/lib/scheduler
+cp k3sserverconfig.yaml /etc/rancher/k3s/config.yaml
+cp scheduler-config.yaml /var/lib/scheduler/scheduler-config.yaml
 
 ## Set up k3s cluster
-curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s - server \
-  --cluster-init \
-  --disable servicelb \
-  --disable traefik \
-  --tls-san 192.168.0.20
+curl -sfL https://get.k3s.io | sh -
 
 ## Install kube-vip
 ## See https://kube-vip.io/docs/installation/daemonset/#kube-vip-as-ha-load-balancer-or-both for updated instructions on how to install as daemonset
@@ -27,40 +29,32 @@ kube-vip manifest daemonset \
     --inCluster \
     --taint \
     --controlplane \
+    --services \
     --leaderElection | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
 
-## Install metallb
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.6/config/manifests/metallb-native.yaml
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/metallb/resources.yaml
+kubectl apply -f https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml
+kubectl create configmap -n kube-system kubevip --from-literal range-global=192.168.0.30-192.168.0.40
 
 ## Installing helm
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 ## Install kubed so that secrets can be synced across all namespaces (f.e. the certificates that cert-manager will generate)
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/kubed/kubed-deployment.yaml
+kubectl apply -f ~/HomeServerKubernetes/kubed-deployment.yaml
 
 ## Install cert-manager
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.crds.yaml
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/cert-manager/cert-manager-deployment.yaml
-
-# check deployment
-kubectl get deployment --namespace kube-system -l "app.kubernetes.io/name=kubed,app.kubernetes.io/instance=kubed"
-
-## Get certificates
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/cert-manager/secrets
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/cert-manager/certificates
+kubectl apply -f ~/HomeServerKubernetes/cert-manager-deployment.yaml
 
 ## Install traefik
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/traefik/traefik-deployment.yaml
+kubectl apply -f ~/HomeServerKubernetes/traefik-deployment.yaml
 
 ## TEST your cluster deployment here!
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/nginx-demo/nginx-demo-deployment.yaml
+kubectl apply -f ~/HomeServerKubernetes/nginx-demo-deployment.yaml
 
 ## Install longhorn
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/longhorn/longhorn-deployment.yaml
+kubectl apply -f ~/HomeServerKubernetes/longhorn-deployment.yaml
 
 ## Install rancher
-kubectl apply -f /home/timoubuntuserver/HomeServerKubernetes/rancher/rancher-deployment.yaml
+kubectl apply -f ~/HomeServerKubernetes/portainer-deployment.yaml
 
 ## Check deployment
 kubectl -n cattle-system rollout status deploy/rancher
