@@ -5,6 +5,22 @@ kind: Namespace
 metadata:
   name: demo
 ---
+# Create PVC for nginx-demo
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-nfs-claim
+  namespace: demo
+  annotations:
+    foldername: nginx
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-other
+  resources:
+    requests:
+      storage: 1Gi
+---
 # Deploying nginx in demo namespace
 kind: Deployment
 apiVersion: apps/v1
@@ -30,6 +46,13 @@ spec:
       containers:
       - name: nginx
         image: nginx:latest
+        volumeMounts:
+        - mountPath: /var/www/html/nginx
+          name: nginx-data
+      volumes:
+      - name: nginx-data
+        persistentVolumeClaim:
+          claimName: nginx-nfs-claim
 ---
 # Exposing port 80 of nginx
 apiVersion: v1

@@ -1,0 +1,59 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nfs-other
+  namespace: kube-system
+spec:
+  chart: nfs-subdir-external-provisioner
+  targetNamespace: kube-system
+  repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+  valuesContent: |-
+    replicaCount: 3
+    storageClass:
+      name: nfs-other
+      provisionerName: nfs-other
+      onDelete: delete
+      pathPattern: ${.PVC.annotations.foldername}
+    nfs:
+      server: 192.168.0.3
+      path: "/mnt/user/other"
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nfs-tvshows
+  namespace: kube-system
+spec:
+  chart: nfs-subdir-external-provisioner
+  targetNamespace: kube-system
+  repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+  valuesContent: |-
+    replicaCount: 3
+    storageClass:
+      name: nfs-tvshows
+      provisionerName: nfs-tvshows
+      onDelete: delete
+      pathPattern: ${.PVC.annotations.foldername}
+    nfs:
+      server: 192.168.0.3
+      path: "/mnt/user/tvshows"
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nfs-movies
+  namespace: kube-system
+spec:
+  chart: nfs-subdir-external-provisioner
+  targetNamespace: kube-system
+  repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+  valuesContent: |-
+    replicaCount: 3
+    storageClass:
+      name: nfs-movies
+      provisionerName: nfs-movies
+      onDelete: delete
+      pathPattern: ${.PVC.annotations.foldername}
+    nfs:
+      server: 192.168.0.3
+      path: "/mnt/user/movies"
