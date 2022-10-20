@@ -1,6 +1,9 @@
 ## Set up prerequisites
 apt-get install jq iputils-ping nfs-common git
 
+git config --global user.email ""
+git config --global user.name "Timo Verbrugghe"
+
 ## Copy over config.yaml
 mkdir -p /etc/rancher/k3s
 mkdir -p /var/lib/scheduler
