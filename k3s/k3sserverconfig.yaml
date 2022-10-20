@@ -26,7 +26,8 @@ kube-apiserver-arg:
 - "default-not-ready-toleration-seconds=20"
 - "default-unreachable-toleration-seconds=20" 
 
+etcd-expose-metrics: true
+
 # kube-scheduler-arg:
 # - "config=/var/lib/scheduler/scheduler-config.yaml"
 
-etcd-expose-metrics: true

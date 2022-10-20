@@ -49,4 +49,4 @@ spec:
         - name: ratelimit
           namespace: traefik
   tls:
-    secretName: wildcard-timo-be-staging-tls
+    secretName: wildcard-timo-be-production-tls

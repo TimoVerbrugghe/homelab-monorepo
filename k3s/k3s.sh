@@ -7,7 +7,7 @@ git config --global user.name "Timo Verbrugghe"
 ## Copy over config.yaml
 mkdir -p /etc/rancher/k3s
 mkdir -p /var/lib/scheduler
-cp k3sserverconfig.yaml /etc/rancher/k3s/config.yaml
+cp k3s/k3sserverconfig.yaml /etc/rancher/k3s/config.yaml
 cp scheduler-config.yaml /var/lib/scheduler/scheduler-config.yaml
 
 ## Set up k3s cluster
@@ -44,6 +44,9 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ## Install kubed so that secrets can be synced across all namespaces (f.e. the certificates that cert-manager will generate)
 kubectl apply -f ~/HomeServerKubernetes/kubed-deployment.yaml
 
+## Install secrets
+kubectl apply -f ~/HomeServerKubernetes/secrets.yaml
+
 ## Install cert-manager
 kubectl apply -f ~/HomeServerKubernetes/cert-manager-deployment.yaml
 
@@ -54,7 +57,7 @@ kubectl apply -f ~/HomeServerKubernetes/traefik-deployment.yaml
 kubectl apply -f ~/HomeServerKubernetes/nginx-demo-deployment.yaml
 
 ## Install longhorn
-kubectl apply -f ~/HomeServerKubernetes/longhorn-deployment.yaml
+kubectl apply -f ~/HomeServerKubernetes/longhorn-deployment.yamll
 
 ## Install rancher
 kubectl apply -f ~/HomeServerKubernetes/portainer-deployment.yaml

@@ -14,7 +14,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  replicas: 3
+  replicas: 1
   progressDeadlineSeconds: 600
   revisionHistoryLimit: 2
   strategy:
@@ -30,10 +30,6 @@ spec:
       containers:
       - name: nginx
         image: nginx:latest
-  topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
 ---
 # Exposing port 80 of nginx
 apiVersion: v1

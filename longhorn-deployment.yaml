@@ -42,4 +42,4 @@ spec:
         - name: longhornheaders
           namespace: traefik
   tls:
-    secretName: wildcard-timo-be-staging-tls
+    secretName: wildcard-timo-be-production-tls

@@ -1,0 +1,58 @@
+---
+# Creating namespace for keycloak and stackgres to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stackgres
+---
+# Create local storageclass that supports volume expansion. BEWARE -> You need to take backups yourself using stackgres's backup configs!
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage-volume-expansion
+provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+---
+# Install stackgres (with prometheusAutobind to true due to bug)
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: stackgres-operator
+  namespace: kube-system
+spec:
+  chart: stackgres-operator
+  targetNamespace: stackgres
+  repo: https://stackgres.io/downloads/stackgres-k8s/stackgres/helm/
+  valuesContent: |-
+    authentication:
+      user: admin
+      password: admin
+    grafana:
+      autoEmbed: false
+    prometheus:
+      allowAutobind: true
+---
+# Allowing traefik to route to stackgres ui
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: stackgres
+  namespace: stackgres
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`stackgrestest.timo.be`)
+      kind: Rule
+      services:
+        - name: stackgres-restapi
+          port: 443
+      middlewares:
+        - name: secureheaders
+          namespace: traefik
+        - name: ratelimit
+          namespace: traefik
+  tls:
+    secretName: wildcard-timo-be-production-tls
