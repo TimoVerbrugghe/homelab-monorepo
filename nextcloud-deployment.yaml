@@ -1,0 +1,111 @@
+---
+# Creating namespace for nextcloud and stackgres to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nextcloud
+---
+# Create script to setup nextcloud database
+apiVersion: stackgres.io/v1
+kind: SGScript
+metadata:
+  name: nextcloud-sgscript
+  namespace: nextcloud
+spec:
+  managedVersions: true
+  continueOnError: false
+  scripts:
+  - name: create-nextcloud-user
+    script: |
+      CREATE USER nextcloud WITH PASSWORD 'nextcloud' CREATEDB CREATEROLE;
+  - name: create-nextcloud-database
+    script: |
+      CREATE DATABASE nextcloud;
+  - name: assign-nextcloud-user-to-database
+    script: |
+      GRANT ALL PRIVILEGES ON DATABASE nextcloud TO nextcloud;
+---
+# Create stackgres cluster for nextcloud
+apiVersion: stackgres.io/v1
+kind: SGCluster
+metadata:
+  name: postgres-nextcloud
+  namespace: nextcloud
+spec:
+  instances: 3
+  postgres:
+    version: "latest"
+  prometheusAutobind: false
+  pods:
+    persistentVolume:
+      size: "2Gi"
+      storageClass: "stackgres-local-storage"
+  managedSql:
+    scripts:
+    - id: 1
+      sgScript: nextcloud-sgscript
+---
+# Create PVCs for nextcloud to connect to data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-nfs-claim
+  namespace: demo
+  annotations:
+    foldername: nginx
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-other
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Deploy nextcloud
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nextcloud
+  namespace: kube-system
+spec:
+  chart: nextcloud
+  targetNamespace: nextcloud
+  repo: https://nextcloud.github.io/helm/
+  valuesContent: |-
+    replicaCount: 3
+    nextcloud:
+      host: nextcloudtest.timo.be
+      username: admin
+      password: admin
+      internalDatabase:
+        enabled: false
+      externalDatabase:
+        enabled: true
+        type: postgresql
+        host: postgres-nextcloud.nextcloud.svc.cluster.local
+        user: nextcloud
+        password: nextcloud
+        database: nextcloud
+      extraVolumes:
+        - name: nfs-nextcloud-tvshows
+          persistentVolumeClaim:
+            claimName: nextcloud-nfs-tvshows-claim
+        - name: nfs-nextcloud-movies
+          persistentVolumeClaim:
+            claimName: nextcloud-nfs-movies-claim
+        - name: nfs-nextcloud-other
+          persistentVolumeClaim:
+            claimName: nextcloud-nfs-other-claim
+      extraVolumeMounts:
+        - name: nfs-nextcloud-tvshows
+          mountpath: "/tvshows"
+        - name: nfs-nextcloud-movies
+          mountpath: "/movies"
+        - name: nfs-nextcloud-other
+          mountpath: "/other"
+      
+    cronjob:
+      enabled: true
+    persistence:
+      enabled: true
+      storageClass: "longhorn"

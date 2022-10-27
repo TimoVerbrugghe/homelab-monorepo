@@ -1,0 +1,66 @@
+---
+# Create instance profile for keycloak stackgres cluster
+apiVersion: stackgres.io/v1
+kind: SGInstanceProfile
+metadata:
+  namespace: keycloak 
+  name: size-xs
+spec:
+  cpu: "500m"
+  memory: "512Mi"
+---
+# Create pooling config for keycloak (with search_path & extra_float_digits removed)
+apiVersion: stackgres.io/v1
+kind: SGPoolingConfig
+metadata:
+  namespace: keycloak
+  name: keycloak-poolconfig
+spec:
+  pgBouncer:
+    pgbouncer.ini:
+      pgbouncer:
+        ignore_startup_parameters: "extra_float_digits,search_path"
+---
+# Create script to setup keycloak database
+apiVersion: stackgres.io/v1
+kind: SGScript
+metadata:
+  name: keycloak-sgscript
+  namespace: keycloak
+spec:
+  managedVersions: true
+  continueOnError: false
+  scripts:
+  - name: create-keycloak-user
+    script: |
+      CREATE USER keycloak WITH PASSWORD 'keycloak' CREATEDB CREATEROLE;
+  - name: create-keycloak-database
+    script: |
+      CREATE DATABASE keycloak;
+  - name: assign-keycloak-user-to-database
+    script: |
+      GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak;
+---
+# Deploy keycloak cluster
+apiVersion: stackgres.io/v1
+kind: SGCluster
+metadata:
+  namespace: keycloak
+  name: keycloak-cluster
+spec:
+  instances: 3
+  postgres:
+    version: "latest"
+  sgInstanceProfile: "size-xs"
+  configurations:
+    sgPoolingConfig: "keycloak-poolconfig"
+  prometheusAutobind: false
+  pods:
+    persistentVolume:
+      size: "2Gi"
+      storageClass: "stackgres-local-storage"
+  managedSql:
+    continueOnSGScriptError: false
+    scripts:
+    - id: 1
+      sgScript: keycloak-sgscript

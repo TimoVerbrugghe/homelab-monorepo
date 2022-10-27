@@ -1,0 +1,30 @@
+# Create StorageClass for keycloak that will be linked to /opt/bitnami/keycloak/data/import
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: keycloak-local-storage
+  annotations:
+    openebs.io/cas-type: local
+    cas.openebs.io/config: |
+      - name: StorageType
+        value: hostpath
+      - name: BasePath
+        value: /var/openebs/keycloak
+provisioner: openebs.io/local
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: keycloak-local-storage-pvc
+  namespace: keycloak
+spec:
+  storageClassName: keycloak-local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1G
+---

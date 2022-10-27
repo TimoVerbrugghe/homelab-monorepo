@@ -1,0 +1,17 @@
+---
+# Creating namespace for keycloak and stackgres to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openebs
+---
+# Deploy openebs
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: openebs
+  namespace: kube-system
+spec:
+  chart: openebs
+  targetNamespace: openebs
+  repo: https://openebs.github.io/charts
