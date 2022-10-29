@@ -1,0 +1,11 @@
+[Unit]
+Description=code-server
+After=network.target
+[Service]
+Type=exec
+User=demoa
+Group=demoa
+ExecStart=/usr/local/bin/code-server
+Restart=always
+[Install]
+WantedBy=default.target
