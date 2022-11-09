@@ -24,36 +24,23 @@ metadata:
   name: nfs-tvshows
   namespace: kube-system
 spec:
-  chart: nfs-subdir-external-provisioner
+  chart: csi-driver-nfs
   targetNamespace: kube-system
-  repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+  repo: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
   valuesContent: |-
-    replicaCount: 3
-    storageClass:
-      name: nfs-tvshows
-      provisionerName: nfs-tvshows
-      onDelete: delete
-      pathPattern: ${.PVC.annotations.foldername}
-    nfs:
-      server: 192.168.0.3
-      path: "/mnt/user/tvshows"
+    controller:
+      replicas: 3
 ---
-apiVersion: helm.cattle.io/v1
-kind: HelmChart
+# TV Shows NFS Storageclass
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
-  name: nfs-movies
-  namespace: kube-system
-spec:
-  chart: nfs-subdir-external-provisioner
-  targetNamespace: kube-system
-  repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
-  valuesContent: |-
-    replicaCount: 3
-    storageClass:
-      name: nfs-movies
-      provisionerName: nfs-movies
-      onDelete: delete
-      pathPattern: ${.PVC.annotations.foldername}
-    nfs:
-      server: 192.168.0.3
-      path: "/mnt/user/movies"
+  name: nfs-tvshows
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 192.168.0.3
+  share: /mnt/user/test
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+mountOptions:
+  - nfsvers=4.1
