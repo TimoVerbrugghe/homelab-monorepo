@@ -19,3 +19,6 @@ services:
       - 443:443/udp
       - 3000:3000/tcp
       - 853:853/tcp
+  
+volumes:
+  adguardhome:
