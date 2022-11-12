@@ -1,0 +1,38 @@
+- name: ping
+  ping:
+
+- name: Download Ubuntu Cloud Image
+  ansible.builtin.shell:
+    cmd: wget -O cloudimg.img "{{ ubuntu_cloud_image_url }}"
+
+- name: Create new virtual machine
+  ansible.builtin.shell:
+    cmd: qm create "{{ template_id }}" --memory 2048 --core 2 --name "{{ template_name }}" --net0 virtio,bridge="{{ bridge }}"
+
+- name: Import cloudimg to local storage
+  ansible.builtin.shell:
+    cmd: qm importdisk "{{ template_id }}" cloudimg.img "{{ template_storage }}"
+
+- name: Attach new disk to the VM as scsi drive on scsi controller
+  ansible.builtin.shell:
+    cmd: qm set "{{ template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ template_storage }}":vm-"{{ template_id }}"-disk-0
+
+- name: Add cloud init drive
+  ansible.builtin.shell:
+    cmd: qm set "{{ template_id }}" --ide2 "{{ template_storage }}":cloudinit
+
+- name: Make the cloud init drive bootable and restrict BIOS to boot from disk only
+  ansible.builtin.shell:
+    cmd: qm set "{{ template_id }}" --boot c --bootdisk scsi0
+
+- name: Add serial console
+  ansible.builtin.shell:
+    cmd: qm set "{{ template_id }}" --serial0 socket --vga serial0
+
+- name: Create template
+  ansible.builtin.shell:
+    cmd: qm template "{{ template_id }}"
+
+- name: Delete downloaded cloud image
+  ansible.builtin.shell:
+    cmd: rm cloudimg.img

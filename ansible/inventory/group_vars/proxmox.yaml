@@ -1,0 +1,8 @@
+# this is the user that has ssh access
+ansible_user: root
+
+ubuntu_cloud_image_url: https://cloud-images.ubuntu.com/releases/22.10/release/ubuntu-22.10-server-cloudimg-amd64.img
+template_id: 9999
+template_name: ubuntu-cloud
+bridge: vmbr0
+template_storage: local-zfs
