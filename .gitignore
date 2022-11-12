@@ -1,3 +1,5 @@
-secrets*
-test*
-export*
+terraform/credentials.tfvars
+terraform/.terraform*
+terraform/terraform.tfstate*
+terraform/variables.auto.tfvars
+.vscode

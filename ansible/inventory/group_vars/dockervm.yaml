@@ -1,7 +1,3 @@
 # this is the user that has ssh access
-ansible_user: ansibleuser
+ansible_user: testvm
 systemd_dir: /etc/systemd/system
-
-# Portainer Edge Agent
-edge_id: aa7934d0-0486-497c-85cf-ea0fbeaefc6e
-edge_key: aHR0cDovLzE5Mi4xNjguMC4zOjk5OTZ8MTkyLjE2OC4wLjM6ODAwMHw4ZTpkODphYzo0YjowZDo1MzowNjozYjozNDpmODo0OTo3YTo3NDpmZDo4Yjo5OHw0

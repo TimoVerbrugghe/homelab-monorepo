@@ -1,4 +1,4 @@
-- hosts: dockervm
+- hosts: routervm
   gather_facts: true
   become: true
   roles:

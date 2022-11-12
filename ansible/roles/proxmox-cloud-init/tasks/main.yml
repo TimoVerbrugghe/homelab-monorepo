@@ -1,13 +1,46 @@
-- name: ping
-  ping:
-
 - name: Download Ubuntu Cloud Image
-  ansible.builtin.shell:
-    cmd: wget -O cloudimg.img "{{ ubuntu_cloud_image_url }}"
+  get_url:
+    url: "{{ ubuntu_cloud_image_url }}"
+    dest: ./cloudimg.img
 
 - name: Create new virtual machine
-  ansible.builtin.shell:
-    cmd: qm create "{{ template_id }}" --memory 2048 --core 2 --name "{{ template_name }}" --net0 virtio,bridge="{{ bridge }}"
+  delegate_to: localhost
+  community.general.proxmox_kvm:
+    proxmox_default_behavior: no_defaults
+
+    # Logging in to the correct node
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_tokenid }}"
+    api_token_secret: "{{ proxmox_api_tokensecret }}"
+    api_host: "{{ proxmox_api_host }}"
+    node: "{{ proxmox_node | default('proxmox') }}"
+
+    # General VM attributes
+    name: "{{ template_name }}"
+    vmid: "{{ template_id }}"
+    machine: q35
+    ostype: l26
+    serial:
+      serial0: socket
+    vga: serial0
+    net:
+      net0: virtio,bridge={{ bridge }}
+
+    # EFI Bios & disk
+    bios: ovmf
+    efidisk0:
+      storage: "{{ template_storage }}"
+      format: raw
+      efitype: 4m
+      pre_enrolled_keys: true
+
+    # Performance
+    cores: "{{ template_cores | default(1) }}"
+    memory: "{{ template_memory | default(2048) }}"
+
+    # Add cloud-init drive with some defaults
+    ide:
+      ide2: '{{ template_storage }}:cloudinit'
 
 - name: Import cloudimg to local storage
   ansible.builtin.shell:
@@ -15,24 +48,17 @@
 
 - name: Attach new disk to the VM as scsi drive on scsi controller
   ansible.builtin.shell:
-    cmd: qm set "{{ template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ template_storage }}":vm-"{{ template_id }}"-disk-0
-
-- name: Add cloud init drive
-  ansible.builtin.shell:
-    cmd: qm set "{{ template_id }}" --ide2 "{{ template_storage }}":cloudinit
+    cmd: qm set "{{ template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ template_storage }}":vm-"{{ template_id }}"-disk-1
 
 - name: Make the cloud init drive bootable and restrict BIOS to boot from disk only
-  ansible.builtin.shell:
+  shell:
     cmd: qm set "{{ template_id }}" --boot c --bootdisk scsi0
 
-- name: Add serial console
-  ansible.builtin.shell:
-    cmd: qm set "{{ template_id }}" --serial0 socket --vga serial0
-
 - name: Create template
-  ansible.builtin.shell:
+  shell:
     cmd: qm template "{{ template_id }}"
 
 - name: Delete downloaded cloud image
-  ansible.builtin.shell:
-    cmd: rm cloudimg.img
+  file:
+    state: absent
+    path: ./cloudimg.img

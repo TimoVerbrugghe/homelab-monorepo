@@ -1,5 +1,8 @@
+- name: Prepare env on localhost (Mac)
+  hosts: localhost
+  roles:
+    - role: hostprereq
+      
 - hosts: proxmox
-  gather_facts: true
-  become: true
   roles:
     - role: proxmox-cloud-init

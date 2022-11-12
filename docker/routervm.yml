@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  
+  adguardhome:
+    image: adguard/adguardhome
+    restart: unless-stopped
+    volumes:
+      - adguardhome/work:/opt/adguardhome/work
+      - adguardhome/conf:/opt/adguardhome/conf
+    ports:
+      - 53:53/tcp
+      - 80:80/tcp
+      - 443:443/tcp
+      - 443:443/udp
+      - 3000:3000/tcp
+      - 853:853/tcp

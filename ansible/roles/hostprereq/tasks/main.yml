@@ -1,0 +1,19 @@
+- name: Update homebrew
+  homebrew:
+    update_homebrew: true
+- name: Install pip using homebrew
+  homebrew:
+    name: python
+    state: present
+  register: result
+  until: result is successful
+- name: Upgrade pip to latest version
+  pip:
+    name: pip
+    extra_args: --upgrade
+- name: Install pip packages
+  pip:
+    name: 
+      - proxmoxer 
+      - requests
+    state: present

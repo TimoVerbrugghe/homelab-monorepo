@@ -1,4 +1,3 @@
-- include_tasks: 
-  - apt-dist-upgrade.yml
-  - install-qemu-guest-agent.yml
-  - install-docker.yml
+- include_tasks: apt-dist-upgrade.yml
+- include_tasks: install-qemu-guest-agent.yml
+- include_tasks: install-docker.yml
