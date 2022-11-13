@@ -18,32 +18,8 @@ variable "github_username" {
     type = string
 }
 
-variable "vm_ipaddress" {
-    type = string
-}
-
-variable "vm_ciuser" {
-    type = string
-    default = "admin"
-} 
-
-variable "vm_cipassword" {
-    type = string
-    default = "admin"
-}
-
 variable "template_name" {
     type = string
-}
-
-variable "vm_cores" {
-    type = number
-    default = 1
-}
-
-variable "vm_memory" {
-    type = number
-    default = 2048
 }
 
 variable "vm_networkbridge" {
@@ -51,22 +27,23 @@ variable "vm_networkbridge" {
     default = "vmbr0"
 }
 
-variable "vm_disksize" {
-    type = string
-    default = "20G"
-}
-
 variable "vm_storage" {
     type = string
     default = "local-zfs"
 }
 
-variable "vm_name" {
+variable "gateway" {
     type = string
+    default = "192.168.0.1"
 }
 
-variable "vm_description" {
-    type = string
-    default = ""
+variable "vm_configs" {
+    type = list(object({
+        vm_name = string
+        vm_description = optional(string, "")
+        vm_ipaddress = string
+        vm_cores = optional(number, 1)
+        vm_memory = optional(number, 2048)
+        vm_disksize = optional(string, "40G")
+    }))
 }
-
