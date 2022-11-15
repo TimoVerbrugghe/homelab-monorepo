@@ -1,0 +1,3 @@
+# this is the user that has ssh access
+ansible_user: testvm
+systemd_dir: /etc/systemd/system

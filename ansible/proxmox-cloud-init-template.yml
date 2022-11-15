@@ -1,5 +1,6 @@
-- name: Prepare env on localhost (Mac)
+- name: Prepare env on localhost 
   hosts: localhost
+  gather_facts: true
   roles:
     - role: hostprereq
       

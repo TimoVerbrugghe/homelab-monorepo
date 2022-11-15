@@ -1,19 +1,38 @@
+# Run tasks to install all necessary packages on the host for all ansible playbooks in this folder.
+
+# Run specific tasks if the host is a Mac
 - name: Update homebrew
   homebrew:
     update_homebrew: true
+  when: ansible_distribution == 'MacOSX'
+
 - name: Install pip using homebrew
   homebrew:
     name: python
     state: present
-  register: result
-  until: result is successful
+  when: ansible_distribution == 'MacOSX'
+
+
+# Run specific tasks if the host is a Linux machine
+- name: Install python & pip
+  become: true
+  apt:
+    name: 
+      - python3-pip
+    state: present
+    update_cache: true
+  when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "Debian" or ansible_facts['os_family'] == "ArchLinux"
+
 - name: Upgrade pip to latest version
   pip:
     name: pip
     extra_args: --upgrade
+  
 - name: Install pip packages
   pip:
     name: 
       - proxmoxer 
       - requests
+      - pywinrm
+      - requests-credssp
     state: present

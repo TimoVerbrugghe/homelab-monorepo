@@ -3,3 +3,6 @@
 **/.vscode
 terraform/modules/proxmoxsettings/outputs.tf
 **/terraform.tfstate*
+**/*auto.pkrvars.hcl
+**/downloaded_**
+ansible/inventory/group_vars/
