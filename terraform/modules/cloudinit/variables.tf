@@ -1,12 +1,10 @@
 # Terraform variables
 variable "github_username" {
     type = string
-    default = ""
 }
 
 variable "template_name" {
     type = string
-    default = ""
 }
 
 variable "vm_networkbridge" {

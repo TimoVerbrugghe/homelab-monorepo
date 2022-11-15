@@ -1,5 +1,5 @@
-terraform/credentials.tfvars
-terraform/.terraform*
-terraform/terraform.tfstate*
-terraform/variables.auto.tfvars
-.vscode
+**/.terraform*
+**/*.auto.tfvars
+**/.vscode
+terraform/modules/proxmoxsettings/outputs.tf
+**/terraform.tfstate*

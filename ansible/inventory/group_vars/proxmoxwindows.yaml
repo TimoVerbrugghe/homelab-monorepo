@@ -1,0 +1,17 @@
+# this is the user that has ssh access
+ansible_user: root
+
+github_username: TimoVerbrugghe
+proxmox_api_user: root@pam
+proxmox_api_tokenid: ansible
+proxmox_api_tokensecret: 67e68c46-5758-4e3b-a6cf-fd6fa8e9f697
+proxmox_api_host: 192.168.0.145
+# proxmox_node: proxmox
+# template_ciuser: admin
+# template_cipassword: admin
+
+windows_iso_url: https://software.download.prss.microsoft.com/dbazure/Win11_22H2_English_x64v1.iso?t=0ee7ee64-a0c5-4247-9df5-f1880c2536ca&e=1668545624&h=12eec202d4f56ab908ffbce422daa9f8608e820db2997961523d14592cc7cea8
+template_id: 9000
+template_name: windows11
+bridge: vmbr0
+template_storage: local-zfs

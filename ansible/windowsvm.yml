@@ -1,0 +1,8 @@
+- name: Prepare env on localhost (Mac)
+  hosts: localhost
+  roles:
+    - role: hostprereq
+      
+- hosts: proxmoxwindows
+  roles:
+    - role: windowsvm

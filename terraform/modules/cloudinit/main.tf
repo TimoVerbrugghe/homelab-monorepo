@@ -1,12 +1,20 @@
-# Proxmox Full-Clone
-# ---
-# Create a new VM from a clone
+# Proxmox Cloud-Init Full clone
 
+# Import ssh keys
 data "http" "sshkeys" {
     url = "https://github.com/${var.github_username}.keys"
+
+    # Check if SSH keys got downloaded correctly
+    lifecycle {
+        postcondition {
+            condition     = contains([200, 201, 204], self.status_code)
+            error_message = "SSH keys not found to apply in cloud-init template"
+        }
+    }
 }
 
-resource "proxmox_vm_qemu" "create_cloud_init_vm" {
+# Create Cloud Init VMs
+resource "proxmox_vm_qemu" "create_proxmox_vms" {
     
     for_each = {
         for index, vm in var.vm_configs:
@@ -14,7 +22,7 @@ resource "proxmox_vm_qemu" "create_cloud_init_vm" {
     }
     
     # VM General Settings
-    target_node = "proxmox"
+    target_node = "${each.value.node}"
     name = "${each.value.vm_name}"
     bios = "ovmf"
     clone = "${var.template_name}"

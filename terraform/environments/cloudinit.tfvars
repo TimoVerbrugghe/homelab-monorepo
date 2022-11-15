@@ -1,8 +1,4 @@
-proxmox_api_url = "https://0.0.0.0:8006/api2/json"  # Your Proxmox IP Address
-proxmox_api_token_id = "root@pam!terraform"  # API Token ID
-proxmox_api_token_secret = ""
-
-github_username = "TimoVerbrugghe"
+github_username = "timoverbrugghe"
 template_name = "ubuntu-cloud"
 vm_storage = "local-zfs"
 vm_networkbridge = "vmbr0"
@@ -12,9 +8,17 @@ vm_configs = [ {
     vm_ipaddress = "192.168.0.25"
     vm_memory = 2048
     vm_name = "jeremy"
+    node = "proxmox"
 }, {
     vm_cores = 2
     vm_ipaddress = "192.168.0.26"
     vm_memory = 2048
     vm_name = "aelita"
+    node = "proxmox"
+}, {
+    vm_cores = 2
+    vm_ipaddress = "192.168.0.27"
+    vm_memory = 2048
+    vm_name = "ulrich"
+    node = "proxmox"
 } ]

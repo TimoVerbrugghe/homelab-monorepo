@@ -1,12 +1,7 @@
 # Terraform variables
-variable "github_username" {
+variable "target_node" {
     type = string
-    default = ""
-}
-
-variable "template_name" {
-    type = string
-    default = ""
+    default = "proxmox"
 }
 
 variable "vm_networkbridge" {
@@ -28,7 +23,6 @@ variable "vm_configs" {
     type = list(object({
         vm_name = string
         vm_description = optional(string, "")
-        vm_ipaddress = string
         vm_cores = optional(number, 1)
         vm_memory = optional(number, 2048)
         vm_disksize = optional(string, "40G")

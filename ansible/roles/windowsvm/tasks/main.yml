@@ -1,0 +1,75 @@
+- name: Download Windows 11 image
+  get_url:
+    url: "{{ windows_iso_url }}"
+    dest: /var/lib/vz/template/iso/windows11.iso
+
+- name: Download Virtio-win drivers
+  get_url:
+    url: https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso
+    dest: /var/lib/vz/template/iso/virtiowin.iso
+
+- name: Copy over template file
+  template:
+    src: autounattend.xml.j2
+    dest: ./autounattend.xml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create an ISO file
+  shell:
+    mkisofs -r -iso-level 4 -J -o /var/lib/vz/template/iso/WIN_AUTOINSTALL.iso ./autounattend.xml
+
+- name: Create new virtual machine
+  delegate_to: localhost
+  community.general.proxmox_kvm:
+    proxmox_default_behavior: no_defaults
+
+    # Logging in to the correct node
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_tokenid }}"
+    api_token_secret: "{{ proxmox_api_tokensecret }}"
+    api_host: "{{ proxmox_api_host }}"
+    node: "{{ proxmox_node | default('proxmox') }}"
+
+    # General VM attributes
+    name: "{{ template_name }}"
+    vmid: "{{ template_id }}"
+    machine: q35
+    ostype: win11
+    net:
+      net0: virtio,bridge={{ bridge }}
+
+    # Disk
+    scsihw: virtio-scsi-pci
+    scsi:
+      scsi0: '{{ template_storage }}:64,format=raw'
+
+    # EFI Bios & disk
+    bios: ovmf
+    efidisk0:
+      storage: "{{ template_storage }}"
+      format: raw
+      efitype: 4m
+      pre_enrolled_keys: true
+
+    # Performance
+    cores: "{{ template_cores | default(1) }}"
+    memory: "{{ template_memory | default(2048) }}"
+    balloon: 0
+
+- name: Add 3 IDE cdrom drives for windows 11 ISO, virtio-win iso & WIN_AUTOINSTALL iso
+  shell:
+    cmd: qm set "{{ template_id }}" --sata0 local:iso/windows11.iso,media=cdrom --sata1 local:iso/virtiowin.iso,media=cdrom --sata2 local:iso/WIN_AUTOINSTALL.iso,media=cdrom
+
+- name: Set to boot from the Windows 11 iso
+  shell:
+    cmd: qm set "{{ template_id }}" --boot order=scsi0;sata0
+    
+- name: Add TPMstate disk (required in windows 11)
+  shell:
+    cmd: qm set "{{ template_id }}" --tpmstate0 local-zfs:1,version=v2.0
+
+- name: Create template
+  shell:
+    cmd: qm template "{{ template_id }}"
