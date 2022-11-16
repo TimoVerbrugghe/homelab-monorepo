@@ -54,7 +54,7 @@ source "proxmox-iso" "windowsvm" {
         device = "sata0"
         iso_url = "${var.virtiowin_url}"
         iso_checksum = "${var.virtiowin_checksum}"
-        unmount = false
+        unmount = true
         iso_storage_pool = "local"
     }
 
@@ -63,6 +63,7 @@ source "proxmox-iso" "windowsvm" {
         cd_files = ["./autounattend.xml", "./configuration.ps1"]
         cd_label = "WIN_AUTOINSTALL"
         iso_storage_pool = "local"
+        unmount = true
     }
 
     onboot = false
@@ -79,6 +80,7 @@ source "proxmox-iso" "windowsvm" {
     winrm_password       = "${var.winrm_password}"
     winrm_use_ssl        = true
     winrm_username       = "${var.winrm_username}"
+    winrm_hostname       = "${var.winrm_hostname}"
 
 }
 
@@ -92,5 +94,23 @@ build {
         inline = ["mkdir c:\\Packer"]
     }
 
+    #### TO ADD: proxmox specific commands to add tpmstate, remove memory ballooning
+
+        // {
+        // "post-processors": [
+        //     {
+        //     "type": "shell-local",
+        //     "inline": [
+        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --scsihw virtio-scsi-pci",
+        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --ide2 {{user `datastore`}}:cloudinit",
+        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --boot c --bootdisk scsi0",
+        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --ciuser {{ user `ssh_username` }}",
+        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --cipassword {{ user `ssh_password` }}",
+        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --vga std"
+        //     ]
+        //     }
+        // ]
+        // }
 }
+
 

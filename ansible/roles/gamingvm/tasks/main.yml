@@ -1,0 +1,17 @@
+- name: Test to see if this is working
+  win_file:
+    path: C:\ansible.txt
+    state: touch
+
+- name: Install virtio-win guest tools
+  win_package:
+
+# Install packages with winget
+- name: Install Steam
+  
+
+
+
+- name: Install chocolatey
+  win_chocolatey:
+    name: chocolatey

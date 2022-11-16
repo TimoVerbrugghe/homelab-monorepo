@@ -1,0 +1,5 @@
+- name: Prepare gaming vm
+  hosts: windowsvm
+  gather_facts: true
+  roles:
+    - role: gamingvm

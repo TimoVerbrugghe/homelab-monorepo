@@ -134,3 +134,8 @@ variable "winrm_username" {
   type    = string
   default = "Administrator"
 }
+
+variable "winrm_hostname" {
+  type    = string
+  default = "WindowsVM"
+}
