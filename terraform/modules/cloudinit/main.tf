@@ -26,7 +26,7 @@ resource "proxmox_vm_qemu" "create_proxmox_vms" {
     name = "${each.value.vm_name}"
     bios = "ovmf"
     clone = "${var.template_name}"
-    onboot = true # boot when VM is created
+    onboot = false
     os_type = "cloud-init"
     
     # CPU Settings

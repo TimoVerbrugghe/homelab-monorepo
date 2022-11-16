@@ -2,8 +2,14 @@
 # Proxmox variables
 #############################################################
 variable "proxmox_hostname" {
-  description = "Proxmox host address (e.g. https://192.168.1.1:8006)"
+  description = "Proxmox host IP address (e.g. 192.168.1.1) or hostname (proxmox.example.com)"
   type = string
+}
+
+variable "proxmox_port" {
+  description = "Proxmox connection port (default 8006)"
+  type = string
+  default = "8006"
 }
 
 variable "proxmox_username" {
@@ -135,7 +141,7 @@ variable "winrm_username" {
   default = "Administrator"
 }
 
-variable "winrm_hostname" {
+variable "winrm_host" {
   type    = string
   default = "WindowsVM"
 }

@@ -7,12 +7,14 @@ resource "proxmox_vm_qemu" "create_gamingvm" {
         for index, vm in var.vm_configs:
         vm.vm_name => vm
     }
-    
+
     # VM General Settings
     target_node = "${each.value.node}"
     name = "${each.value.vm_name}"
     bios = "ovmf"
-    onboot = true # boot when VM is created
+    onboot = false
+
+    clone = "${var.template_name}"
     
     # CPU Settings
     cores = "${each.value.vm_cores}"

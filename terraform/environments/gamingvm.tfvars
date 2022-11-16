@@ -1,3 +1,4 @@
+template_name = "windowsvm"
 vm_storage = "local-zfs"
 vm_networkbridge = "vmbr0"
 

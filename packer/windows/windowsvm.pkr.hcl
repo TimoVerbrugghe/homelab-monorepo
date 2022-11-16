@@ -1,7 +1,7 @@
 source "proxmox-iso" "windowsvm" {
     # Proxmox connection configuration
 
-    proxmox_url = "${var.proxmox_hostname}/api2/json"
+    proxmox_url = "https://${var.proxmox_hostname}:${var.proxmox_port}/api2/json"
     insecure_skip_tls_verify = "${var.proxmox_insecure_skip_tls_verify}"
     username = "${var.proxmox_username}"
     token = "${var.proxmox_api_token_secret}"
@@ -9,6 +9,7 @@ source "proxmox-iso" "windowsvm" {
 
     # General VM configuration
     vm_name = "${var.vm_name}"
+    vm_id = "${var.vm_id}"
     memory = "${var.vm_memory}"
     sockets = 1
     cores = "${var.vm_cores}"
@@ -60,7 +61,7 @@ source "proxmox-iso" "windowsvm" {
 
     additional_iso_files {
         device = "sata1"
-        cd_files = ["./autounattend.xml", "./configuration.ps1"]
+        cd_files = ["./autounattend.xml", "./configurewinrm.ps1", "./testpowershell.ps1"]
         cd_label = "WIN_AUTOINSTALL"
         iso_storage_pool = "local"
         unmount = true
@@ -80,7 +81,7 @@ source "proxmox-iso" "windowsvm" {
     winrm_password       = "${var.winrm_password}"
     winrm_use_ssl        = true
     winrm_username       = "${var.winrm_username}"
-    winrm_hostname       = "${var.winrm_hostname}"
+    winrm_host           = "${var.winrm_host}"
 
 }
 
@@ -89,28 +90,17 @@ build {
         "source.proxmox-iso.windowsvm"
     ]
 
-    # Test to see if winrm works
-    provisioner "powershell" {
-        inline = ["mkdir c:\\Packer"]
+    # TO DO See if I'm going to either change something in here or leave it up to ansible
+    // provisioner "powershell" {
+    //     inline = ["mkdir c:\\Packer"]
+    // }
+
+    post-processor "shell-local" { 
+        inline = [
+            "ssh root@${var.proxmox_hostname} qm set ${var.vm_id} --tpmstate0 local-zfs:1,version=v2.0",
+            "ssh root@${var.proxmox_hostname} qm set ${var.vm_id} --balloon 0"
+        ]
     }
-
-    #### TO ADD: proxmox specific commands to add tpmstate, remove memory ballooning
-
-        // {
-        // "post-processors": [
-        //     {
-        //     "type": "shell-local",
-        //     "inline": [
-        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --scsihw virtio-scsi-pci",
-        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --ide2 {{user `datastore`}}:cloudinit",
-        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --boot c --bootdisk scsi0",
-        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --ciuser {{ user `ssh_username` }}",
-        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --cipassword {{ user `ssh_password` }}",
-        //         "ssh root@{{user `proxmox_host`}} qm set {{user `vmid`}} --vga std"
-        //     ]
-        //     }
-        // ]
-        // }
 }
 
 

@@ -1,4 +1,5 @@
-proxmox_hostname = "https://192.168.0.0:8006"
+proxmox_hostname = "192.168.0.145"
+proxmox_port = "8006"
 proxmox_username = "root@pam!packer"
 proxmox_api_token_secret = ""
 proxmox_node_name = "proxmox"
