@@ -1,3 +1,3 @@
 Clear-Host
-Write-Host "Running hello world..."
-Start-Sleep -s 240
+Write-Host "Running test to see if PowerShell works"
+Read-Host -Prompt "Press any key to continue"
