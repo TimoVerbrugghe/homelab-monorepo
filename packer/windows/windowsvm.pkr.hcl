@@ -53,15 +53,16 @@ source "proxmox-iso" "windowsvm" {
 
     additional_iso_files {
         device = "sata0"
-        iso_url = "${var.virtiowin_url}"
-        iso_checksum = "${var.virtiowin_checksum}"
+        iso_file = "local:iso/virtiowin.iso"
+        // iso_url = "${var.virtiowin_url}"
+        // iso_checksum = "${var.virtiowin_checksum}"
         unmount = true
         iso_storage_pool = "local"
     }
 
     additional_iso_files {
         device = "sata1"
-        cd_files = ["./autounattend.xml", "./configurewinrm.ps1", "./testpowershell.ps1"]
+        cd_files = ["./autounattend.xml", "./configurewinrm.ps1"]
         cd_label = "WIN_AUTOINSTALL"
         iso_storage_pool = "local"
         unmount = true
@@ -81,7 +82,7 @@ source "proxmox-iso" "windowsvm" {
     winrm_password       = "${var.winrm_password}"
     winrm_use_ssl        = true
     winrm_username       = "${var.winrm_username}"
-    winrm_host           = "${var.winrm_host}"
+    // winrm_host           = "${var.winrm_host}"
 
 }
 
@@ -91,9 +92,14 @@ build {
     ]
 
     # TO DO See if I'm going to either change something in here or leave it up to ansible
-    // provisioner "powershell" {
-    //     inline = ["mkdir c:\\Packer"]
-    // }
+    provisioner "powershell" {
+        inline = [
+            "mkdir c:\\Packer",
+            "Clear-Host",
+            "Write-Host \"Running test to see if PowerShell works\"",
+            "Read-Host -Prompt \"Press any key to continue\""
+        ]
+    }
 
     post-processor "shell-local" { 
         inline = [
