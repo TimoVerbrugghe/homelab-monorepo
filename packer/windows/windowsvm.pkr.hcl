@@ -82,7 +82,7 @@ source "proxmox-iso" "windowsvm" {
     winrm_password       = "${var.winrm_password}"
     winrm_use_ssl        = true
     winrm_username       = "${var.winrm_username}"
-    // winrm_host           = "${var.winrm_host}"
+    winrm_host           = "${var.winrm_host}"
 
 }
 
@@ -96,8 +96,7 @@ build {
         inline = [
             "mkdir c:\\Packer",
             "Clear-Host",
-            "Write-Host \"Running test to see if PowerShell works\"",
-            "Read-Host -Prompt \"Press any key to continue\""
+            "Write-Host \"Running test to see if PowerShell works\""
         ]
     }
 

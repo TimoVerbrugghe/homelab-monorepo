@@ -27,7 +27,7 @@ $IP = (Get-NetIPAddress -InterfaceAlias "Ethernet*" -AddressFamily IPv4).IPAddre
 $Certificate = New-SelfSignedCertificate -DnsName $env:COMPUTERNAME,$IP -CertStoreLocation Cert:\LocalMachine\My
 
 # Create new HTTPS listener with the self-signed certificate
-New-WSManInstance WinRM/Config/Listener -SelectorSet @{Address="*"; Transport="HTTPS"} -ValueSet @{CertificateThumbprint=$Certificate.Thumbprint}
+New-WSManInstance WinRM/Config/Listener -SelectorSet @{Address="*"; Transport="HTTPS"} -ValueSet @{Hostname=$env:COMPUTERNAME;CertificateThumbprint=$Certificate.Thumbprint;Port="5986"}
 
 # Configure WinRM to be able to sign in with CredSSP, and provide the
 # self-signed cert to the WinRM listener.

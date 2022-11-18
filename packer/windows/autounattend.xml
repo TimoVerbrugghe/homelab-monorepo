@@ -182,34 +182,34 @@
             </OOBE>
             <!-- Set timezone, computername, user accounts -->
             <TimeZone>Romance Standard Time</TimeZone>
+
             <UserAccounts>
-                <AdministratorPassword>
-                    <Value>administrator</Value>
-                    <PlainText>true</PlainText>
-                </AdministratorPassword>
+                <!-- <AdministratorPassword>
+                  <Value>vagrant</Value>
+                  <PlainText>true</PlainText>
+                </AdministratorPassword> -->
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
+                            <Value>vagrant</Value>
                             <PlainText>true</PlainText>
-                            <Value></Value>
                         </Password>
-                        <Description></Description>
-                        <DisplayName>WindowsVM</DisplayName>
-                        <Group>Administrators</Group>
-                        <Name>WindowsVM</Name>
+                        <Group>administrators</Group>
+                        <DisplayName>Vagrant</DisplayName>
+                        <Name>vagrant</Name>
+                        <Description>Vagrant User</Description>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
-            <!-- Set Administrator account to automatically login once for script setup -->
             <AutoLogon>
                 <Password>
-                    <Value>administrator</Value>
+                    <Value>vagrant</Value>
                     <PlainText>true</PlainText>
                 </Password>
-                <LogonCount>1</LogonCount>
                 <Enabled>true</Enabled>
-                <Username>Administrator</Username>
+                <Username>vagrant</Username>
             </AutoLogon>
+
             <!-- Disable installing built-in Teams in Windows 11 -->
             <ConfigureChatAutoInstall>false</ConfigureChatAutoInstall>
             <!-- Disable windows features -->
@@ -226,8 +226,8 @@
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
                     <RequiresUserInput>false</RequiresUserInput>
-                    <CommandLine>cmd /C wmic useraccount where name="WindowsVM" set PasswordExpires=false</CommandLine>
-                    <Description>Password Never Expires for WindowsVM user</Description>
+                    <CommandLine>cmd /C wmic useraccount where name="vagrant" set PasswordExpires=false</CommandLine>
+                    <Description>Password Never Expires for vagrant user</Description>
                     <Order>1</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
