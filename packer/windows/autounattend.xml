@@ -351,16 +351,16 @@
                     <Order>10</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -NoLogo-ExecutionPolicy RemoteSigned -File E:\staticip.ps1</CommandLine>
+                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File E:\staticip.ps1</CommandLine>
                     <Description>Configure Static IP for this VM</Description>
                     <Order>11</Order>
-                    <RequiresUserInput>true</RequiresUserInput>
+                    <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File E:\configurewinrm.ps1</CommandLine>
                     <Description>Configure WinRM so that ansible can connect to it</Description>
-                    <Order>11</Order>
-                    <RequiresUserInput>true</RequiresUserInput>
+                    <Order>12</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
             </FirstLogonCommands>
         </component>

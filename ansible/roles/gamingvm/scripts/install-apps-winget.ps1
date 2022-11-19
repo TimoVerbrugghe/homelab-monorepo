@@ -18,6 +18,7 @@ function Install-Apps() {
         "7zip.7zip"
         "Nvidia.GeForceExperience"
         "Parsec.Parsec"
+        "SoftwareFreedomConservancy.QEMUGuestAgent"
 
         # Gaming
         "EpicGames.EpicGamesLauncher"
@@ -33,8 +34,6 @@ function Install-Apps() {
     Install-WingetApps -WingetApps $WingetApps
 
 }
-
-winget install -e --id Ubisoft.Connect
 
 Write-Host "Uninstalling Windows Terminal (from the MS Store) in order to reinstall it again through winget sources"
 winget uninstall "windows terminal"

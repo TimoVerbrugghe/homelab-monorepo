@@ -5,21 +5,29 @@
 #   script:
 #     roles/gamingvm/scripts/enable-remote-desktop.ps1
 
+
+## Will potentially need other solution here (maybe using powershell)
 - name: Update windows (all possible channels), reboot as many times as needed & increase reboot wait time to survive long updates
   win_updates:
-    category_names: "*"
+    category_names: '*'
     reboot: yes
     reboot_timeout: 3600
 
 - name: Update windows pass 2
   win_updates:
-    category_names: "*"
+    category_names: '*'
     reboot: yes
     reboot_timeout: 3600
 
 - name: Update windows part 3
   win_updates:
-    category_names: "*"
+    category_names: '*'
+    reboot: yes
+    reboot_timeout: 3600
+
+- name: Update windows pass 4
+  win_updates:
+    category_names: '*'
     reboot: yes
     reboot_timeout: 3600
 
