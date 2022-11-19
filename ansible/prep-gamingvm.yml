@@ -1,3 +1,9 @@
+# - name: Prepare host
+#   hosts: localhost
+#   gather_facts: true
+#   roles:
+#     - role: hostprereq
+
 - name: Prepare gaming vm
   hosts: windowsvm
   gather_facts: true

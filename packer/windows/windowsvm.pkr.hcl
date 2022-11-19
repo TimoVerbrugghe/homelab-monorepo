@@ -62,7 +62,7 @@ source "proxmox-iso" "windowsvm" {
 
     additional_iso_files {
         device = "sata1"
-        cd_files = ["./autounattend.xml", "./configurewinrm.ps1"]
+        cd_files = ["./autounattend.xml", "./configurewinrm.ps1", "./staticip.ps1"]
         cd_label = "WIN_AUTOINSTALL"
         iso_storage_pool = "local"
         unmount = true
@@ -83,6 +83,7 @@ source "proxmox-iso" "windowsvm" {
     winrm_use_ssl        = true
     winrm_username       = "${var.winrm_username}"
     winrm_host           = "${var.winrm_host}"
+    winrm_timeout = "10h0m0s"
 
 }
 
@@ -99,6 +100,17 @@ build {
             "Write-Host \"Running test to see if PowerShell works\""
         ]
     }
+
+    # To Do Enable Ansible Provisioner https://developer.hashicorp.com/packer/plugins/provisioners/ansible/ansible
+    // provisioner "ansible" {
+    //   playbook_file   = "../../ansible/prep-gamingvm.yml"
+    //   user            = "Administrator"
+    //   use_proxy       = false
+    //   extra_arguments = [
+    //     "-e",
+    //     "ansible_winrm_server_cert_validation=ignore"
+    //   ]
+    // }
 
     post-processor "shell-local" { 
         inline = [

@@ -1,0 +1,2 @@
+## This is similar to pressing the Update All button in the Windows Store, forcing the winget package to update to >1.3, which allows for installing packages from source msstore without having store account
+Get-CimInstance -Namespace "Root\cimv2\mdm\dmmap" -ClassName "MDM_EnterpriseModernAppManagement_AppManagement01" | Invoke-CimMethod -MethodName UpdateScanMethod

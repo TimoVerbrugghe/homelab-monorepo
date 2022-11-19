@@ -65,6 +65,8 @@
                     <Path>reg add HKLM\System\Setup\LabConfig /v BypassTPMCheck /t reg_dword /d 0x00000001 /f</Path>
                 </RunSynchronousCommand>
             </RunSynchronous>
+
+            <!-- Create partition scheme -->
             <DiskConfiguration>
                 <Disk wcm:action="add">
                     <CreatePartitions>
@@ -147,12 +149,7 @@
             </UserData>
         </component>
     </settings>
-    <!-- Settings to apply to an offline Microsoft Windows Image -->
-    <!-- <settings pass="offlineServicing">
-        <component name="Microsoft-Windows-LUA-Settings" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <EnableLUA>false</EnableLUA>
-        </component>
-    </settings> -->
+
     <!-- Settings to apply for all deployments -->
     <settings pass="generalize">
         <component name="Microsoft-Windows-Security-SPP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -160,6 +157,76 @@
             <SkipRearm>1</SkipRearm>
         </component>
     </settings>
+
+    <!-- Settings to apply for this specific deployment -->
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <!-- Disable cloud content (tiktok, whatsapp, etc...) -->
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /t REG_DWORD /d 1 /f</Path>
+                    <Order>1</Order>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableConsumerAccountStateContent /t REG_DWORD /d 1 /f</Path>
+                    <Order>2</Order>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableSoftLanding /t REG_DWORD /d 1 /f</Path>
+                    <Order>3</Order>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableCloudOptimizedContent /t REG_DWORD /d 1 /f</Path>
+                    <Order>4</Order>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+        <!-- Set Keyboard & Language Settings -->
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <!-- English (0409) with Belgian Period Azerty keyboard (00000813) -->
+            <InputLocale>0409:00000813</InputLocale>
+            <SystemLocale>en-US</SystemLocale>
+            <UILanguage>en-US</UILanguage>
+            <UILanguageFallback>en-US</UILanguageFallback>
+            <UserLocale>en-BE</UserLocale>
+        </component>
+
+        <!-- Do not attempt to activate automatically -->
+        <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <SkipAutoActivation>true</SkipAutoActivation>
+        </component>
+
+        <!-- Do not participate in the Customer Experience Improvement Program (CEIP) -->
+        <component name="Microsoft-Windows-SQMApi" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <CEIPEnabled>0</CEIPEnabled>
+        </component>
+
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ComputerName>WindowsVM</ComputerName>
+
+            <!-- Set Dark Mode, TimeZone -->
+            <Themes>
+                <UWPAppsUseLightTheme>false</UWPAppsUseLightTheme>
+            </Themes>
+            <TimeZone>Romance Standard Time</TimeZone>
+
+            <!-- Disable installing built-in Teams in Windows 11 -->
+            <ConfigureChatAutoInstall>false</ConfigureChatAutoInstall>
+
+            <!-- Disable windows features -->
+            <WindowsFeatures>
+                <ShowInternetExplorer>false</ShowInternetExplorer>
+                <ShowMediaCenter>false</ShowMediaCenter>
+                <ShowWindowsMediaPlayer>false</ShowWindowsMediaPlayer>
+            </WindowsFeatures>
+
+        </component>
+    </settings>
+
     <!-- Settings to apply during the first-boot experience -->
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -180,99 +247,122 @@
                 <SkipMachineOOBE>true</SkipMachineOOBE>
                 <SkipUserOOBE>true</SkipUserOOBE>
             </OOBE>
-            <!-- Set timezone, computername, user accounts -->
-            <TimeZone>Romance Standard Time</TimeZone>
 
+            <!-- UserAccounts -->
             <UserAccounts>
-                <!-- <AdministratorPassword>
-                  <Value>vagrant</Value>
-                  <PlainText>true</PlainText>
-                </AdministratorPassword> -->
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
-                            <Value>vagrant</Value>
+                            <!-- Hashed value for Blank Password -->
+                            <Value>UABhAHMAcwB3AG8AcgBkAA==</Value>
+                            <PlainText>false</PlainText>
+                        </Password>
+                        <Group>Administrators;Users</Group>
+                        <DisplayName>GamingVM</DisplayName>
+                        <Name>GamingVM</Name>
+                        <Description>GamingVM User</Description>
+                    </LocalAccount>
+
+                    <!-- Add ansible user for automation -->
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>ansible</Value>
                             <PlainText>true</PlainText>
                         </Password>
-                        <Group>administrators</Group>
-                        <DisplayName>Vagrant</DisplayName>
-                        <Name>vagrant</Name>
-                        <Description>Vagrant User</Description>
+                        <Group>Administrators</Group>
+                        <DisplayName>ansible</DisplayName>
+                        <Name>ansible</Name>
+                        <Description>Ansible User</Description>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
+
             <AutoLogon>
                 <Password>
-                    <Value>vagrant</Value>
-                    <PlainText>true</PlainText>
+                    <!-- Hashed value for Blank Password -->
+                    <Value>UABhAHMAcwB3AG8AcgBkAA==</Value>
+                    <PlainText>false</PlainText>
                 </Password>
                 <Enabled>true</Enabled>
-                <Username>vagrant</Username>
+                <Username>GamingVM</Username>
             </AutoLogon>
 
-            <!-- Disable installing built-in Teams in Windows 11 -->
-            <ConfigureChatAutoInstall>false</ConfigureChatAutoInstall>
-            <!-- Disable windows features -->
-            <WindowsFeatures>
-                <ShowInternetExplorer>false</ShowInternetExplorer>
-                <ShowMediaCenter>false</ShowMediaCenter>
-                <ShowWindowsMediaPlayer>false</ShowWindowsMediaPlayer>
-            </WindowsFeatures>
-            <!-- Set Dark Mode -->
-            <Themes>
-                <UWPAppsUseLightTheme>false</UWPAppsUseLightTheme>
-            </Themes>
             <!-- Set commands to run configuration powershell script (for WinRM) -->
             <FirstLogonCommands>
+                <!-- Further disable cloud content when this user logs on for the first time -->
                 <SynchronousCommand wcm:action="add">
-                    <RequiresUserInput>false</RequiresUserInput>
-                    <CommandLine>cmd /C wmic useraccount where name="vagrant" set PasswordExpires=false</CommandLine>
-                    <Description>Password Never Expires for vagrant user</Description>
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v OemPreInstalledAppsEnabled /t REG_DWORD /d 0 /f</CommandLine>
                     <Order>1</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -NoLogo -NoExit -W Maximized -ExecutionPolicy RemoteSigned -File E:\configurewinrm.ps1</CommandLine>
-                    <Description>Test to see if powershell works</Description>
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v ContentDeliveryAllowed /t REG_DWORD /d 0 /f</CommandLine>
                     <Order>2</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v PreInstalledAppsEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>3</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v PreInstalledAppsEverEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>4</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SilentInstalledAppsEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>5</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SystemPaneSuggestionsEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>6</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SoftLandingEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>7</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SubscribedContent-338389Enabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>8</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SubscribedContent-88000326Enabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>9</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <RequiresUserInput>false</RequiresUserInput>
+                    <CommandLine>cmd /C wmic useraccount where name="GamingVM" set PasswordExpires=false</CommandLine>
+                    <Description>Password Never Expires for gamingvm user</Description>
+                    <Order>10</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>powershell.exe -NoLogo-ExecutionPolicy RemoteSigned -File E:\staticip.ps1</CommandLine>
+                    <Description>Configure Static IP for this VM</Description>
+                    <Order>11</Order>
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
-                <!-- <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File E:\configurewinrm.ps1</CommandLine>
-                    <Description>Configure WinRM so packer and can connect</Description>
-                    <Order>1</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell -NoLogo -ExecutionPolicy RemoteSigned -File E:\debloatwindows.ps1</CommandLine>
-                    <Description>Script to debloat windows (uninstall preinstalled apps and other config)</Description>
-                    <Order>2</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand> -->
+                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File E:\configurewinrm.ps1</CommandLine>
+                    <Description>Configure WinRM so that ansible can connect to it</Description>
+                    <Order>11</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
             </FirstLogonCommands>
         </component>
     </settings>
-    <!-- Settings to apply for this specific deployment -->
-    <settings pass="specialize">
-        <!-- Set Keyboard & Language Settings -->
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <!-- English (0409) with Belgian Period Azerty keyboard (00000813) -->
-            <InputLocale>0409:00000813</InputLocale>
-            <SystemLocale>en-US</SystemLocale>
-            <UILanguage>en-US</UILanguage>
-            <UILanguageFallback>en-US</UILanguageFallback>
-            <UserLocale>en-BE</UserLocale>
-        </component>
-        <!-- Do not attempt to activate automatically -->
-        <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <SkipAutoActivation>true</SkipAutoActivation>
-        </component>
-        <!-- Do not participate in the Customer Experience Improvement Program (CEIP) -->
-        <component name="Microsoft-Windows-SQMApi" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <CEIPEnabled>0</CEIPEnabled>
-        </component>
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ComputerName>WindowsVM</ComputerName>
-        </component>
-    </settings>
-    <cpi:offlineImage cpi:source="wim:c:/users/timo/downloads/win11_22h2_english_x64v1/sources/install.wim#Windows 11 Pro" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>
