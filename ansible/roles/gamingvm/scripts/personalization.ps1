@@ -200,7 +200,7 @@ function Enable-UltimatePowerPlan() {
     powercfg -SetActive $HighPerformancePowerPlanGuid
 
     # Make sure that destinationGuid doesn't exist yet as Power plan (redirect errors if it doesn't exist)
-    powercfg -Delete $DestinationGuid > nul 2> nul
+    powercfg -Delete $DestinationGuid >$null 2>$null
 
     # Duplicate ultimatepowerplan & set it as active
     powercfg -DuplicateScheme $UltimatePowerPlanGuid $DestinationGuid
@@ -261,7 +261,7 @@ function Enable-WindowsAutoUpdate() {
 }
 
 function Disable-Notifications() {
-    $Path="HCKU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications"
+    $Path="HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications"
     $Setting="ToastEnabled"
     $Value=0
 
