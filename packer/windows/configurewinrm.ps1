@@ -32,7 +32,8 @@ New-WSManInstance WinRM/Config/Listener -SelectorSet @{Address="*"; Transport="H
 # Configure WinRM to be able to sign in with CredSSP, and provide the
 # self-signed cert to the WinRM listener.
 # Set-WSManInstance -ResourceURI WinRM/Config/Service/Auth -ValueSet @{Basic = "true"} # Enable if you need basic authentication, but CredSSP is safer than basic
-Set-WSManInstance -ResourceURI WinRM/Config/Service/Auth -ValueSet @{CredSSP = "true"} 
+Set-WSManInstance -ResourceURI WinRM/Config/Service/Auth -ValueSet @{Basic = "true"}
+Set-WSManInstance -ResourceURI WinRM/Config/Service/Auth -ValueSet @{CredSSP = "true"}
 
 # Enable connections from any host
 Set-WSManInstance -ResourceURI WinRM/Config/Client -ValueSet @{TrustedHosts="*"}
@@ -55,3 +56,23 @@ $rule = @{
 Stop-Service WinRM
 Set-Service WinRM -StartupType Automatic
 Start-Service WinRM
+
+# Disable limit local account use of blank password so that ansible can do become with blank password
+$Path = "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"
+$Setting = "LimitBlankPasswordUse"
+$Value = 0
+
+if(Test-Path $Path) {
+
+  if (Get-ItemProperty -Path $Path -Name $Setting) {
+      # If the setting exists, set its value
+      Set-ItemProperty -Path $Path -Name $Setting -Value $Value -Force
+  } Else {
+      # If the setting doesn't exist, create it
+      New-ItemProperty -Path $Path -Name $Setting -Value $Value -Force
+  }
+} Else {
+# If the Path doesn't exist, then the setting also doesn't exist, so create both (using Force to create any subpaths as well) 
+  New-Item -Path $Path -Force
+  New-ItemProperty -Path $Path -Name $Setting -Value $Value -Force
+}

@@ -23,3 +23,4 @@ virtiowin_url = "https://fedorapeople.org/groups/virt/virtio-win/direct-download
 # WinRM config
 winrm_username = "ansible"
 winrm_password = "ansible"
+winrm_host = "192.168.0.20"

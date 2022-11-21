@@ -194,6 +194,135 @@ function Remove-BloatwareAppsList() {
 
 }
 
+function Test-RegistryValue {
+
+    param (
+        [parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]$Path,
+    
+        [parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]$Setting
+    )
+    
+    try {
+        Get-ItemProperty -Path $Path | Select-Object -ExpandProperty $Setting -ErrorAction Stop | Out-Null
+        return $true
+    }
+    
+    catch {
+        return $false
+    }
+    
+}
+    
+function Set-Registry-Setting {
+    param (
+        [Parameter(Mandatory)] [string] $Path,
+        [Parameter(Mandatory)] [string] $Setting,
+        [Parameter(Mandatory)] [int] $Value
+    )
+
+    # Check if the Path in the Registry exists
+    if (Test-Path $Path) {
+
+        if (Test-RegistryValue $Path $Setting) {
+            # If the setting exists, set its value
+            Set-ItemProperty -Path $Path -Name $Setting -Value $Value -Force
+        }
+        Else {
+            # If the setting doesn't exist, create it
+            New-ItemProperty -Path $Path -Name $Setting -Value $Value -Force
+        }
+    }
+    Else {
+        # If the Path doesn't exist, then the setting also doesn't exist, so create both (using Force to create any subpaths as well) 
+        New-Item -Path $Path -Force
+        New-ItemProperty -Path $Path -Name $Setting -Value $Value -Force
+    }
+
+}
+
+function Disable-ContentDeliveryManager() {
+    $ContentDeliveryManagerSettings= @(
+        "SubscribedContent-310093Enabled"
+        "SubscribedContent-314559Enabled"
+        "SubscribedContent-314563Enabled"
+        "SubscribedContent-338387Enabled"
+        "SubscribedContent-338388Enabled"
+        "SubscribedContent-338389Enabled"
+        "SubscribedContent-338393Enabled"
+        "SubscribedContent-353698Enabled"
+        "RotatingLockScreenOverlayEnabled"
+        "RotatingLockScreenEnabled"
+
+        # Prevents Apps from re-installing
+        "ContentDeliveryAllowed"
+        "FeatureManagementEnabled"
+        "OemPreInstalledAppsEnabled"
+        "PreInstalledAppsEnabled"
+        "PreInstalledAppsEverEnabled"
+        "RemediationRequired"
+        "SilentInstalledAppsEnabled"
+        "SoftLandingEnabled"
+        "SubscribedContentEnabled"
+        "SystemPaneSuggestionsEnabled"
+    )
+
+    $Path="HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
+    $Value=0
+
+    ForEach ($Setting in $ContentDeliveryManagerSettings) {
+        Write-Host "Disabling $Setting"
+        Set-Registry-Setting $Path $Setting $Value
+    }    
+}
+
+function Disable-CloudContent() {
+    $CloudContentSettings= @(
+        "DisableWindowsConsumerFeatures"
+        "DisableConsumerAccountStateContent"
+        "DisableSoftLanding"
+        "DisableCloudOptimizedContent"
+    )
+
+    $Path="HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent"
+    $Value=1
+
+    ForEach ($Setting in $CloudContentSettings) {
+        Write-Host "Enabling $Setting"
+        Set-Registry-Setting $Path $Setting $Value
+    }
+    
+    $CloudContentSettingsUser = @(
+        "DisableWindowsSpotlightWindowsWelcomeExperience"
+        "DisableWindowsSpotlightOnSettings"
+        "DisableWindowsSpotlightOnActionCenter"
+        "DisableThirdPartySuggestions"
+        "DisableSpotlightCollectionOnDesktop"
+        "DisableTailoredExperiencesWithDiagnosticData"
+        "DisableWindowsSpotlightFeatures"
+    )
+    $Path="HKCU:\SOFTWARE\Policies\Microsoft\Windows\CloudContent"
+    $Value=1
+
+    ForEach ($Setting in $CloudContentSettingsUser) {
+        Set-Registry-Setting $Path $Setting $Value
+    }
+
+    $Setting="ConfigureWindowsSpotlight"
+    $Value=2
+    Set-Registry-Setting $Path $Setting $Value
+
+    $Setting="IncludeEnterpriseSpotlight"
+    $Value=0
+    Set-Registry-Setting $Path $Setting $Value
+}
+
 Write-Host "Removing Bloatware Apps"
 Remove-BloatwareAppsList
-Write-Host "Removal complete"
+
+Write-Host "Disabling Cloud Content"
+Disable-CloudContent
+
+Write-Host "Disabling Content Delivery Manager"
+Disable-ContentDeliveryManager

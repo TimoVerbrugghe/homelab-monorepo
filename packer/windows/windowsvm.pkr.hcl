@@ -72,7 +72,7 @@ source "proxmox-iso" "windowsvm" {
     boot = "order=scsi0;ide2;net0"
 
     // # Type in something when the boot starts so we can skip "Press any button to boot from CD or DVD"
-    boot_wait = "10s"
+    boot_wait = "9s"
     boot_command = [
         "<spacebar><spacebar>"
     ]
@@ -95,22 +95,30 @@ build {
     # TO DO See if I'm going to either change something in here or leave it up to ansible
     provisioner "powershell" {
         inline = [
-            "mkdir c:\\Packer",
-            "Clear-Host",
-            "Write-Host \"Running test to see if PowerShell works\""
+            "Write-Host \"Testing connection to WinRM from Packer\""
         ]
     }
 
-    # To Do Enable Ansible Provisioner https://developer.hashicorp.com/packer/plugins/provisioners/ansible/ansible
-    // provisioner "ansible" {
-    //   playbook_file   = "../../ansible/prep-gamingvm.yml"
-    //   user            = "Administrator"
-    //   use_proxy       = false
-    //   extra_arguments = [
-    //     "-e",
-    //     "ansible_winrm_server_cert_validation=ignore"
-    //   ]
-    // }
+    # Sleep for a long time to do debugging
+    provisioner "shell-local" {
+        inline = ["sleep 100000"]
+    }
+
+    # Provision something with ansible
+    provisioner "ansible" {
+        playbook_file   = "../../ansible/prep-gamingvm.yml"
+        user            = "ansible"
+        use_proxy       = false
+        ansible_env_vars = [
+            "no_proxy=\"*\""
+        ]
+        extra_arguments = [
+            "-i",
+            "${var.winrm_host}",
+            "-e",
+            "ansible_user=ansible ansible_password=ansible ansible_connection=winrm ansible_winrm_transport=credssp ansible_winrm_server_cert_validation=ignore"
+        ]
+    }
 
     post-processor "shell-local" { 
         inline = [

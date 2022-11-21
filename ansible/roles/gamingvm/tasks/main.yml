@@ -1,90 +1,78 @@
 - name: Test connection to Windows (using ping)
-  win_ping:
+  ansible.windows.win_ping:
 
-# - name: Enable Remote Desktop
-#   script:
-#     roles/gamingvm/scripts/enable-remote-desktop.ps1
+- name: Disable basic auth for WinRM
+  ansible.builtin.script:
+    roles/gamingvm/scripts/disable-basicauth-winrm.ps1
 
+- name: Speed up Ansible by optimizing PowerShell Assemblies
+  ansible.builtin.script:
+    roles/gamingvm/scripts/speed-up-ansible.ps1
 
-## Will potentially need other solution here (maybe using powershell)
-- name: Update windows (all possible channels), reboot as many times as needed & increase reboot wait time to survive long updates
-  win_updates:
-    category_names: '*'
-    reboot: yes
-    reboot_timeout: 3600
+- name: Create Restore Point
+  ansible.builtin.script:
+    roles/gamingvm/scripts/create-restore-point.ps1
 
-- name: Update windows pass 2
-  win_updates:
-    category_names: '*'
-    reboot: yes
-    reboot_timeout: 3600
+- name: Enable Remote Desktop
+  ansible.builtin.script:
+    roles/gamingvm/scripts/enable-remote-desktop.ps1
 
-- name: Update windows part 3
-  win_updates:
-    category_names: '*'
-    reboot: yes
-    reboot_timeout: 3600
+# - name: Update windows (all possible channels), reboot as many times as needed & increase reboot wait time to survive long updates
+#   ansible.windows.win_updates:
+#     category_names: '*'
+#     reboot: true
+#     reboot_timeout: 3600
 
-- name: Update windows pass 4
-  win_updates:
-    category_names: '*'
-    reboot: yes
-    reboot_timeout: 3600
+# - name: Update windows pass 2
+#   ansible.windows.win_updates:
+#     category_names: '*'
+#     reboot: true
+#     reboot_timeout: 3600
 
-# - name: Allow blank password on become
-#   ansible.windows.win_regedit:
-#     path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
-#     name: LimitBlankPasswordUse
-#     data: 0
-#     type: dword
-#     state: present
+# - name: Update windows part 3
+#   ansible.windows.win_updates:
+#     category_names: '*'
+#     reboot: true
+#     reboot_timeout: 3600
 
-# - name: Create Restore Point
-#   script:
-#     roles/gamingvm/scripts/create-restore-point.ps1
+# - name: Update windows pass 4
+#   ansible.windows.win_updates:
+#     category_names: '*'
+#     reboot: true
+#     reboot_timeout: 3600
 
-# - name: Remove bloatware
-#   script:
-#     roles/gamingvm/scripts/remove-bloatware.ps1
-#   # vars:
-#   #   ansible_become: true
-#   #   ansible_become_method: runas
-#   #   ansible_become_user: GamingVM
-#   #   ansible_become_password: ''
+- name: Remove bloatware
+  ansible.builtin.script:
+    roles/gamingvm/scripts/remove-bloatware.ps1
 
-# - name: Update Windows Store Apps
-#   script:
-#     roles/gamingvm/scripts/update-windows-store-apps.ps1
+- name: Update Windows Store Apps
+  ansible.builtin.script:
+    roles/gamingvm/scripts/update-windows-store-apps.ps1
 
-# - name: Wait for 10 minutes to allow windows store to update apps
-#   wait_for:
-#     timeout: 600
-#   delegate_to: localhost
+- name: Wait for 10 minutes to allow windows store to update apps
+  ansible.windows.win_wait_for:
+    timeout: 600
 
-# - name: Install Apps using winget
-#   script:
-#     roles/gamingvm/scripts/install-apps-winget.ps1
-#   vars:
-#     ansible_become: true
-#     ansible_become_method: runas
-#     ansible_become_user: GamingVM
-#     ansible_become_password: ''
+- name: Downloading the winget source package manually because otherwise the winget commands fail (see https://github.com/microsoft/winget-cli/issues/2696)
+  ansible.windows.win_package:
+    path: https://cdn.winget.microsoft.com/cache/source.msix
+    state: present
 
-# - name: Ensure Chocolatey itself is installed, using community repo for the bootstrap
-#   win_chocolatey:
-#     name: chocolatey
+- name: Install Apps using winget
+  ansible.builtin.script:
+    roles/gamingvm/scripts/install-apps-winget.ps1
 
-# - name: Install packages using chocolatey
-#   win_chocolatey:
-#     name: 
+- name: Ensure Chocolatey itself is installed, using community repo for the bootstrap
+  chocolatey.chocolatey.win_chocolatey:
+    name: chocolatey
 
-# - name: Delete all desktop icons
-#   script:
-#     roles/gamingvm/scripts/delete-all-desktop-icons.ps1
-#   vars:
-#     ansible_become: true
-#     ansible_become_method: runas
-#     ansible_become_user: GamingVM
-#     ansible_become_password: ''
+- name: Install packages using chocolatey
+  chocolatey.chocolatey.win_chocolatey:
+    name: cemu
 
-## Set startup apps
+- name: Personalization options (Desktop, Theme, Taskbar, Security, Performance)
+  ansible.builtin.script:
+    roles/gamingvm/scripts/personalization.ps1
+
+- name: generate native .NET images for CPU
+  win_dotnet_ngen:
