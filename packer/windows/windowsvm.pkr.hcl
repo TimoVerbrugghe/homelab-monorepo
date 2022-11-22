@@ -100,9 +100,9 @@ build {
     }
 
     # Sleep for a long time to do debugging
-    provisioner "shell-local" {
-        inline = ["sleep 100000"]
-    }
+    // provisioner "shell-local" {
+    //     inline = ["sleep 100000"]
+    // }
 
     # Provision something with ansible
     provisioner "ansible" {
@@ -113,6 +113,7 @@ build {
             "no_proxy=\"*\""
         ]
         extra_arguments = [
+            "-vvv",
             "-i",
             "${var.winrm_host}",
             "-e",

@@ -75,4 +75,8 @@
     roles/gamingvm/scripts/personalization.ps1
 
 - name: generate native .NET images for CPU
-  win_dotnet_ngen:
+  community.windows.win_dotnet_ngen:
+
+- name: Final reboot to apply all settings
+  ansible.windows.win_reboot:
+
