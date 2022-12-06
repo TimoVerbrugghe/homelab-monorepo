@@ -1,9 +1,10 @@
-- name: Prepare env on localhost 
+- name: Prepare env on localhost
   hosts: localhost
   gather_facts: true
   roles:
     - role: hostprereq
-      
-- hosts: proxmox
+
+- name: Create cloud init template
+  hosts: proxmox
   roles:
     - role: proxmox-cloud-init

@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - sonarrconfig:/config
+      - tvshows:/tv #optional
+      - downloads:/downloads #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - radarrconfig/config
+      - movies:/movies #optional
+      - downloads:/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+volumes:
+  sonarr:
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.0.3,nolock,soft,rw"
+      device: ":/mnt/user/other/test/sonarr"

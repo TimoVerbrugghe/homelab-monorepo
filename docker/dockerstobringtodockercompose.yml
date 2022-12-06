@@ -1,0 +1,54 @@
+## Media Management
+# Sonarr
+# Radarr
+# Lidarr
+# Bazarr
+# Plex
+# Jellyfin
+# Overseerr
+# Prowlarr
+# Tautulli
+
+## Tools
+# Bitwarden
+# Bitwarden export
+# Code-Server -> Redundant with official codeserver remote tunnel, but need to see if it can be dockerize
+# Filezilla
+# Portainer agent
+# rclone
+# Uptime Kuma
+
+## Downloaders
+# Flood
+# icloudPD
+# jDownloader2
+# NZBget
+# Qbittorrent
+# Youtube-DL-Material
+
+## Authentication
+# Keycloak
+# Keycloak postgres database
+# Traefik-Forward-Auth
+
+## Website
+# Homarr
+
+## Home Automation
+# Home Assistant
+# Homebridge
+# MQTT
+# Scrypted
+# Zigbee2MQTT
+
+## File Management
+# Doublecommander/Krusader
+# Nextcloud
+# Nextcloud postgres database
+
+## Networking
+# Cloudflare DDNS -> Redundant with OPNsense
+# LocalSpeedTest
+# Speedtest-Tracker
+# Tailscale
+# Traefik

@@ -19,7 +19,21 @@ services:
       - 443:443/udp
       - 3000:3000/tcp
       - 853:853/tcp
+
+  netbootxyz:
+    image: ghcr.io/netbootxyz/netbootxyz
+    container_name: netbootxyz
+    volumes:
+      - netbootxyz-config:/config # optional
+      - netbootxyz-assets:/assets # optional
+    ports:
+      - 3000:3000
+      - 69:69/udp
+      - 8080:80
+    restart: unless-stopped
   
 volumes:
   adguardhome-work:
   adguardhome-conf:
+  netbootxyz-assets:
+  netbootxyz-config:

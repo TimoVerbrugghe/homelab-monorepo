@@ -1,5 +1,5 @@
 - name: Download Ubuntu Cloud Image
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ ubuntu_cloud_image_url }}"
     dest: ./cloudimg.img
 
@@ -51,14 +51,14 @@
     cmd: qm set "{{ template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ template_storage }}":vm-"{{ template_id }}"-disk-1
 
 - name: Make the cloud init drive bootable and restrict BIOS to boot from disk only
-  shell:
+  ansible.builtin.shell:
     cmd: qm set "{{ template_id }}" --boot c --bootdisk scsi0
 
 - name: Create template
-  shell:
+  ansible.builtin.shell:
     cmd: qm template "{{ template_id }}"
 
 - name: Delete downloaded cloud image
-  file:
+  ansible.builtin.file:
     state: absent
     path: ./cloudimg.img
