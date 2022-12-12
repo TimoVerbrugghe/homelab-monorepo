@@ -48,27 +48,7 @@ services:
   
 volumes:
   adguardhome-work:
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.0.3,nolock,soft,rw"
-      device: ":/mnt/user/other/appdatajeremy/adguardhome/work"
   adguardhome-conf:
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.0.3,nolock,soft,rw"
-      device: ":/mnt/user/other/appdatajeremy/adguardhome/conf"
   netbootxyz-assets:
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.0.3,nolock,soft,rw"
-      device: ":/mnt/user/other/appdatajeremy/netbootxyz/assets"
   netbootxyz-config:
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.0.3,nolock,soft,rw"
-      device: ":/mnt/user/other/appdatajeremy/netbootxyz/config"
   tailscale:
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.0.3,nolock,soft,rw"
-      device: ":/mnt/user/other/appdatajeremy/tailscale"
