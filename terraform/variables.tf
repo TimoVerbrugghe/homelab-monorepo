@@ -35,3 +35,23 @@ variable "vm_configs" {
         node = optional(string, "proxmox")
     }))
 }
+
+variable "proxmox_api_token_id" {
+    type = string
+    default = "root@pam!terraform"
+}
+
+variable "proxmox_api_token_secret" {
+    type = string
+    sensitive = true
+}
+
+variable "proxmox_api_url" {
+    type = string
+    default = "https://proxmox.timo.be/api2/json"
+}
+
+variable "proxmox_tls_insecure" {
+    type = string
+    default = true
+}

@@ -12,17 +12,11 @@ terraform {
     }
 }
 
-module "proxmox_settings" {
-    source = "./modules/proxmoxsettings"
-}
-
 provider "proxmox" {
 
-    pm_api_url = "${module.proxmox_settings.proxmox_api_url}"
-    pm_api_token_id = "${module.proxmox_settings.proxmox_api_token_id}"
-    pm_api_token_secret = "${module.proxmox_settings.proxmox_api_token_secret}"
-
-    # (Optional) Skip TLS Verification
-    pm_tls_insecure = true
+    pm_api_url = "${var.proxmox_api_url}"
+    pm_api_token_id = "${var.proxmox_api_token_id}"
+    pm_api_token_secret = "${var.proxmox_api_token_secret}"
+    pm_tls_insecure = "${var.proxmox_tls_insecure}"
 
 }

@@ -1,0 +1,14 @@
+- name: Prepare host
+  hosts: localhost
+  gather_facts: true
+  roles:
+    - role: ../roles/hostprereq
+
+- name: Download ssh keys from github and install them
+  hosts: all
+  tasks:
+    - name: Download Github SSH keys
+      ansible.builtin.get_url:
+        url: "{{ github_username }}"
+        dest: .ssh/authorized_keys
+        mode: "0440"

@@ -1,4 +1,4 @@
-- name: apt
-  apt:
-    update_cache: yes
+- name: Apt update & apt dist-upgrade
+  ansible.builtin.apt:
+    update_cache: true
     upgrade: 'dist'

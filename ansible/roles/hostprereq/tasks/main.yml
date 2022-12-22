@@ -1,9 +1,10 @@
 # Run tasks to install all necessary packages on the host for all ansible playbooks in this folder.
 
 # Run specific tasks if the host is a Mac
-- name: Update homebrew
+- name: Update homebrew & upgrade packages
   community.general.homebrew:
     update_homebrew: true
+    upgrade_all: true
   when: ansible_distribution == 'MacOSX'
 
 - name: Install pip using homebrew
@@ -12,13 +13,19 @@
     state: present
   when: ansible_distribution == 'MacOSX'
 
+# - name: Install sshpass using homebrew
+#   community.general.homebrew:
+#     name: sshpass
+#     state: present
+#   when: ansible_distribution == 'MacOSX'
 
 # Run specific tasks if the host is a Linux machine
-- name: Install python & pip
+- name: Install python, pip and sshpass
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - python3-pip
+      - sshpass
     state: present
     update_cache: true
   when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "Debian" or ansible_facts['os_family'] == "ArchLinux"
@@ -30,8 +37,8 @@
 
 - name: Install pip packages
   ansible.builtin.pip:
-    name: 
-      - proxmoxer 
+    name:
+      - proxmoxer
       - requests
       - pywinrm
       - requests-credssp

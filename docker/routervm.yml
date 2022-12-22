@@ -14,10 +14,10 @@ services:
       - adguardhome-conf:/opt/adguardhome/conf
     ports:
       - 53:53/tcp
-      - 80:80/tcp
+      - 80:80/tcp 
       - 443:443/tcp
       - 443:443/udp
-      - 3000:3000/tcp
+      - 3000:3000/tcp # Web UI
       - 853:853/tcp
 
   netbootxyz:
@@ -29,7 +29,23 @@ services:
     ports:
       - 3000:3000
       - 69:69/udp
-      - 8080:80
+      - 8080:80 # Web UI
+    restart: unless-stopped
+
+  tailscale:
+    image: tailscale/tailscale
+    container_name: tailscale
+    network_mode: host
+    privileged: true
+    volumes:
+      - /var/lib:/var/lib
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-state:/state
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY}
+      - TS_ROUTES=${TS_ROUTES}
+      - TS_EXTRA_ARGS=--advertise-exit-node
+      - TS_STATE_DIR=/state
     restart: unless-stopped
   
 volumes:
@@ -37,3 +53,4 @@ volumes:
   adguardhome-conf:
   netbootxyz-assets:
   netbootxyz-config:
+  tailscale-state:

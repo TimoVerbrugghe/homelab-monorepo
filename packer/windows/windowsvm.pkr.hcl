@@ -106,7 +106,7 @@ build {
 
     # Provision something with ansible
     provisioner "ansible" {
-        playbook_file   = "../../ansible/prep-gamingvm.yml"
+        playbook_file   = "../../ansible/playbooks/prep-gamingvm.yml"
         user            = "ansible"
         use_proxy       = false
         ansible_env_vars = [

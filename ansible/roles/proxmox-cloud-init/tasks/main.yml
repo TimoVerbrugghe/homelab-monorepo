@@ -2,6 +2,7 @@
   ansible.builtin.get_url:
     url: "{{ ubuntu_cloud_image_url }}"
     dest: ./cloudimg.img
+    mode: "0440"
 
 - name: Create new virtual machine
   delegate_to: localhost
@@ -43,20 +44,24 @@
       ide2: '{{ template_storage }}:cloudinit'
 
 - name: Import cloudimg to local storage
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: qm importdisk "{{ template_id }}" cloudimg.img "{{ template_storage }}"
+  changed_when: false
 
 - name: Attach new disk to the VM as scsi drive on scsi controller
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: qm set "{{ template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ template_storage }}":vm-"{{ template_id }}"-disk-1
+  changed_when: false
 
 - name: Make the cloud init drive bootable and restrict BIOS to boot from disk only
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: qm set "{{ template_id }}" --boot c --bootdisk scsi0
+  changed_when: false
 
 - name: Create template
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: qm template "{{ template_id }}"
+  changed_when: false
 
 - name: Delete downloaded cloud image
   ansible.builtin.file:
