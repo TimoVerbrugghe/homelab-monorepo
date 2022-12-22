@@ -47,23 +47,10 @@ services:
       - TS_EXTRA_ARGS=--advertise-exit-node
       - TS_STATE_DIR=/state
     restart: unless-stopped
-
-  tailscale:
-    image: tailscale/tailscale
-    container_name: tailscale
-    volumes:
-      - tailscale:/state
-    network_mode: host
-    privileged: true
-    restart: unless-stopped
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY}
-      - TS_ROUTES=10.10.10.0/24
-      - TS_EXTRA_ARG=--advertise-exit-node
-      - TS_STATE_DIR=/state
   
 volumes:
   adguardhome-work:
   adguardhome-conf:
   netbootxyz-assets:
   netbootxyz-config:
+  tailscale:
