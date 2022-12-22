@@ -27,7 +27,7 @@ services:
       - netbootxyz-config:/config # optional
       - netbootxyz-assets:/assets # optional
     ports:
-      - 3000:3000
+      - 3001:3000 # Web ui on port 3001 to not conflict with adguardhome
       - 69:69/udp
       - 8080:80 # Web UI
     restart: unless-stopped
@@ -47,10 +47,23 @@ services:
       - TS_EXTRA_ARGS=--advertise-exit-node
       - TS_STATE_DIR=/state
     restart: unless-stopped
+
+  tailscale:
+    image: tailscale/tailscale
+    container_name: tailscale
+    volumes:
+      - tailscale:/state
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY}
+      - TS_ROUTES=10.10.10.0/24
+      - TS_EXTRA_ARG=--advertise-exit-node
+      - TS_STATE_DIR=/state
   
 volumes:
   adguardhome-work:
   adguardhome-conf:
   netbootxyz-assets:
   netbootxyz-config:
-  tailscale-state:
