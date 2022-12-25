@@ -28,6 +28,7 @@ resource "proxmox_vm_qemu" "create_proxmox_vms" {
     clone = "${var.template_name}"
     onboot = false
     os_type = "cloud-init"
+    tablet = false
     
     # CPU Settings
     cores = "${each.value.vm_cores}"
@@ -36,6 +37,7 @@ resource "proxmox_vm_qemu" "create_proxmox_vms" {
     
     # Memory Settings
     memory = "${each.value.vm_memory}"
+    balloon = 0
 
     # Network Settings
     network {

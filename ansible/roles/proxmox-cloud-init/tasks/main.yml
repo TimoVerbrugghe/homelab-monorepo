@@ -20,12 +20,15 @@
     name: "{{ template_name }}"
     vmid: "{{ template_id }}"
     machine: q35
+    cpu: host
     ostype: l26
     serial:
       serial0: socket
     vga: serial0
     net:
       net0: virtio,bridge={{ bridge }}
+    agent: true
+    tablet: false
 
     # EFI Bios & disk
     bios: ovmf
@@ -38,6 +41,7 @@
     # Performance
     cores: "{{ template_cores | default(1) }}"
     memory: "{{ template_memory | default(2048) }}"
+    balloon: 0
 
     # Add cloud-init drive with some defaults
     ide:

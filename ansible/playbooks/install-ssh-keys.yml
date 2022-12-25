@@ -9,6 +9,6 @@
   tasks:
     - name: Download Github SSH keys
       ansible.builtin.get_url:
-        url: "{{ github_username }}"
+        url: "https://github.com/{{ github_username }}.keys"
         dest: .ssh/authorized_keys
         mode: "0440"

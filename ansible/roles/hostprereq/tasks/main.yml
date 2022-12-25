@@ -12,13 +12,7 @@
     name: python
     state: present
   when: ansible_distribution == 'MacOSX'
-
-# - name: Install sshpass using homebrew
-#   community.general.homebrew:
-#     name: sshpass
-#     state: present
-#   when: ansible_distribution == 'MacOSX'
-
+ 
 # Run specific tasks if the host is a Linux machine
 - name: Install python, pip and sshpass
   become: true
