@@ -40,7 +40,7 @@ services:
     volumes:
       - /var/lib:/var/lib
       - /dev/net/tun:/dev/net/tun
-      - tailscale-state:/state
+      - tailscale:/state
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY}
       - TS_ROUTES=${TS_ROUTES}
