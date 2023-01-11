@@ -4,3 +4,9 @@
     state: present
     update_cache: true
   become: true
+
+- name: Enable & start service qemu-guest-agent
+  ansible.builtin.systemd:
+    name: qemu-guest-agent
+    enabled: yes
+    state: started

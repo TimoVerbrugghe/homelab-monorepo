@@ -1,2 +1,4 @@
 #!/bin/bash
-ansible-playbook -i inventory/hosts.ini -vvv playbooks/routervm.yml
+ansible-playbook -vvv \
+    -i inventory/hosts.ini \
+    playbooks/routervm.yml

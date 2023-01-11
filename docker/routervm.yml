@@ -12,12 +12,13 @@ services:
     volumes:
       - adguardhome-work:/opt/adguardhome/work
       - adguardhome-conf:/opt/adguardhome/conf
+      - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - 53:53/tcp
       - 80:80/tcp 
       - 443:443/tcp
       - 443:443/udp
-      - 3000:3000/tcp # Web UI
+      - 3001:3000/tcp # Web UI for installation, on port 3001 to not conflict with netbootxyz
       - 853:853/tcp
 
   netbootxyz:
@@ -27,9 +28,9 @@ services:
       - netbootxyz-config:/config # optional
       - netbootxyz-assets:/assets # optional
     ports:
-      - 3001:3000 # Web ui on port 3001 to not conflict with adguardhome
+      - 3000:3000 # Web ui
       - 69:69/udp
-      - 8080:80 # Web UI
+      - 8080:80 # NGINX server to host assets
     restart: unless-stopped
 
   tailscale:

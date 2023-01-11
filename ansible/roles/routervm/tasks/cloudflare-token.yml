@@ -1,0 +1,6 @@
+- name: Create cloudflare.ini file
+  ansible.builtin.copy:
+    dest: "/etc/letsencrypt/cloudflare.ini"
+    content: |
+      dns_cloudflare_api_token = "{{ dns_cloudflare_api_token }}"
+    mode: '0600'

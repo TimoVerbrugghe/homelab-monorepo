@@ -4,6 +4,15 @@
 - name: Install qemu-guest-agent
   ansible.builtin.include_tasks: install-qemu-guest-agent.yml
 
+- name: Disable DNSStublistener (needed for adguardhome)
+  ansible.builtin.include_tasks: disable-dnsstublistener.yml
+
+- name: Setup firewall
+  ansible.builtin.include_tasks: firewall-setup.yml
+
+- name: Create cloudflare token file
+  ansible.builtin.include_tasks: cloudflare-token.yml
+
 - name: Install docker
   ansible.builtin.include_tasks: install-docker.yml
 
