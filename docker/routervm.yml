@@ -3,11 +3,14 @@ version: "3"
 services:
   watchtower:
     image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   
   adguardhome:
     image: adguard/adguardhome
+    container_name: adguardhome
     restart: unless-stopped
     volumes:
       - adguardhome-work:/opt/adguardhome/work
@@ -24,6 +27,7 @@ services:
   netbootxyz:
     image: ghcr.io/netbootxyz/netbootxyz
     container_name: netbootxyz
+    restart: unless-stopped
     volumes:
       - netbootxyz-config:/config # optional
       - netbootxyz-assets:/assets # optional
@@ -31,11 +35,12 @@ services:
       - 3000:3000 # Web ui
       - 69:69/udp
       - 8080:80 # NGINX server to host assets
-    restart: unless-stopped
+    
 
   tailscale:
     image: tailscale/tailscale
     container_name: tailscale
+    restart: unless-stopped
     network_mode: host
     privileged: true
     volumes:
@@ -47,7 +52,7 @@ services:
       - TS_ROUTES=${TS_ROUTES}
       - TS_EXTRA_ARGS=--advertise-exit-node
       - TS_STATE_DIR=/state
-    restart: unless-stopped
+    
   
 volumes:
   adguardhome-work:
