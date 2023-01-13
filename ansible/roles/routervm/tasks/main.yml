@@ -18,3 +18,9 @@
 
 - name: Install portainer agent
   ansible.builtin.include_tasks: portaineragent-install.yml
+
+- name: Enable watchdog
+  ansible.builtin.include_tasks: enable-watchdog.yml
+
+- name: Reboot (to make sure all settings are applied)
+  ansible.builtin.reboot:

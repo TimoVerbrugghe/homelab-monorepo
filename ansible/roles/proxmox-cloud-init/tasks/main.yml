@@ -62,6 +62,11 @@
     cmd: qm set "{{ template_id }}" --boot c --bootdisk scsi0
   changed_when: false
 
+- name: Add watchdog device
+  ansible.builtin.command:
+    cmd: qm set "{{ template_id }}" -watchdog model=i6300esb,action=reset
+  changed_when: false
+
 - name: Create template
   ansible.builtin.command:
     cmd: qm template "{{ template_id }}"

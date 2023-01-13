@@ -1,3 +1,4 @@
+# This script is an edge job from portainer running on the router VM added as a portainer edge agent
 docker run --rm \
     --name certbot \
     -v "/etc/letsencrypt:/etc/letsencrypt" \
