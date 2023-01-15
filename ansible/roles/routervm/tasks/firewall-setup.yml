@@ -19,6 +19,13 @@
     port: "53"
     proto: tcp
 
+- name: Open DNS port
+  community.general.ufw:
+    state: enabled
+    rule: allow
+    port: "53"
+    proto: udp
+
 - name: Open HTTP port
   community.general.ufw:
     state: enabled
