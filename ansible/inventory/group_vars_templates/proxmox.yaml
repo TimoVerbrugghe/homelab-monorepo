@@ -8,7 +8,7 @@ github_username: TimoVerbrugghe
 proxmox_api_user: root@pam
 proxmox_api_tokenid: ansible
 proxmox_api_tokensecret: 
-proxmox_api_host: 192.168.0.20
+proxmox_api_host: routerpve.timo.local
 proxmox_node: routerpve
 
 # Cloud Init settings (username and password)

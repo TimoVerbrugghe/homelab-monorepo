@@ -25,7 +25,7 @@
     group: root
     state: link
 
-- name: Reload resolved service
+- name: Restart resolved service
   ansible.builtin.systemd:
     name: systemd-resolved
     state: restarted # not reloaded because job type reload not applicable to systemd-resolved

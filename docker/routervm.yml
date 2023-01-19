@@ -37,7 +37,6 @@ services:
       - 69:69/udp
       - 8080:80 # NGINX server to host assets
     
-
   tailscale:
     image: tailscale/tailscale
     container_name: tailscale
@@ -53,11 +52,23 @@ services:
       - TS_ROUTES=${TS_ROUTES}
       - TS_EXTRA_ARGS=--advertise-exit-node
       - TS_STATE_DIR=/state
-    
-  
+
+  scanservjs:
+    image: sbs20/scanservjs:latest
+    container_name: scanservjs
+    ports:
+      - 8081:8080 # Port 8081 to not interfere with netbootxyz container
+    volumes:
+      - scanservjs-scans:/app/data/output
+      - scanservjs-config:/app/config
+    devices:
+      - /dev/scanner:/dev/bus/usb/001/002
+
 volumes:
   adguardhome-work:
   adguardhome-conf:
   netbootxyz-assets:
   netbootxyz-config:
   tailscale:
+  scanservjs-scans:
+  scanservjs-config:
