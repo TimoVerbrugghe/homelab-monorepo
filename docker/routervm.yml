@@ -61,6 +61,7 @@ services:
     volumes:
       - scanservjs-scans:/app/data/output
       - scanservjs-config:/app/config
+      - /var/run/dbus:/var/run/dbus
     devices:
       - /dev/scanner:/dev/bus/usb/001/002
 

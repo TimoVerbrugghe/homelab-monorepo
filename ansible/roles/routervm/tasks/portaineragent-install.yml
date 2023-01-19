@@ -15,3 +15,6 @@
       EDGE_ID: "{{ portaineragent_edge_id }}"
       EDGE_KEY: "{{ portaineragent_edge_key }}"
       EDGE_INSECURE_POLL: "0"
+    dns: # Need to specify google dns here, because this will run on a VM where dns server points to localhost, which doesn't work with docker containers
+      - 8.8.8.8
+      - 8.8.4.4
