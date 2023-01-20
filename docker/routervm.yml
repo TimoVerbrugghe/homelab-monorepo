@@ -64,6 +64,20 @@ services:
       - scanservjs-config:/app/config
     devices: 
       - /dev/bus/usb:/dev/bus/usb
+  
+  airsane:
+    image: claytsay/docker-airsane
+    container_name: airsane
+    restart: unless-stopped
+    networks:
+      dockervlan:
+        ipv4_address: 10.10.10.8
+    environment:
+      - SANED_ACL="10.10.10.0/24"
+      - SANED_DEVICE="genesys:libusb:009:002"
+    devices: 
+      - /dev/bus/usb:/dev/bus/usb
+    
 
 volumes:
   adguardhome-work:
@@ -73,3 +87,14 @@ volumes:
   tailscale:
   scanservjs-scans:
   scanservjs-config:
+
+networks:
+  dockervlan:
+    name: dockervlan
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "10.10.10.0/24"
+          gateway: "10.10.10.1"
