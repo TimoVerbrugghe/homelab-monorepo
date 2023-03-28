@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  firefly:
+    image: fireflyiii/core:latest
+    restart: unless-stopped
+    network_mode: dockerproxy
+    container_name: firefly
+    volumes:
+      - firefly_iii_upload:/var/www/html/storage/upload
+    environment:
+      - APP_KEY=9KVvXDhcB7Z5v7i3MCgnW8ed3p52T94C
+      - TZ=Europe/Brussels
+      - DB_CONNECTION=mysql
+      - DB_HOST=fireflydb
+      - DB_PORT=3306
+      - DB_DATABASE=firefly
+      - DB_USERNAME=firefly
+      - DB_PASSWORD=firefly
+    ports:
+      - 9045:8080
+    depends_on:
+      - fireflydb
+
+  fireflydb:
+    image: mariadb    
+    restart: unless-stopped
+    network_mode: dockerproxy
+    container_name: fireflydb
+    environment:
+      - MARIADB_ROOT_PASSWORD=firefly
+      - MARIADB_DATABASE=firefly
+      - MARIADB_USER=firefly
+      - MARIADB_PASSWORD=firefly
+    volumes:
+      - firefly_iii_db:/var/lib/mysql
+
+  fidi:
+    image: fireflyiii/data-importer:latest
+    restart: unless-stopped
+    network_mode: dockerproxy
+    container_name: fidi
+    environment:
+      - FIREFLY_III_URL=http://firefly:8080
+      - FIREFLY_III_ACCESS_TOKEN=
+      - NORDIGEN_ID=9f16151f-f196-45f6-98b6-de2492e3f59d
+      - NORDIGEN_KEY=8db68026179e25bb48a569e4fcaf823447f05780f5f7dc039193fa96e944b65f813aee0a915c4148af5236c866c06567d7cd4d3dc2f18e9da71bd571d875c94c
+      - NORDIGEN_SANDBOX=false
+      - TZ=Europe/Brussels
+    ports:
+      - 9046:8080
+    depends_on:
+      - firefly
+
+volumes:
+  firefly_iii_upload:
+  firefly_iii_db:

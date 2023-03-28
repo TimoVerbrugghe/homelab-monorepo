@@ -1,29 +1,16 @@
-## Media Management
-# Sonarr
-# Radarr
-# Lidarr
-# Bazarr
-# Plex
-# Jellyfin
-# Overseerr
-# Prowlarr
-# Tautulli
+#########################
+## Kubernetes services ##
+#########################
 
 ## Tools
 # Bitwarden
 # Bitwarden export
-# Code-Server -> Redundant with official codeserver remote tunnel, but need to see if it can be dockerize
+# VS Code Tunnel
 # Filezilla
-# Portainer agent
-# rclone
+# Portainer
 # Uptime Kuma
 
 ## Downloaders
-# Flood
-# icloudPD
-# jDownloader2
-# NZBget
-# Qbittorrent
 # Youtube-DL-Material
 
 ## Authentication
@@ -34,21 +21,46 @@
 ## Website
 # Homarr
 
+## Networking
+# LocalSpeedTest
+# Speedtest-Tracker
+# Tailscale
+# Traefik
+
 ## Home Automation
 # Home Assistant
-# Homebridge
 # MQTT
 # Scrypted
-# Zigbee2MQTT
+# Zigbee2MQTT -> IF I get an ethernet zigbee controller
+
+###########################################################################
+## Services ONLY running on the truenas server, aka using docker-compose ##
+###########################################################################
+
+## Media Management
+# Sonarr
+# Radarr
+# Lidarr
+# Bazarr
+# Plex
+# Jellyfin
+# Overseerr
+# Prowlarr
+# Tautulli
+# Emulatorjs
+
+## Downloaders
+# Flood
+# icloudPD
+# jDownloader2
+# Qbittorrent
+# Ariang
 
 ## File Management
 # Doublecommander/Krusader
 # Nextcloud
 # Nextcloud postgres database
 
-## Networking
-# Cloudflare DDNS -> Redundant with OPNsense
-# LocalSpeedTest
-# Speedtest-Tracker
-# Tailscale
-# Traefik
+## Tools
+# rclone -> Normally this will be replaced with cloudtasks in truenas
+# watchtower

@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  flood:
+    container_name: flood
+    image: jesec/flood
+    restart: unless-stopped
+    network_mode: dockerproxy
+    volumes:
+      - /mnt/user/appdata/flood:/config
+      - downloads:/data
+    labels:
+      - traefik.http.routers.flood.rule=Host(`torrents.timo.be`)
+      - traefik.http.routers.flood.entrypoints=https
+      - traefik.http.services.flood.loadbalancer.server.port=3000
+      - traefik.http.routers.flood.middlewares=keycloak-auth@file
+
+  qbittorrent: 
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    network_mode: dockerproxy
+    environment:
+      - PUID=99
+      - PGID=100
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/user/appdata/qbittorrent:/config
+      - downloads:/downloads
+    labels:
+      - traefik.http.routers.sonarr.entrypoints=https
+      - traefik.http.services.sonarr.loadbalancer.server.port=8080
+      - traefik.http.routers.sonarr.middlewares=keycloak-auth@file
+
+  icloudpd-timo:
+    image: icloudpd/icloudpd:latest
+    

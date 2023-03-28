@@ -14,7 +14,7 @@ metadata:
 spec:
   chart: traefik
   targetNamespace: traefik
-  repo: https://helm.traefik.io/traefik
+  repo: https://traefik.github.io/charts
   valuesContent: |-
     globalArguments:
       - "--global.sendanonymoususage=true"
@@ -34,10 +34,6 @@ spec:
     deployment:
       enabled: true
       replicas: 3
-      annotations: {}
-      podAnnotations: {}
-      additionalContainers: []
-      initContainers: []
 
     ports:
       traefik:
@@ -53,6 +49,9 @@ spec:
         protocol: TCP
         tls:
           enabled: true
+          middlewares:
+            - traefik-secureheaders@kubernetescrd
+            - traefik-ratelimit@kubernetescrd
       metrics:
         port: 9100
         expose: true
@@ -68,11 +67,14 @@ spec:
         enabled: true
         namespaces: []
         allowCrossNamespace: true
+        allowExternalNameServices: true
         ingressClass: traefik
       kubernetesIngress:
         enabled: true
         namespaces: []
         ingressClass: traefik
+        allowCrossNamespace: true
+        allowExternalNameServices: true
         publishedService:
           enabled: true
 
@@ -88,7 +90,7 @@ spec:
       annotations: {}
       labels: {}
       spec:
-        loadBalancerIP: 192.168.0.30 # this should be an IP in the MetalLB range
+        loadBalancerIP: 10.10.10.30 # this should be an IP in the kube-vip range
       loadBalancerSourceRanges: []
       externalIPs: []
 ---
@@ -179,10 +181,39 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-      middlewares:
-        - name: secureheaders
-          namespace: traefik
-        - name: ratelimit
-          namespace: traefik
   tls:
     secretName: wildcard-timo-be-production-tls
+---
+# EXAMPLE: Deploy a traefik route to a service not running in Kubernetes (f.e. proxmox) using Kubernetes External Services (https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-ingressroute:~:text=an%20http%20connection.-,Using%20Kubernetes%20ExternalName%20Service,-Traefik%20backends%20creation)
+# First you define the "router" in traefik (aka IngressRoute) where you point to a Kubernetes external service
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: routerpve
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`routerpve.timo.be`)
+      kind: Rule
+      services:
+        - name: routerpve-svc
+      middlewares:
+        - name: EXAMPLE
+          namespace: EXAMPLE
+  tls:
+    secretName: wildcard-timo-be-production-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: routerpve-svc
+  namespace: traefik
+spec:
+  externalName: routerpve.timo.local # Can also be an IP address
+  type: ExternalName
+  ports:
+    - port: 8006

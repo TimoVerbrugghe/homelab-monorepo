@@ -64,12 +64,12 @@ services:
       - scanservjs-config:/app/config
     devices: 
       - /dev/bus/usb:/dev/bus/usb
-  
+
   airsane:
     image: claytsay/docker-airsane
     container_name: airsane
     restart: unless-stopped
-    networks:
+    networks: # Separate dockervlan network because this container runs avahi and don't want this to clash with other containers running avahi as well
       dockervlan:
         ipv4_address: 10.10.10.8
     environment:
