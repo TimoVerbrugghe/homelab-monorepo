@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    env:
+    environment:
       WATCHTOWER_NOTIFICATION_URL: slack://${SLACK_TOKEN}@${SLACK_CHANNEL}/
   
   adguardhome:
