@@ -9,12 +9,17 @@
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
       - /:/host
-      - /data
+      - portainer-agent-data:/data
     env:
       EDGE: "1"
       EDGE_ID: "{{ portaineragent_edge_id }}"
       EDGE_KEY: "{{ portaineragent_edge_key }}"
       EDGE_INSECURE_POLL: "0"
-    dns: # Need to specify google dns here, because this will run on a VM where dns server points to localhost, which doesn't work with docker containers
+    etc_hosts: { # Need to specify the local IP of the portainer host here, otherwise portainer agent will not be able to resolve to that host
+      "{{ portainer_host_url }}": "{{ portainer_host_ip }}"
+    }
+    dns_servers: # Need to specify google dns here, because this will run on a VM where dns server points to localhost, which doesn't work with docker containers
       - 8.8.8.8
       - 8.8.4.4
+      - 1.1.1.1
+      - 1.0.0.1

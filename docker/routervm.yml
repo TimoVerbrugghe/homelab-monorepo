@@ -27,6 +27,38 @@ services:
       - 3001:3000/tcp # Web UI for installation, on port 3001 to not conflict with netbootxyz
       - 853:853/tcp
 
+  adguardhome-sync:
+    image: ghcr.io/bakito/adguardhome-sync
+    container_name: adguardhome-sync
+    command: run
+    environment:
+      LOG_LEVEL: info
+      ORIGIN_URL: ${{ adguardhome_origin_url }}
+      ORIGIN_USERNAME: ${{ adguardhome_origin_username }}
+      ORIGIN_PASSWORD: ${{ adguardhome_origin_password }}
+
+      REPLICA_URL: ${{ adguardhome_replica_url }}
+      REPLICA_USERNAME: ${{ adguardhome_replica_username }}
+      REPLICA_PASSWORD: ${{ adguardhome_replica_password }}
+      CRON: '*/1 * * * *' # run every minute
+      RUNONSTART: true
+
+      # Configure sync features; by default all features are enabled.
+      # FEATURES_GENERALSETTINGS: true
+      # FEATURES_QUERYLOGCONFIG: true
+      # FEATURES_STATSCONFIG: true
+      # FEATURES_CLIENTSETTINGS: true
+      # FEATURES_SERVICES: true
+      # FEATURES_FILTERS: true
+      # FEATURES_DHCP_SERVERCONFIG: true
+      # FEATURES_DHCP_STATICLEASES: true
+      # FEATURES_DNS_SERVERCONFIG: true
+      # FEATURES_DNS_ACCESSLISTS: true
+      # FEATURES_DNS_REWRITES: true
+    ports:
+      - 8082:8080
+    restart: unless-stopped
+    
   netbootxyz:
     image: ghcr.io/netbootxyz/netbootxyz
     container_name: netbootxyz
