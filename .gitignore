@@ -7,3 +7,4 @@ terraform/environments/**
 **/downloaded_**
 ansible/inventory/group_vars/
 .sfdx/**
+**.env
