@@ -7,9 +7,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      WATCHTOWER_NOTIFICATION_URL: slack://${SLACK_TOKEN}@${SLACK_CHANNEL}/
-
+      
   unifi-controller:
     image: lscr.io/linuxserver/unifi-controller:latest
     container_name: unifi-controller
