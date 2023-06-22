@@ -7,7 +7,28 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  
+
+  unifi-controller:
+    image: lscr.io/linuxserver/unifi-controller:latest
+    container_name: unifi-controller
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - unifi-controller:/config
+    ports:
+      - 8443:8443
+      - 3478:3478/udp
+      - 10001:10001/udp
+      - 8080:8080
+      - 1900:1900/udp #optional
+      - 8843:8843 #optional
+      - 8880:8880 #optional
+      - 6789:6789 #optional
+      - 5514:5514/udp #optional
+    restart: unless-stopped
+
   adguardhome:
     image: adguard/adguardhome
     container_name: adguardhome
@@ -35,7 +56,7 @@ services:
     ports:
       - 3000:3000 # Web ui
       - 69:69/udp
-      - 8080:80 # NGINX server to host assets
+      - 8081:80 # NGINX server to host assets
     
   tailscale:
     image: tailscale/tailscale
@@ -58,7 +79,7 @@ services:
     container_name: scanservjs
     restart: unless-stopped
     ports:
-      - 8081:8080 # Port 8081 to not interfere with netbootxyz container
+      - 8082:8080 # Port 8082 to not interfere with unifi or netbootxyz container
     volumes:
       - scanservjs-scans:/app/data/output
       - scanservjs-config:/app/config
@@ -87,6 +108,7 @@ volumes:
   tailscale:
   scanservjs-scans:
   scanservjs-config:
+  unifi-controller:
 
 networks:
   dockervlan:
