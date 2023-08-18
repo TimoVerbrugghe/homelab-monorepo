@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    volumes:
+      - homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - traefik.enable=false
+
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    restart: unless-stopped
+    volumes:
+      - mqtt:/mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+    labels:
+      - traefik.enable=false
+
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - zigbee2mqtt:/app/data
+    ports:
+      - 9442:9442
+    environment:
+      - TZ=Europe/Brussels
+
+  scrypted:
+    container_name: scrypted
+    restart: unless-stopped
+    network_mode: host
+    image: koush/scrypted
+    # hardware accelerated video decoding
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - scrypted:/server/volume
+    ports:
+      - 10443:10443
+    labels:
+      - traefik.enable=false
+
+  homebridge:
+    container_name: homebridge
+    image: homebridge/homebridge:latest
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - homebridge:/homebridge
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"
+    labels:
+      - traefik.enable=false
+
+volumes:
+  homeassistant:
+  mqtt:
+  zigbee2mqtt:
+  scrypted:
+
+networks:
+  dockervlan:
+    external: true
+  dockerproxy:
+    external: true

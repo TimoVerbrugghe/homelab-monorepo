@@ -1,15 +1,14 @@
 version: "3.8"
 
 services:
-  plex-with-gpu:
-    container_name: plex-with-gpu
+  plex:
+    container_name: plex
     image: plexinc/pms-docker
     restart: unless-stopped
-    network_mode: dockerproxy
-    runtime: nvidia
+    networks:
+      - dockerproxy
     environment:
       - TZ=Europe/Brussels
-      - NVIDIA_VISIBLE_DEVICES=GPU-7ae0af11-474c-3823-3f17-5de32da6a0b6
     ports:
       - 32400:32400/tcp
       - 32410:32410/udp
@@ -20,27 +19,40 @@ services:
       - movies:/movies:rw
       - tvshows:/tv:rw
       - /tmp:/transcode:rw
-      - /mnt/user/appdata/plex:/config:rw
+      - plex:/config:rw
+    devices:
+      - /dev/dri:/dev/dri
     labels:
       - traefik.http.routers.plex.rule=Host(`plex.timo.be`)
       - traefik.http.routers.plex.entrypoints=https
       - traefik.http.services.plex.loadbalancer.server.port=32400
 
+  plex-autolanguages:
+    container_name: plex-autolanguagues
+    image: remirigal/plex-auto-languages:latest
+    networks:
+      - dockerproxy
+    restart: unless-stopped
+    environment:
+      - PLEX_URL=http://plex:32400
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - TZ=Europe/Brussels
+
   jellyfin:
     container_name: jellyfin
     image: jellyfin/jellyfin
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     restart: unless-stopped
-    runtime: nvidia
-    user: 99:100
     environment:
       - TZ=Europe/Brussels
-      - NVIDIA_VISIBLE_DEVICES=GPU-7ae0af11-474c-3823-3f17-5de32da6a0b6
     volumes:
-      - /mnt/user/appdata/jellyfin:/config
+      - jellyfin:/config
       - /tmp:/cache
       - movies:/movies
       - tvshows:/tv
+    devices:
+      - /dev/dri:/dev/dri
     labels:
       - traefik.http.routers.plex.rule=Host(`jellyfin.timo.be`)
       - traefik.http.routers.plex.entrypoints=https
@@ -50,13 +62,14 @@ services:
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     environment:
       - PUID=99
       - PGID=100
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/user/appdata/sonarr:/config
+      - sonarr:/config
       - tvshows:/tv
       - downloads:/downloads
     labels:
@@ -68,13 +81,14 @@ services:
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     environment:
       - PUID=99
       - PGID=100
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/user/appdata/radarr:/config
+      - radarr:/config
       - movies:/movies
       - downloads:/downloads
     labels:
@@ -86,13 +100,14 @@ services:
     container_name: lidarr
     image: lscr.io/linuxserver/lidarr:latest
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     environment:
       - PUID=99
       - PGID=100
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/user/appdata/lidarr:/config
+      - lidarr:/config
       - music:/music
       - downloads:/downloads
     labels:
@@ -104,13 +119,14 @@ services:
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     environment:
       - PUID=99
       - PGID=100
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/user/appdata/bazarr:/config
+      - bazarr:/config
       - movies:/movies
       - tvshows:/tv
     labels:
@@ -122,12 +138,13 @@ services:
     container_name: overseerr
     image: sctx/overseerr:latest
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     environment:
       - LOG_LEVEL=debug
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/user/appdata/overseerr:/app/config
+      - overseerr:/app/config
     labels:
       - traefik.http.routers.plex.rule=Host(`request.timo.be`)
       - traefik.http.routers.overseerr.entrypoints=https
@@ -138,13 +155,14 @@ services:
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     environment:
       - PUID=99
       - PGID=100
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/user/appdata/prowlarr:/config
+      - prowlarr:/config
     labels:
       - traefik.http.routers.prowlarr.entrypoints=https
       - traefik.http.services.prowlarr.loadbalancer.server.port=9696
@@ -154,13 +172,14 @@ services:
     image: ghcr.io/tautulli/tautulli
     container_name: tautulli
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     environment:
       - PUID=99
       - PGID=100
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/user/appdata/tautulli:/config
+      - tautulli:/config
     labels:
       - traefik.http.routers.tautulli.entrypoints=https
       - traefik.http.services.tautulli.loadbalancer.server.port=8181
@@ -170,18 +189,20 @@ services:
     image: lscr.io/linuxserver/emulatorjs:latest
     container_name: emulatorjs
     restart: unless-stopped
+    networks:
+      - dockerproxy
     environment:
       - PUID=99
       - PGID=100
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/user/appdata/emulatorjs:/config
-      - /mnt/user/appdata/emulatorjs-data:/data
-      - /mnt/user/games/DS:/data/nds/roms:rw
-      - /mnt/user/games/GBA:/data/gba/roms:rw
-      - /mnt/user/games/GBC:/data/gbc/roms:rw
-      - /mnt/user/games/PS1:/data/psx/roms:rw
-      - /mnt/user/games/SNES:/data/snes/roms:rw
+      - emulatorjs:/config
+      - emulatorjs-data:/data
+      - dsgames:/data/nds/roms:rw
+      - gbagames:/data/gba/roms:rw
+      - gbcgames:/data/gbc/roms:rw
+      - ps1games:/data/psx/roms:rw
+      - snesgames:/data/snes/roms:rw
     labels:
       - traefik.http.routers.emulatorjs.rule=Host(`games.timo.be`)
       - traefik.http.routers.emulatorjs.entrypoints=https
@@ -193,21 +214,71 @@ services:
       - traefik.http.routers.emulatorjs-config.middlewares=keycloak-auth@file
 
 volumes:
-  movies:
-    external: true
   downloads:
     external: true
-  music:
-    external: true
+    
+  movies:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/movies"
   tvshows:
-    external: true
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/tvshows"
+  music:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/music"
   dsgames:
-    external: true
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/games/DS"
   gbagames:
-    external: true
-  gbcgames:
-    external: true
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/games/GBA"
   ps1games:
-    external: true
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/games/PS1"
   snesgames:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/games/SNES"
+  gbcgames:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/games/GBC"
+    external: true
+  
+  plex:
+  jellyfin:
+  sonarr:
+  radarr:
+  lidarr:
+  bazarr:
+  overseerr:
+  prowlarr:
+  tautulli:
+  emulatorjs:
+  emulatorjs-data:
+
+networks:
+  dockerproxy:
     external: true

@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     network_mode: dockerproxy
     volumes:
-      - /mnt/user/appdata/flood:/config
+      - flood:/config
       - downloads:/data
     labels:
       - traefik.http.routers.flood.rule=Host(`torrents.timo.be`)
@@ -25,7 +25,7 @@ services:
       - PGID=100
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/user/appdata/qbittorrent:/config
+      - qbittorrent:/config
       - downloads:/downloads
     labels:
       - traefik.http.routers.sonarr.entrypoints=https
@@ -33,5 +33,116 @@ services:
       - traefik.http.routers.sonarr.middlewares=keycloak-auth@file
 
   icloudpd-timo:
-    image: icloudpd/icloudpd:latest
+    image: boredazfcuk/icloudpd
+    container_name: icloudpd-timo
+    restart: unless-stopped
+    network_mode: bridge
+    environment:
+      - apple_id={$ICLOUDPD_APPLE_ID}
+      - authentication_type=MFA
+
+      - synchronisation_interval=86400
+      - TZ=Europe/London
+      - download_path=/home/user/iCloud
+      - skip_check=true
+      - auto_delete=true
+      - UMASK=000
+      - PGID=100
+      - PUID=99
+
+      - notification_type=Webhook
+      - notification_title=iCloudPD
+      - webhook_server=hooks.slack.com
+      - webhook_port=443
+      - webhook_path=/services/
+      - webhook_id={$ICLOUDPD_WEBHOOK_ID}
+      - webhook_body=text
+      - webhook_https=true
+    volumes:
+        - icloudpd-timo:/config
+        - icloudpd-data:/home/user/iCloud
+    labels:
+      - traefik.enable=false
+
+  jdownloader2:
+    image: jlesage/jdownloader-2
+    container_name: jdownloader2
+    restart: unless-stopped
+    network_mode: dockerproxy
+    volumes:
+      - jdownloader2:/config
+      - downloads:/output
+    labels:
+      - traefik.http.routers.flood.rule=Host(`jdownloader.timo.be`)
+      - traefik.http.routers.flood.entrypoints=https
+      - traefik.http.services.flood.loadbalancer.server.port=5800
+      - traefik.http.routers.flood.middlewares=keycloak-auth@file
     
+  aria2-pro:
+    image: p3terx/aria2-pro
+    container_name: aria2-pro
+    restart: unless-stopped
+    network_mode: dockerproxy
+    logging:
+      options:
+        max-size: 1m
+    environment:
+      - PUID=99
+      - PGID=100
+      - UMASK_SET=022
+      - RPC_SECRET={$ARIA2_RPC_SECRET}
+      - RPC_PORT=6800
+      - LISTEN_PORT=6888
+    volumes:
+      - aria2-pro:/config
+      - downloads:/downloads
+    labels:
+      - traefik.enable=false
+
+  ariang:
+    image: p3terx/ariang
+    container_name: ariang
+    restart: unless-stopped
+    network_mode: dockerproxy
+    logging:
+      options:
+        max-size: 1m
+    labels:
+      - traefik.http.routers.flood.entrypoints=https
+      - traefik.http.services.flood.loadbalancer.server.port=6880
+      - traefik.http.routers.flood.middlewares=keycloak-auth@file    
+
+  metube:
+    image: ghcr.io/alexta69/metube
+    container_name: metube
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - TEMP_DIR=/tmp
+      - DARK_MODE=true
+    volumes:
+      - downloads:/downloads
+      - /tmp:/tmp
+    labels:
+      - traefik.http.routers.metube.entrypoints=https
+      - traefik.http.services.metube.loadbalancer.server.port=8081
+      - traefik.http.routers.metube.middlewares=keycloak-auth@file 
+
+volumes:
+  icloudpd-timo:
+  qbittorrent:
+  flood:
+  jdownloader2:
+  aria2-pro:
+  downloads:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/downloads"
+  
+networks:
+  dockerproxy:
+    external: true
+  

@@ -1,0 +1,53 @@
+- name: Pause to remind to set a DHCP reservation for the mac address
+  ansible.builtin.pause:
+    prompt: "Press enter if you have set a DHCP reservation (in Unifi f.e.) based on the MAC address (or if it's not needed)"
+
+- name: Download Github Keys
+  ansible.builtin.set_fact: 
+    sshkeys: "{{ lookup('ansible.builtin.url', 'https://github.com/{{ github_username }}.keys', split_lines=false) }}"
+
+- name: Update PVE template list
+  command: pveam update
+
+- name: Download LXC template
+  command: pveam download local "{{ lxc_template_name }}"
+
+- name: Create new LXC container
+  community.general.proxmox:
+    node: "{{ proxmox_node | default('proxmox') }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_tokenid }}"
+    api_token_secret: "{{ proxmox_api_tokensecret }}"
+    api_host: "{{ proxmox_api_host }}"
+
+    password: "{{ lxc_password }}"
+    hostname: "{{ lxc_hostname }}"
+    ostemplate: "local:vztmpl/{{ lxc_template_name }}"
+    pubkey: "{{ sshkeys }}"
+    storage: "{{ lxc_storage }}"
+    disk: "{{ lxc_storage }}:{{ lxc_disksize }}"
+    unprivileged: false
+    onboot: true
+    memory: "{{ lxc_memory }}"
+    timezone: "host"
+    netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,hwaddr={{ lxc_macaddress }},bridge={{ lxc_bridge }}"}'
+  register: lxc_container_info
+
+- name: Pause to remind to change feature set before starting container
+  ansible.builtin.pause:
+    prompt: "CONTAINER CREATED - Press enter if you have set the necessary features on the container through the Web UI (f.e. NFS/CIFS support - has to be done manually, not possible using the proxmox api)"
+
+- name: Sleep for 10 seconds to let container be created
+  ansible.builtin.wait_for:
+    timeout: 10
+
+- name: Start new LXC container
+  community.general.proxmox:
+    node: "{{ proxmox_node | default('proxmox') }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_tokenid }}"
+    api_token_secret: "{{ proxmox_api_tokensecret }}"
+    api_host: "{{ proxmox_api_host }}"
+
+    hostname: "{{ lxc_hostname }}"
+    state: "started"

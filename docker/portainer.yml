@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  portainer:
+    container_name: portainer
+    restart: unless-stopped
+    image: portainer/portainer-ce:latest
+    networks:
+      - dockerproxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer:/data
+    labels:
+      - traefik.http.routers.portainer.entrypoints=https
+      - traefik.http.services.portainer.loadbalancer.server.port=9443
+      - traefik.http.routers.portaineredge.entrypoints=https
+      - traefik.http.services.portaineredge.loadbalancer.server.port=8000
+      - traefik.http.routers.portaineredge.rule=Host(`portaineredge.timo.be`)
+
+volumes:
+  portainer:
+
+networks:
+  dockerproxy:
+    name: dockerproxy

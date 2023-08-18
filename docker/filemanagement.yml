@@ -1,0 +1,109 @@
+version: "3.8"
+
+services:
+  filebrowser:
+    container_name: filebrowser
+    image: filebrowser/filebrowser
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - media:/srv
+      - filebrowser:/database.db
+    labels:
+      - traefik.http.routers.filebrowser.entrypoints=https
+      - traefik.http.services.filebrowser.loadbalancer.server.port=80
+      - traefik.http.routers.filebrowser.middlewares=keycloak-auth@file
+      - traefik.http.routers.filebrowser.rule=Host('files.timo.be')    
+
+  mariadb-nextcloud:
+    image: mariadb
+    networks:
+      - dockerproxy
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    volumes:
+      - mariadb-nextcloud:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD={$MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD={$MYSQL_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  nextcloud:
+    image: nextcloud
+    networks:
+      - dockerproxy
+    restart: unless-stopped
+    depends_on:
+      - mariadb-nextcloud
+    volumes:
+      - nextcloud:/var/www/html
+      - nextcloud-data:/data
+    environment:
+      - MYSQL_PASSWORD={$MYSQL_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=mariadb-nextcloud
+    labels:
+      - traefik.http.routers.nextcloud.entrypoints=https
+      - traefik.http.services.nextcloud.loadbalancer.server.port=80
+    
+  filezilla:
+    image: lscr.io/linuxserver/filezilla:latest
+    container_name: filezilla
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - filezilla:/config
+      - media:/media
+    labels:
+      - traefik.http.routers.filezilla.entrypoints=https
+      - traefik.http.services.filezilla.loadbalancer.server.port=80
+      - traefik.http.routers.filezilla.middlewares=keycloak-auth@file
+
+  krusader:
+    container_name: krusader
+    image: binhex/arch-krusader
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - dockerproxy
+    environment:
+      - TEMP_FOLDER=/config/krusader/tmp
+      - WEBPAGE_TITLE=krusader
+      - UMASK=000
+      - PUID=99
+      - PGID=100
+    volumes:
+      - media:/media
+      - krusader:/config
+    labels:
+      - traefik.http.routers.krusader.entrypoints=https
+      - traefik.http.services.krusader.loadbalancer.server.port=80
+      - traefik.http.routers.krusader.middlewares=keycloak-auth@file
+
+
+volumes:
+  filebrowser:
+  media:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user"
+  nextcloud:
+  nextcloud-data:
+  mariadb-nextcloud:
+  filezilla:
+  krusader:
+
+networks:
+  dockerproxy:
+    external: true
+

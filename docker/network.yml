@@ -1,0 +1,148 @@
+version: "3.8"
+
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    restart: unless-stopped
+    networks:
+      - dockervlan
+    volumes:
+      - adguardhome-work:/opt/adguardhome/work
+      - adguardhome-conf:/opt/adguardhome/conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - 53:53/udp
+      - 53:53/tcp
+      - 80:80/tcp 
+      - 443:443/tcp
+      - 443:443/udp
+      - 3000:3000/tcp # Web UI for installation, on port 3001 to not conflict with netbootxyz
+      - 853:853/tcp
+    
+  netbootxyz:
+    image: ghcr.io/netbootxyz/netbootxyz
+    container_name: netbootxyz
+    restart: unless-stopped
+    networks:
+      - dockervlan
+    volumes:
+      - netbootxyz-config:/config # optional
+      - netbootxyz-assets:/assets # optional
+    ports:
+      - 3000:3000 # Web ui
+      - 69:69/udp
+      - 80:80 # NGINX server to host assets
+    
+  tailscale:
+    image: tailscale/tailscale
+    container_name: tailscale
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - /var/lib:/var/lib
+      - /dev/net/tun:/dev/net/tun
+      - tailscale:/state
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY}
+      - TS_ROUTES=${TS_ROUTES}
+      - TS_EXTRA_ARGS=--advertise-exit-node
+      - TS_STATE_DIR=/state
+
+  speedtest-tracker:
+    container_name: speedtest-tracker
+    restart: unless-stopped
+    image: ghcr.io/alexjustesen/speedtest-tracker
+    ports:
+      - '8080:80'
+      - '8443:443'
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - speedtest-tracker:/config
+    labels:
+      - traefik.http.routers.speedtest-tracker.entrypoints=https
+      - traefik.http.services.speedtest-tracker.loadbalancer.server.port=80
+      - traefik.http.routers.speedtest-tracker.middlewares=keycloak-auth@file
+      - traefik.http.routers.speedtest-tracker.rule=Host('speedtest.timo.be')
+
+  localspeedtest:
+    restart: unless-stopped
+    container_name: openspeedtest
+    image: openspeedtest/latest
+    labels:
+      - traefik.http.routers.localspeedtest.entrypoints=https
+      - traefik.http.services.localspeedtest.loadbalancer.server.port=3000
+      - traefik.http.routers.localspeedtest.middlewares=keycloak-auth@file
+
+  traefik:
+    image: traefik
+    container_name: traefik
+    networks:
+      - dockerproxy
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+      - 8000:8000/tcp
+      - 6800:6800/tcp
+    volumes:
+      - traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # adguardhome-sync:
+  #   image: ghcr.io/bakito/adguardhome-sync
+  #   container_name: adguardhome-sync
+  #   command: run
+  #   environment:
+  #     LOG_LEVEL: info
+  #     ORIGIN_URL: ${{ adguardhome_origin_url }}
+  #     ORIGIN_USERNAME: ${{ adguardhome_origin_username }}
+  #     ORIGIN_PASSWORD: ${{ adguardhome_origin_password }}
+
+  #     REPLICA_URL: ${{ adguardhome_replica_url }}
+  #     REPLICA_USERNAME: ${{ adguardhome_replica_username }}
+  #     REPLICA_PASSWORD: ${{ adguardhome_replica_password }}
+  #     CRON: '*/1 * * * *' # run every minute
+  #     RUNONSTART: true
+
+  #     # Configure sync features; by default all features are enabled.
+  #     # FEATURES_GENERALSETTINGS: true
+  #     # FEATURES_QUERYLOGCONFIG: true
+  #     # FEATURES_STATSCONFIG: true
+  #     # FEATURES_CLIENTSETTINGS: true
+  #     # FEATURES_SERVICES: true
+  #     # FEATURES_FILTERS: true
+  #     # FEATURES_DHCP_SERVERCONFIG: true
+  #     # FEATURES_DHCP_STATICLEASES: true
+  #     # FEATURES_DNS_SERVERCONFIG: true
+  #     # FEATURES_DNS_ACCESSLISTS: true
+  #     # FEATURES_DNS_REWRITES: true
+  #   ports:
+  #     - 8082:8080
+  #   restart: unless-stopped
+
+volumes:
+  adguardhome-work:
+  adguardhome-conf:
+  netbootxyz-assets:
+  netbootxyz-config:
+  tailscale:
+  traefik:
+
+networks:
+  dockerproxy:
+    external: true
+    
+  dockervlan:
+    name: dockervlan
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "10.10.10.0/24"
+          gateway: "10.10.10.1"

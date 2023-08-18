@@ -1,0 +1,12 @@
+# Run tasks to download an LXC template & create new LXC container
+- name: Prepare env on proxmox
+  hosts: proxmox
+  gather_facts: true
+  roles:
+    - role: ../roles/hostprereq
+
+- name: Set up LXC container
+  hosts: proxmox
+  gather_facts: true
+  roles:
+    - role: ../roles/proxmox-lxc

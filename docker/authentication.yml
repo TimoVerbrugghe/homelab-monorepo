@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  traefik-forward-auth:
+    container_name: traefik-forward-auth
+    restart: unless-stopped
+    image: thomseddon/traefik-forward-auth
+    networks:
+      - dockerproxy
+    environment:
+      - PROVIDERS_OIDC_CLIENT_ID={$PROVIDERS_OIDC_CLIENT_ID}
+      - PROVIDERS_OIDC_CLIENT_SECRET={$PROVIDERS_OIDC_CLIENT_SECRET}
+      - SECRET={$TRAEFIK_FORWARD_AUTH_SECRET}
+      - COOKIE_DOMAIN={$TRAEFIK_FORWARD_AUTH_COOKIE_DOMAIN}
+      - INSECURE_COOKIE=false
+      - LOG_LEVEL=info
+      - LOG_FORMAT=text
+      - PROVIDERS_OIDC_ISSUER_URL={$PROVIDERS_OIDC_ISSUER_URL}
+      - DEFAULT_PROVIDER=oidc
+      - AUTH_HOST={$TRAEFIK_FORWARD_AUTH_HOST}
+    labels:
+      - traefik.http.routers.keycloakauth.entrypoints=https
+      - traefik.http.services.keycloakauth.loadbalancer.server.port=4181
+      - traefik.http.routers.keycloakauth.middlewares=keycloak-auth@file
+      - traefik.http.routers.keycloakauth.rule=Host(`keycloakauth.timo.be`)
+
+# Still need to update the database to the latest postgres version
+  keycloak-postgres:
+    container_name: keycloak-postgres
+    image: postgres
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - POSTGRES_PASSWORD=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_DB=keycloak
+    volumes:
+      - keycloak-postgres:/var/lib/postgresql/data
+
+  keycloak:
+    container_name: keycloak
+    restart: unless-stopped
+    image: quay.io/keycloak/keycloak
+    command: start
+    depends_on:
+      - keycloak-postgres
+    networks:
+      - dockerproxy
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - 'KEYCLOAK_ADMIN_PASSWORD=7qfrXFcA58jNXcz!D$8ZNpFfY*Gey$'
+      - KC_DB_URL_HOST=postgres-keycloak
+      - KC_DB_URL_PORT=5432
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=keycloak
+      - KC_PROXY=edge
+      - KC_HOSTNAME=auth.timo.be
+      - KC_DB=postgres
+    labels:
+      - traefik.http.routers.keycloak.entrypoints=https
+      - traefik.http.services.keycloak.loadbalancer.server.port=8080
+      - traefik.http.routers.keycloakauth.rule=Host(`auth.timo.be`)
+    volumes:
+      - keycloakbackup:/opt/keycloak/data/import
+
+volumes:
+  postgres-keycloak:
+  keycloakbackup:
+
+networks:
+  dockerproxy:
+    external: true

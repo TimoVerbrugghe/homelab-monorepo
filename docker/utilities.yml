@@ -1,0 +1,158 @@
+version: "3.8"
+
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  scanservjs:
+    image: sbs20/scanservjs:latest
+    container_name: scanservjs
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - scanservjs-scans:/app/data/output
+      - scanservjs-config:/app/config
+    devices: 
+      - /dev/bus/usb:/dev/bus/usb
+    labels:
+      - traefik.http.routers.scanservjs.entrypoints=https
+      - traefik.http.services.scanservjs.loadbalancer.server.port=8080
+      - traefik.http.routers.scanservjs.middlewares=keycloak-auth@file
+      - traefik.http.routers.scanservjs.rule=Host('scan.timo.be')    
+
+  airsane:
+    image: claytsay/docker-airsane
+    container_name: airsane
+    restart: unless-stopped
+    networks: # Separate dockervlan network because this container runs avahi and don't want this to clash with other containers running avahi as well
+      - dockervlan
+    environment:
+      SANED_ACL: 10.10.10.0/24
+      SANED_DEVICE: genesys:libusb:009:002
+    devices: 
+      - /dev/bus/usb:/dev/bus/usb
+
+  bitwarden:
+    image: vaultwarden/server:latest
+    container_name: bitwarden
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - DOMAIN=https://vaultwarden.example.com  # Your domain; vaultwarden needs to know it's https to work properly with attachments
+      - SERVER_ADMIN_EMAIL=timo@hotmail.be
+      - SIGNUPS_ALLOWED=false
+      - INVITATIONS_ALLOWED=false
+      - WEBSOCKET_ENABLED=false
+      - ADMIN_TOKEN=${BITWARDEN_ADMIN_TOKEN}
+    labels:
+      - traefik.http.routers.bitwarden.entrypoints=https
+      - traefik.http.services.bitwarden.loadbalancer.server.port=80
+    volumes:
+      - bitwarden:/data
+    
+  bitwarden-export:
+    image: ghcr.io/timoverbrugghe/bitwarden-export
+    container_name: bitwarden-export
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - CRON_SCHEDULE=0
+      - BW_CLIENTID={$BW_CLIENTID}
+      - BW_CLIENTSECRET={$BW_CLIENTSECRET}
+      - BW_SERVER=http://bitwarden
+      - BW_PASSWORD={$BW_PASSWORD}
+    volumes:
+      - bitwarden-export:/appdata
+
+  webtop:
+    image: lscr.io/linuxserver/webtop:latest
+    container_name: webtop
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - webtop:/config
+    shm_size: "1gb"
+    labels:
+      - traefik.http.routers.webtop.entrypoints=https
+      - traefik.http.services.webtop.loadbalancer.server.port=3000
+      - traefik.http.routers.webtop.middlewares=keycloak-auth@file
+      - traefik.http.routers.webtop.rule=Host('chrome.timo.be')    
+
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - code-server:/config
+    labels:
+      - traefik.http.routers.code-server.entrypoints=https
+      - traefik.http.services.code-server.loadbalancer.server.port=8443
+      - traefik.http.routers.code-server.middlewares=keycloak-auth@file
+      - traefik.http.routers.code-server.rule=Host('vscode.timo.be')    
+
+  uptimekuma:
+    image: louislam/uptimekuma
+    container_name: uptimekuma
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - uptimekuma:/app/data
+    labels:
+      - traefik.http.routers.code-server.entrypoints=https
+      - traefik.http.services.code-server.loadbalancer.server.port=3001
+      - traefik.http.routers.code-server.middlewares=keycloak-auth@file    
+    
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - homarr-config:/app/data/configs
+      - homarr-icons:/app/public/icons
+    labels:
+      - traefik.http.routers.homarr.entrypoints=https
+      - traefik.http.services.homarr.loadbalancer.server.port=7575
+      - traefik.http.routers.homarr.middlewares=keycloak-auth@file
+      - traefik.http.routers.homarr.rule=Host('www.timo.be')
+
+volumes:
+  scanservjs-scans:
+  scanservjs-config:
+  bitwarden:
+  bitwarden-export:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/other/bitwarden-export"
+  webtop:
+  code-server:
+  homarr-config:
+  homarr-icons:
+
+networks:
+  dockerproxy:
+    external: true
+  dockervlan:
+    external: true
