@@ -1,10 +1,10 @@
 **/.terraform*
 **/*.auto.tfvars
 **/.vscode
-terraform/environments/**
 **/terraform.tfstate*
 **/*auto.pkrvars.hcl
 **/downloaded_**
-ansible/inventory/group_vars/
+ansible/inventory/group_vars/**
 .sfdx/**
 **.env
+terraform/environments/proxmox.tfvars

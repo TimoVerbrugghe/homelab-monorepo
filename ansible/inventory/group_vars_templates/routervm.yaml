@@ -1,7 +1,0 @@
-# Portainer Edge Agent ID and Key
-portaineragent_edge_id: <edge_id>
-portaineragent_edge_key: <edge_key>
-dns_cloudflare_api_token: <api_token>
-
-scanner_vendor_id: 
-scanner_product_id: 

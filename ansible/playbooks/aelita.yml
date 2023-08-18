@@ -1,0 +1,19 @@
+- name: Prepare env on localhost
+  hosts: localhost
+  gather_facts: true
+  roles:
+    - role: ../roles/hostprereq
+
+- name: Do first time ubuntu setup
+  hosts: aelita
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/ubuntu-first-setup
+
+- name: Install Portainer Server
+  hosts: aelita
+  gather_facts: true
+  become: true
+  tasks:
+    - ansible.builtin.include_tasks: ../tasks/portainerserver-install.yml

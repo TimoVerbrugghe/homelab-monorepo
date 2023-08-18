@@ -31,7 +31,7 @@
     onboot: true
     memory: "{{ lxc_template_memory | default(2048) }}"
     timezone: "host"
-    netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,hwaddr={{ lxc_template_macaddress | default("0A:00:00:00:00:00") }},bridge={{ lxc_template_bridge | default("vmbr0") }}"}'
+    netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,bridge={{ lxc_template_bridge | default("vmbr0") }}"}'
   register: lxc_container_info
 
 - name: Pause to remind to change feature set before starting container

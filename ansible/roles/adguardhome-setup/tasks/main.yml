@@ -1,0 +1,8 @@
+- name: Disable DNSStublistener
+  ansible.builtin.include_tasks: disable-dnsstublistener.yml
+
+- name: Create cloudflare token file
+  ansible.builtin.include_tasks: cloudflare-token.yml
+
+- name: Reboot (to make sure all settings are applied)
+  ansible.builtin.reboot:
