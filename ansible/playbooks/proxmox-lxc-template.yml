@@ -9,4 +9,4 @@
   hosts: proxmox
   gather_facts: true
   roles:
-    - role: ../roles/proxmox-lxc
+    - role: ../roles/proxmox-lxc-template

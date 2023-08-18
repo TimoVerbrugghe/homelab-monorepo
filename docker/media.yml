@@ -1,32 +1,6 @@
 version: "3.8"
 
 services:
-  plex:
-    container_name: plex
-    image: plexinc/pms-docker
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    environment:
-      - TZ=Europe/Brussels
-    ports:
-      - 32400:32400/tcp
-      - 32410:32410/udp
-      - 32412:32412/udp
-      - 32413:32413/udp
-      - 32414:32414/udp
-    volumes:
-      - movies:/movies:rw
-      - tvshows:/tv:rw
-      - /tmp:/transcode:rw
-      - plex:/config:rw
-    devices:
-      - /dev/dri:/dev/dri
-    labels:
-      - traefik.http.routers.plex.rule=Host(`plex.timo.be`)
-      - traefik.http.routers.plex.entrypoints=https
-      - traefik.http.services.plex.loadbalancer.server.port=32400
-
   plex-autolanguages:
     container_name: plex-autolanguagues
     image: remirigal/plex-auto-languages:latest
@@ -37,26 +11,6 @@ services:
       - PLEX_URL=http://plex:32400
       - PLEX_TOKEN=${PLEX_TOKEN}
       - TZ=Europe/Brussels
-
-  jellyfin:
-    container_name: jellyfin
-    image: jellyfin/jellyfin
-    networks:
-      - dockerproxy
-    restart: unless-stopped
-    environment:
-      - TZ=Europe/Brussels
-    volumes:
-      - jellyfin:/config
-      - /tmp:/cache
-      - movies:/movies
-      - tvshows:/tv
-    devices:
-      - /dev/dri:/dev/dri
-    labels:
-      - traefik.http.routers.plex.rule=Host(`jellyfin.timo.be`)
-      - traefik.http.routers.plex.entrypoints=https
-      - traefik.http.services.plex.loadbalancer.server.port=8096
 
   sonarr:
     container_name: sonarr
@@ -266,9 +220,7 @@ volumes:
       o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/games/GBC"
     external: true
-  
-  plex:
-  jellyfin:
+
   sonarr:
   radarr:
   lidarr:

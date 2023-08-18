@@ -1,0 +1,84 @@
+version: "3.8"
+
+services:
+  scrypted:
+    container_name: scrypted
+    restart: unless-stopped
+    network_mode: host
+    image: koush/scrypted
+    # hardware accelerated video decoding
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - scrypted:/server/volume
+    ports:
+      - 10443:10443
+    labels:
+      - traefik.enable=false
+
+  jellyfin:
+    container_name: jellyfin
+    image: jellyfin/jellyfin
+    networks:
+      - dockerproxy
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - jellyfin:/config
+      - /tmp:/cache
+      - movies:/movies
+      - tvshows:/tv
+    devices:
+      - /dev/dri:/dev/dri
+    labels:
+      - traefik.http.routers.plex.rule=Host(`jellyfin.timo.be`)
+      - traefik.http.routers.plex.entrypoints=https
+      - traefik.http.services.plex.loadbalancer.server.port=8096
+
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    ports:
+      - 32400:32400/tcp
+      - 32410:32410/udp
+      - 32412:32412/udp
+      - 32413:32413/udp
+      - 32414:32414/udp
+    volumes:
+      - movies:/movies:rw
+      - tvshows:/tv:rw
+      - /tmp:/transcode:rw
+      - plex:/config:rw
+    devices:
+      - /dev/dri:/dev/dri
+    labels:
+      - traefik.http.routers.plex.rule=Host(`plex.timo.be`)
+      - traefik.http.routers.plex.entrypoints=https
+      - traefik.http.services.plex.loadbalancer.server.port=32400
+
+networks:
+  dockerproxy:
+    external: true
+
+volumes:
+  scrypted:
+  plex:
+  jellyfin:
+  movies:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/movies"
+  tvshows:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/tvshows"

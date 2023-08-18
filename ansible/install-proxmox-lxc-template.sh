@@ -8,4 +8,4 @@ export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
 ansible-playbook \
      -i inventory/hosts.ini \
-     playbooks/proxmox-lxc.yml
+     playbooks/proxmox-lxc-template.yml

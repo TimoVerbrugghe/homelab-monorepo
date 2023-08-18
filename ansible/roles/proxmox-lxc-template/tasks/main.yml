@@ -10,7 +10,7 @@
   command: pveam update
 
 - name: Download LXC template
-  command: pveam download local "{{ lxc_template_name }}"
+  command: pveam download local "{{ lxc_ostemplate_name }}"
 
 - name: Create new LXC container
   community.general.proxmox:
@@ -20,34 +20,29 @@
     api_token_secret: "{{ proxmox_api_tokensecret }}"
     api_host: "{{ proxmox_api_host }}"
 
-    password: "{{ lxc_password }}"
-    hostname: "{{ lxc_hostname }}"
-    ostemplate: "local:vztmpl/{{ lxc_template_name }}"
+    vmid: "{{ lxc_template_id | default(9999) }}"
+    password: "{{ lxc_template_password | default('templatepassword') }}"
+    hostname: "{{ lxc_template_name | default('ubuntu-lxc') }}"
+    ostemplate: "local:vztmpl/{{ lxc_ostemplate_name }}"
     pubkey: "{{ sshkeys }}"
-    storage: "{{ lxc_storage }}"
-    disk: "{{ lxc_storage }}:{{ lxc_disksize }}"
+    storage: "{{ lxc_template_storage | default('local-zfs') }}"
+    disk: "{{ lxc_template_storage | default('local-zfs') }}:{{ lxc_template_disksize }}"
     unprivileged: false
     onboot: true
-    memory: "{{ lxc_memory }}"
+    memory: "{{ lxc_template_memory | default(2048) }}"
     timezone: "host"
-    netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,hwaddr={{ lxc_macaddress }},bridge={{ lxc_bridge }}"}'
+    netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,hwaddr={{ lxc_template_macaddress | default("0A:00:00:00:00:00") }},bridge={{ lxc_template_bridge | default("vmbr0") }}"}'
   register: lxc_container_info
 
 - name: Pause to remind to change feature set before starting container
   ansible.builtin.pause:
     prompt: "CONTAINER CREATED - Press enter if you have set the necessary features on the container through the Web UI (f.e. NFS/CIFS support - has to be done manually, not possible using the proxmox api)"
 
-- name: Sleep for 10 seconds to let container be created
+- name: Sleep for 5 seconds to let container be created
   ansible.builtin.wait_for:
-    timeout: 10
+    timeout: 5
 
-- name: Start new LXC container
-  community.general.proxmox:
-    node: "{{ proxmox_node | default('proxmox') }}"
-    api_user: "{{ proxmox_api_user }}"
-    api_token_id: "{{ proxmox_api_tokenid }}"
-    api_token_secret: "{{ proxmox_api_tokensecret }}"
-    api_host: "{{ proxmox_api_host }}"
-
-    hostname: "{{ lxc_hostname }}"
-    state: "started"
+- name: Create template
+  ansible.builtin.command:
+    cmd: pct set "{{ lxc_template_id | default(9999) }}" --template true
+  changed_when: false

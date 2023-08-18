@@ -1,0 +1,29 @@
+- name: Install watchdog & linux-image-generic (which adds the i6300esb kernel module)
+  ansible.builtin.apt:
+    name:
+      - watchdog
+      - linux-image-generic
+    state: present
+    update_cache: true
+  become: true
+
+- name: Insert/Update watchdog configuration in /etc/watchdog.conf
+  ansible.builtin.blockinfile:
+    path: /etc/watchdog.conf
+    block: |
+      watchdog-device = /dev/watchdog
+      log-dir =  /var/log/watchdog
+      realtime = yes
+      priority = 1
+    
+- name: Change watchdog module in /etc/default/watchdog
+  ansible.builtin.lineinfile:
+    path: /etc/default/watchdog
+    regexp: '^watchdog_module'
+    line: watchdog_module=i6300esb
+
+- name: Enable watchdog service
+  ansible.builtin.systemd:
+    name: watchdog
+    enabled: yes
+    state: started
