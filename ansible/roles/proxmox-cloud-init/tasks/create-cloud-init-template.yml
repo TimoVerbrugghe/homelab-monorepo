@@ -1,0 +1,81 @@
+- name: Download Ubuntu Cloud Image
+  ansible.builtin.get_url:
+    url: "{{ ubuntu_cloud_image_url }}"
+    dest: ./cloudimg.img
+    mode: "0440"
+
+- name: Create new virtual machine
+  delegate_to: localhost
+  community.general.proxmox_kvm:
+    proxmox_default_behavior: no_defaults
+
+    # Logging in to the correct node
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_tokenid }}"
+    api_token_secret: "{{ proxmox_api_tokensecret }}"
+    api_host: "{{ proxmox_api_host }}"
+    node: "{{ proxmox_node | default('proxmox') }}"
+
+    # General VM attributes
+    name: "{{ vm_template_name }}"
+    vmid: "{{ vm_template_id }}"
+    machine: q35
+    cpu: host
+    ostype: l26
+    net:
+      net0: virtio,bridge={{ network_bridge }}
+    agent: true
+    tablet: false
+
+    # EFI Bios & disk
+    bios: ovmf
+    efidisk0:
+      storage: "{{ vm_template_storage }}"
+      format: raw
+      efitype: 4m
+      pre_enrolled_keys: true
+
+    # Performance
+    cores: "{{ vm_template_cores | default(1) }}"
+    memory: "{{ vm_template_memory | default(2048) }}"
+    balloon: 0
+
+    # Add cloud-init drive with some defaults
+    ide:
+      ide2: '{{ vm_template_storage }}:cloudinit'
+    
+    # Passthrough intel iGPU
+    hostpci:
+      hostpci0:
+        host="{{ hostpci_igpu_id }}",pcie=1,rombar=1
+
+
+- name: Import cloudimg to local storage
+  ansible.builtin.command:
+    cmd: qm importdisk "{{ vm_template_id }}" cloudimg.img "{{ vm_template_storage }}"
+  changed_when: false
+
+- name: Attach new disk to the VM as scsi drive on scsi controller
+  ansible.builtin.command:
+    cmd: qm set "{{ vm_template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ vm_template_storage }}":vm-"{{ vm_template_id }}"-disk-1
+  changed_when: false
+
+- name: Make the cloud init drive bootable and restrict BIOS to boot from disk only
+  ansible.builtin.command:
+    cmd: qm set "{{ vm_template_id }}" --boot c --bootdisk scsi0
+  changed_when: false
+
+- name: Add watchdog device
+  ansible.builtin.command:
+    cmd: qm set "{{ vm_template_id }}" -watchdog model=i6300esb,action=reset
+  changed_when: false
+
+- name: Create template
+  ansible.builtin.command:
+    cmd: qm template "{{ vm_template_id }}"
+  changed_when: false
+
+- name: Delete downloaded cloud image
+  ansible.builtin.file:
+    state: absent
+    path: ./cloudimg.img

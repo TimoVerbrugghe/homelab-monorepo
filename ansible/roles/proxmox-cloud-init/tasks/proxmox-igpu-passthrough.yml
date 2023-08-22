@@ -1,0 +1,52 @@
+
+- name: Create cmdline directory
+  ansible.builtin.file:
+    path: /etc/kernel/cmdline.d
+    state: directory
+    mode: '0644'
+    
+- name: Append additional kernel command line parameters for iGPU passhtrough
+  ansible.builtin.lineinfile:
+    path: /etc/kernel/cmdline.d/igpupassthrough
+    # Turn on intel IOMMU, Bind vfio driver to iGPU
+    line: 'intel_iommu=on iommu=pt vfio_pci.ids={{ vfio_pci_ids }}'
+    mode: '644'
+    state: present
+    create: true
+
+- name: Append additional kernel command line parameters for optimizations
+  ansible.builtin.lineinfile:
+    path: /etc/kernel/cmdline.d/optimizations
+    # disable all optional CPU mitigations & turn on transparent hugepages
+    line: 'mitigations=off transparent_hugepage=always'
+    mode: '644'
+    state: present
+    create: true
+
+- name: Create vfio.conf
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/vfio.conf
+    content: |
+      vfio
+      vfio_iommu_type1
+      vfio_pci
+
+- name: Create gpu-blacklist.conf
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/gpu-blacklist.conf
+    content: |
+      blacklist nouveau
+      blacklist snd_hda_intel
+      blacklist snd_hda_codec_hdmi
+      blacklist i915
+
+- name: Update initramfs
+  ansible.builtin.command: 
+    cmd: update-initramfs -u -k all
+
+- name: Refresh Boot
+  ansible.builtin.command: 
+    cmd: proxmox-boot-tool refresh
+
+- name: Reboot (so we can apply all these iGPU passthrough settings)
+  ansible.builtin.reboot:

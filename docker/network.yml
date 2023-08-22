@@ -6,7 +6,8 @@ services:
     container_name: adguardhome
     restart: unless-stopped
     networks:
-      - dockervlan
+      dockervlan:
+        ipv4_address: 10.10.10.15
     volumes:
       - adguardhome-work:/opt/adguardhome/work
       - adguardhome-conf:/opt/adguardhome/conf
@@ -19,13 +20,16 @@ services:
       - 443:443/udp
       - 3000:3000/tcp # Web UI for installation, on port 3001 to not conflict with netbootxyz
       - 853:853/tcp
+    labels:
+      - traefik.enable=false
     
   netbootxyz:
     image: ghcr.io/netbootxyz/netbootxyz
     container_name: netbootxyz
     restart: unless-stopped
     networks:
-      - dockervlan
+      dockervlan:
+        ipv4_address: 10.10.10.16
     volumes:
       - netbootxyz-config:/config # optional
       - netbootxyz-assets:/assets # optional
@@ -33,6 +37,8 @@ services:
       - 3000:3000 # Web ui
       - 69:69/udp
       - 80:80 # NGINX server to host assets
+    labels:
+      - traefik.enable=false
     
   tailscale:
     image: tailscale/tailscale
@@ -49,14 +55,15 @@ services:
       - TS_ROUTES=${TS_ROUTES}
       - TS_EXTRA_ARGS=--advertise-exit-node
       - TS_STATE_DIR=/state
+    labels:
+      - traefik.enable=false
 
   speedtest-tracker:
     container_name: speedtest-tracker
     restart: unless-stopped
     image: ghcr.io/alexjustesen/speedtest-tracker
-    ports:
-      - '8080:80'
-      - '8443:443'
+    networks:
+      - dockerproxy
     environment:
       - PUID=1000
       - PGID=1000
@@ -68,12 +75,14 @@ services:
       - traefik.http.routers.speedtest-tracker.entrypoints=https
       - traefik.http.services.speedtest-tracker.loadbalancer.server.port=80
       - traefik.http.routers.speedtest-tracker.middlewares=keycloak-auth@file
-      - traefik.http.routers.speedtest-tracker.rule=Host('speedtest.timo.be')
+      - traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.timo.be`)
 
   localspeedtest:
     restart: unless-stopped
-    container_name: openspeedtest
+    container_name: localspeedtest
     image: openspeedtest/latest
+    networks:
+      - dockerproxy
     labels:
       - traefik.http.routers.localspeedtest.entrypoints=https
       - traefik.http.services.localspeedtest.loadbalancer.server.port=3000
@@ -82,12 +91,14 @@ services:
   traefik:
     image: traefik
     container_name: traefik
+    environment:
+      - CF_API_EMAIL=${CF_API_EMAIL}
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
     networks:
       - dockerproxy
     ports:
       - 80:80/tcp
       - 443:443/tcp
-      - 8000:8000/tcp
       - 6800:6800/tcp
     volumes:
       - traefik:/etc/traefik
@@ -132,10 +143,11 @@ volumes:
   netbootxyz-config:
   tailscale:
   traefik:
+  speedtest-tracker:
 
 networks:
   dockerproxy:
-    external: true
+    name: dockerproxy
     
   dockervlan:
     name: dockervlan

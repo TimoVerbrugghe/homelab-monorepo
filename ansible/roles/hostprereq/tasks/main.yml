@@ -9,7 +9,9 @@
 
 - name: Install python & pip using homebrew
   community.general.homebrew:
-    name: python
+    name: 
+      - python
+      - hudochenkov/sshpass/sshpass
     state: present
   when: ansible_distribution == 'MacOSX'
 

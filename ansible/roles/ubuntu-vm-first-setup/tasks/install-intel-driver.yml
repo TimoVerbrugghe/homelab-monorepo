@@ -1,0 +1,18 @@
+- name: Install Intel Driver & Linux-Generic (necessary if you are working with cloud images and want to use i915 kernel module)
+  ansible.builtin.apt:
+    name:
+      - linux-generic
+      - clinfo
+      - vainfo
+      - intel-media-va-driver-non-free
+      - intel-gpu-tools
+      - ocl-icd-libopencl1
+      - intel-opencl-icd
+      - firmware-linux-nonfree
+      - libvpl2
+      - onevpl-tools
+    state: present
+    update_cache: true
+  become: true
+
+

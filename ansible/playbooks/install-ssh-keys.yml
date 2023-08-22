@@ -7,8 +7,8 @@
 - name: Download ssh keys from github and install them
   hosts: all
   tasks:
-    - name: Download Github SSH keys
-      ansible.builtin.get_url:
-        url: "https://github.com/{{ github_username }}.keys"
-        dest: .ssh/authorized_keys
-        mode: "0440"
+    - name: Set authorized keys from GitHub
+      ansible.posix.authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: https://github.com/{{ github_username }}.keys

@@ -1,11 +1,14 @@
 - name: Do Apt update & upgrade
   ansible.builtin.include_tasks: apt-dist-upgrade.yml
 
+- name: Install docker
+  ansible.builtin.include_tasks: install-docker.yml
+
 - name: Install qemu-guest-agent
   ansible.builtin.include_tasks: install-qemu-guest-agent.yml
 
-- name: Install docker
-  ansible.builtin.include_tasks: install-docker.yml
+- name: Install intel drivers
+  ansible.builtin.include_tasks: install-intel-driver.yml
 
 - name: Enable watchdog
   ansible.builtin.include_tasks: enable-watchdog.yml

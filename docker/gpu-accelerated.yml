@@ -11,16 +11,14 @@ services:
       - /dev/dri:/dev/dri
     volumes:
       - scrypted:/server/volume
-    ports:
-      - 10443:10443
     labels:
       - traefik.enable=false
+    security_opt:
+      - apparmor:unconfined
 
   jellyfin:
     container_name: jellyfin
     image: jellyfin/jellyfin
-    networks:
-      - dockerproxy
     restart: unless-stopped
     environment:
       - TZ=Europe/Brussels
@@ -29,21 +27,21 @@ services:
       - /tmp:/cache
       - movies:/movies
       - tvshows:/tv
+      - /dev/shm:/dev/shm
     devices:
       - /dev/dri:/dev/dri
-    labels:
-      - traefik.http.routers.plex.rule=Host(`jellyfin.timo.be`)
-      - traefik.http.routers.plex.entrypoints=https
-      - traefik.http.services.plex.loadbalancer.server.port=8096
+    ports:
+      - 8096:8096
+    security_opt:
+      - apparmor:unconfined
 
   plex:
     container_name: plex
     image: plexinc/pms-docker
     restart: unless-stopped
-    networks:
-      - dockerproxy
     environment:
       - TZ=Europe/Brussels
+      - PLEX_CLAIM=${PLEX_CLAIM_TOKEN}
     ports:
       - 32400:32400/tcp
       - 32410:32410/udp
@@ -55,16 +53,11 @@ services:
       - tvshows:/tv:rw
       - /tmp:/transcode:rw
       - plex:/config:rw
+      - /dev/shm:/dev/shm
     devices:
       - /dev/dri:/dev/dri
-    labels:
-      - traefik.http.routers.plex.rule=Host(`plex.timo.be`)
-      - traefik.http.routers.plex.entrypoints=https
-      - traefik.http.services.plex.loadbalancer.server.port=32400
-
-networks:
-  dockerproxy:
-    external: true
+    security_opt:
+      - apparmor:unconfined
 
 volumes:
   scrypted:

@@ -1,0 +1,25 @@
+- name: Prepare env on localhost
+  hosts: localhost
+  gather_facts: true
+  roles:
+    - role: ../roles/hostprereq
+
+- name: Configure hosts & Create Proxmox Cloud Init template
+  ansible.builtin.import_playbook: proxmox-cloud-init-template.yml
+
+- name: Pause to remind to set a DHCP reservation for the mac address & Deploy Aelita VM
+  hosts: localhost
+  tasks:
+    - name: Pause for DHCP reminder
+      ansible.builtin.pause:
+        prompt: "Press enter if you have set a DHCP reservation (in Unifi f.e.) based on the MAC address for Aelita (or if it's not needed)"
+    - name: Deploy Aelita VM
+      community.general.terraform:
+        project_path: ../../terraform/environments/aelita
+        state: present
+        variables_files:
+          - ../../terraform/environments/aelita/aelita.tfvars
+          - ../../terraform/environments/proxmox.tfvars
+
+- name: Configure Aelita
+  ansible.builtin.import_playbook: aelita.yml

@@ -88,7 +88,6 @@ services:
       - traefik.http.services.krusader.loadbalancer.server.port=80
       - traefik.http.routers.krusader.middlewares=keycloak-auth@file
 
-
 volumes:
   filebrowser:
   media:
