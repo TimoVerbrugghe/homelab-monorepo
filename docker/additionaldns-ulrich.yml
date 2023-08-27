@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    restart: unless-stopped
+    networks:
+      dockervlan:
+        ipv4_address: 10.10.10.21
+    volumes:
+      - adguardhome-work:/opt/adguardhome/work
+      - adguardhome-conf:/opt/adguardhome/conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    
+  tailscale:
+    image: tailscale/tailscale
+    container_name: tailscale
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - /var/lib:/var/lib
+      - /dev/net/tun:/dev/net/tun
+      - tailscale:/state
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY}
+      - TS_ROUTES=${TS_ROUTES}
+      - TS_EXTRA_ARGS=--advertise-exit-node
+      - TS_STATE_DIR=/state
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  adguardhome-work:
+  adguardhome-conf:
+  tailscale:
+
+networks:
+  dockervlan:
+    name: dockervlan
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "10.10.10.0/24"
+          gateway: "10.10.10.1"

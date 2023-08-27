@@ -1,29 +1,29 @@
 version: "3.8"
 
 services:
-  # adguardhome:
-  #   image: adguard/adguardhome
-  #   container_name: adguardhome
-  #   restart: unless-stopped
-  #   networks:
-  #     dockervlan:
-  #       ipv4_address: 10.10.10.20
-  #   volumes:
-  #     - adguardhome-work:/opt/adguardhome/work
-  #     - adguardhome-conf:/opt/adguardhome/conf
-  #     - /etc/letsencrypt:/etc/letsencrypt
-  #   # ports:
-  #   #   - 53:53/udp
-  #   #   - 53:53/tcp
-  #   #   - 80:80/tcp 
-  #   #   - 443:443/tcp
-  #   #   - 443:443/udp
-  #   #   - 3000:3000/tcp # Web UI for installation, on port 3001 to not conflict with netbootxyz
-  #   #   - 853:853/tcp
-  #   labels:
-  #     - traefik.docker.network=dockervlan
-  #     - traefik.http.routers.adguardhome.entrypoints=https
-  #     - traefik.http.services.adguardhome.loadbalancer.server.port=80
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    restart: unless-stopped
+    networks:
+      dockervlan:
+        ipv4_address: 10.10.10.20
+    volumes:
+      - adguardhome-work:/opt/adguardhome/work
+      - adguardhome-conf:/opt/adguardhome/conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    # ports:
+    #   - 53:53/udp
+    #   - 53:53/tcp
+    #   - 80:80/tcp 
+    #   - 443:443/tcp
+    #   - 443:443/udp
+    #   - 3000:3000/tcp # Web UI for installation, on port 3001 to not conflict with netbootxyz
+    #   - 853:853/tcp
+    labels:
+      - traefik.docker.network=dockervlan
+      - traefik.http.routers.adguardhome.entrypoints=https
+      - traefik.http.services.adguardhome.loadbalancer.server.port=80
     
   netbootxyz:
     image: ghcr.io/netbootxyz/netbootxyz
