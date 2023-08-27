@@ -1,47 +1,47 @@
-# - name: Gather facts from igpuvm host in inventory
-#   hosts: igpuvm
-#   vars:
-#     ansible_host_key_checking: false
-#     ansible_ssh_extra_args: '-o UserKnownHostsFile=/dev/null'
-#   tasks:
-#     - setup:
-#         gather_subset: network
+- name: Gather facts from igpuvm host in inventory
+  hosts: igpuvm
+  vars:
+    ansible_host_key_checking: false
+    ansible_ssh_extra_args: '-o UserKnownHostsFile=/dev/null'
+  tasks:
+    - setup:
+        gather_subset: network
 
-# - name: Add igpuvm Public Keys to known_hosts
-#   hosts: localhost
-#   connection: local
-#   vars:
-#     ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
-#     ssh_known_hosts: "{{ groups['igpuvm'] }}"
-#   tasks:
-#     - known_hosts:
-#         path: "{{ ssh_known_hosts_file }}"
-#         name: "{{ item }}"
-#         key: "{{ lookup('pipe','ssh-keyscan -T 10 ' + item + ',' + lookup('dig',item)) }}"
-#         state: present
-#       loop: "{{ ssh_known_hosts | map('extract', hostvars, ['inventory_hostname']) | list }}"
-#       become: no
+- name: Add igpuvm Public Keys to known_hosts
+  hosts: localhost
+  connection: local
+  vars:
+    ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
+    ssh_known_hosts: "{{ groups['igpuvm'] }}"
+  tasks:
+    - known_hosts:
+        path: "{{ ssh_known_hosts_file }}"
+        name: "{{ item }}"
+        key: "{{ lookup('pipe','ssh-keyscan -T 10 ' + item + ',' + lookup('dig',item)) }}"
+        state: present
+      loop: "{{ ssh_known_hosts | map('extract', hostvars, ['inventory_hostname']) | list }}"
+      become: no
 
-# - name: Do first time Ubuntu setup
-#   hosts: igpuvm
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - role: ../roles/ubuntu-vm-first-setup
+- name: Do first time Ubuntu setup
+  hosts: igpuvm
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/ubuntu-vm-first-setup
 
-# - name: Install intel drivers
-#   hosts: igpuvm
-#   gather_facts: true
-#   become: true
-#   tasks:
-#     - ansible.builtin.include_tasks: ../tasks/install-intel-driver.yml
+- name: Install intel drivers
+  hosts: igpuvm
+  gather_facts: true
+  become: true
+  tasks:
+    - ansible.builtin.include_tasks: ../tasks/install-intel-driver.yml
 
-# - name: Setup iGPU passthrough for igpuvm VM
-#   hosts: proxmox
-#   gather_facts: true
-#   tasks:
-#     - ansible.builtin.include_tasks: ../tasks/proxmox-vm-igpupassthrough.yml
-#       when: inventory_hostname == igpu_vm_proxmox_node
+- name: Setup iGPU passthrough for igpuvm VM
+  hosts: proxmox
+  gather_facts: true
+  tasks:
+    - ansible.builtin.include_tasks: ../tasks/proxmox-vm-igpupassthrough.yml
+      when: inventory_hostname == igpu_vm_proxmox_node
 
 - name: Install Portainer Server & Get certs for DNS
   hosts: igpuvm
