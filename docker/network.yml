@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
     networks:
       dockervlan:
-        ipv4_address: 10.10.10.23
+        ipv4_address: 10.10.10.24
     volumes:
       - netbootxyz-config:/config # optional
       - netbootxyz-assets:/assets # optional
