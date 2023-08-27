@@ -4,7 +4,8 @@ services:
   firefly:
     image: fireflyiii/core:latest
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     container_name: firefly
     volumes:
       - firefly_iii_upload:/var/www/html/storage/upload
@@ -25,7 +26,8 @@ services:
   fireflydb:
     image: mariadb    
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     container_name: fireflydb
     environment:
       - MARIADB_ROOT_PASSWORD=firefly
@@ -38,7 +40,8 @@ services:
   fidi:
     image: fireflyiii/data-importer:latest
     restart: unless-stopped
-    network_mode: dockerproxy
+    networks:
+      - dockerproxy
     container_name: fidi
     environment:
       - FIREFLY_III_URL=http://firefly:8080

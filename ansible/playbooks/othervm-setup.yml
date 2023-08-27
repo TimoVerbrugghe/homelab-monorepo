@@ -1,0 +1,29 @@
+- name: Add Other VM Public Keys to known_hosts
+  hosts: localhost
+  connection: local
+  vars:
+    ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
+    ssh_known_hosts: "{{ groups['othervms'] }}"
+  tasks:
+    - known_hosts:
+        path: "{{ ssh_known_hosts_file }}"
+        name: "{{ item }}"
+        key: "{{ lookup('pipe','ssh-keyscan -T 10 ' + item + ',' + lookup('dig',item)) }}"
+        state: present
+      loop: "{{ ssh_known_hosts | map('extract', hostvars, ['inventory_hostname']) | list }}"
+      become: no
+
+- name: Setup Other VMs
+  hosts: othervms
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/ubuntu-vm-first-setup
+
+- name: Install Portainer Agent on other VMs & get certs for DNS
+  hosts: othervms
+  gather_facts: true
+  become: true
+  tasks:
+    - ansible.builtin.include_tasks: ../tasks/portaineragent-install.yml
+    - ansible.builtin.include_tasks: ../tasks/renew-certs.yml

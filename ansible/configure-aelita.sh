@@ -1,4 +1,4 @@
 #!/bin/bash
-ansible-playbook \
+ansible-playbook\
     -i inventory/hosts.ini \
-    playbooks/aelita.yml
+    playbooks/igpuvm.yml

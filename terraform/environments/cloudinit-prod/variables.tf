@@ -21,7 +21,11 @@ variable "vm_storage" {
 
 variable "gateway" {
     type = string
-    default = "192.168.0.1"
+    default = "10.10.10.1"
+}
+
+variable "nameserver" {
+    type = string
 }
 
 variable "vm_configs" {
@@ -33,6 +37,8 @@ variable "vm_configs" {
         vm_memory = optional(number, 2048)
         vm_disksize = optional(string, "40G")
         node = optional(string, "proxmox")
+        vm_id = optional(number, 0)
+        vm_ipaddress = string
     }))
 }
 

@@ -24,6 +24,7 @@ resource "proxmox_vm_qemu" "create_proxmox_vms" {
     define_connection_info = false
 
     # VM General Settings
+    vmid = "${each.value.vm_id}"
     target_node = "${each.value.node}"
     name = "${each.value.vm_name}"
     bios = "ovmf"
@@ -61,8 +62,9 @@ resource "proxmox_vm_qemu" "create_proxmox_vms" {
     }
 
     # Cloud-Init settings
-    ipconfig0 = "ip=dhcp,ip6=dhcp"
+    ipconfig0 = "ip=${each.value.vm_ipaddress}/24,gw=${var.gateway}"
     ciuser = "${each.value.vm_name}"
     cipassword = "${each.value.vm_name}"
     sshkeys = tostring(data.http.sshkeys.response_body)
+    nameserver = "${var.nameserver}"
 }

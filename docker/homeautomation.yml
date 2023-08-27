@@ -5,13 +5,15 @@ services:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
-    privileged: true
     network_mode: host
     volumes:
       - homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
     labels:
-      - traefik.enable=false
+      - traefik.docker.network=host
+      - traefik.http.routers.hass.entrypoints=https
+      - traefik.http.services.hass.loadbalancer.server.port=8123
+      - traefik.http.routers.hass.rule=Host(`hass.timo.be`)
 
   mqtt:
     image: eclipse-mosquitto
@@ -49,7 +51,24 @@ services:
         max-size: "10mb"
         max-file: "1"
     labels:
-      - traefik.enable=false
+      - traefik.docker.network=host
+      - traefik.http.routers.homebridge.entrypoints=https
+      - traefik.http.services.homebridge.loadbalancer.server.port=8581
+
+  scrypted:
+    container_name: scrypted
+    restart: unless-stopped
+    network_mode: host
+    image: koush/scrypted
+    # hardware accelerated video decoding
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - scrypted:/server/volume
+    labels:
+      - traefik.docker.network=host
+      - traefik.http.routers.homebridge.entrypoints=https
+      - traefik.http.services.homebridge.loadbalancer.server.port=8581
 
 volumes:
   homeassistant:

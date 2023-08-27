@@ -23,7 +23,7 @@
     cpu: host
     ostype: l26
     net:
-      net0: virtio,bridge={{ network_bridge }}
+      net0: virtio,bridge={{ vm_network_bridge }}
     agent: true
     tablet: false
 
@@ -44,12 +44,6 @@
     ide:
       ide2: '{{ vm_template_storage }}:cloudinit'
     
-    # Passthrough intel iGPU
-    hostpci:
-      hostpci0:
-        host="{{ hostpci_igpu_id }}",pcie=1,rombar=1
-
-
 - name: Import cloudimg to local storage
   ansible.builtin.command:
     cmd: qm importdisk "{{ vm_template_id }}" cloudimg.img "{{ vm_template_storage }}"

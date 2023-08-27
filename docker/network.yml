@@ -7,21 +7,23 @@ services:
     restart: unless-stopped
     networks:
       dockervlan:
-        ipv4_address: 10.10.10.15
+        ipv4_address: 10.10.10.20
     volumes:
       - adguardhome-work:/opt/adguardhome/work
       - adguardhome-conf:/opt/adguardhome/conf
       - /etc/letsencrypt:/etc/letsencrypt
-    ports:
-      - 53:53/udp
-      - 53:53/tcp
-      - 80:80/tcp 
-      - 443:443/tcp
-      - 443:443/udp
-      - 3000:3000/tcp # Web UI for installation, on port 3001 to not conflict with netbootxyz
-      - 853:853/tcp
+    # ports:
+    #   - 53:53/udp
+    #   - 53:53/tcp
+    #   - 80:80/tcp 
+    #   - 443:443/tcp
+    #   - 443:443/udp
+    #   - 3000:3000/tcp # Web UI for installation, on port 3001 to not conflict with netbootxyz
+    #   - 853:853/tcp
     labels:
-      - traefik.enable=false
+      - traefik.docker.network=dockervlan
+      - traefik.http.routers.adguardhome.entrypoints=https
+      - traefik.http.services.adguardhome.loadbalancer.server.port=80
     
   netbootxyz:
     image: ghcr.io/netbootxyz/netbootxyz
@@ -29,16 +31,18 @@ services:
     restart: unless-stopped
     networks:
       dockervlan:
-        ipv4_address: 10.10.10.16
+        ipv4_address: 10.10.10.23
     volumes:
       - netbootxyz-config:/config # optional
       - netbootxyz-assets:/assets # optional
-    ports:
-      - 3000:3000 # Web ui
-      - 69:69/udp
-      - 80:80 # NGINX server to host assets
+    # ports:
+    #   - 3000:3000 # Web ui
+    #   - 69:69/udp
+    #   - 80:80 # NGINX server to host assets
     labels:
-      - traefik.enable=false
+      - traefik.docker.network=dockervlan
+      - traefik.http.routers.netbootxyz.entrypoints=https
+      - traefik.http.services.netbootxyz.loadbalancer.server.port=3000
     
   tailscale:
     image: tailscale/tailscale
@@ -132,8 +136,6 @@ services:
   #     # FEATURES_DNS_SERVERCONFIG: true
   #     # FEATURES_DNS_ACCESSLISTS: true
   #     # FEATURES_DNS_REWRITES: true
-  #   ports:
-  #     - 8082:8080
   #   restart: unless-stopped
 
 volumes:

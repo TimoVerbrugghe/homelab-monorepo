@@ -1,25 +1,56 @@
-- name: Prepare env on localhost
-  hosts: localhost
-  gather_facts: true
-  roles:
-    - role: ../roles/hostprereq
+# ## This playbook sets up proxmox hosts to passthrough iGPU, install ubuntu cloudinit templates & uses terraform to deploy vms based on these templates
+# ## This playbook will deploy 2 types of VMs: iGPU VM (where there are additional steps taken to install intel drivers and passthrough the iGPU) and "standard" VMs
 
-- name: Configure hosts & Create Proxmox Cloud Init template
-  ansible.builtin.import_playbook: proxmox-cloud-init-template.yml
+# - name: Prepare env on localhost
+#   hosts: localhost
+#   gather_facts: true
+#   roles:
+#     - role: ../roles/hostprereq
 
-- name: Pause to remind to set a DHCP reservation for the mac address & Deploy Aelita VM
+# - name: Add Proxmox Public SSH Keys to local system so there is no interrupt on host verification
+#   ansible.builtin.import_playbook: add-public-keys-proxmox.yml
+
+# - name: Configure Proxmox & Create Ubuntu Cloud Init Template
+#   ansible.builtin.import_playbook: proxmox-cloud-init-template.yml
+
+# - name: VM deployment using terraform
+#   hosts: localhost
+#   tasks:
+#     - name: Pause for confirmation
+#       ansible.builtin.pause:
+#         prompt: "Ready to deploy VMs - Press enter if you are happy with terraform variables, DHCP reservations, etc..."
+#     - name: Deploy VMs
+#       community.general.terraform:
+#         project_path: ../../terraform/environments/cloudinit-prod/
+#         state: present
+#         force_init: true
+#         variables_files:
+#           - ./cloudinit-prod.tfvars
+#           - ../proxmox.tfvars
+
+# - name: Wait 30 seconds to make sure that all cloudinit functions have been executed & VMs are fully booted
+#   hosts: localhost
+#   tasks:
+#     - name: Wait for 30 seconds to make sure VMs have fully booted
+#       ansible.builtin.pause:
+#         seconds: 30
+
+# - name: Configure iGPU VM
+#   ansible.builtin.import_playbook: igpuvm-setup.yml
+
+# - name: Prompt user to go to Portainer Server site for configuration
+#   hosts: localhost
+#   tasks:
+#     - ansible.builtin.pause:
+#         prompt: "Portainer server has been deployed on igpuvm VM. Please go to https://{{ hostvars[item].inventory_hostname }}:9443 to configure. Press enter to continue."
+#       with_items:  "{{ groups['igpuvm'] }}"
+
+- name: Configure other VMs
+  ansible.builtin.import_playbook: othervm-setup.yml
+
+- name: Prompt user to add Portainer Agent to configuration
   hosts: localhost
   tasks:
-    - name: Pause for DHCP reminder
-      ansible.builtin.pause:
-        prompt: "Press enter if you have set a DHCP reservation (in Unifi f.e.) based on the MAC address for Aelita (or if it's not needed)"
-    - name: Deploy Aelita VM
-      community.general.terraform:
-        project_path: ../../terraform/environments/aelita
-        state: present
-        variables_files:
-          - ../../terraform/environments/aelita/aelita.tfvars
-          - ../../terraform/environments/proxmox.tfvars
-
-- name: Configure Aelita
-  ansible.builtin.import_playbook: aelita.yml
+    - ansible.builtin.pause:
+        prompt: "Portainer Agent has been deployed on other vms. Please add {{ hostvars[item].inventory_hostname }}:9001 as an additional environment to portainer server installation. Press enter to continue."
+      with_items:  "{{ groups['othervms'] }}"

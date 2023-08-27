@@ -7,4 +7,6 @@ module "proxmox-cloudinit" {
     vm_configs = "${var.vm_configs}"
     vm_storage = "${var.vm_storage}"
     vm_networkbridge = "${var.vm_networkbridge}"
+    gateway = "${var.gateway}"
+    nameserver = "${var.nameserver}"
 }

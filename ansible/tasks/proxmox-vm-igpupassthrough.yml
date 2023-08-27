@@ -1,0 +1,27 @@
+- name: Add iGPU PCI passthrough
+  ansible.builtin.command:
+    cmd: qm set "{{ igpu_vm_id }}" --hostpci0 host={{ hostpci_igpu_id }},pcie=1,rombar=1
+  changed_when: false
+
+- name: Disable default display otherwise VM locks up when having both PCI passthrough and default display
+  ansible.builtin.command:
+    cmd: qm set "{{ igpu_vm_id }}" --vga type=none
+  changed_when: false
+
+- name: Restart VM to apply iGPU settings
+  delegate_to: localhost
+  community.general.proxmox_kvm:
+  # Logging in to the correct node
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_tokenid }}"
+    api_token_secret: "{{ proxmox_api_tokensecret }}"
+    api_host: "{{ proxmox_api_host }}"
+    node: "{{ proxmox_node | default('proxmox') }}"
+
+    vmid: "{{ igpu_vm_id }}"
+    state: restarted
+
+- name: Wait 30 seconds to make sure that VM has fully rebooted
+  delegate_to: localhost
+  ansible.builtin.pause:
+    seconds: 30

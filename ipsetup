@@ -1,0 +1,16 @@
+xana            10.10.10.2
+sectorfive      10.10.10.3 #Proxmox
+forestsector    10.10.10.4 #Proxmox
+mountainsector  10.10.10.5 #Proxmox
+icesector       10.10.10.6 #Proxmox
+
+aelita          10.10.10.7 #Main VM with all dockers
+ulrich          10.10.10.8
+odd             10.10.10.9
+
+Zigbee Sensor   10.10.10.10
+
+Adguardhome (aelita)     10.10.10.20
+Adguardhome (ulrich)     10.10.10.21
+Adguardhome (yumi)       10.10.10.22
+NetBootXYZ               10.10.10.23

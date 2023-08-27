@@ -4,24 +4,36 @@
     path: /etc/kernel/cmdline.d
     state: directory
     mode: '0644'
-    
-- name: Append additional kernel command line parameters for iGPU passhtrough
-  ansible.builtin.lineinfile:
-    path: /etc/kernel/cmdline.d/igpupassthrough
-    # Turn on intel IOMMU, Bind vfio driver to iGPU
-    line: 'intel_iommu=on iommu=pt vfio_pci.ids={{ vfio_pci_ids }}'
-    mode: '644'
-    state: present
-    create: true
 
-- name: Append additional kernel command line parameters for optimizations
+- name: Check if /etc/kernel/cmdline contains command line parameters for iGPU passthrough
+  find:
+    paths: /etc/kernel/
+    patterns: cmdline
+    contains: ^.*intel_iommu=on iommu=pt vfio_pci.ids={{ vfio_pci_ids }}.*$
+  register: igpu_cmdline_find
+
+- name: Append /etc/kernel/cmdline with command line parameters for iGPU passthrough
   ansible.builtin.lineinfile:
-    path: /etc/kernel/cmdline.d/optimizations
-    # disable all optional CPU mitigations & turn on transparent hugepages
-    line: 'mitigations=off transparent_hugepage=always'
-    mode: '644'
-    state: present
-    create: true
+    path: /etc/kernel/cmdline
+    backrefs: true
+    regexp: ^(.*)$
+    line: \1 intel_iommu=on iommu=pt vfio_pci.ids={{ vfio_pci_ids }}
+  when: igpu_cmdline_find.matched == 0
+
+- name: Check if /etc/kernel/cmdline contains command line parameters for optimizations
+  find:
+    paths: /etc/kernel/
+    patterns: cmdline
+    contains: ^.*mitigations=off transparent_hugepage=always.*$
+  register: optimizations_cmdline_find
+
+- name: Append /etc/kernel/cmdline with command line parameters for optimizations
+  ansible.builtin.lineinfile:
+    path: /etc/kernel/cmdline
+    backrefs: true
+    regexp: ^(.*)$
+    line: \1 mitigations=off transparent_hugepage=always
+  when: optimizations_cmdline_find.matched == 0
 
 - name: Create vfio.conf
   ansible.builtin.copy:

@@ -6,10 +6,7 @@
 
 - name: Install qemu-guest-agent
   ansible.builtin.include_tasks: install-qemu-guest-agent.yml
-
-- name: Install intel drivers
-  ansible.builtin.include_tasks: install-intel-driver.yml
-
+  
 - name: Enable watchdog
   ansible.builtin.include_tasks: enable-watchdog.yml
 

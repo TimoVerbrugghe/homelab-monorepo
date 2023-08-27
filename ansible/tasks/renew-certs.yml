@@ -8,7 +8,7 @@
   ansible.builtin.copy:
     dest: "/etc/letsencrypt/cloudflare.ini"
     content: |
-      dns_cloudflare_api_token = "{{ dns_cloudflare_api_token }}"
+      dns_cloudflare_api_token = {{ dns_cloudflare_api_token }}
     mode: '0600'
 
 - name: Run Certbot container to get certs
@@ -19,7 +19,7 @@
     state: started
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
-    dns:
+    dns_servers:
       - "8.8.8.8"
       - "1.1.1.1"
     command: |

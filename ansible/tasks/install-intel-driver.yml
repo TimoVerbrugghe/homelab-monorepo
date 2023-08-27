@@ -8,7 +8,6 @@
       - intel-gpu-tools
       - ocl-icd-libopencl1
       - intel-opencl-icd
-      - firmware-linux-nonfree
       - libvpl2
       - onevpl-tools
     state: present
