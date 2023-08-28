@@ -78,7 +78,7 @@ services:
     labels:
       - traefik.http.routers.speedtest-tracker.entrypoints=https
       - traefik.http.services.speedtest-tracker.loadbalancer.server.port=80
-      - traefik.http.routers.speedtest-tracker.middlewares=keycloak-auth@file
+      # - traefik.http.routers.speedtest-tracker.middlewares=keycloak-auth@file
       - traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.timo.be`)
 
   localspeedtest:
@@ -90,7 +90,7 @@ services:
     labels:
       - traefik.http.routers.localspeedtest.entrypoints=https
       - traefik.http.services.localspeedtest.loadbalancer.server.port=3000
-      - traefik.http.routers.localspeedtest.middlewares=keycloak-auth@file
+      # - traefik.http.routers.localspeedtest.middlewares=keycloak-auth@file
 
   traefik:
     image: traefik
@@ -107,6 +107,14 @@ services:
     volumes:
       - traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
+
+  cloudflared-tunnel:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
 
 volumes:
   adguardhome-work:
