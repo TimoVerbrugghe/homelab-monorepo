@@ -100,7 +100,6 @@ services:
       - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
     networks:
       - dockerproxy
-      - bridge
     ports:
       - 80:80/tcp
       - 443:443/tcp
