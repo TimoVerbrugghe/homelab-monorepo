@@ -103,10 +103,12 @@ services:
     ports:
       - 80:80/tcp
       - 443:443/tcp
-      - 6800:6800/tcp
     volumes:
       - traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - traefik.http.routers.traefik.entrypoints=https
+      - traefik.http.services.traefik.loadbalancer.server.port=80
 
   # cloudflared-tunnel:
   #   container_name: cloudflared-tunnel

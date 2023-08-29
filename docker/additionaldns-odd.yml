@@ -52,7 +52,12 @@ services:
       REPLICA_URL: ${adguardhome_replica_url}
       REPLICA_USERNAME: ${adguardhome_replica_username}
       REPLICA_PASSWORD: ${adguardhome_replica_password}
-      CRON: '*/5 * * * *' # run every 5 minutes
+
+      REPLICA1_URL: ${adguardhome_replica1_url}
+      REPLICA1_USERNAME: ${adguardhome_replica1_username}
+      REPLICA1_PASSWORD: ${adguardhome_replica1_password}
+
+      CRON: '*/1 * * * *' # run every minute
       RUNONSTART: true
 
       # Configure sync features; by default all features are enabled.

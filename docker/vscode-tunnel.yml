@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+
+  # Builds a simple docker container running Ubuntu with VS code installed started with the "code tunnel" command to establish VS code tunnel
+  vscode-tunnel:
+    build: https://github.com/TimoVerbrugghe/vscode-remote-tunnel-docker.git
+    container_name: vscode-tunnel
+    hostname: ${VSCODE_TUNNEL_NAME}
+    restart: unless-stopped
+    volumes:
+      - /var/lib/docker/volumes:/home/workspace
+      - vscode-tunnel:/root/.vscode # To persist tunnel registration
+      - vscode-tunnel-server:/root/.vscode-server # To persist extensions and other settings
+
+volumes:
+  vscode-tunnel:
+  vscode-tunnel-server:
