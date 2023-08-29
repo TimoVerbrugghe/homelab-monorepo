@@ -74,6 +74,13 @@ services:
       # FEATURES_DNS_REWRITES: true
     restart: unless-stopped
 
+  cloudflared-tunnel:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
 
 volumes:
   adguardhome-work:

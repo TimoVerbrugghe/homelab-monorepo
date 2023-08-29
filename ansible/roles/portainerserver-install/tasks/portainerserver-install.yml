@@ -1,25 +1,71 @@
-# Create Portainer Agent
-- name: Create Portainer Server container
-  community.docker.docker_container:
-    name: portainer
-    image: portainer/portainer-ce:latest
-    restart_policy: unless-stopped
-    state: started
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-      - /etc/letsencrypt/live:/certs/live:ro
-      - /etc/letsencrypt/archive:/certs/archive:ro
-    ports:
-      - "8000:8000"
-      - "9443:9443"
-    networks:
-      - name: "test"
-    labels:
-      traefik.http.routers.portainer.entrypoints: "https"
-      traefik.http.services.portainer.loadbalancer.server.port: "9443"
-      traefik.docker.network: "bridge"
-      traefik.http.services.portainer.loadbalancer.server.scheme: "https"
-    command: |
-      --sslcert /certs/live/timo.be/fullchain.pem
-      --sslkey /certs/live/timo.be/privkey.pem
+# Create Portainer Server
+# - name: Create Portainer Server container
+#   community.docker.docker_container:
+#     name: portainer
+#     image: portainer/portainer-ce:latest
+#     restart_policy: unless-stopped
+#     state: started
+#     volumes:
+#       - /var/run/docker.sock:/var/run/docker.sock
+#       - portainer_data:/data
+#       - /etc/letsencrypt/live:/certs/live:ro
+#       - /etc/letsencrypt/archive:/certs/archive:ro
+#     ports:
+#       - "8000:8000"
+#       - "9443:9443"
+#     labels:
+#       traefik.http.routers.portainer.entrypoints: "https"
+#       traefik.http.services.portainer.loadbalancer.server.port: "9443"
+#       traefik.docker.network: "bridge"
+#       traefik.http.services.portainer.loadbalancer.server.scheme: "https"
+#     command: |
+#       --sslcert /certs/live/timo.be/fullchain.pem
+#       --sslkey /certs/live/timo.be/privkey.pem
+
+- name: Create portainer folder
+  file:
+    path: /etc/portainer
+    state: directory
+    mode: '0755'
+
+- name: Create docker compose file that defines portainer server and the network
+  ansible.builtin.copy:
+    dest: "/etc/portainer/portainer-server-compose.yml"
+    content: |
+      version: '3.8'
+
+      services:
+        portainer:
+          image: portainer/portainer-ce:latest
+          container_name: portainer
+          restart: unless-stopped
+          volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - portainer:/data
+            - /etc/letsencrypt/live:/certs/live:ro
+            - /etc/letsencrypt/archive:/certs/archive:ro
+          ports:
+            - "8000:8000"
+            - "9443:9443"
+          networks:
+            - defaultbridge
+          labels:
+            - traefik.http.routers.portainer.entrypoints=https
+            - traefik.http.services.portainer.loadbalancer.server.port=9443
+            - traefik.docker.network=defaultbridge
+            - traefik.http.services.portainer.loadbalancer.server.scheme=https
+          command: --sslcert /certs/live/timo.be/fullchain.pem --sslkey /certs/live/timo.be/privkey.pem
+
+      volumes:
+        portainer:
+
+      networks:
+        defaultbridge:
+          name: defaultbridge
+
+- name: Start Portainer Server and a user defined bridge network for traefik to later connect to
+  become: true
+  ansible.builtin.shell:
+    cmd: "docker compose -f portainer-server-compose.yml up -d"
+    chdir: /etc/portainer
+
