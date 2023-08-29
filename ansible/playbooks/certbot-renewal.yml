@@ -1,0 +1,6 @@
+- name: Renew certs with certbot
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/certbot-renewal

@@ -22,6 +22,8 @@
     dns_servers:
       - "8.8.8.8"
       - "1.1.1.1"
+    labels:
+      traefik.enable: "false"
     command: |
       certonly 
       --non-interactive --keep-until-expiring --agree-tos --no-eff-email
@@ -29,5 +31,7 @@
       -m timo@hotmail.be 
       --dns-cloudflare-propagation-seconds 20 
       --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini
-      --cert-name dns.timo.be 
+      --cert-name timo.be 
       -d dns.timo.be
+      -d home.timo.be
+      -d *.home.timo.be

@@ -1,0 +1,25 @@
+# Create Portainer Agent
+- name: Create Portainer Server container
+  community.docker.docker_container:
+    name: portainer
+    image: portainer/portainer-ce:latest
+    restart_policy: unless-stopped
+    state: started
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+      - /etc/letsencrypt/live:/certs/live:ro
+      - /etc/letsencrypt/archive:/certs/archive:ro
+    ports:
+      - "8000:8000"
+      - "9443:9443"
+    networks:
+      - name: "test"
+    labels:
+      traefik.http.routers.portainer.entrypoints: "https"
+      traefik.http.services.portainer.loadbalancer.server.port: "9443"
+      traefik.docker.network: "bridge"
+      traefik.http.services.portainer.loadbalancer.server.scheme: "https"
+    command: |
+      --sslcert /certs/live/timo.be/fullchain.pem
+      --sslkey /certs/live/timo.be/privkey.pem

@@ -47,6 +47,6 @@
   hosts: igpuvm
   gather_facts: true
   become: true
-  tasks:
-    - ansible.builtin.include_tasks: ../tasks/portainerserver-install.yml
-    - ansible.builtin.include_tasks: ../tasks/renew-certs.yml
+  roles:
+    - role: ../roles/portainerserver-install
+    - role: ../roles/certbot-renewal

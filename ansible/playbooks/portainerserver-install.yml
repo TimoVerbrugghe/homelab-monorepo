@@ -1,0 +1,6 @@
+- name: Install Portainer Server
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/portainerserver-install
