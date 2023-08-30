@@ -43,7 +43,7 @@ services:
     container_name: keycloak
     restart: always
     image: quay.io/keycloak/keycloak
-    command: start
+    command: start --import-realm
     depends_on:
       - keycloak-postgres
     networks:
@@ -68,6 +68,11 @@ services:
 volumes:
   keycloak-postgres:
   keycloakbackup:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user/other/keycloakbackup/import"
 
 networks:
   dockerproxy:
