@@ -18,11 +18,12 @@
     content: |
       #! /bin/bash
       ip link add macvlan0 link eth0 type macvlan mode bridge
-    mode: '0600'
+    mode: '0755'
 
 - name: Create netplan configuration with routes (routes dependent on the host)
   ansible.builtin.copy:
     dest: "/etc/netplan/90-docker.yaml"
+    # Correct indentation needs to be applied to the variable so that it sits right under routes:
     content: |
       network:
           version: 2
@@ -32,8 +33,7 @@
                   addresses:
                   - 10.10.10.0/24
                   routes:
-                  -   to: 10.10.10.21
-                  -   to: 10.10.10.24
+      {{ macvlan_routes | indent(width=12, first=True) }}
     mode: '0600'
 
 - name: Run netplan apply to make sure changes are persistent across reboots

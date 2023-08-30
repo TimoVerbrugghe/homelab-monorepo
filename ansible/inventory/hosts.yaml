@@ -1,0 +1,44 @@
+all:
+  children:
+    igpuvm:
+      children:
+        aelita:
+          hosts:
+            aelita.home.timo.be:
+              ansible_user: aelita
+              macvlan_routes: |
+                - to: 10.10.10.20
+    othervms:
+      children:
+        odd:
+          hosts:
+            odd.home.timo.be:
+              ansible_user: odd
+              macvlan_routes: |
+                - to: 10.10.10.22
+                - to: 10.10.10.24
+        ulrich:
+          hosts:
+            ulrich.home.timo.be:
+              ansible_user: ulrich
+              macvlan_routes: |
+                - to: 10.10.10.21
+    proxmox:
+      hosts:
+        forestsector.home.timo.be:
+          ansible_user: root
+          vm_template_id: 9999
+          proxmox_node: forestsector
+          vfio_pci_ids: 8086:46d1
+          hostpci_igpu_id: '00:02.0'
+        icesector.home.timo.be:
+          ansible_user: root
+          vm_template_id: 9998
+          proxmox_node: icesector
+          vfio_pci_ids: 8086:4d61
+        mountainsector.home.timo.be:
+          ansible_user: root
+          vm_template_id: 9997
+          proxmox_node: mountainsector
+          vfio_pci_ids: 8086:4e61
+    windowsvm:

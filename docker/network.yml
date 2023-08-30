@@ -105,6 +105,8 @@ services:
     command: tunnel run
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+    labels:
+      - traefik.enable=false
 
 volumes:
   adguardhome-work:

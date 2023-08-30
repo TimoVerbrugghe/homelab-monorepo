@@ -12,6 +12,8 @@ services:
       - /var/lib/docker/volumes:/home/workspace
       - vscode-tunnel:/root/.vscode # To persist tunnel registration
       - vscode-tunnel-server:/root/.vscode-server # To persist extensions and other settings
+    labels:
+      - traefik.enable=false
 
 volumes:
   vscode-tunnel:

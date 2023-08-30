@@ -1,0 +1,6 @@
+- name: Configure Macvlan adapter - Necessary if you are running macvlan docker containers and still want the host to connect to those containers
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/macvlan-config
