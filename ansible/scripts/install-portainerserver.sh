@@ -1,5 +1,5 @@
 #!/bin/bash
-ansible-playbook -vvv \
-     -i "10.10.10.7", \
-     -e "ansible_user=aelita" \
+ansible-playbook \
+     -i ../inventory/hosts.yaml \
+     --limit "aelita.home.timo.be" \
      ../playbooks/portainerserver-install.yml

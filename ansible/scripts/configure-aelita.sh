@@ -1,4 +1,4 @@
 #!/bin/bash
 ansible-playbook\
-    -i ../inventory/hosts.ini \
+    -i ../inventory/hosts.yaml \
     ../playbooks/igpuvm.yml

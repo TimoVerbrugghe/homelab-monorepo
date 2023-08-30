@@ -1,4 +1,4 @@
 #!/bin/bash
 ansible-playbook \
-     -i ../inventory/hosts.ini -vvv \
+     -i ../inventory/hosts.yaml \
      ../playbooks/prep-gamingvm.yml
