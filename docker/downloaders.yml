@@ -28,9 +28,9 @@ services:
       - qbittorrent:/config
       - downloads:/downloads
     labels:
-      - traefik.http.routers.sonarr.entrypoints=https
-      - traefik.http.services.sonarr.loadbalancer.server.port=8080
-      - traefik.http.routers.sonarr.middlewares=keycloak-auth@file
+      - traefik.http.routers.qbittorrent.entrypoints=https
+      - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
+      - traefik.http.routers.qbittorrent.middlewares=keycloak-auth@file
 
   # icloudpd-timo:
   #   image: boredazfcuk/icloudpd
@@ -73,10 +73,10 @@ services:
       - jdownloader2:/config
       - downloads:/output
     labels:
-      - traefik.http.routers.flood.rule=Host(`jdownloader.home.timo.be`)
-      - traefik.http.routers.flood.entrypoints=https
-      - traefik.http.services.flood.loadbalancer.server.port=5800
-      - traefik.http.routers.flood.middlewares=keycloak-auth@file
+      - traefik.http.routers.jdownloader.rule=Host(`jdownloader.home.timo.be`)
+      - traefik.http.routers.jdownloader.entrypoints=https
+      - traefik.http.services.jdownloader.loadbalancer.server.port=5800
+      - traefik.http.routers.jdownloader.middlewares=keycloak-auth@file
     
   aria2-pro:
     image: p3terx/aria2-pro
@@ -108,9 +108,9 @@ services:
       options:
         max-size: 1m
     labels:
-      - traefik.http.routers.flood.entrypoints=https
-      - traefik.http.services.flood.loadbalancer.server.port=6880
-      - traefik.http.routers.flood.middlewares=keycloak-auth@file    
+      - traefik.http.routers.ariang.entrypoints=https
+      - traefik.http.services.ariang.loadbalancer.server.port=6880
+      - traefik.http.routers.ariang.middlewares=keycloak-auth@file    
 
   metube:
     image: ghcr.io/alexta69/metube
