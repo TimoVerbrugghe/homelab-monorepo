@@ -22,9 +22,8 @@ services:
       - traefik.http.routers.keycloakauth.entrypoints=https
       - traefik.http.services.keycloakauth.loadbalancer.server.port=4181
       - traefik.http.routers.keycloakauth.middlewares=keycloak-auth@file
-      - traefik.http.routers.keycloakauth.rule=Host(`keycloakauth.timo.be`)
+      - traefik.http.routers.keycloakauth.rule=Host(`keycloakauth.home.timo.be`)
 
-# Still need to update the database to the latest postgres version
   keycloak-postgres:
     container_name: keycloak-postgres
     image: postgres
@@ -62,7 +61,7 @@ services:
     labels:
       - traefik.http.routers.keycloak.entrypoints=https
       - traefik.http.services.keycloak.loadbalancer.server.port=8080
-      - traefik.http.routers.keycloak.rule=Host(`auth.timo.be`)
+      - traefik.http.routers.keycloak.rule=Host(`auth.home.timo.be`)
     volumes:
       - keycloakbackup:/opt/keycloak/data/import
 

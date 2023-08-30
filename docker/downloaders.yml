@@ -10,7 +10,7 @@ services:
       - flood:/config
       - downloads:/data
     labels:
-      - traefik.http.routers.flood.rule=Host(`torrents.timo.be`)
+      - traefik.http.routers.flood.rule=Host(`torrents.home.timo.be`)
       - traefik.http.routers.flood.entrypoints=https
       - traefik.http.services.flood.loadbalancer.server.port=3000
       - traefik.http.routers.flood.middlewares=keycloak-auth@file
@@ -73,7 +73,7 @@ services:
       - jdownloader2:/config
       - downloads:/output
     labels:
-      - traefik.http.routers.flood.rule=Host(`jdownloader.timo.be`)
+      - traefik.http.routers.flood.rule=Host(`jdownloader.home.timo.be`)
       - traefik.http.routers.flood.entrypoints=https
       - traefik.http.services.flood.loadbalancer.server.port=5800
       - traefik.http.routers.flood.middlewares=keycloak-auth@file
@@ -139,7 +139,7 @@ volumes:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/downloads"
   
 networks:

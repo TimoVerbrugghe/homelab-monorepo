@@ -12,14 +12,6 @@ services:
       - adguardhome-work:/opt/adguardhome/work
       - adguardhome-conf:/opt/adguardhome/conf
       - /etc/letsencrypt:/etc/letsencrypt
-    # ports:
-    #   - 53:53/udp
-    #   - 53:53/tcp
-    #   - 80:80/tcp 
-    #   - 443:443/tcp
-    #   - 443:443/udp
-    #   - 3000:3000/tcp # Web UI for installation, on port 3001 to not conflict with netbootxyz
-    #   - 853:853/tcp
     labels:
       - traefik.docker.network=dockervlan
       - traefik.http.routers.adguardhome.entrypoints=https
@@ -33,12 +25,8 @@ services:
       dockervlan:
         ipv4_address: 10.10.10.24
     volumes:
-      - netbootxyz-config:/config # optional
-      - netbootxyz-assets:/assets # optional
-    # ports:
-    #   - 3000:3000 # Web ui
-    #   - 69:69/udp
-    #   - 80:80 # NGINX server to host assets
+      - netbootxyz-config:/config
+      - netbootxyz-assets:/assets
     labels:
       - traefik.docker.network=dockervlan
       - traefik.http.routers.netbootxyz.entrypoints=https

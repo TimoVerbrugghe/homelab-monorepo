@@ -13,7 +13,7 @@ services:
       - traefik.docker.network=host
       - traefik.http.routers.hass.entrypoints=https
       - traefik.http.services.hass.loadbalancer.server.port=8123
-      - traefik.http.routers.hass.rule=Host(`hass.timo.be`)
+      - traefik.http.routers.hass.rule=Host(`hass.home.timo.be`)
 
   mqtt:
     image: eclipse-mosquitto

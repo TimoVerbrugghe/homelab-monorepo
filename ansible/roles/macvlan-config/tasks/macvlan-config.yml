@@ -1,0 +1,41 @@
+# This role sets up a macvlan bridge using netplan on ubuntu. This is necessary if you have docker containers with macvlan configured that you want to connect to from the docker host (f.e. a DNS container that uses macvlan to have a separate IP to expose ports 80, 53, 443, etc...).
+
+- name: Make sure networkd-dispatcher service is running
+  ansible.builtin.systemd:
+    name: networkd-dispatcher
+    enabled: yes
+    state: started
+
+- name: Create configured.d folder for the script to create macvlan0 adapter
+  ansible.builtin.file:
+    path: /etc/networkd-dispatcher/configured.d
+    state: directory
+    mode: '0755'
+
+- name: Create macvlan0 adapter script which will run when netplan apply is run
+  ansible.builtin.copy:
+    dest: "/etc/networkd-dispatcher/configured.d/10-macvlan-interface.sh"
+    content: |
+      #! /bin/bash
+      ip link add macvlan0 link eth0 type macvlan mode bridge
+    mode: '0600'
+
+- name: Create netplan configuration with routes (routes dependent on the host)
+  ansible.builtin.copy:
+    dest: "/etc/netplan/90-docker.yaml"
+    content: |
+      network:
+          version: 2
+          renderer: networkd
+          ethernets:
+              macvlan0:
+                  addresses:
+                  - 10.10.10.0/24
+                  routes:
+                  -   to: 10.10.10.21
+                  -   to: 10.10.10.24
+    mode: '0600'
+
+- name: Run netplan apply to make sure changes are persistent across reboots
+  ansible.builtin.shell:
+    cmd: netplan apply
