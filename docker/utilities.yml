@@ -48,7 +48,7 @@ services:
     networks:
       - dockerproxy
     environment:
-      - DOMAIN=https://vaultwarden.example.com  # Your domain; vaultwarden needs to know it's https to work properly with attachments
+      - DOMAIN=https://bitwarden.home.timo.be # Your domain; vaultwarden needs to know it's https to work properly with attachments
       - SERVER_ADMIN_EMAIL=timo@hotmail.be
       - SIGNUPS_ALLOWED=false
       - INVITATIONS_ALLOWED=false
@@ -139,7 +139,7 @@ services:
       - traefik.http.routers.homarr.entrypoints=https
       - traefik.http.services.homarr.loadbalancer.server.port=7575
       - traefik.http.routers.homarr.middlewares=keycloak-auth@file
-      - traefik.http.routers.homarr.rule=Host('www.home.timo.be')
+      - traefik.http.routers.homarr.rule=Host('home.timo.be')
 
 volumes:
   scanservjs-scans:

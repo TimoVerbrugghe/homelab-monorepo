@@ -32,37 +32,37 @@ services:
       - traefik.http.services.sonarr.loadbalancer.server.port=8080
       - traefik.http.routers.sonarr.middlewares=keycloak-auth@file
 
-  icloudpd-timo:
-    image: boredazfcuk/icloudpd
-    container_name: icloudpd-timo
-    restart: unless-stopped
-    network_mode: bridge
-    environment:
-      - apple_id={$ICLOUDPD_APPLE_ID}
-      - authentication_type=MFA
+  # icloudpd-timo:
+  #   image: boredazfcuk/icloudpd
+  #   container_name: icloudpd-timo
+  #   restart: unless-stopped
+  #   network_mode: bridge
+  #   environment:
+  #     - apple_id={$ICLOUDPD_APPLE_ID}
+  #     - authentication_type=MFA
 
-      - synchronisation_interval=86400
-      - TZ=Europe/London
-      - download_path=/home/user/iCloud
-      - skip_check=true
-      - auto_delete=true
-      - UMASK=000
-      - PGID=100
-      - PUID=99
+  #     - synchronisation_interval=86400
+  #     - TZ=Europe/London
+  #     - download_path=/home/user/iCloud
+  #     - skip_check=true
+  #     - auto_delete=true
+  #     - UMASK=000
+  #     - PGID=100
+  #     - PUID=99
 
-      - notification_type=Webhook
-      - notification_title=iCloudPD
-      - webhook_server=hooks.slack.com
-      - webhook_port=443
-      - webhook_path=/services/
-      - webhook_id={$ICLOUDPD_WEBHOOK_ID}
-      - webhook_body=text
-      - webhook_https=true
-    volumes:
-        - icloudpd-timo:/config
-        - icloudpd-data:/home/user/iCloud
-    labels:
-      - traefik.enable=false
+  #     - notification_type=Webhook
+  #     - notification_title=iCloudPD
+  #     - webhook_server=hooks.slack.com
+  #     - webhook_port=443
+  #     - webhook_path=/services/
+  #     - webhook_id={$ICLOUDPD_WEBHOOK_ID}
+  #     - webhook_body=text
+  #     - webhook_https=true
+  #   volumes:
+  #       - icloudpd-timo:/config
+  #       - icloudpd-data:/home/user/iCloud
+  #   labels:
+  #     - traefik.enable=false
 
   jdownloader2:
     image: jlesage/jdownloader-2
@@ -130,13 +130,12 @@ services:
       - traefik.http.routers.metube.middlewares=keycloak-auth@file 
 
 volumes:
-  icloudpd-timo:
+  # icloudpd-timo:
   qbittorrent:
   flood:
   jdownloader2:
   aria2-pro:
   downloads:
-    driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
