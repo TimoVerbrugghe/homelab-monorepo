@@ -4,8 +4,9 @@ services:
   flood:
     container_name: flood
     image: jesec/flood
-    restart: unless-stopped
-    network_mode: dockerproxy
+    restart: always
+    networks: 
+      - dockerproxy
     volumes:
       - flood:/config
       - downloads:/data
@@ -18,8 +19,9 @@ services:
   qbittorrent: 
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    restart: unless-stopped
-    network_mode: dockerproxy
+    restart: always
+    networks: 
+      - dockerproxy
     environment:
       - PUID=99
       - PGID=100
@@ -35,8 +37,9 @@ services:
   # icloudpd-timo:
   #   image: boredazfcuk/icloudpd
   #   container_name: icloudpd-timo
-  #   restart: unless-stopped
-  #   network_mode: bridge
+  #   restart: always
+    # networks: 
+    #   - dockerproxy
   #   environment:
   #     - apple_id={$ICLOUDPD_APPLE_ID}
   #     - authentication_type=MFA
@@ -67,8 +70,9 @@ services:
   jdownloader2:
     image: jlesage/jdownloader-2
     container_name: jdownloader2
-    restart: unless-stopped
-    network_mode: dockerproxy
+    restart: always
+    networks: 
+      - dockerproxy
     volumes:
       - jdownloader2:/config
       - downloads:/output
@@ -81,8 +85,9 @@ services:
   aria2-pro:
     image: p3terx/aria2-pro
     container_name: aria2-pro
-    restart: unless-stopped
-    network_mode: dockerproxy
+    restart: always
+    networks: 
+      - dockerproxy
     logging:
       options:
         max-size: 1m
@@ -103,8 +108,9 @@ services:
   ariang:
     image: p3terx/ariang
     container_name: ariang
-    restart: unless-stopped
-    network_mode: dockerproxy
+    restart: always
+    networks:
+      - dockerproxy
     logging:
       options:
         max-size: 1m
@@ -116,7 +122,7 @@ services:
   metube:
     image: ghcr.io/alexta69/metube
     container_name: metube
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
