@@ -66,7 +66,7 @@ services:
     labels:
       - traefik.http.routers.speedtest-tracker.entrypoints=https
       - traefik.http.services.speedtest-tracker.loadbalancer.server.port=80
-      # - traefik.http.routers.speedtest-tracker.middlewares=keycloak-auth@file
+      - traefik.http.routers.speedtest-tracker.middlewares=keycloak-auth@file
       - traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.home.timo.be`)
 
   localspeedtest:
@@ -78,7 +78,7 @@ services:
     labels:
       - traefik.http.routers.localspeedtest.entrypoints=https
       - traefik.http.services.localspeedtest.loadbalancer.server.port=3000
-      # - traefik.http.routers.localspeedtest.middlewares=keycloak-auth@file
+      - traefik.http.routers.localspeedtest.middlewares=keycloak-auth@file
 
   traefik:
     image: traefik
