@@ -54,6 +54,8 @@ services:
       - PLEX_URL=http://plex:32400
       - PLEX_TOKEN=${PLEX_TOKEN}
       - TZ=Europe/Brussels
+    labels:
+      - traefik.enable=false
 
   sonarr:
     container_name: sonarr
@@ -143,7 +145,7 @@ services:
     volumes:
       - overseerr:/app/config
     labels:
-      - traefik.http.routers.plex.rule=Host(`request.timo.be`)
+      - traefik.http.routers.plex.rule=Host(`request.home.timo.be`)
       - traefik.http.routers.overseerr.entrypoints=https
       - traefik.http.services.overseerr.loadbalancer.server.port=5055
       - traefik.http.routers.overseerr.middlewares=keycloak-auth@file
@@ -201,11 +203,11 @@ services:
       - ps1games:/data/psx/roms:rw
       - snesgames:/data/snes/roms:rw
     labels:
-      - traefik.http.routers.emulatorjs.rule=Host(`games.timo.be`)
+      - traefik.http.routers.emulatorjs.rule=Host(`games.home.timo.be`)
       - traefik.http.routers.emulatorjs.entrypoints=https
       - traefik.http.services.emulatorjs.loadbalancer.server.port=80
       - traefik.http.routers.emulatorjs.middlewares=keycloak-auth@file
-      - traefik.http.routers.emulatorjs-config.rule=Host(`gamesconfig.timo.be`)
+      - traefik.http.routers.emulatorjs-config.rule=Host(`gamesconfig.home.timo.be`)
       - traefik.http.routers.emulatorjs-config.entrypoints=https
       - traefik.http.services.emulatorjs-config.loadbalancer.server.port=3000
       - traefik.http.routers.emulatorjs-config.middlewares=keycloak-auth@file
@@ -215,55 +217,55 @@ volumes:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/downloads"
   movies:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/movies"
   tvshows:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/tvshows"
   music:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/music"
   dsgames:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/games/DS"
   gbagames:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/games/GBA"
   ps1games:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/games/PS1"
   snesgames:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/games/SNES"
   gbcgames:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.timo.local,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user/games/GBC"
     external: true
 
