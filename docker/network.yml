@@ -4,7 +4,7 @@ services:
   adguardhome:
     image: adguard/adguardhome
     container_name: adguardhome
-    restart: unless-stopped
+    restart: always
     networks:
       dockervlan:
         ipv4_address: 10.10.10.20
@@ -20,7 +20,7 @@ services:
   netbootxyz:
     image: ghcr.io/netbootxyz/netbootxyz
     container_name: netbootxyz
-    restart: unless-stopped
+    restart: always
     networks:
       dockervlan:
         ipv4_address: 10.10.10.24
@@ -35,7 +35,7 @@ services:
   tailscale:
     image: tailscale/tailscale
     container_name: tailscale
-    restart: unless-stopped
+    restart: always
     network_mode: host
     privileged: true
     volumes:
@@ -52,7 +52,7 @@ services:
 
   speedtest-tracker:
     container_name: speedtest-tracker
-    restart: unless-stopped
+    restart: always
     image: ghcr.io/alexjustesen/speedtest-tracker
     networks:
       - dockerproxy
@@ -70,7 +70,7 @@ services:
       - traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.home.timo.be`)
 
   localspeedtest:
-    restart: unless-stopped
+    restart: always
     container_name: localspeedtest
     image: openspeedtest/latest
     networks:
@@ -82,6 +82,7 @@ services:
 
   traefik:
     image: traefik
+    restart: always
     container_name: traefik
     environment:
       - CF_API_EMAIL=${CF_API_EMAIL}
@@ -101,7 +102,7 @@ services:
   cloudflared-tunnel:
     container_name: cloudflared-tunnel
     image: cloudflare/cloudflared
-    restart: unless-stopped
+    restart: always
     command: tunnel run
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}

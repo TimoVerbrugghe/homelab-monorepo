@@ -3,7 +3,7 @@ version: "3.8"
 services:
   traefik-forward-auth:
     container_name: traefik-forward-auth
-    restart: unless-stopped
+    restart: always
     image: thomseddon/traefik-forward-auth
     networks:
       - dockerproxy
@@ -27,7 +27,7 @@ services:
   keycloak-postgres:
     container_name: keycloak-postgres
     image: postgres
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -41,7 +41,7 @@ services:
 
   keycloak:
     container_name: keycloak
-    restart: unless-stopped
+    restart: always
     image: quay.io/keycloak/keycloak
     command: start
     depends_on:
