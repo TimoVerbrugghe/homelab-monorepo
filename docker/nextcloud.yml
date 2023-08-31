@@ -25,7 +25,7 @@ services:
       - dockerproxy
     restart: always
     depends_on:
-      - mariadb-nextcloud
+      - nextcloud-mariadb
     volumes:
       - nextcloud:/var/www/html
       - nextcloud-data:/data
@@ -34,7 +34,7 @@ services:
       - MYSQL_PASSWORD={$MYSQL_PASSWORD}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_HOST=mariadb-nextcloud
+      - MYSQL_HOST=nextcloud-mariadb
       - REDIS_HOST=nextcloud-redis
     labels:
       traefik.http.routers.nextcloud.entrypoints: https
@@ -49,7 +49,7 @@ services:
     networks:
       - dockerproxy
     depends_on:
-      - mariadb-nextcloud
+      - nextcloud-mariadb
       - nextcloud
     image: nextcloud
     restart: always
