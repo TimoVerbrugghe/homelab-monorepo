@@ -148,24 +148,6 @@ services:
       - traefik.http.services.webtop.loadbalancer.server.port=3000
       - traefik.http.routers.webtop.middlewares=keycloak-auth@file  
 
-  code-server:
-    image: lscr.io/linuxserver/code-server:latest
-    container_name: code-server
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=Europe/Brussels
-    volumes:
-      - code-server:/config
-    labels:
-      - traefik.http.routers.code-server.entrypoints=https
-      - traefik.http.services.code-server.loadbalancer.server.port=8443
-      - traefik.http.routers.code-server.middlewares=keycloak-auth@file
-      - traefik.http.routers.code-server.rule=Host(`vscode.home.timo.be`)    
-
   uptimekuma:
     image: louislam/uptime-kuma
     container_name: uptimekuma
