@@ -64,8 +64,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=99
-      - PGID=100
       - TZ=Europe/Brussels
     volumes:
       - sonarr:/config
@@ -83,8 +81,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=99
-      - PGID=100
       - TZ=Europe/Brussels
     volumes:
       - radarr:/config
@@ -102,8 +98,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=99
-      - PGID=100
       - TZ=Europe/Brussels
     volumes:
       - lidarr:/config
@@ -121,8 +115,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=99
-      - PGID=100
       - TZ=Europe/Brussels
     volumes:
       - bazarr:/config
@@ -157,8 +149,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=99
-      - PGID=100
       - TZ=Europe/Brussels
     volumes:
       - prowlarr:/config
@@ -174,8 +164,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=99
-      - PGID=100
       - TZ=Europe/Brussels
     volumes:
       - tautulli:/config
@@ -191,8 +179,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=99
-      - PGID=100
       - TZ=Europe/Brussels
     volumes:
       - emulatorjs:/config

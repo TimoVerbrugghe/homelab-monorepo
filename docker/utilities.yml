@@ -48,7 +48,7 @@ services:
     networks:
       - dockerproxy
     environment:
-      - DOMAIN=https://bitwarden.home.timo.be # Your domain; vaultwarden needs to know it's https to work properly with attachments
+      - DOMAIN=${BITWARDEN_DOMAIN} # Your domain; vaultwarden needs to know it's https to work properly with attachments
       - SERVER_ADMIN_EMAIL=timo@hotmail.be
       - SIGNUPS_ALLOWED=false
       - INVITATIONS_ALLOWED=false
@@ -84,8 +84,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=Europe/Brussels
     volumes:
       - webtop:/config
@@ -102,8 +100,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=Europe/Brussels
     volumes:
       - code-server:/config
