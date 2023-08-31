@@ -209,6 +209,7 @@ volumes:
   code-server:
   homarr-config:
   homarr-icons:
+  uptimekuma:
   speedtest-tracker:
   speedtest-tracker-postgres:
 
