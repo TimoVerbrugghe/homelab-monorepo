@@ -3,7 +3,7 @@ version: "3.8"
 services:
   flood:
     container_name: flood
-    image: jesec/flood
+    image: jesec/flood:master-distroless
     restart: always
     user: $PUID:$PGID
     networks: 
