@@ -5,6 +5,7 @@ services:
     container_name: flood
     image: jesec/flood
     restart: always
+    user: $PUID:$PGID
     networks: 
       - dockerproxy
     volumes:
