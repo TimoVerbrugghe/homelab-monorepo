@@ -10,6 +10,8 @@ services:
     volumes:
       - flood:/config
       - downloads:/data
+    environment:
+      - HOME=/config
     labels:
       - traefik.http.routers.flood.rule=Host(`torrents.home.timo.be`)
       - traefik.http.routers.flood.entrypoints=https
