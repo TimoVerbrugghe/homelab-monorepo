@@ -4,12 +4,12 @@ services:
   filebrowser:
     container_name: filebrowser
     image: filebrowser/filebrowser
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     volumes:
       - media:/srv
-      - filebrowser:/database.db
+      - filebrowser:/db/
     labels:
       - traefik.http.routers.filebrowser.entrypoints=https
       - traefik.http.services.filebrowser.loadbalancer.server.port=80
@@ -17,10 +17,11 @@ services:
       - traefik.http.routers.filebrowser.rule=Host('files.home.timo.be')    
 
   mariadb-nextcloud:
+    container_name: mariadb-nextcloud
     image: mariadb
     networks:
       - dockerproxy
-    restart: unless-stopped
+    restart: always
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
     volumes:
       - mariadb-nextcloud:/var/lib/mysql
@@ -31,10 +32,11 @@ services:
       - MYSQL_USER=nextcloud
 
   nextcloud:
+    container_name: nextcloud
     image: nextcloud
     networks:
       - dockerproxy
-    restart: unless-stopped
+    restart: always
     depends_on:
       - mariadb-nextcloud
     volumes:
@@ -52,7 +54,7 @@ services:
   filezilla:
     image: lscr.io/linuxserver/filezilla:latest
     container_name: filezilla
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -70,7 +72,7 @@ services:
   krusader:
     container_name: krusader
     image: binhex/arch-krusader
-    restart: unless-stopped
+    restart: always
     privileged: true
     networks:
       - dockerproxy
