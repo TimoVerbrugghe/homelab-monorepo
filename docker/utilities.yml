@@ -168,7 +168,7 @@ services:
       - traefik.http.routers.code-server.rule=Host('vscode.home.timo.be')    
 
   uptimekuma:
-    image: louislam/uptimekuma
+    image: louislam/uptime-kuma
     container_name: uptimekuma
     restart: unless-stopped
     networks:
