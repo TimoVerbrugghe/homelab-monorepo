@@ -10,10 +10,7 @@ services:
       - homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
     labels:
-      traefik.docker.network: host
-      traefik.http.routers.hass.entrypoints: https
-      traefik.http.services.hass.loadbalancer.server.port: 8123
-      traefik.http.routers.hass.rule: Host(`hass.home.timo.be`)
+      traefik.enable: false
 
   mqtt:
     image: eclipse-mosquitto
@@ -57,9 +54,7 @@ services:
         max-size: "10mb"
         max-file: "1"
     labels:
-      traefik.docker.network: host
-      traefik.http.routers.homebridge.entrypoints: https
-      traefik.http.services.homebridge.loadbalancer.server.port: 8581
+      traefik.enable: false
 
   scrypted:
     container_name: scrypted
@@ -72,9 +67,7 @@ services:
     volumes:
       - scrypted:/server/volume
     labels:
-      traefik.docker.network: host
-      traefik.http.routers.homebridge.entrypoints: https
-      traefik.http.services.homebridge.loadbalancer.server.port: 8581
+      traefik.enable: false
 
 volumes:
   homeassistant:
