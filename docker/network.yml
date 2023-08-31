@@ -50,36 +50,6 @@ services:
     labels:
       - traefik.enable=false
 
-  speedtest-tracker:
-    container_name: speedtest-tracker
-    restart: always
-    image: ghcr.io/alexjustesen/speedtest-tracker
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=Europe/Brussels
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - speedtest-tracker:/config
-    labels:
-      - traefik.http.routers.speedtest-tracker.entrypoints=https
-      - traefik.http.services.speedtest-tracker.loadbalancer.server.port=80
-      - traefik.http.routers.speedtest-tracker.middlewares=keycloak-auth@file
-      - traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.home.timo.be`)
-
-  localspeedtest:
-    restart: always
-    container_name: localspeedtest
-    image: openspeedtest/latest
-    networks:
-      - dockerproxy
-    labels:
-      - traefik.http.routers.localspeedtest.entrypoints=https
-      - traefik.http.services.localspeedtest.loadbalancer.server.port=3000
-      - traefik.http.routers.localspeedtest.middlewares=keycloak-auth@file
-
   traefik:
     image: traefik
     restart: always

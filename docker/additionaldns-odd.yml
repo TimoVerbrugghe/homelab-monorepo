@@ -80,7 +80,7 @@ services:
     restart: unless-stopped
     command: tunnel run --protocol http2
     environment:
-      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+      - TUNNEL_TOKEN=$CLOUDFLARED_TUNNEL_TOKEN
 
 volumes:
   adguardhome-work:

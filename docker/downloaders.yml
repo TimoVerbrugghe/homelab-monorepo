@@ -8,6 +8,8 @@ services:
     networks: 
       - dockerproxy
     environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=Europe/Brussels
       - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
     volumes:
@@ -34,6 +36,8 @@ services:
   #     - skip_check=true
   #     - auto_delete=true
   #     - UMASK=000
+      #   - PUID=${PUID}
+      # - PGID=${PGID}
   #     - notification_type=Webhook
   #     - notification_title=iCloudPD
   #     - webhook_server=hooks.slack.com
@@ -73,6 +77,8 @@ services:
       options:
         max-size: 1m
     environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
       - UMASK_SET=022
       - RPC_SECRET={$ARIA2_RPC_SECRET}
       - RPC_PORT=6800
