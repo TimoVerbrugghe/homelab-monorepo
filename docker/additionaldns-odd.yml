@@ -78,7 +78,7 @@ services:
     container_name: cloudflared-tunnel
     image: cloudflare/cloudflared
     restart: unless-stopped
-    command: tunnel run
+    command: tunnel run --protocol http2
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
 
