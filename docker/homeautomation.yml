@@ -81,6 +81,7 @@ volumes:
   mqtt:
   zigbee2mqtt:
   scrypted:
+  homebridge:
 
 networks:
   dockervlan:
