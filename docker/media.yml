@@ -5,6 +5,8 @@ services:
     container_name: jellyfin
     image: jellyfin/jellyfin
     restart: unless-stopped
+    networks:
+      - dockerproxy
     environment:
       - TZ=Europe/Brussels
     volumes:
@@ -23,6 +25,8 @@ services:
     container_name: plex
     image: plexinc/pms-docker
     restart: unless-stopped
+    networks:
+      - dockerproxy
     environment:
       - TZ=Europe/Brussels
       - PLEX_CLAIM=${PLEX_CLAIM_TOKEN}
