@@ -62,15 +62,15 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=$PUID
+      - PGID=$PGID
       - TZ=Europe/Brussels
     volumes:
       - filezilla:/config
       - media:/media
     labels:
       - traefik.http.routers.filezilla.entrypoints=https
-      - traefik.http.services.filezilla.loadbalancer.server.port=80
+      - traefik.http.services.filezilla.loadbalancer.server.port=3000
       - traefik.http.routers.filezilla.middlewares=keycloak-auth@file
 
   krusader:
@@ -91,7 +91,7 @@ services:
       - krusader:/config
     labels:
       - traefik.http.routers.krusader.entrypoints=https
-      - traefik.http.services.krusader.loadbalancer.server.port=80
+      - traefik.http.services.krusader.loadbalancer.server.port=6080
       - traefik.http.routers.krusader.middlewares=keycloak-auth@file
 
 volumes:
