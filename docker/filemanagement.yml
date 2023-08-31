@@ -59,6 +59,22 @@ services:
       traefik.http.middlewares.nextcloud_redirectregex.redirectregex.regex: 'https://(.*)/.well-known/(?:card|cal)dav'
       traefik.http.middlewares.nextcloud_redirectregex.redirectregex.replacement: 'https://$${1}/remote.php/dav'
     
+  nextcloud-cron:
+    container_name: nextcloud
+    networks:
+      - dockerproxy
+    depends_on:
+      - mariadb-nextcloud
+      - nextcloud
+    image: nextcloud
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html:z
+      - nextcloud-data:/data
+    entrypoint: /cron.sh
+    labels:
+      traefik.enable: false
+
   filezilla:
     image: lscr.io/linuxserver/filezilla:latest
     container_name: filezilla
