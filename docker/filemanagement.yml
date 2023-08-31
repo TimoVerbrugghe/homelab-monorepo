@@ -60,7 +60,7 @@ services:
       traefik.http.middlewares.nextcloud_redirectregex.redirectregex.replacement: 'https://$${1}/remote.php/dav'
     
   nextcloud-cron:
-    container_name: nextcloud
+    container_name: nextcloud-cron
     networks:
       - dockerproxy
     depends_on:
