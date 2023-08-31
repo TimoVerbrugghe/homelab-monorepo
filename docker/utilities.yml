@@ -175,9 +175,9 @@ services:
     volumes:
       - uptimekuma:/app/data
     labels:
-      - traefik.http.routers.code-server.entrypoints=https
-      - traefik.http.services.code-server.loadbalancer.server.port=3001
-      - traefik.http.routers.code-server.middlewares=keycloak-auth@file    
+      - traefik.http.routers.uptime-kuma.entrypoints=https
+      - traefik.http.services.uptime-kuma.loadbalancer.server.port=3001
+      - traefik.http.routers.uptime-kuma.middlewares=keycloak-auth@file    
     
   homarr:
     container_name: homarr
