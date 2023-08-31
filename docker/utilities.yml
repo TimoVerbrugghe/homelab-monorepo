@@ -209,6 +209,8 @@ volumes:
   code-server:
   homarr-config:
   homarr-icons:
+  speedtest-tracker:
+  speedtest-tracker-postgres:
 
 networks:
   dockerproxy:
