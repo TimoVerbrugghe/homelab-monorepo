@@ -88,8 +88,8 @@ services:
       - aria2-pro:/config
       - downloads:/downloads
     labels:
-      - traefik.http.routers.ariang.entrypoints=https
-      - traefik.http.services.ariang.loadbalancer.server.port=6800
+      - traefik.http.routers.aria2pro.entrypoints=https
+      - traefik.http.services.aria2pro.loadbalancer.server.port=6800
 
   ariang:
     image: p3terx/ariang
