@@ -277,6 +277,8 @@ volumes:
   tautulli:
   emulatorjs:
   emulatorjs-data:
+  jellyfin:
+  plex:
 
 networks:
   dockerproxy:
