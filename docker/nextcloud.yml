@@ -15,6 +15,8 @@ services:
       - MYSQL_PASSWORD={$MYSQL_PASSWORD}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
+    labels:
+      traefik.enable: false
 
   nextcloud:
     container_name: nextcloud
@@ -77,3 +79,7 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user"
+
+networks:
+  dockerproxy:
+    external: true
