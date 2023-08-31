@@ -4,7 +4,7 @@ services:
   jellyfin:
     container_name: jellyfin
     image: jellyfin/jellyfin
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -24,7 +24,7 @@ services:
   plex:
     container_name: plex
     image: plexinc/pms-docker
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -53,7 +53,7 @@ services:
     image: remirigal/plex-auto-languages:latest
     networks:
       - dockerproxy
-    restart: unless-stopped
+    restart: always
     environment:
       - PLEX_URL=http://plex:32400
       - PLEX_TOKEN=${PLEX_TOKEN}
@@ -64,7 +64,7 @@ services:
   sonarr:
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -83,7 +83,7 @@ services:
   radarr:
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -102,7 +102,7 @@ services:
   lidarr:
     container_name: lidarr
     image: lscr.io/linuxserver/lidarr:latest
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -121,7 +121,7 @@ services:
   bazarr:
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -140,7 +140,7 @@ services:
   overseerr:
     container_name: overseerr
     image: sctx/overseerr:latest
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -157,7 +157,7 @@ services:
   prowlarr:
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -174,7 +174,7 @@ services:
   tautulli:
     image: ghcr.io/tautulli/tautulli
     container_name: tautulli
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -191,7 +191,7 @@ services:
   emulatorjs:
     image: lscr.io/linuxserver/emulatorjs:latest
     container_name: emulatorjs
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -211,6 +211,8 @@ services:
       - traefik.http.routers.emulatorjs.entrypoints=https
       - traefik.http.services.emulatorjs.loadbalancer.server.port=80
       - traefik.http.routers.emulatorjs.middlewares=keycloak-auth@file
+      - traefik.http.routers.emulatorjs.service=emulatorjs
+      - traefik.http.routers.emulatorjs-config.service=emulatorjs-config
       - traefik.http.routers.emulatorjs-config.rule=Host(`gamesconfig.home.timo.be`)
       - traefik.http.routers.emulatorjs-config.entrypoints=https
       - traefik.http.services.emulatorjs-config.loadbalancer.server.port=3000
