@@ -1,0 +1,10 @@
+- name: Insert/Update UDP buffer size configuration in /etc/sysctl.conf
+  ansible.builtin.blockinfile:
+    path: /etc/sysctl.conf
+    block: |
+      net.core.rmem_max=2500000
+      net.core.wmem_max=2500000
+
+- name: Apply syctl configuration
+  ansible.builtin.shell:
+    cmd: sysctl -p

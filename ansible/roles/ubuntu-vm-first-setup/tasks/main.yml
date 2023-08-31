@@ -10,5 +10,8 @@
 - name: Enable watchdog
   ansible.builtin.include_tasks: enable-watchdog.yml
 
+- name: Increase UPD Buffer Size (necessary for cloudflare tunnel)
+  ansible.builtin.include_tasks: ../../increase-udp-buffer-size/tasks/increase-udp-buffer-size.yml
+
 - name: Reboot (to make sure all settings are applied)
   ansible.builtin.reboot:

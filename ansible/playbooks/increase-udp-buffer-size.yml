@@ -1,0 +1,6 @@
+- name: Increase UDP buffer size
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/increase-udp-buffer-size
