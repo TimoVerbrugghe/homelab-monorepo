@@ -57,6 +57,8 @@ services:
     networks:
       - dockerproxy
     environment:
+      - PUID=$(id -u)
+      - PGID=$(id -g)
       - TZ=Europe/Brussels
     volumes:
       - /etc/localtime:/etc/localtime:ro
