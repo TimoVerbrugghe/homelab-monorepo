@@ -218,6 +218,20 @@ services:
       - traefik.http.services.emulatorjs-config.loadbalancer.server.port=3000
       - traefik.http.routers.emulatorjs-config.middlewares=keycloak-auth@file
 
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    user: ${PUID}:${PGID}
+    networks:
+      - dockerproxy
+    volumes:
+      - recyclarr:/config
+    environment:
+      - TZ=Europe/Brussels
+      - CRON_SCHEDULE=@daily
+    labels:
+      - traefik.enable=false
+
 volumes:
   downloads:
     driver: local
@@ -285,6 +299,7 @@ volumes:
   emulatorjs-data:
   jellyfin:
   plex:
+  recyclarr:
 
 networks:
   dockerproxy:
