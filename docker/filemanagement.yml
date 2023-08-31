@@ -62,8 +62,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=$PUID
-      - PGID=$PGID
       - TZ=Europe/Brussels
     volumes:
       - filezilla:/config
@@ -83,9 +81,6 @@ services:
     environment:
       - TEMP_FOLDER=/config/krusader/tmp
       - WEBPAGE_TITLE=krusader
-      - UMASK=000
-      - PUID=99
-      - PGID=100
     volumes:
       - media:/media
       - krusader:/config
