@@ -5,11 +5,15 @@ services:
     container_name: filebrowser
     image: filebrowser/filebrowser
     restart: always
+    environment:
+      - FB_DATABASE=/config/database.db
+      - FB_CONFIG=/config/filebrowser.json
+      - FB_NOAUTH=true
     networks:
       - dockerproxy
     volumes:
       - media:/srv
-      - filebrowser:/db/
+      - filebrowser:/config
     labels:
       - traefik.http.routers.filebrowser.entrypoints=https
       - traefik.http.services.filebrowser.loadbalancer.server.port=80
