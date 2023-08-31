@@ -75,6 +75,15 @@ services:
     labels:
       traefik.enable: false
 
+  nextcloud-redis:
+    image: redis:alpine
+    restart: always
+    networks:
+      - dockerproxy
+    container_name: nextcloud-redis
+    labels:
+      traefik.enable: false
+
   filezilla:
     image: lscr.io/linuxserver/filezilla:latest
     container_name: filezilla
