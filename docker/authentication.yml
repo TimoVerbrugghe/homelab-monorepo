@@ -58,6 +58,7 @@ services:
       - KC_PROXY=edge
       - KC_HOSTNAME=${KC_HOSTNAME}
       - KC_DB=postgres
+      - KC_HOSTNAME_ADMIN=${KC_HOSTNAME}
     labels:
       - traefik.http.routers.keycloak.entrypoints=https
       - traefik.http.services.keycloak.loadbalancer.server.port=8080
