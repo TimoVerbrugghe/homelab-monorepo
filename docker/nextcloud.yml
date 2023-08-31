@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  nextcloud-mariadb:
+    container_name: nextcloud-mariadb
+    image: mariadb
+    networks:
+      - dockerproxy
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    volumes:
+      - mariadb-nextcloud:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD={$MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD={$MYSQL_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud
+    networks:
+      - dockerproxy
+    restart: always
+    depends_on:
+      - mariadb-nextcloud
+    volumes:
+      - nextcloud:/var/www/html
+      - nextcloud-data:/data
+      - media:/media
+    environment:
+      - MYSQL_PASSWORD={$MYSQL_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=mariadb-nextcloud
+      - REDIS_HOST=nextcloud-redis
+    labels:
+      traefik.http.routers.nextcloud.entrypoints: https
+      traefik.http.services.nextcloud.loadbalancer.server.port: 80
+      traefik.http.routers.nextcloud.middlewares: nextcloud_redirectregex
+      traefik.http.middlewares.nextcloud_redirectregex.redirectregex.permanent: true
+      traefik.http.middlewares.nextcloud_redirectregex.redirectregex.regex: 'https://(.*)/.well-known/(?:card|cal)dav'
+      traefik.http.middlewares.nextcloud_redirectregex.redirectregex.replacement: 'https://$${1}/remote.php/dav'
+    
+  nextcloud-cron:
+    container_name: nextcloud-cron
+    networks:
+      - dockerproxy
+    depends_on:
+      - mariadb-nextcloud
+      - nextcloud
+    image: nextcloud
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html:z
+      - nextcloud-data:/data
+    entrypoint: /cron.sh
+    labels:
+      traefik.enable: false
+
+  nextcloud-redis:
+    image: redis:alpine
+    restart: always
+    networks:
+      - dockerproxy
+    container_name: nextcloud-redis
+    labels:
+      traefik.enable: false
+
+volumes:
+  nextcloud:
+  nextcloud-data:
+  mariadb-nextcloud:
+  media:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/user"

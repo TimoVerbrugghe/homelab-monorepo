@@ -62,9 +62,6 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/user"
-  nextcloud:
-  nextcloud-data:
-  mariadb-nextcloud:
   filezilla:
   krusader:
 
