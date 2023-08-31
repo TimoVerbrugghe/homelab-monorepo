@@ -29,6 +29,7 @@ services:
       - PUID=99
       - PGID=100
       - TZ=Europe/Brussels
+      - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
     volumes:
       - qbittorrent:/config
       - downloads:/downloads
