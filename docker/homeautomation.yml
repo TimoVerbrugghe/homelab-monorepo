@@ -10,33 +10,39 @@ services:
       - homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
     labels:
-      - traefik.docker.network=host
-      - traefik.http.routers.hass.entrypoints=https
-      - traefik.http.services.hass.loadbalancer.server.port=8123
-      - traefik.http.routers.hass.rule=Host(`hass.home.timo.be`)
+      traefik.docker.network: host
+      traefik.http.routers.hass.entrypoints: https
+      traefik.http.services.hass.loadbalancer.server.port: 8123
+      traefik.http.routers.hass.rule: Host(`hass.home.timo.be`)
 
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt
     restart: unless-stopped
+    networks:
+      - defaultbridge
     volumes:
       - mqtt:/mosquitto
     ports:
       - 1883:1883
       - 9001:9001
     labels:
-      - traefik.enable=false
+      traefik.enable: false
 
   zigbee2mqtt:
     container_name: zigbee2mqtt
     image: koenkk/zigbee2mqtt
     restart: unless-stopped
+    networks:
+      - defaultbridge
     volumes:
       - zigbee2mqtt:/app/data
-    ports:
-      - 9442:9442
     environment:
       - TZ=Europe/Brussels
+    labels:
+      traefik.docker.network: defaultbridge
+      traefik.http.routers.homebridge.entrypoints: https
+      traefik.http.services.homebridge.loadbalancer.server.port: 9442
 
   homebridge:
     container_name: homebridge
@@ -51,9 +57,9 @@ services:
         max-size: "10mb"
         max-file: "1"
     labels:
-      - traefik.docker.network=host
-      - traefik.http.routers.homebridge.entrypoints=https
-      - traefik.http.services.homebridge.loadbalancer.server.port=8581
+      traefik.docker.network: host
+      traefik.http.routers.homebridge.entrypoints: https
+      traefik.http.services.homebridge.loadbalancer.server.port: 8581
 
   scrypted:
     container_name: scrypted
@@ -66,9 +72,9 @@ services:
     volumes:
       - scrypted:/server/volume
     labels:
-      - traefik.docker.network=host
-      - traefik.http.routers.homebridge.entrypoints=https
-      - traefik.http.services.homebridge.loadbalancer.server.port=8581
+      traefik.docker.network: host
+      traefik.http.routers.homebridge.entrypoints: https
+      traefik.http.services.homebridge.loadbalancer.server.port: 8581
 
 volumes:
   homeassistant:
@@ -79,5 +85,5 @@ volumes:
 networks:
   dockervlan:
     external: true
-  dockerproxy:
+  defaultbridge:
     external: true
