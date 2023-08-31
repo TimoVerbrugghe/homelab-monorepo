@@ -12,7 +12,7 @@ services:
       - PGID=${PGID}
       - TZ=Europe/Brussels
       - DB_CONNECTION=pgsql
-      - DB_HOST=speesdtest-tracker-postgres
+      - DB_HOST=speedtest-tracker-postgres
       - DB_PORT=5432
       - DB_DATABASE=${SPEEDTEST_TRACKER_POSTGRES_DB}
       - DB_USERNAME=${SPEEDTEST_TRACKER_POSTGRES_USER}
@@ -40,7 +40,6 @@ services:
       - speedtest-tracker-postgres:/var/lib/postgresql/data
     labels:
       - traefik.enable=false
-
 
   localspeedtest:
     restart: always
