@@ -4,7 +4,7 @@ services:
   speedtest-tracker:
     container_name: speedtest-tracker
     restart: always
-    image: ghcr.io/alexjustesen/speedtest-tracker
+    image: ghcr.io/alexjustesen/speedtest-tracker:v0.11.17
     networks:
       - dockerproxy
     environment:
