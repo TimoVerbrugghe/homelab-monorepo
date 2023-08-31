@@ -1,24 +1,6 @@
 version: "3.8"
 
 services:
-  flood:
-    container_name: flood
-    image: jesec/flood:master-distroless
-    restart: always
-    user: $PUID:$PGID
-    networks: 
-      - dockerproxy
-    volumes:
-      - flood:/config
-      - downloads:/data
-    environment:
-      - HOME=/config
-    labels:
-      - traefik.http.routers.flood.rule=Host(`torrents.home.timo.be`)
-      - traefik.http.routers.flood.entrypoints=https
-      - traefik.http.services.flood.loadbalancer.server.port=3000
-      - traefik.http.routers.flood.middlewares=keycloak-auth@file
-
   qbittorrent: 
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
