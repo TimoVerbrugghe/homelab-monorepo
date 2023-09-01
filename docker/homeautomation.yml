@@ -1,17 +1,17 @@
 version: "3.8"
 
 services:
-  # homeassistant:
-  #   container_name: homeassistant
-  #   image: ghcr.io/home-assistant/home-assistant:stable
-  #   restart: always
-  #   network_mode: host
-  #   privileged: true
-  #   volumes:
-  #     - homeassistant:/config
-  #     - /etc/localtime:/etc/localtime:ro
-  #   labels:
-  #     traefik.enable: false
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: always
+    network_mode: host
+    privileged: true
+    volumes:
+      - homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      traefik.enable: false
 
   mqtt:
     image: eclipse-mosquitto
