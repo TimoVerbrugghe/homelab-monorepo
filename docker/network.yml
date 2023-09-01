@@ -13,9 +13,9 @@ services:
       - adguardhome-conf:/opt/adguardhome/conf
       - /etc/letsencrypt:/etc/letsencrypt
     labels:
-      - traefik.docker.network=dockervlan
-      - traefik.http.routers.adguardhome.entrypoints=https
-      - traefik.http.services.adguardhome.loadbalancer.server.port=80
+      traefik.docker.network: dockervlan
+      traefik.http.routers.adguardhome.entrypoints: https
+      traefik.http.services.adguardhome.loadbalancer.server.port: 80
     
   netbootxyz:
     image: ghcr.io/netbootxyz/netbootxyz
@@ -28,9 +28,9 @@ services:
       - netbootxyz-config:/config
       - netbootxyz-assets:/assets
     labels:
-      - traefik.docker.network=dockervlan
-      - traefik.http.routers.netbootxyz.entrypoints=https
-      - traefik.http.services.netbootxyz.loadbalancer.server.port=3000
+      traefik.docker.network: dockervlan
+      traefik.http.routers.netbootxyz.entrypoints: https
+      traefik.http.services.netbootxyz.loadbalancer.server.port: 3000
     
   tailscale:
     image: tailscale/tailscale
@@ -48,7 +48,7 @@ services:
       - TS_EXTRA_ARGS=--advertise-exit-node
       - TS_STATE_DIR=/state
     labels:
-      - traefik.enable=false
+      traefik.enable: false
 
   traefik:
     image: traefik
@@ -67,7 +67,7 @@ services:
       - traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
-      - traefik.enable=false
+      traefik.enable: false
 
   cloudflared-tunnel:
     container_name: cloudflared-tunnel
@@ -77,7 +77,7 @@ services:
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
     labels:
-      - traefik.enable=false
+      traefik.enable: false
 
 volumes:
   adguardhome-work:

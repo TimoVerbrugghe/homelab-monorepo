@@ -21,10 +21,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - speedtest-tracker:/config
     labels:
-      - traefik.http.routers.speedtest-tracker.entrypoints=https
-      - traefik.http.services.speedtest-tracker.loadbalancer.server.port=80
-      - traefik.http.routers.speedtest-tracker.middlewares=keycloak-auth@file
-      - traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.home.timo.be`)
+      traefik.http.routers.speedtest-tracker.entrypoints: https
+      traefik.http.services.speedtest-tracker.loadbalancer.server.port: 80
+      traefik.http.routers.speedtest-tracker.middlewares: keycloak-auth@file
+      traefik.http.routers.speedtest-tracker.rule: Host(`speedtest.home.timo.be`) || Host(`speedtest.timo.be`)
 
   speedtest-tracker-postgres:
     container_name: speedtest-tracker-postgres
@@ -39,7 +39,7 @@ services:
     volumes:
       - speedtest-tracker-postgres:/var/lib/postgresql/data
     labels:
-      - traefik.enable=false
+      traefik.enable: false
 
   localspeedtest:
     restart: always
@@ -48,9 +48,9 @@ services:
     networks:
       - dockerproxy
     labels:
-      - traefik.http.routers.localspeedtest.entrypoints=https
-      - traefik.http.services.localspeedtest.loadbalancer.server.port=3000
-      - traefik.http.routers.localspeedtest.middlewares=keycloak-auth@file
+      traefik.http.routers.localspeedtest.entrypoints: https
+      traefik.http.services.localspeedtest.loadbalancer.server.port: 3000
+      traefik.http.routers.localspeedtest.middlewares: keycloak-auth@file
 
   watchtower:
     image: containrrr/watchtower
@@ -59,7 +59,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
-      - traefik.enable=false
+      traefik.enable: false
 
   scanservjs:
     image: sbs20/scanservjs:latest
@@ -73,10 +73,10 @@ services:
     devices: 
       - /dev/bus/usb:/dev/bus/usb
     labels:
-      - traefik.http.routers.scanservjs.entrypoints=https
-      - traefik.http.services.scanservjs.loadbalancer.server.port=8080
-      - traefik.http.routers.scanservjs.middlewares=keycloak-auth@file
-      - traefik.http.routers.scanservjs.rule=Host(`scan.home.timo.be`)    
+      traefik.http.routers.scanservjs.entrypoints: https
+      traefik.http.services.scanservjs.loadbalancer.server.port: 8080
+      traefik.http.routers.scanservjs.middlewares: keycloak-auth@file
+      traefik.http.routers.scanservjs.rule: Host(`scan.home.timo.be`) || Host(`scan.timo.be`)
 
   airsane:
     image: claytsay/docker-airsane
@@ -90,7 +90,7 @@ services:
     devices: 
       - /dev/bus/usb:/dev/bus/usb
     labels:
-      - traefik.enable=false
+      traefik.enable: false
 
   bitwarden:
     image: vaultwarden/server:latest
@@ -99,19 +99,19 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - DOMAIN=${BITWARDEN_DOMAIN} # Your domain; vaultwarden needs to know it's https to work properly with attachments
-      - SERVER_ADMIN_EMAIL=timo@hotmail.be
-      - SIGNUPS_ALLOWED=false
-      - INVITATIONS_ALLOWED=false
-      - WEBSOCKET_ENABLED=false
-      - ADMIN_TOKEN=${BITWARDEN_ADMIN_TOKEN}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      DOMAIN: ${BITWARDEN_DOMAIN} # Your domain; vaultwarden needs to know it's https to work properly with attachments
+      SERVER_ADMIN_EMAIL: timo@hotmail.be
+      SIGNUPS_ALLOWED: false
+      INVITATIONS_ALLOWED: false
+      WEBSOCKET_ENABLED: false
+      ADMIN_TOKEN: ${BITWARDEN_ADMIN_TOKEN}
     volumes:
       - bitwarden:/data
     labels:
-      - traefik.http.routers.bitwarden.entrypoints=https
-      - traefik.http.services.bitwarden.loadbalancer.server.port=80
+      traefik.http.routers.bitwarden.entrypoints: https
+      traefik.http.services.bitwarden.loadbalancer.server.port: 80
     
   bitwarden-export:
     image: ghcr.io/timoverbrugghe/bitwarden-export
@@ -122,13 +122,13 @@ services:
     volumes:
       - bitwarden-export:/appdata
     environment:
-      - CRON_SCHEDULE=0
-      - BW_CLIENTID={$BW_CLIENTID}
-      - BW_CLIENTSECRET={$BW_CLIENTSECRET}
-      - BW_SERVER=http://bitwarden
-      - BW_PASSWORD={$BW_PASSWORD}
+      CRON_SCHEDULE: 0
+      BW_CLIENTID: ${BW_CLIENTID}
+      BW_CLIENTSECRET: ${BW_CLIENTSECRET}
+      BW_SERVER: http://bitwarden
+      BW_PASSWORD: ${BW_PASSWORD}
     labels:
-      - traefik.enable=false
+      traefik.enable: false
 
   webtop:
     image: lscr.io/linuxserver/webtop:latest
@@ -157,9 +157,9 @@ services:
     volumes:
       - uptimekuma:/app/data
     labels:
-      - traefik.http.routers.uptime-kuma.entrypoints=https
-      - traefik.http.services.uptime-kuma.loadbalancer.server.port=3001
-      - traefik.http.routers.uptime-kuma.middlewares=keycloak-auth@file    
+      traefik.http.routers.uptime-kuma.entrypoints: https
+      traefik.http.services.uptime-kuma.loadbalancer.server.port: 3001
+      traefik.http.routers.uptime-kuma.middlewares: keycloak-auth@file    
     
   homarr:
     container_name: homarr
@@ -171,10 +171,10 @@ services:
       - homarr-config:/app/data/configs
       - homarr-icons:/app/public/icons
     labels:
-      - traefik.http.routers.homarr.entrypoints=https
-      - traefik.http.services.homarr.loadbalancer.server.port=7575
-      - traefik.http.routers.homarr.middlewares=keycloak-auth@file
-      - traefik.http.routers.homarr.rule=Host(`home.timo.be`)
+      traefik.http.routers.homarr.entrypoints: https
+      traefik.http.services.homarr.loadbalancer.server.port: 7575
+      traefik.http.routers.homarr.middlewares: keycloak-auth@file
+      traefik.http.routers.homarr.rule: Host(`home.timo.be`) || Host(`www.timo.be`) || Host(`timo.be`)
 
 volumes:
   scanservjs-scans:
