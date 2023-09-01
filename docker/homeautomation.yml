@@ -1,22 +1,22 @@
 version: "3.8"
 
 services:
-  homeassistant:
-    container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:stable
-    restart: unless-stopped
-    network_mode: host
-    privileged: true
-    volumes:
-      - homeassistant:/config
-      - /etc/localtime:/etc/localtime:ro
-    labels:
-      traefik.enable: false
+  # homeassistant:
+  #   container_name: homeassistant
+  #   image: ghcr.io/home-assistant/home-assistant:stable
+  #   restart: always
+  #   network_mode: host
+  #   privileged: true
+  #   volumes:
+  #     - homeassistant:/config
+  #     - /etc/localtime:/etc/localtime:ro
+  #   labels:
+  #     traefik.enable: false
 
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt
-    restart: unless-stopped
+    restart: always
     networks:
       - defaultbridge
     volumes:
@@ -30,7 +30,7 @@ services:
   zigbee2mqtt:
     container_name: zigbee2mqtt
     image: koenkk/zigbee2mqtt
-    restart: unless-stopped
+    restart: always
     networks:
       - defaultbridge
     volumes:
@@ -45,7 +45,7 @@ services:
   homebridge:
     container_name: homebridge
     image: homebridge/homebridge:latest
-    restart: unless-stopped
+    restart: always
     network_mode: host
     volumes:
       - homebridge:/homebridge
@@ -59,7 +59,7 @@ services:
 
   scrypted:
     container_name: scrypted
-    restart: unless-stopped
+    restart: always
     network_mode: host
     image: koush/scrypted
     # hardware accelerated video decoding
