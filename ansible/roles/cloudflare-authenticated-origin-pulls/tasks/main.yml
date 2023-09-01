@@ -1,0 +1,5 @@
+# This role downloads the cloudflare .PEM file that traefik (or another reverse proxy) needs for authenticated origin pull setup
+# More information available here: https://developers.cloudflare.com/ssl/origin-configuration/authenticated-origin-pull/set-up/zone-level/
+
+- name: Set up host for Cloudflare Authenticated Origin Pulls
+  ansible.builtin.include_tasks: cf-auth-origin-pulls.yml

@@ -1,0 +1,6 @@
+- name: Download Cloudflare .PEM file for authenticated origin pulls
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/cloudflare-authenticated-origin-pulls

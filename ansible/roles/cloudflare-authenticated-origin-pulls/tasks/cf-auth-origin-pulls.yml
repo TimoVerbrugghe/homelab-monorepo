@@ -1,0 +1,5 @@
+- name: Download cloudflare .PEM file
+  ansible.builtin.get_url:
+    url: https://developers.cloudflare.com/ssl/static/authenticated_origin_pull_ca.pem
+    dest: /var/lib/docker/volumes/network_traefik/_data/authenticated_origin_pull_ca.pem
+    mode: '0600'

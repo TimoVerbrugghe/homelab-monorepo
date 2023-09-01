@@ -61,7 +61,6 @@ services:
       - dockerproxy
       - defaultbridge # to connect with portainer
     ports:
-      - 80:80/tcp
       - 443:443/tcp
     volumes:
       - traefik:/etc/traefik
