@@ -16,7 +16,7 @@
 - .cue
 - .Trash-0
 
-## Exclude folders in /mnt/user
+## Exclude folders in /mnt/X.A.N.A./media
 - /appdata/**
 - /books/**
 - /domains/**

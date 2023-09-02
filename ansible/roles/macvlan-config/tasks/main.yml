@@ -1,4 +1,0 @@
-# This role sets up a macvlan bridge using netplan on ubuntu. This is necessary if you have docker containers with macvlan configured that you want to connect to from the docker host (f.e. a DNS container that uses macvlan to have a separate IP to expose ports 80, 53, 443, etc...).
-
-- name: Configure macvlan
-  ansible.builtin.include_tasks: macvlan-config.yml

@@ -4,7 +4,7 @@
 **/terraform.tfstate*
 **/*auto.pkrvars.hcl
 **/downloaded_**
-ansible/inventory/group_vars/**
+ansible/inventory/group_vars/*.yml
 .sfdx/**
 **.env
 terraform/environments/proxmox.tfvars

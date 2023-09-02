@@ -7,7 +7,7 @@
     - setup:
         gather_subset: network
 
-- name: Add SSH keys to known_hosts file
+- name: Add Proxmox SSH keys to known_hosts file
   hosts: localhost
   connection: local
   vars:
@@ -21,3 +21,12 @@
         state: present
       loop: "{{ ssh_known_hosts | map('extract', hostvars, ['inventory_hostname']) | list }}"
       become: no
+
+- name: Download ssh keys from github and install them
+  hosts: all
+  tasks:
+    - name: Set authorized keys from GitHub
+      ansible.posix.authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: https://github.com/{{ github_username }}.keys

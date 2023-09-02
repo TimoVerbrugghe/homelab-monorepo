@@ -8,15 +8,10 @@
     - role: ../roles/hostprereq
 
 - name: Add Proxmox Public SSH Keys to local system so there is no interrupt on host verification
-  ansible.builtin.import_playbook: add-host-ssh-keys.yml
+  ansible.builtin.import_playbook: install-ssh-keys.yml
 
-- name: Configure iGPU passthrough
-  hosts: all
-  roles:
-    - role: ../roles/proxmox-igpu-passthrough
-
-- name: Configure Proxmox & Create Ubuntu Cloud Init Template
-  hosts: all
+- name: Configure Proxmox Hosts for GPU passthrough & Create Ubuntu Cloud Init Template
+  hosts: proxmox
   roles:
     - role: ../roles/proxmox-igpu-passthrough
     - role: ../roles/proxmox-cloud-init
@@ -24,9 +19,6 @@
 - name: VM deployment using terraform
   hosts: localhost
   tasks:
-    - name: Pause for confirmation
-      ansible.builtin.pause:
-        prompt: "Ready to deploy VMs - Press enter if you are happy with terraform variables, DHCP reservations, etc..."
     - name: Deploy VMs
       community.general.terraform:
         project_path: ../../terraform/environments/cloudinit-prod/

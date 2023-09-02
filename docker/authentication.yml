@@ -71,8 +71,8 @@ volumes:
   keycloakbackup:
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/user/other/keycloakbackup/import"
+      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/other/keycloakbackup/import"
 
 networks:
   dockerproxy:

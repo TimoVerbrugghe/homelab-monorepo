@@ -10,8 +10,17 @@
 - name: Enable watchdog
   ansible.builtin.include_tasks: enable-watchdog.yml
 
-- name: Increase UPD Buffer Size (necessary for cloudflare tunnel)
-  ansible.builtin.include_tasks: ../../increase-udp-buffer-size/tasks/increase-udp-buffer-size.yml
+# Set up a macvlan bridge using netplan on ubuntu. 
+# This is necessary if you have docker containers with macvlan configured that you want to connect to from the docker host (f.e. a DNS container that uses macvlan to have a separate IP to expose ports 80, 53, 443, etc...).
+
+- name: Configure macvlan
+  ansible.builtin.include_tasks: macvlan-config.yml
+
+# Increase the UDP buffer size in order to have more stable QUIC connections, necessary for the cloudflare tunnel
+# More information available here: https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+
+- name: Increase UDP buffer size
+  ansible.builtin.include_tasks: increase-udp-buffer-size.yml
 
 - name: Reboot (to make sure all settings are applied)
   ansible.builtin.reboot:

@@ -51,7 +51,7 @@
 
 - name: Attach new disk to the VM as scsi drive on scsi controller
   ansible.builtin.command:
-    cmd: qm set "{{ vm_template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ vm_template_storage }}":vm-"{{ vm_template_id }}"-disk-1
+    cmd: qm set "{{ vm_template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ vm_template_storage }}":"{{ vm_template_id }}"/vm-"{{ vm_template_id }}"-disk-1.raw
   changed_when: false
 
 - name: Make the cloud init drive bootable and restrict BIOS to boot from disk only

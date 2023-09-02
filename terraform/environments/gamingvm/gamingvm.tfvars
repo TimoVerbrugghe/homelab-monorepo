@@ -1,5 +1,5 @@
 template_name = "windowsvm"
-vm_storage = "local-zfs"
+vm_storage = "local-btrfs"
 vm_networkbridge = "vmbr0"
 
 vm_configs = [ {

@@ -1,0 +1,37 @@
+# DNS Cloudflare API Token for Certificates Renewal
+dns_cloudflare_api_token: 
+
+# Physical Scanner to attach to VM
+scanner_vendor_id: 04a9
+scanner_product_id: 190a
+
+# this is the user that has ssh access
+ansible_user: root
+
+# Github Username for SSH Keys
+github_username: TimoVerbrugghe
+
+# Proxmox connectivity & setup
+proxmox_api_user: root@pam
+proxmox_api_tokenid: ansible
+proxmox_api_tokensecret: 
+proxmox_api_host: mountainsector.home.timo.be
+proxmox_node: mountainsector
+vfio_pci_ids: 
+hostpci_igpu_id: 00:02.0
+
+# Cloud Init settings (username and password)
+template_ciuser: admin
+template_cipassword: admin
+
+# VM Template Settings
+ubuntu_cloud_image_url: https://cloud-images.ubuntu.com/releases/23.04/release/ubuntu-23.04-server-cloudimg-amd64.img
+vm_template_id: 9999
+vm_template_name: ubuntu-cloud
+vm_network_bridge: vmbr0
+vm_template_storage: local-btrfs
+proxmox_template_node: forestsector
+
+# iGPU VM settings
+igpu_vm_id: 105
+igpu_vm_proxmox_node: forestsector.home.timo.be

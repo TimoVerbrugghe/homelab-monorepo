@@ -1,5 +1,0 @@
-# This role increases the UDP buffer size in order to have more stable QUIC connections, necessary for the cloudflare tunnel
-# More information available here: https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
-
-- name: Increase UDP buffer size
-  ansible.builtin.include_tasks: increase-udp-buffer-size.yml

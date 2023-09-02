@@ -1,8 +1,5 @@
 # Playbook to set up a new proxmox host, this includes setting up iGPU passthrough & installing cloud-init template
 
-- name: Add Proxmox Public SSH Keys to local system so there is no interrupt on host verification
-  ansible.builtin.import_playbook: add-host-ssh-keys.yml
-
 - name: Configure iGPU passthrough & Create Ubuntu Cloud Init template
   hosts: all
   roles:

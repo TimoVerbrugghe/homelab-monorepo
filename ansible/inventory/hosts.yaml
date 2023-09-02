@@ -36,7 +36,7 @@ all:
           ansible_user: root
           vm_template_id: 9998
           proxmox_node: icesector
-          vfio_pci_ids: 8086:4d61
+          vfio_pci_ids: 8086:46d1
           acs_override: false
         mountainsector.home.timo.be:
           ansible_user: root
