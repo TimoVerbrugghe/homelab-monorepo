@@ -1,4 +1,5 @@
 - name: Create cloud init template
   hosts: proxmox
   roles:
+    - role: ../roles/proxmox-igpu-passthrough
     - role: ../roles/proxmox-cloud-init

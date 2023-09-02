@@ -1,27 +1,3 @@
-- name: Gather facts from igpuvm host in inventory
-  hosts: igpuvm
-  vars:
-    ansible_host_key_checking: false
-    ansible_ssh_extra_args: '-o UserKnownHostsFile=/dev/null'
-  tasks:
-    - setup:
-        gather_subset: network
-
-- name: Add igpuvm Public Keys to known_hosts
-  hosts: localhost
-  connection: local
-  vars:
-    ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
-    ssh_known_hosts: "{{ groups['igpuvm'] }}"
-  tasks:
-    - known_hosts:
-        path: "{{ ssh_known_hosts_file }}"
-        name: "{{ item }}"
-        key: "{{ lookup('pipe','ssh-keyscan -T 10 ' + item + ',' + lookup('dig',item)) }}"
-        state: present
-      loop: "{{ ssh_known_hosts | map('extract', hostvars, ['inventory_hostname']) | list }}"
-      become: no
-
 - name: Do first time Ubuntu setup
   hosts: igpuvm
   gather_facts: true

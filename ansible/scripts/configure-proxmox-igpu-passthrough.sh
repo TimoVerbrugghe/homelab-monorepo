@@ -5,4 +5,4 @@
 ansible-playbook \
      -i ../inventory/hosts.yaml \
      --limit sectorfive.home.timo.be \
-     ../playbooks/proxmox-cloud-init-template.yml
+     ../playbooks/proxmox-igpu-passthrough.yml

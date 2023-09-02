@@ -1,0 +1,8 @@
+- name: Download ssh keys from github and install them
+  hosts: all
+  tasks:
+    - name: Set authorized keys from GitHub
+      ansible.posix.authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: https://github.com/{{ github_username }}.keys

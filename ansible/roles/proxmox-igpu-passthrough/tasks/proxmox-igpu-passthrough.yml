@@ -1,0 +1,59 @@
+- name: Check if /etc/default/grub contains command line parameters for iGPU passthrough and enable if missing
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?:(?!intel_iommu=on iommu=pt vfio_pci.ids={{ vfio_pci_ids }}).)*?)"$'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 intel_iommu=on iommu=pt vfio_pci.ids={{ vfio_pci_ids }}"'
+    backup: true
+    backrefs: true
+
+- name: Check if /etc/default/grub contains command line parameters for CPU optimizations
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?:(?!mitigations=off transparent_hugepage=always).)*?)"$'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 mitigations=off transparent_hugepage=always"'
+    backup: true
+    backrefs: true
+
+- name: Check if /etc/default/grub contains command line parameters for ACS override (if needed by the host)
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?:(?!pcie_acs_override=downstream,multifunction).)*?)"$'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_acs_override=downstream,multifunction"'
+    backup: true
+    backrefs: true
+  when: acs_override
+
+- name: Create vfio.conf
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/vfio.conf
+    content: |
+      vfio
+      vfio_iommu_type1
+      vfio_pci
+
+- name: Create gpu-blacklist.conf
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/gpu-blacklist.conf
+    content: |
+      blacklist nvidiafb
+      blacklist nouveau
+      blacklist snd_hda_intel
+      blacklist snd_hda_codec_hdmi
+      blacklist i915
+
+- name: Create sas-blacklist.conf for LSI SAS PCIe controllers
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/sas-blacklist.conf
+    content: |
+      blacklist mpt3sas
+  
+- name: Update initramfs
+  ansible.builtin.command: 
+    cmd: update-initramfs -u -k all
+
+- name: Run update-grub
+  ansible.builtin.command: 
+    cmd: update-grub
+
+- name: Reboot (so we can apply all these iGPU passthrough settings)
+  ansible.builtin.reboot:

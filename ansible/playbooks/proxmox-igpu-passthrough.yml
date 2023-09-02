@@ -1,0 +1,4 @@
+- name: Set up correct proxmox igpu passthrough
+  hosts: all
+  roles:
+    - role: ../roles/proxmox-igpu-passthrough
