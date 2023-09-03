@@ -140,6 +140,7 @@ volumes:
   radarr-others:
   overseerr-others:
   plex-others:
+  qbittorrent-others:
 
 networks:
   media-others:
