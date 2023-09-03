@@ -37,7 +37,7 @@ services:
     volumes:
       - sonarr-others:/config
       - tvshows-others:/tv
-      - downloads:/downloads
+      - downloads-others:/downloads
     ports: 
       - 8989:8989/tcp
     labels:
@@ -56,7 +56,7 @@ services:
     volumes:
       - radarr-others:/config
       - movies-others:/movies
-      - downloads:/downloads
+      - downloads-others:/downloads
     ports: 
       - 7878:7878/tcp
     labels:
