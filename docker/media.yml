@@ -149,7 +149,7 @@ services:
     volumes:
       - overseerr:/app/config
     labels:
-      - traefik.http.routers.overseerr.rule=Host(`request.home.timo.be`)
+      - traefik.http.routers.overseerr.rule=Host(`request.home.timo.be`) || Host(`request.timo.be`)
       - traefik.http.routers.overseerr.entrypoints=https
       - traefik.http.services.overseerr.loadbalancer.server.port=5055
       - traefik.http.routers.overseerr.middlewares=keycloak-auth@file
