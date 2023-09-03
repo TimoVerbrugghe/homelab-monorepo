@@ -141,6 +141,7 @@ volumes:
   overseerr-others:
   plex-others:
   qbittorrent-others:
+  bazarr-others:
 
 networks:
   media-others:
