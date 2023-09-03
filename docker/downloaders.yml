@@ -130,7 +130,7 @@ volumes:
   downloads:
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/downloads"
   
 networks:
