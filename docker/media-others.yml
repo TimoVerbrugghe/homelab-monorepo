@@ -1,0 +1,147 @@
+version: "3.8"
+
+services:
+  plex-others:
+    container_name: plex-others
+    image: plexinc/pms-docker
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      PLEX_UID: ${PUID}
+      PLEX_GID: ${PGID}
+      TZ: Europe/Brussels
+      PLEX_CLAIM: ${PLEX_CLAIM_TOKEN}
+    ports:
+      - 32401:32401/tcp
+    volumes:
+      - movies-others:/movies:rw
+      - tvshows-others:/tv:rw
+      - plex-others:/config:rw
+      - /dev/shm:/dev/shm
+    devices:
+      - /dev/dri:/dev/dri
+    labels:
+      traefik.http.routers.plex.entrypoints: https
+      traefik.http.services.plex.loadbalancer.server.port: 32401
+
+  sonarr-others:
+    container_name: sonarr-others
+    image: lscr.io/linuxserver/sonarr:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - sonarr-others:/config
+      - tvshows-others:/tv
+      - downloads:/downloads
+    labels:
+      traefik.http.routers.sonarr.entrypoints: https
+      traefik.http.services.sonarr.loadbalancer.server.port: 8989
+      traefik.http.routers.sonarr.middlewares: keycloak-auth@file
+
+  radarr-others:
+    container_name: radarr-others
+    image: lscr.io/linuxserver/radarr:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - radarr-others:/config
+      - movies-others:/movies
+      - downloads:/downloads
+    labels:
+      traefik.http.routers.radarr.entrypoints: https
+      traefik.http.services.radarr.loadbalancer.server.port: 7878
+      traefik.http.routers.radarr.middlewares: keycloak-auth@file
+
+  bazarr-others:
+    container_name: bazarr-others
+    image: lscr.io/linuxserver/bazarr:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - bazarr-others:/config
+      - movies-others:/movies
+      - tvshows-others:/tv
+    labels:
+      traefik.http.routers.bazarr.entrypoints: https
+      traefik.http.services.bazarr.loadbalancer.server.port: 6767
+      traefik.http.routers.bazarr.middlewares: keycloak-auth@file
+
+  overseerr-others:
+    container_name: overseerr-others
+    image: sctx/overseerr:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Brussels
+    volumes:
+      - overseerr-others:/app/config
+    labels:
+      - traefik.http.routers.overseerr.rule=Host(`download.home.timo.be`) || Host(`download.timo.be`)
+      - traefik.http.routers.overseerr.entrypoints=https
+      - traefik.http.services.overseerr.loadbalancer.server.port=5055
+
+  qbittorrent-others: 
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent-others
+    restart: always
+    networks: 
+      - dockerproxy
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+      - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
+    volumes:
+      - qbittorrent-others:/config
+      - downloads-others:/downloads
+    labels:
+      traefik.http.routers.qbittorrent.entrypoints: https
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+      traefik.http.routers.qbittorrent.middlewares: keycloak-auth@file
+
+volumes:
+  downloads-others:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/downloads-others"
+  movies-others:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media-others/movies"
+  tvshows-others:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media-others/tvshows"
+
+  sonarr-others:
+  radarr-others:
+  overseerr-others:
+  plex-others:
+
+networks:
+  dockerproxy:
+    external: true

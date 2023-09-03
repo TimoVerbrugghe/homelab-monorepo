@@ -28,18 +28,15 @@ services:
     networks:
       - dockerproxy
     environment:
-      - TZ=Europe/Brussels
-      - PLEX_CLAIM=${PLEX_CLAIM_TOKEN}
+      PLEX_UID: ${PUID}
+      PLEX_GID: ${PGID}
+      TZ: Europe/Brussels
+      PLEX_CLAIM: ${PLEX_CLAIM_TOKEN}
     ports:
       - 32400:32400/tcp
-      - 32410:32410/udp
-      - 32412:32412/udp
-      - 32413:32413/udp
-      - 32414:32414/udp
     volumes:
       - movies:/movies:rw
       - tvshows:/tv:rw
-      - /tmp:/transcode:rw
       - plex:/config:rw
       - /dev/shm:/dev/shm
     devices:
@@ -238,7 +235,7 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/X.A.N.A./media/downloads"
+      device: ":/mnt/FranzHopper/downloads"
   movies:
     driver: local
     driver_opts:
