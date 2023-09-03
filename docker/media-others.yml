@@ -6,7 +6,7 @@ services:
     image: plexinc/pms-docker
     restart: always
     networks:
-      - dockerproxy
+      - media-others
     environment:
       PLEX_UID: ${PUID}
       PLEX_GID: ${PGID}
@@ -22,15 +22,14 @@ services:
     devices:
       - /dev/dri:/dev/dri
     labels:
-      traefik.http.routers.plex.entrypoints: https
-      traefik.http.services.plex.loadbalancer.server.port: 32401
+      traefik.enable: false
 
   sonarr-others:
     container_name: sonarr-others
     image: lscr.io/linuxserver/sonarr:latest
     restart: always
     networks:
-      - dockerproxy
+      - media-others
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -39,17 +38,17 @@ services:
       - sonarr-others:/config
       - tvshows-others:/tv
       - downloads:/downloads
+    ports: 
+      - 8989:8989/tcp
     labels:
-      traefik.http.routers.sonarr.entrypoints: https
-      traefik.http.services.sonarr.loadbalancer.server.port: 8989
-      traefik.http.routers.sonarr.middlewares: keycloak-auth@file
+      traefik.enable: false
 
   radarr-others:
     container_name: radarr-others
     image: lscr.io/linuxserver/radarr:latest
     restart: always
     networks:
-      - dockerproxy
+      - media-others
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -58,17 +57,17 @@ services:
       - radarr-others:/config
       - movies-others:/movies
       - downloads:/downloads
+    ports: 
+      - 7878:7878/tcp
     labels:
-      traefik.http.routers.radarr.entrypoints: https
-      traefik.http.services.radarr.loadbalancer.server.port: 7878
-      traefik.http.routers.radarr.middlewares: keycloak-auth@file
+      traefik.enable: false
 
   bazarr-others:
     container_name: bazarr-others
     image: lscr.io/linuxserver/bazarr:latest
     restart: always
     networks:
-      - dockerproxy
+      - media-others
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -77,33 +76,33 @@ services:
       - bazarr-others:/config
       - movies-others:/movies
       - tvshows-others:/tv
+    ports: 
+      - 6767:6767/tcp
     labels:
-      traefik.http.routers.bazarr.entrypoints: https
-      traefik.http.services.bazarr.loadbalancer.server.port: 6767
-      traefik.http.routers.bazarr.middlewares: keycloak-auth@file
+      traefik.enable: false
 
   overseerr-others:
     container_name: overseerr-others
     image: sctx/overseerr:latest
     restart: always
     networks:
-      - dockerproxy
+      - media-others
     environment:
       - LOG_LEVEL=debug
       - TZ=Europe/Brussels
     volumes:
       - overseerr-others:/app/config
+    ports: 
+      - 5055:5055/tcp
     labels:
-      - traefik.http.routers.overseerr.rule=Host(`download.home.timo.be`) || Host(`download.timo.be`)
-      - traefik.http.routers.overseerr.entrypoints=https
-      - traefik.http.services.overseerr.loadbalancer.server.port=5055
+      traefik.enable: false
 
   qbittorrent-others: 
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent-others
     restart: always
-    networks: 
-      - dockerproxy
+    networks:
+      - media-others
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -112,10 +111,10 @@ services:
     volumes:
       - qbittorrent-others:/config
       - downloads-others:/downloads
+    ports: 
+      - 8080:8080/tcp
     labels:
-      traefik.http.routers.qbittorrent.entrypoints: https
-      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
-      traefik.http.routers.qbittorrent.middlewares: keycloak-auth@file
+      traefik.enable: false
 
 volumes:
   downloads-others:
@@ -143,5 +142,5 @@ volumes:
   plex-others:
 
 networks:
-  dockerproxy:
-    external: true
+  media-others:
+    name: media-others
