@@ -52,15 +52,6 @@ services:
       traefik.http.services.localspeedtest.loadbalancer.server.port: 3000
       traefik.http.routers.localspeedtest.middlewares: keycloak-auth@file
 
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      traefik.enable: false
-
   scanservjs:
     image: sbs20/scanservjs:latest
     container_name: scanservjs
@@ -176,6 +167,19 @@ services:
       traefik.http.routers.homarr.middlewares: keycloak-auth@file
       traefik.http.routers.homarr.rule: Host(`home.timo.be`) || Host(`www.timo.be`) || Host(`timo.be`)
 
+  netbootxyz:
+    image: ghcr.io/netbootxyz/netbootxyz
+    container_name: netbootxyz
+    restart: always
+    networks:
+      dockervlan:
+        ipv4_address: ${NETBOOTXYZ_IP_ADDRESS}
+    volumes:
+      - netbootxyz-config:/config
+      - netbootxyz-assets:/assets
+    labels:
+      traefik.enable: false
+
 volumes:
   scanservjs-scans:
   scanservjs-config:
@@ -193,6 +197,8 @@ volumes:
   uptimekuma:
   speedtest-tracker:
   speedtest-tracker-postgres:
+  netbootxyz-config:
+  netbootxyz-assets:
 
 networks:
   dockerproxy:

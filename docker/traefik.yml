@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:    
+  traefik:
+    image: traefik
+    restart: always
+    container_name: traefik
+    environment:
+      - CF_API_EMAIL=${CF_API_EMAIL}
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+    networks:
+      - dockerproxy
+      - defaultbridge # to connect with portainer
+    ports:
+      - 443:443/tcp
+    volumes:
+      - traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      traefik.enable: false
+
+volumes:
+  traefik:
+
+networks:
+  defaultbridge:
+    external: true
+    
+  dockerproxy:
+    name: dockerproxy

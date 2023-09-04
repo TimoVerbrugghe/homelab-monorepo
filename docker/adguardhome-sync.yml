@@ -1,48 +1,13 @@
 version: "3.8"
 
 services:
-  adguardhome:
-    image: adguard/adguardhome
-    container_name: adguardhome
-    restart: unless-stopped
-    networks:
-      dockervlan:
-        ipv4_address: 10.10.10.22
-    volumes:
-      - adguardhome-work:/opt/adguardhome/work
-      - adguardhome-conf:/opt/adguardhome/conf
-      - /etc/letsencrypt:/etc/letsencrypt
-    
-  tailscale:
-    image: tailscale/tailscale
-    container_name: tailscale
-    restart: unless-stopped
-    network_mode: host
-    privileged: true
-    volumes:
-      - /var/lib:/var/lib
-      - /dev/net/tun:/dev/net/tun
-      - tailscale:/state
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY}
-      - TS_ROUTES=${TS_ROUTES}
-      - TS_EXTRA_ARGS=--advertise-exit-node
-      - TS_STATE_DIR=/state
-
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
   adguardhome-sync:
     image: ghcr.io/bakito/adguardhome-sync
     container_name: adguardhome-sync
     command: run
     networks:
       dockervlan:
-        ipv4_address: 10.10.10.23
+        ipv4_address: ${adguardhome_sync_ipaddress}
     environment:
       LOG_LEVEL: info
       ORIGIN_URL: ${adguardhome_origin_url}
@@ -74,18 +39,9 @@ services:
       # FEATURES_DNS_REWRITES: true
     restart: unless-stopped
 
-  cloudflared-tunnel:
-    container_name: cloudflared-tunnel
-    image: cloudflare/cloudflared
-    restart: unless-stopped
-    command: tunnel run --protocol http2
-    environment:
-      - TUNNEL_TOKEN=$CLOUDFLARED_TUNNEL_TOKEN
-
 volumes:
   adguardhome-work:
   adguardhome-conf:
-  tailscale:
 
 networks:
   dockervlan:
