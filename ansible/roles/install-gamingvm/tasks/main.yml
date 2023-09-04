@@ -1,0 +1,19 @@
+## TO DO -> Create tasks file that will setup a gaming vm on proxmox
+
+- name: Create ISO with Windows installation filed (in the isofiles folder)
+  community.general.iso_create:
+    src_files:
+      - ../isofiles/Autounattend.xml
+      - ../isofiles/configurewinrm.ps1
+      - ../isofiles/staticip.ps1
+    dest_iso: /tmp/windows_autoinstall.iso
+    interchange_level: 3
+    joliet: 3
+    vol_ident: WIN_AUTOINSTALL
+
+- name: Upload Windows Autoinstall iso to Proxmox host
+  ansible.builtin.copy:
+
+- name: Download latest windows iso to proxmox host
+
+- name: Create Windows Gaming VM
