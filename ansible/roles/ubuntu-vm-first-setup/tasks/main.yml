@@ -22,5 +22,9 @@
 - name: Increase UDP buffer size
   ansible.builtin.include_tasks: increase-udp-buffer-size.yml
 
+- name: Install intel driver (if VM has enable_gpu set to true)
+  ansible.builtin.include_tasks: install-intel-gpu-driver.yml
+  when: enable_gpu
+
 - name: Reboot (to make sure all settings are applied)
   ansible.builtin.reboot:

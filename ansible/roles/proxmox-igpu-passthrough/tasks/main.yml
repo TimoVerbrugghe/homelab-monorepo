@@ -1,6 +1,0 @@
-- name: Setup proxmox host (iGPU passthrough)
-  ansible.builtin.include_tasks: proxmox-igpu-passthrough.yml
-
-- name: Wait 10 seconds to make sure proxmox API is running for potential other playbooks
-  ansible.builtin.pause:
-    seconds: 10

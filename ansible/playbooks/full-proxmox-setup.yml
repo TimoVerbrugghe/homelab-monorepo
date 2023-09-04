@@ -13,8 +13,7 @@
 - name: Configure Proxmox Hosts for GPU passthrough & Create Ubuntu Cloud Init Template
   hosts: proxmox
   roles:
-    - role: ../roles/proxmox-igpu-passthrough
-    - role: ../roles/proxmox-cloud-init
+    - role: ../roles/proxmox-host-setup
 
 - name: VM deployment using terraform
   hosts: localhost
@@ -35,8 +34,8 @@
       ansible.builtin.pause:
         seconds: 30
 
-- name: Configure iGPU VM
-  ansible.builtin.import_playbook: igpuvm-setup.yml
+- name: Configure VMs
+  ansible.builtin.import_playbook: vm-setup.yml
 
 - name: Prompt user to go to Portainer Server site for configuration
   hosts: localhost
@@ -44,9 +43,6 @@
     - ansible.builtin.pause:
         prompt: "Portainer server has been deployed on igpuvm VM. Please go to https://{{ hostvars[item].inventory_hostname }}:9443 to configure. Press enter to continue."
       with_items:  "{{ groups['igpuvm'] }}"
-
-- name: Configure other VMs
-  ansible.builtin.import_playbook: othervm-setup.yml
 
 - name: Prompt user to add Portainer Agent to configuration
   hosts: localhost

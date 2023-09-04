@@ -1,53 +1,60 @@
 all:
   children:
-    igpuvm:
-      children:
-        aelita:
-          hosts:
-            aelita.home.timo.be:
-              ansible_user: aelita
-              macvlan_routes: |
-                - to: 10.10.10.20
-    othervms:
-      children:
-        odd:
-          hosts:
-            odd.home.timo.be:
-              ansible_user: odd
-              macvlan_routes: |
-                - to: 10.10.10.22
-                - to: 10.10.10.24
-        ulrich:
-          hosts:
-            ulrich.home.timo.be:
-              ansible_user: ulrich
-              macvlan_routes: |
-                - to: 10.10.10.21
+    vm:
+      hosts:
+        aelita.home.timo.be:
+          ansible_user: aelita
+          macvlan_routes: |
+            - to: 10.10.10.20
+          enable_gpu: true
+          portainer_server: true
+          proxmox_node: forestsector
+          vm_id: 105
+          hostpci_gpu_id: '00:02.0'
+        odd.home.timo.be:
+          ansible_user: odd
+          macvlan_routes: |
+            - to: 10.10.10.22
+            - to: 10.10.10.24
+          portainer_agent: true
+          proxmox_node: icesector
+          vm_id: 107
+        ulrich.home.timo.be:
+          ansible_user: ulrich
+          macvlan_routes: |
+            - to: 10.10.10.21
+          portainer_agent: true
+          enable_gpu: true
+          proxmox_node: mountainsector
+          vm_id: 106
+          hostpci_gpu_id: '00:02.0'
+
     proxmox:
       hosts:
-        forestsector.home.timo.be:
+        forestsector.local.timo.be:
           ansible_user: root
           vm_template_id: 9999
           proxmox_node: forestsector
           vfio_pci_ids: 8086:46d1
           hostpci_igpu_id: '00:02.0'
           acs_override: false
-        icesector.home.timo.be:
+        icesector.local.timo.be:
           ansible_user: root
           vm_template_id: 9998
           proxmox_node: icesector
           vfio_pci_ids: 8086:46d1
           acs_override: false
-        mountainsector.home.timo.be:
+        mountainsector.local.timo.be:
           ansible_user: root
           vm_template_id: 9997
           proxmox_node: mountainsector
           vfio_pci_ids: 8086:4e61
           acs_override: false
-        sectorfive.home.timo.be:
+        sectorfive.local.timo.be:
           ansible_user: root
           vm_template_id: 9996
           proxmox_node: sectorfive
           vfio_pci_ids: 1000:0072,10de:1c03,10de:10f1
           acs_override: true
+    
     windowsvm:

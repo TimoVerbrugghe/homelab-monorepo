@@ -1,0 +1,9 @@
+- name: Setup proxmox host (iGPU passthrough)
+  ansible.builtin.include_tasks: proxmox-igpu-passthrough.yml
+
+- name: Wait 20 seconds to make sure proxmox API is running for potential other playbooks
+  ansible.builtin.pause:
+    seconds: 20
+
+- name: Create Cloud Init Template
+  ansible.builtin.include_tasks: create-cloud-init-template.yml

@@ -1,4 +1,4 @@
-- name: Gather facts from Proxmox hosts in inventory
+- name: Gather facts from hosts in inventory
   hosts: all
   vars:
     ansible_host_key_checking: false
