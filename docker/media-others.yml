@@ -121,19 +121,19 @@ volumes:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/downloads-others"
   movies-others:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media-others/movies"
   tvshows-others:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media-others/tvshows"
 
   sonarr-others:
