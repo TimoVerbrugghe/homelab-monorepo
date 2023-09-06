@@ -180,6 +180,12 @@ services:
     labels:
       traefik.enable: false
 
+  airconnect:
+      network_mode: host
+      image: 1activegeek/airconnect
+      labels:
+        traefik.enable: false
+
 volumes:
   scanservjs-scans:
   scanservjs-config:
