@@ -12,7 +12,9 @@ services:
     networks:
       - dockerproxy
     volumes:
-      - media:/srv
+      - media:/srv/media
+      - isos:/srv/isos
+      - photos:/srv/photos
       - filebrowser:/config
     labels:
       traefik.http.routers.filebrowser.entrypoints: https
@@ -31,6 +33,8 @@ services:
     volumes:
       - filezilla:/config
       - media:/media
+      - isos:/isos
+      - photos:/photos
     labels:
       traefik.http.routers.filezilla.entrypoints: https
       traefik.http.services.filezilla.loadbalancer.server.port: 3000
@@ -48,6 +52,8 @@ services:
       - WEBPAGE_TITLE=krusader
     volumes:
       - media:/media
+      - isos:/isos
+      - photos:/photos
       - krusader:/config
     labels:
       traefik.http.routers.krusader.entrypoints: https
@@ -62,6 +68,24 @@ volumes:
       type: "nfs"
       o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media"
+  photos:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./photos"
+  isos:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/isos"
+  downloads:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.home.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/downloads"
   filezilla:
   krusader:
 

@@ -59,8 +59,5 @@ kubectl apply -f ~/HomeServerKubernetes/nginx-demo-deployment.yaml
 ## Install longhorn
 kubectl apply -f ~/HomeServerKubernetes/longhorn-deployment.yamll
 
-## Install rancher
+## Install portainer
 kubectl apply -f ~/HomeServerKubernetes/portainer-deployment.yaml
-
-## Check deployment
-kubectl -n cattle-system rollout status deploy/rancher

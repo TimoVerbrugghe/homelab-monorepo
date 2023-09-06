@@ -13,6 +13,7 @@
 
 - name: Upload Windows Autoinstall iso to Proxmox host
   ansible.builtin.copy:
+    
 
 - name: Download latest windows iso to proxmox host
 
