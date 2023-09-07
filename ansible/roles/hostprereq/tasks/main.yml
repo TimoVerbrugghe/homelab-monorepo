@@ -22,6 +22,7 @@
       - requests
       - pywinrm
       - requests-credssp
+      - pycdlib
     state: present
   when: ansible_distribution == 'MacOSX'
 
@@ -35,6 +36,7 @@
       - python3-proxmoxer
       - python3-requests
       - python3-winrm
+      - python3-pycdlib
     state: present
     update_cache: true
   when: ansible_facts['os_family'] == "Debian"

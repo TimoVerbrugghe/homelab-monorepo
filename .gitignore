@@ -8,3 +8,4 @@ ansible/inventory/group_vars/*.yml
 .sfdx/**
 **.env
 terraform/environments/proxmox.tfvars
+*.rom

@@ -1,20 +1,94 @@
 ## TO DO -> Create tasks file that will setup a gaming vm on proxmox
 
 - name: Create ISO with Windows installation filed (in the isofiles folder)
+  delegate_to: localhost
   community.general.iso_create:
     src_files:
-      - ../isofiles/Autounattend.xml
-      - ../isofiles/configurewinrm.ps1
-      - ../isofiles/staticip.ps1
+      - ../roles/install-gamingvm/isofiles/autounattend.xml
+      - ../roles/install-gamingvm/isofiles/configurewinrm.ps1
+      - ../roles/install-gamingvm/isofiles/staticip.ps1
     dest_iso: /tmp/windows_autoinstall.iso
     interchange_level: 3
     joliet: 3
     vol_ident: WIN_AUTOINSTALL
 
-- name: Upload Windows Autoinstall iso to Proxmox host
+- name: Upload Windows Autoinstall iso to NFS share
   ansible.builtin.copy:
-    
+    src: /tmp/windows_autoinstall.iso
+    dest: /mnt/pve/isos/template/iso/windows_autoinstall.iso
 
-- name: Download latest windows iso to proxmox host
+- name: Download latest windows iso
+  ansible.builtin.get_url:
+    url: "{{ windows11_iso_url }}" # Replace with your actual ISO URL
+    dest: /mnt/pve/isos/template/iso/windows11.iso 
+
+- name: Download virtiowin.iso
+  ansible.builtin.get_url:
+    url: "{{ virtio_win_iso_url }}"  # Replace with your actual ISO URL
+    dest: /mnt/pve/isos/template/iso/virtiowin.iso 
 
 - name: Create Windows Gaming VM
+  delegate_to: localhost
+  community.general.proxmox_kvm:
+    proxmox_default_behavior: no_defaults
+
+    # Logging in to the correct node
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_tokenid }}"
+    api_token_secret: "{{ proxmox_api_tokensecret }}"
+    api_host: "{{ proxmox_api_host }}"
+    node: "{{ proxmox_node | default('proxmox') }}"
+
+    # General VM attributes
+    name: "{{ gamingvm_name }}"
+    vmid: "{{ gamingvm_id }}"
+    machine: q35
+    cpu: host
+    ostype: win11
+    net:
+      net0: virtio,bridge={{ vm_network_bridge }}
+    agent: true
+    tablet: false
+
+    # EFI Bios & disk
+    bios: ovmf
+    efidisk0:
+      storage: "{{ gamingvm_storage }}"
+      format: raw
+      efitype: 4m
+      pre_enrolled_keys: true
+
+    # Performance
+    cores: "{{ gamingvm_cores | default(1) }}"
+    memory: "{{ gamingvm_memory | default(2048) }}"
+    balloon: 0
+
+    # Windows Autoinstall ISO, virtiowin iso and windows11 iso
+    sata:
+      sata0: isos:iso/windows11.iso,media=cdrom
+      sata1: isos:iso/windows_autoinstall.iso,media=cdrom
+      sata2: isos:iso/virtiowin.iso,media=cdrom
+
+    # TPM (required for windows 11)
+    tpmstate0:
+      storage: "{{ gamingvm_storage }}"
+
+- name: Upload vbios rom to proxmox folder
+  ansible.builtin.copy:
+    src: ../roles/install-gamingvm/vbios/vbios.rom
+    dest: /usr/share/kvm/vbios.rom
+
+- name: Set VGA display to type none
+  ansible.builtin.command:
+    cmd: qm set {{ gamingvm_id }} --vga type=none
+  changed_when: false
+
+- name: Add graphics card
+  ansible.builtin.command:
+    cmd: qm set {{ gamingvm_id }} --hostpci0 host={{ gamingvm_gpu_id }},pcie=1,x-vga=1,rombar=1,romfile=vbios.rom
+  changed_when: false
+
+- name: Add NVME drive
+  ansible.builtin.command:
+    cmd: qm set {{ gamingvm_id }} --hostpci1 host={{ gamingvm_nvme_id }},pcie=1,rombar=1
+  changed_when: false
