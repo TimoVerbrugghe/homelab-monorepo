@@ -49,6 +49,7 @@
       net0: virtio,bridge={{ vm_network_bridge }}
     agent: true
     tablet: false
+    boot: order=sata0;hostpci1
 
     # EFI Bios & disk
     bios: ovmf
@@ -92,3 +93,30 @@
   ansible.builtin.command:
     cmd: qm set {{ gamingvm_id }} --hostpci1 host={{ gamingvm_nvme_id }},pcie=1,rombar=1
   changed_when: false
+
+- name: Start VM
+  delegate_to: localhost
+  community.general.proxmox_kvm:
+    proxmox_default_behavior: no_defaults
+
+    # Logging in to the correct node
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_tokenid }}"
+    api_token_secret: "{{ proxmox_api_tokensecret }}"
+    api_host: "{{ proxmox_api_host }}"
+    node: "{{ proxmox_node | default('proxmox') }}"
+
+    # General VM attributes
+    vmid: "{{ gamingvm_id }}"
+    
+    # Start VM
+    state: started
+
+- name: Wait 6 seconds before pressing a key in the vm so that we skip "Press any key to boot from CD or DVD"
+  delegate_to: localhost
+  ansible.builtin.pause:
+    seconds: 6
+
+- name: Press space key to skip "Press any key to boot from CD or DVD" prompt
+  ansible.builtin.command:
+    cmd: qm sendkey {{ gamingvm_id }} spc

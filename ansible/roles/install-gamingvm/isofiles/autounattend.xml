@@ -58,14 +58,6 @@
         </component>
         <!-- Disk Setup -->
         <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <!-- Disable TPM Check, necessary for packer + proxmox since proxmox does not yet support adding vTPM through API -->
-            <RunSynchronous>
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>1</Order>
-                    <Path>reg add HKLM\System\Setup\LabConfig /v BypassTPMCheck /t reg_dword /d 0x00000001 /f</Path>
-                </RunSynchronousCommand>
-            </RunSynchronous>
-
             <!-- Create partition scheme -->
             <DiskConfiguration>
                 <Disk wcm:action="add">

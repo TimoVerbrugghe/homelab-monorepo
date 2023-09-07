@@ -1,1 +1,1 @@
-New-NetIPAddress -IPAddress 192.168.0.36 -DefaultGateway 192.168.0.1 -PrefixLength 24 -InterfaceIndex (Get-NetAdapter).InterfaceIndex
+New-NetIPAddress -IPAddress 10.10.10.11 -DefaultGateway 10.10.10.1 -PrefixLength 24 -InterfaceIndex (Get-NetAdapter).InterfaceIndex

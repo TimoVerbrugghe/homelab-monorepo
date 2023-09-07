@@ -32,7 +32,7 @@ New-WSManInstance WinRM/Config/Listener -SelectorSet @{Address="*"; Transport="H
 # Configure WinRM to be able to sign in with CredSSP, and provide the
 # self-signed cert to the WinRM listener.
 # Set-WSManInstance -ResourceURI WinRM/Config/Service/Auth -ValueSet @{Basic = "true"} # Enable if you need basic authentication, but CredSSP is safer than basic
-Set-WSManInstance -ResourceURI WinRM/Config/Service/Auth -ValueSet @{Basic = "true"}
+# Set-WSManInstance -ResourceURI WinRM/Config/Service/Auth -ValueSet @{Basic = "true"}
 Set-WSManInstance -ResourceURI WinRM/Config/Service/Auth -ValueSet @{CredSSP = "true"}
 
 # Enable connections from any host
