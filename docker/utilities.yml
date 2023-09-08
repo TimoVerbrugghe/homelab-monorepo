@@ -74,7 +74,8 @@ services:
     container_name: airsane
     restart: unless-stopped
     networks: # Separate dockervlan network because this container runs avahi and don't want this to clash with other containers running avahi as well
-      - dockervlan
+      dockervlan:
+        ipv4_address: ${AIRSANE_IP_ADDRESS}
     environment:
       SANED_ACL: 10.10.10.0/24
       SANED_DEVICE: genesys:libusb:009:002

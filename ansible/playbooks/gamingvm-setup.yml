@@ -4,11 +4,11 @@
 #   roles:
 #     - role: ../roles/hostprereq
 
-# - name: Upload Gaming VM files
-#   hosts: proxmox
-#   gather_facts: true
-#   roles:
-#     - role: ../roles/install-gamingvm
+- name: Upload Gaming VM files & Install VM
+  hosts: proxmox
+  gather_facts: true
+  roles:
+    - role: ../roles/install-gamingvm
 
 # - name: Wait 300 seconds to make sure that windows has installed and booted
 #   hosts: localhost
@@ -17,19 +17,19 @@
 #       ansible.builtin.pause:
 #         seconds: 300
 
-- name: Prepare gaming vm
-  hosts: all
-  roles:
-    - role: ../roles/configure-gamingvm
-  vars:
-    ansible_user: ansible
-    ansible_password: ansible
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
-    ansible_winrm_server_cert_validation: ignore
-    ansible_become: true
-    ansible_become_method: runas
-    ansible_become_user: GamingVM
-    ansible_become_password: ''
-    ansible_winrm_operation_timeout_sec: 120
-    ansible_winrm_read_timeout_sec: 150
+# - name: Prepare gaming vm
+#   hosts: all
+#   roles:
+#     - role: ../roles/configure-gamingvm
+#   vars:
+#     ansible_user: ansible
+#     ansible_password: ansible
+#     ansible_connection: winrm
+#     ansible_winrm_transport: credssp
+#     ansible_winrm_server_cert_validation: ignore
+#     ansible_become: true
+#     ansible_become_method: runas
+#     ansible_become_user: GamingVM
+#     ansible_become_password: ''
+#     ansible_winrm_operation_timeout_sec: 120
+#     ansible_winrm_read_timeout_sec: 150
