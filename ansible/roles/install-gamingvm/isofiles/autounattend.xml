@@ -6,42 +6,42 @@
             <!--
             This makes the VirtIO drivers available to Windows, assuming that
             the VirtIO driver disk at https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
-            is available as drive D:
+            is available as drive E: if it's the second sata iso connected in proxmox
             -->
             <DriverPaths>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="2">
-                    <Path>D:\viostor\w11\amd64</Path>
+                    <Path>E:\viostor\w11\amd64</Path>
                 </PathAndCredentials>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="3">
-                    <Path>D:\NetKVM\w11\amd64</Path>
+                    <Path>E:\NetKVM\w11\amd64</Path>
                 </PathAndCredentials>
                 <!-- Not installing the balloon driver - known to cause performance issues              
                 <PathAndCredentials wcm:action="add" wcm:keyValue="4">
-                    <Path>D:\Balloon\w11\amd64</Path>
+                    <Path>E:\Balloon\w11\amd64</Path>
                 </PathAndCredentials> -->
                 <PathAndCredentials wcm:action="add" wcm:keyValue="5">
-                    <Path>D:\pvpanic\w11\amd64</Path>
+                    <Path>E:\pvpanic\w11\amd64</Path>
                 </PathAndCredentials>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="6">
-                    <Path>D:\qemupciserial\w11\amd64</Path>
+                    <Path>E:\qemupciserial\w11\amd64</Path>
                 </PathAndCredentials>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="7">
-                    <Path>D:\qxldod\w11\amd64</Path>
+                    <Path>E:\qxldod\w11\amd64</Path>
                 </PathAndCredentials>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="8">
-                    <Path>D:\vioinput\w11\amd64</Path>
+                    <Path>E:\vioinput\w11\amd64</Path>
                 </PathAndCredentials>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="9">
-                    <Path>D:\viorng\w11\amd64</Path>
+                    <Path>E:\viorng\w11\amd64</Path>
                 </PathAndCredentials>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="10">
-                    <Path>D:\vioscsi\w11\amd64</Path>
+                    <Path>E:\vioscsi\w11\amd64</Path>
                 </PathAndCredentials>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="11">
-                    <Path>D:\vioserial\w11\amd64</Path>
+                    <Path>E:\vioserial\w11\amd64</Path>
                 </PathAndCredentials>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="12">
-                    <Path>D:\vioserial\w11\amd64</Path>
+                    <Path>E:\vioserial\w11\amd64</Path>
                 </PathAndCredentials>
             </DriverPaths>
         </component>
@@ -343,13 +343,13 @@
                     <Order>10</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File E:\staticip.ps1</CommandLine>
+                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File F:\staticip.ps1</CommandLine>
                     <Description>Configure Static IP for this VM</Description>
                     <Order>11</Order>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File E:\configurewinrm.ps1</CommandLine>
+                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File F:\configurewinrm.ps1</CommandLine>
                     <Description>Configure WinRM so that ansible can connect to it</Description>
                     <Order>12</Order>
                     <RequiresUserInput>false</RequiresUserInput>

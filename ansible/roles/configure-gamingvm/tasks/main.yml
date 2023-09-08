@@ -1,21 +1,25 @@
-- name: Test connection to Windows (using ping)
-  ansible.windows.win_ping:
+# - name: Test connection to Windows (using ping)
+#   ansible.windows.win_ping:
 
-- name: Disable basic auth for WinRM
-  ansible.builtin.script:
-    roles/gamingvm/scripts/disable-basicauth-winrm.ps1
+# - name: Disable basic auth for WinRM
+#   ansible.builtin.script:
+#     scripts/disable-basicauth-winrm.ps1
 
-- name: Speed up Ansible by optimizing PowerShell Assemblies
-  ansible.builtin.script:
-    roles/gamingvm/scripts/speed-up-ansible.ps1
+# - name: Speed up Ansible by optimizing PowerShell Assemblies
+#   ansible.builtin.script:
+#     scripts/speed-up-ansible.ps1
 
-- name: Create Restore Point
-  ansible.builtin.script:
-    roles/gamingvm/scripts/create-restore-point.ps1
+# - name: Create Restore Point
+#   ansible.builtin.script:
+#     scripts/create-restore-point.ps1
 
-- name: Enable Remote Desktop
+# - name: Enable Remote Desktop
+#   ansible.builtin.script:
+#     scripts/enable-remote-desktop.ps1
+
+- name: Set DNS servers
   ansible.builtin.script:
-    roles/gamingvm/scripts/enable-remote-desktop.ps1
+    scripts/set-dns.ps1
 
 - name: Update windows (all possible channels), reboot as many times as needed & increase reboot wait time to survive long updates
   ansible.windows.win_updates:
@@ -43,11 +47,11 @@
 
 - name: Remove bloatware
   ansible.builtin.script:
-    roles/gamingvm/scripts/remove-bloatware.ps1
+    scripts/remove-bloatware.ps1
 
 - name: Update Windows Store Apps
   ansible.builtin.script:
-    roles/gamingvm/scripts/update-windows-store-apps.ps1
+    scripts/update-windows-store-apps.ps1
 
 - name: Wait for 10 minutes to allow windows store to update apps
   ansible.windows.win_wait_for:
@@ -60,7 +64,7 @@
 
 - name: Install Apps using winget
   ansible.builtin.script:
-    roles/gamingvm/scripts/install-apps-winget.ps1
+    scripts/install-apps-winget.ps1
 
 - name: Ensure Chocolatey itself is installed, using community repo for the bootstrap
   chocolatey.chocolatey.win_chocolatey:
@@ -72,7 +76,7 @@
 
 - name: Personalization options (Desktop, Theme, Taskbar, Security, Performance)
   ansible.builtin.script:
-    roles/gamingvm/scripts/personalization.ps1
+    scripts/personalization.ps1
 
 - name: Generate native .NET images for CPU
   community.windows.win_dotnet_ngen:

@@ -57,4 +57,6 @@ all:
           vfio_pci_ids: 1000:0072,10de:1c03,10de:10f1
           acs_override: true
     
-    windowsvm:
+    gamingvm:
+      hosts:
+        gamingvm.local.timo.be:

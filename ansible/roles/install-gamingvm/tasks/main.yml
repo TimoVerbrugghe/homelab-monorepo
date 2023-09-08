@@ -67,8 +67,8 @@
     # Windows Autoinstall ISO, virtiowin iso and windows11 iso
     sata:
       sata0: isos:iso/windows11.iso,media=cdrom
-      sata1: isos:iso/windows_autoinstall.iso,media=cdrom
-      sata2: isos:iso/virtiowin.iso,media=cdrom
+      sata1: isos:iso/virtiowin.iso,media=cdrom
+      sata2: isos:iso/windows_autoinstall.iso,media=cdrom
 
     # TPM (required for windows 11)
     tpmstate0:
