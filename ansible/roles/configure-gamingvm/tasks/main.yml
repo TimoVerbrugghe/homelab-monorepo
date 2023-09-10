@@ -1,21 +1,21 @@
-# - name: Test connection to Windows (using ping)
-#   ansible.windows.win_ping:
+- name: Test connection to Windows (using ping)
+  ansible.windows.win_ping:
 
-# - name: Disable basic auth for WinRM
-#   ansible.builtin.script:
-#     scripts/disable-basicauth-winrm.ps1
+- name: Disable basic auth for WinRM
+  ansible.builtin.script:
+    scripts/disable-basicauth-winrm.ps1
 
-# - name: Speed up Ansible by optimizing PowerShell Assemblies
-#   ansible.builtin.script:
-#     scripts/speed-up-ansible.ps1
+- name: Speed up Ansible by optimizing PowerShell Assemblies
+  ansible.builtin.script:
+    scripts/speed-up-ansible.ps1
 
-# - name: Create Restore Point
-#   ansible.builtin.script:
-#     scripts/create-restore-point.ps1
+- name: Create Restore Point
+  ansible.builtin.script:
+    scripts/create-restore-point.ps1
 
-# - name: Enable Remote Desktop
-#   ansible.builtin.script:
-#     scripts/enable-remote-desktop.ps1
+- name: Enable Remote Desktop
+  ansible.builtin.script:
+    scripts/enable-remote-desktop.ps1
 
 - name: Set DNS servers
   ansible.builtin.script:
@@ -72,7 +72,9 @@
 
 - name: Install packages using chocolatey
   chocolatey.chocolatey.win_chocolatey:
-    name: cemu
+    name: 
+      - cemu
+      - vigembus
 
 - name: Personalization options (Desktop, Theme, Taskbar, Security, Performance)
   ansible.builtin.script:
@@ -80,6 +82,10 @@
 
 - name: Generate native .NET images for CPU
   community.windows.win_dotnet_ngen:
+
+- name: Sunshine setup
+  ansible.builtin.script:
+    scripts/sunshine-setup.ps1
 
 - name: Final reboot to apply all settings
   ansible.windows.win_reboot:

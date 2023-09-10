@@ -31,6 +31,9 @@ function Install-Apps() {
         "DolphinEmulator.Dolphin"
         "SteamGridDB.RomManager"
         "Libretro.RetroArch"
+
+        # Sunshine hosting
+        "LizardByte.Sunshine"
     )
 
     Install-WingetApps -WingetApps $WingetApps

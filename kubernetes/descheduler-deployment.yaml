@@ -1,5 +1,5 @@
 ---
-# Install cert-manager in cert-manager namespace using helm (only using cloudflare IPs since cert-manager only needs to create wildcard certs using cloudflare)
+# Install descheduler to make moving pods between nodes faster - for more info see https://github.com/kubernetes-sigs/descheduler
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:

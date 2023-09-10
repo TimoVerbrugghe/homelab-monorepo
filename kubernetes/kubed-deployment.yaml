@@ -1,4 +1,4 @@
-# Install kubed in kube-system namespace
+# Config Syncer (previously kubed) by AppsCode keeps ConfigMaps and Secrets synchronized across namespaces and/or clusters.
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:

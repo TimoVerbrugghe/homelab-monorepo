@@ -257,7 +257,12 @@ function Enable-WindowsAutoUpdate() {
     # Hour in 24 hour format, 0-23
     $Value = 6
 
-    Set-Registry-Setting $Path $Setting $Value    
+    Set-Registry-Setting $Path $Setting $Value  
+    
+    $Setting = "IncludeRecommendedUpdates"
+    $Value = 1
+
+    Set-Registry-Setting $Path $Setting $Value
 }
 
 function Disable-Notifications() {
