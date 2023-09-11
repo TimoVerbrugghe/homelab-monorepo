@@ -1,61 +1,61 @@
 - name: Test connection to Windows (using ping)
   ansible.windows.win_ping:
 
-- name: Disable basic auth for WinRM
-  ansible.builtin.script:
-    scripts/disable-basicauth-winrm.ps1
+# - name: Disable basic auth for WinRM
+#   ansible.builtin.script:
+#     scripts/disable-basicauth-winrm.ps1
 
-- name: Speed up Ansible by optimizing PowerShell Assemblies
-  ansible.builtin.script:
-    scripts/speed-up-ansible.ps1
+# - name: Speed up Ansible by optimizing PowerShell Assemblies
+#   ansible.builtin.script:
+#     scripts/speed-up-ansible.ps1
 
-- name: Create Restore Point
-  ansible.builtin.script:
-    scripts/create-restore-point.ps1
+# - name: Create Restore Point
+#   ansible.builtin.script:
+#     scripts/create-restore-point.ps1
 
-- name: Enable Remote Desktop
-  ansible.builtin.script:
-    scripts/enable-remote-desktop.ps1
+# - name: Enable Remote Desktop
+#   ansible.builtin.script:
+#     scripts/enable-remote-desktop.ps1
 
-- name: Set DNS servers
-  ansible.builtin.script:
-    scripts/set-dns.ps1
+# - name: Set DNS servers
+#   ansible.builtin.script:
+#     scripts/set-dns.ps1
 
-- name: Update windows (all possible channels), reboot as many times as needed & increase reboot wait time to survive long updates
-  ansible.windows.win_updates:
-    category_names: '*'
-    reboot: true
-    reboot_timeout: 3600
+# - name: Update windows (all possible channels), reboot as many times as needed & increase reboot wait time to survive long updates
+#   ansible.windows.win_updates:
+#     category_names: '*'
+#     reboot: true
+#     reboot_timeout: 3600
 
-- name: Update windows pass 2
-  ansible.windows.win_updates:
-    category_names: '*'
-    reboot: true
-    reboot_timeout: 3600
+# - name: Update windows pass 2
+#   ansible.windows.win_updates:
+#     category_names: '*'
+#     reboot: true
+#     reboot_timeout: 3600
 
-- name: Update windows part 3
-  ansible.windows.win_updates:
-    category_names: '*'
-    reboot: true
-    reboot_timeout: 3600
+# - name: Update windows part 3
+#   ansible.windows.win_updates:
+#     category_names: '*'
+#     reboot: true
+#     reboot_timeout: 3600
 
-- name: Update windows pass 4
-  ansible.windows.win_updates:
-    category_names: '*'
-    reboot: true
-    reboot_timeout: 3600
+# - name: Update windows pass 4
+#   ansible.windows.win_updates:
+#     category_names: '*'
+#     reboot: true
+#     reboot_timeout: 3600
 
 - name: Remove bloatware
   ansible.builtin.script:
     scripts/remove-bloatware.ps1
 
-- name: Update Windows Store Apps
-  ansible.builtin.script:
-    scripts/update-windows-store-apps.ps1
+# - name: Update Windows Store Apps
+#   ansible.builtin.script:
+#     scripts/update-windows-store-apps.ps1
 
-- name: Wait for 10 minutes to allow windows store to update apps
-  ansible.windows.win_wait_for:
-    timeout: 600
+# - name: Wait for 10 minutes to allow windows store to update apps
+#   ansible.windows.win_wait_for:
+#     timeout: 600
 
 - name: Downloading the winget source package manually because otherwise the winget commands fail (see https://github.com/microsoft/winget-cli/issues/2696)
   ansible.windows.win_package:
