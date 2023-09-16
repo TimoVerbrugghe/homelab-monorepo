@@ -1,18 +1,22 @@
 version: "3.8"
 
 services:
-  semaphore-postgres:
-    restart: always
-    image: postgres:16
-    container_name: semaphore-postgres
+
+  semaphore-mariadb:
+    container_name: semaphore-mariadb
+    image: mariadb
     networks:
       - dockerproxy
-    volumes: 
-     - semaphore-postgres:/var/lib/postgresql/data
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    volumes:
+      - semaphore-mariadb:/var/lib/mysql
     environment:
-     POSTGRES_USER: ${SEMAPHORE_POSTGRES_USER}
-     POSTGRES_PASSWORD: ${SEMAPHORE_POSTGRES_PASSWORD}
-     POSTGRES_DB: ${SEMAPHORE_POSTGRES_DB}
+      - MARIADB_AUTO_UPGRADE=true
+      - MYSQL_ROOT_PASSWORD=${SEMAPHORE_MARIADB_PASSWORD}
+      - MYSQL_PASSWORD=${SEMAPHORE_MARIADB_PASSWORD}
+      - MYSQL_DATABASE=${SEMAPHORE_MARIADB_DB}
+      - MYSQL_USER=${SEMAPHORE_MARIADB_USER}
     labels:
       traefik.enable: false
 
@@ -25,12 +29,12 @@ services:
     volumes:
       - semaphore:/etc/semaphore
     environment:
-      SEMAPHORE_DB_USER: ${SEMAPHORE_POSTGRES_USER}
-      SEMAPHORE_DB_PASS: ${SEMAPHORE_POSTGRES_PASSWORD}
-      SEMAPHORE_DB_HOST: semaphore-postgres
-      SEMAPHORE_DB_PORT: 5432
-      SEMAPHORE_DB_DIALECT: postgres
-      SEMAPHORE_DB: ${SEMAPHORE_POSTGRES_DB}
+      SEMAPHORE_DB_USER: ${SEMAPHORE_MARIADB_USER}
+      SEMAPHORE_DB_PASS: ${SEMAPHORE_MARIADB_PASSWORD}
+      SEMAPHORE_DB_HOST: semaphore-mariadb
+      SEMAPHORE_DB_PORT: 3306
+      SEMAPHORE_DB_DIALECT: mysql
+      SEMAPHORE_DB: ${SEMAPHORE_MARIADB_DB}
       SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
       SEMAPHORE_ADMIN_PASSWORD: ${SEMAPHORE_ADMIN_PASSWORD}
       SEMAPHORE_ADMIN_NAME: ${SEMAPHORE_ADMIN_NAME}
@@ -39,7 +43,7 @@ services:
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
       SEMAPHORE_LDAP_ACTIVATED: 'no' # if you wish to use ldap, set to: 'yes' 
     depends_on:
-      - semaphore-postgres
+      - semaphore-mariadb
     labels:
       traefik.http.routers.semaphore.entrypoints: https
       traefik.http.services.semaphore.loadbalancer.server.port: 3000
@@ -47,7 +51,7 @@ services:
     
 volumes:
   semaphore:
-  semaphore-postgres:
+  semaphore-mariadb:
 
 networks:
   dockerproxy:
