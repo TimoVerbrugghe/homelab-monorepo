@@ -9,7 +9,7 @@
       shell: df -h / | awk 'NR==2 {print $5}'
       register: disk_usage
 
-    - name: send slack message when reboot is required
+    - name: send slack message when disk usage is above 80%
       uri:
         url: "{{ semaphore_slack_webhook }}"
         method: POST
