@@ -1,0 +1,10 @@
+- name: Update Windows
+  hosts: all
+  tasks:
+    - name: Test connection to Windows (using ping)
+      ansible.windows.win_ping:
+    - name: Update windows (all possible channels), reboot as many times as needed & increase reboot wait time to survive long updates
+      ansible.windows.win_updates:
+        category_names: '*'
+        reboot: true
+        reboot_timeout: 3600
