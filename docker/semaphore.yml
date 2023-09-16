@@ -18,7 +18,7 @@ services:
 
   semaphore:
     restart: always
-    image: semaphoreui/semaphore:2.9.4
+    image: semaphoreui/semaphore:v2.9.4
     container_name: semaphore
     networks:
       - dockerproxy
