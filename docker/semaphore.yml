@@ -5,6 +5,8 @@ services:
     restart: always
     image: postgres
     container_name: semaphore-postgres
+    networks:
+      - dockerproxy
     volumes: 
      - semaphore-postgres:/var/lib/postgresql/data
     environment:
