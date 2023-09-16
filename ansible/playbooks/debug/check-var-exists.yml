@@ -1,0 +1,5 @@
+- name: Display all variables/facts known for a host
+  hosts: all
+  tasks:
+    - shell: echo "The variable 'test' is defined and not empty"
+      when: (test is defined) and (test|length > 0)
