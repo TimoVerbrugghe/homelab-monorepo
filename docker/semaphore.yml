@@ -22,6 +22,8 @@ services:
     container_name: semaphore
     networks:
       - dockerproxy
+    volumes:
+      - semaphore:/etc/semaphore
     environment:
       SEMAPHORE_DB_USER: ${SEMAPHORE_POSTGRES_USER}
       SEMAPHORE_DB_PASS: ${SEMAPHORE_POSTGRES_PASSWORD}
@@ -36,8 +38,6 @@ services:
       SEMAPHORE_ADMIN: ${SEMAPHORE_ADMIN}
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
       SEMAPHORE_LDAP_ACTIVATED: 'no' # if you wish to use ldap, set to: 'yes' 
-      SEMAPHORE_SLACK_ALERT: true
-      SEMAPHORE_SLACK_URL: ${SEMAPHORE_SLACK_URL}
     depends_on:
       - semaphore-postgres
     labels:
@@ -46,6 +46,7 @@ services:
       traefik.http.routers.semaphore.middlewares: keycloak-auth@file  
     
 volumes:
+  semaphore:
   semaphore-postgres:
 
 networks:
