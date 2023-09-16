@@ -23,7 +23,7 @@
     name:
       - py3-pip
     state: present
-  when: ansible_facts['os_family'] == "alpine"
+  when: ansible_facts['os_family'] == "Alpine"
 
 - name: Install pip packages (macos or alpine)
   ansible.builtin.pip:
@@ -34,7 +34,7 @@
       - requests-credssp
       - pycdlib
     state: present
-  when: ansible_distribution == 'MacOSX' or ansible_facts['os_family'] == "alpine"
+  when: ansible_distribution == 'MacOSX' or ansible_facts['os_family'] == "Alpine"
 
 # Do not use pip but install python packages directly on debian and ubuntu
 - name: Install python, pip, sshpass and other dependencies - Debian and Ubuntu
