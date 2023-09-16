@@ -1,0 +1,35 @@
+# Playbook to update ubuntu hosts and notify if reboot is required
+
+- name: Update and upgrade apt packages
+  hosts: all 
+  become: true
+  tasks:
+    - name: Update packages with apt
+      when: ansible_pkg_mgr == 'apt'
+      apt:
+        update_cache: yes
+
+    - name: Upgrade packages with apt
+      when: ansible_pkg_mgr == 'apt'
+      apt:
+        upgrade: dist
+
+- name: check if system reboot is required
+  hosts: "{{ hosts }}"
+  become: yes
+  tasks:
+    - name: check if system reboot is required
+      become: true
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+    - name: send slack message when reboot is required
+      uri:
+        url: "{{ semaphore_slack_webhook }}"
+        method: POST
+        body_format: json
+        body: '{"text": "Reboot required on {{ inventory_hostname }} after updates"}'
+        headers:
+          Content-Type: application/json
+        status_code: 204
+      when: reboot_required.stat.exists
