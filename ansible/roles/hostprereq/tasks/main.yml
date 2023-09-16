@@ -15,6 +15,8 @@
     state: present
   when: ansible_distribution == 'MacOSX'
 
+
+# Install pip packages on macos or alpine
 - name: Install pip packages
   ansible.builtin.pip:
     name: 
@@ -24,10 +26,10 @@
       - requests-credssp
       - pycdlib
     state: present
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_distribution == 'MacOSX' || ansible_facts['os_family'] == "alpine"
 
-# Run specific tasks if the host is a Linux machine
-- name: Install python, pip, sshpass and other dependencies
+# Do not use pip but install python packages directly on debian and ubuntu
+- name: Install python, pip, sshpass and other dependencies - Debian and Ubuntu
   become: true
   ansible.builtin.apt:
     name:
