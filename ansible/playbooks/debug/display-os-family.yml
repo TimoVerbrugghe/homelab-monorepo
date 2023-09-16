@@ -1,0 +1,8 @@
+- name: Display OS Family Variable
+  hosts: localhost
+  gather_facts: true  # Ensure facts are gathered from the localhost
+
+  tasks:
+    - name: Display OS Family
+      debug:
+        var: ansible_os_family
