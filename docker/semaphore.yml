@@ -36,6 +36,8 @@ services:
       SEMAPHORE_ADMIN: ${SEMAPHORE_ADMIN}
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
       SEMAPHORE_LDAP_ACTIVATED: 'no' # if you wish to use ldap, set to: 'yes' 
+      SEMAPHORE_SLACK_ALERT: true
+      SEMAPHORE_SLACK_URL: ${SEMAPHORE_SLACK_URL}
     depends_on:
       - semaphore-postgres
     labels:
