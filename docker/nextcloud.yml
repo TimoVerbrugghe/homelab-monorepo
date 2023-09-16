@@ -11,6 +11,7 @@ services:
     volumes:
       - mariadb-nextcloud:/var/lib/mysql
     environment:
+      - MARIADB_AUTO_UPGRADE=true
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=nextcloud
