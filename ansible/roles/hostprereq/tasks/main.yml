@@ -17,7 +17,15 @@
 
 
 # Install pip packages on macos or alpine
-- name: Install pip packages
+
+- name: Install pip (alpine)
+  ansible.builtin.apk:
+    name:
+      - py3-pip
+    state: present
+  when: ansible_facts['os_family'] == "alpine"
+
+- name: Install pip packages (macos or alpine)
   ansible.builtin.pip:
     name: 
       - proxmoxer
