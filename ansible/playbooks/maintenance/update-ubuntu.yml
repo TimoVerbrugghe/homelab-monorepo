@@ -6,12 +6,12 @@
   tasks:
     - name: Update packages with apt
       when: ansible_pkg_mgr == 'apt'
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
 
     - name: Upgrade packages with apt
       when: ansible_pkg_mgr == 'apt'
-      apt:
+      ansible.builtin.apt:
         upgrade: dist
 
 - name: check if system reboot is required
@@ -20,16 +20,16 @@
   tasks:
     - name: check if system reboot is required
       become: true
-      stat:
+      ansible.builtin.stat:
         path: /var/run/reboot-required
       register: reboot_required
     - name: send slack message when reboot is required
-      uri:
+      ansible.builtin.uri:
         url: "{{ semaphore_slack_webhook }}"
         method: POST
         body_format: json
         body: '{"text": "Reboot required on {{ inventory_hostname }} after updates"}'
         headers:
           Content-Type: application/json
-        status_code: 204
+        status_code: [200,201,202,203,204,205,206]
       when: reboot_required.stat.exists

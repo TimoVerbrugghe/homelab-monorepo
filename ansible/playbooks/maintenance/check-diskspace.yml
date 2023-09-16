@@ -17,5 +17,5 @@
         body: '{"text": "Disk space on {{ inventory_hostname }} is above 80%!"}'
         headers:
           Content-Type: application/json
-        status_code: 204
+        status_code: [200,201,202,203,204,205,206]
       when: disk_usage.stdout[:-1]|int > 80
