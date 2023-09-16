@@ -3,7 +3,7 @@ version: "3.8"
 services:
   semaphore-postgres:
     restart: always
-    image: postgres
+    image: postgres:16
     container_name: semaphore-postgres
     networks:
       - dockerproxy

@@ -26,7 +26,7 @@ services:
 
   keycloak-postgres:
     container_name: keycloak-postgres
-    image: postgres
+    image: postgres:15
     restart: always
     networks:
       - dockerproxy

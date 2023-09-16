@@ -28,7 +28,7 @@ services:
 
   speedtest-tracker-postgres:
     container_name: speedtest-tracker-postgres
-    image: postgres
+    image: postgres:15
     restart: always
     networks:
       - dockerproxy
