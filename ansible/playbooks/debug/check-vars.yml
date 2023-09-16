@@ -1,6 +1,5 @@
 - name: Display all variables/facts known for a host
   hosts: localhost
-  become: true
   tasks:
     - debug:
         var: hostvars[inventory_hostname]
