@@ -23,9 +23,9 @@ services:
     environment:
       SEMAPHORE_DB_USER: ${SEMAPHORE_POSTGRES_USER}
       SEMAPHORE_DB_PASS: ${SEMAPHORE_POSTGRES_PASSWORD}
-      SEMAPHORE_DB_HOST: postgres # for postgres, change to: postgres
-      SEMAPHORE_DB_PORT: 5432 # change to 5432 for postgres
-      SEMAPHORE_DB_DIALECT: postgres # for postgres, change to: postgres
+      SEMAPHORE_DB_HOST: postgres
+      SEMAPHORE_DB_PORT: 5432
+      SEMAPHORE_DB_DIALECT: postgres
       SEMAPHORE_DB: ${SEMAPHORE_POSTGRES_DB}
       SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
       SEMAPHORE_ADMIN_PASSWORD: ${SEMAPHORE_ADMIN_PASSWORD}
@@ -35,14 +35,14 @@ services:
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
       SEMAPHORE_LDAP_ACTIVATED: 'no' # if you wish to use ldap, set to: 'yes' 
     depends_on:
-      - semaphore-postgres # for postgres, change to: postgres
+      - semaphore-postgres
     labels:
       traefik.http.routers.semaphore.entrypoints: https
       traefik.http.services.semaphore.loadbalancer.server.port: 3000
       traefik.http.routers.semaphore.middlewares: keycloak-auth@file  
     
 volumes:
-  semaphore-postgres: # to use postgres, switch to: semaphore-postgres
+  semaphore-postgres:
 
 networks:
   dockerproxy:
