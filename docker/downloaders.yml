@@ -80,7 +80,7 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - UMASK_SET=022
-      - RPC_SECRET={$ARIA2_RPC_SECRET}
+      - RPC_SECRET=${ARIA2_RPC_SECRET}
       - RPC_PORT=6800
       - LISTEN_PORT=6888
     volumes:

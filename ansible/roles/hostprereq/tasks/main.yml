@@ -15,7 +15,6 @@
     state: present
   when: ansible_distribution == 'MacOSX'
 
-
 # Install pip packages on macos or alpine
 
 - name: Install pip (alpine)
