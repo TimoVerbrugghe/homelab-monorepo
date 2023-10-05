@@ -146,10 +146,10 @@ services:
     volumes:
       - overseerr:/app/config
     labels:
-      - traefik.http.routers.overseerr.rule=Host(`request.home.timo.be`) || Host(`request.timo.be`)
-      - traefik.http.routers.overseerr.entrypoints=https
-      - traefik.http.services.overseerr.loadbalancer.server.port=5055
-      - traefik.http.routers.overseerr.middlewares=keycloak-auth@file
+      traefik.http.routers.overseerr.rule: Host(`request.home.timo.be`) || Host(`request.timo.be`)
+      traefik.http.routers.overseerr.entrypoints: https
+      traefik.http.services.overseerr.loadbalancer.server.port: 5055
+      traefik.http.routers.overseerr.middlewares: keycloak-auth@file
 
   prowlarr:
     container_name: prowlarr
@@ -164,9 +164,9 @@ services:
     volumes:
       - prowlarr:/config
     labels:
-      - traefik.http.routers.prowlarr.entrypoints=https
-      - traefik.http.services.prowlarr.loadbalancer.server.port=9696
-      - traefik.http.routers.prowlarr.middlewares=keycloak-auth@file
+      traefik.http.routers.prowlarr.entrypoints: https
+      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
+      traefik.http.routers.prowlarr.middlewares: keycloak-auth@file
 
   tautulli:
     image: ghcr.io/tautulli/tautulli
@@ -181,9 +181,9 @@ services:
     volumes:
       - tautulli:/config
     labels:
-      - traefik.http.routers.tautulli.entrypoints=https
-      - traefik.http.services.tautulli.loadbalancer.server.port=8181
-      - traefik.http.routers.tautulli.middlewares=keycloak-auth@file
+      traefik.http.routers.tautulli.entrypoints: https
+      traefik.http.services.tautulli.loadbalancer.server.port: 8181
+      traefik.http.routers.tautulli.middlewares: keycloak-auth@file
 
   emulatorjs:
     image: lscr.io/linuxserver/emulatorjs:latest

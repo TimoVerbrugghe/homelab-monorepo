@@ -1,0 +1,9 @@
+- name: Reboot hosts one at a time
+  hosts: all
+  serial: 1 # Limit parallellism of this playbook to 1 host at a time
+  become: true
+
+  tasks:
+    - name: Reboot
+      ansible.builtin.reboot:
+        reboot_timeout: 3600

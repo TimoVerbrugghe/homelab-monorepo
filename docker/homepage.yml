@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  homepage:
+    image: ghcr.io/benphelps/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      traefik.http.routers.homepage.entrypoints: https
+      traefik.http.services.homepage.loadbalancer.server.port: 3000
+      traefik.http.routers.homepage.middlewares: keycloak-auth@file
+
+networks:
+  dockerproxy:
+    external: true
+
+volumes:
+  homepage:
