@@ -47,6 +47,7 @@ services:
     image: binhex/arch-krusader
     restart: always
     privileged: true
+    user: ${PUID}:${PGID}
     networks:
       - dockerproxy
     environment:
