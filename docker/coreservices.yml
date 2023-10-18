@@ -64,6 +64,18 @@ services:
     labels:
       traefik.enable: false
 
+  dockerproxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy:latest
+    container_name: dockerproxy
+    environment:
+        - CONTAINERS=1 # Allow access to viewing containers
+        - POST=0 # Disallow any POST operations (effectively read-only)
+    ports:
+        - 127.0.0.1:2375:2375
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
+    restart: unless-stopped
+
 volumes:
   tailscale:
   adguardhome-work:
