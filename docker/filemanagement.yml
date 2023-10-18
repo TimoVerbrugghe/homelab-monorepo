@@ -47,12 +47,13 @@ services:
     image: binhex/arch-krusader
     restart: always
     privileged: true
-    user: ${PUID}:${PGID}
     networks:
       - dockerproxy
     environment:
       - TEMP_FOLDER=/config/krusader/tmp
       - WEBPAGE_TITLE=krusader
+      - PUID=${PUID}
+      - PGID=${PGID}
     volumes:
       - media:/media
       - isos:/isos
