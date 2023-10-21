@@ -1,0 +1,6 @@
+- name: Enable swap
+  hosts: all
+  become: true
+  tasks:
+    - name: Enable swap
+      ansible.builtin.include_tasks: ../roles/ubuntu-vm-first-setup/tasks/enable-swap.yml

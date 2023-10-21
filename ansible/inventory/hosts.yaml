@@ -2,8 +2,7 @@ all:
   children:
     vm:
       hosts:
-        aelita.home.timo.be:
-          test: test
+        aelita.local.timo.be:
           ansible_user: aelita
           macvlan_routes: |
             - to: 10.10.10.20
@@ -12,7 +11,7 @@ all:
           proxmox_node: forestsector
           vm_id: 105
           hostpci_gpu_id: '00:02.0'
-        odd.home.timo.be:
+        odd.local.timo.be:
           ansible_user: odd
           macvlan_routes: |
             - to: 10.10.10.22
@@ -20,7 +19,7 @@ all:
           portainer_agent: true
           proxmox_node: icesector
           vm_id: 107
-        ulrich.home.timo.be:
+        ulrich.local.timo.be:
           ansible_user: ulrich
           macvlan_routes: |
             - to: 10.10.10.21

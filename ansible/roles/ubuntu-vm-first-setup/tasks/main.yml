@@ -26,5 +26,8 @@
   ansible.builtin.include_tasks: install-intel-gpu-driver.yml
   when: enable_gpu
 
+- name: Enable swap
+  ansible.builtin.include_tasks: enable-swap.yml
+
 - name: Reboot (to make sure all settings are applied)
   ansible.builtin.reboot:
