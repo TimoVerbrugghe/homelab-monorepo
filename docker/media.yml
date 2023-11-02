@@ -18,7 +18,7 @@ services:
     devices:
       - /dev/dri:/dev/dri
     ports:
-      # - 1900:1900/udp # autodiscovery
+      - 1901:1900/udp # autodiscovery
       - 7359:7359/udp # autodiscovery
     labels:
       traefik.http.routers.jellyfin.entrypoints: https
