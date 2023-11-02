@@ -18,6 +18,7 @@ services:
     devices:
       - /dev/dri:/dev/dri
     ports:
+      - 8096:8096/tcp # local access
       - 1901:1900/udp # autodiscovery
       - 7359:7359/udp # autodiscovery
     labels:
