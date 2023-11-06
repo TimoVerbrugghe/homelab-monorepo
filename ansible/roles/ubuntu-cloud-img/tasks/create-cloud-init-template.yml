@@ -1,3 +1,18 @@
+## Remove existing ubuntu-cloud template
+- name: Get the list of VMs
+  shell: qm list
+  register: vm_list
+
+- name: Remove the "ubuntu-cloud" templates by looking in the vm list if a vm with name "ubuntu-cloud" exists and destroy it
+  command: qm destroy {{ vmid }} --purge
+  loop: "{{ vm_list.stdout_lines }}"
+  loop_control:
+    loop_var: vm_line
+  vars:
+    vmid: "{{ vm_line.split() | select('match', '^\\d+$') | first }}"
+  when: "'ubuntu-cloud' in vm_line"
+
+## Create new template
 - name: Download Ubuntu Cloud Image
   ansible.builtin.get_url:
     url: "{{ ubuntu_cloud_image_url }}"

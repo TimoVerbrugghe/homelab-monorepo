@@ -1,0 +1,189 @@
+- name: Uninstall existing K3s server if they are present
+  shell: k3s-uninstall.sh
+  ignore_errors: true
+
+- name: Create config file directory
+  file:
+    path: /etc/rancher/k3s
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy k3s config file to controlplane nodes
+  template:
+    src: "k3s-controlplane-config.yaml.j2"
+    dest: "/etc/rancher/k3s/config.yaml"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Deploy kube-vip manifest to first controlplane (will deploy automatically when k3s gets installed)
+  ansible.builtin.include_tasks: kube-vip.yml
+  when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+## Install k3s on the first controlplane node
+- name: Install K3s server with cluster-init on the first controlplane node
+  shell: curl -sfL https://get.k3s.io | sh -
+  when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+## Verify k3s is running
+- name: Verify k3s is running
+  when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+  block:
+    - name: Verify that node is up (check k3s-init.service if this fails)
+      command:
+        cmd: k3s kubectl get nodes -o=jsonpath="{.items[*].metadata.name}"
+      register: nodes
+      until: nodes.rc == 0 and (nodes.stdout.split() | length) == 1  # yamllint disable-line rule:line-length
+      retries: "{{ retry_count | default(20) }}"
+      delay: 10
+      changed_when: false
+  always:
+    - name: Save logs of k3s-init.service
+      include_tasks: fetch_k3s_init_logs.yml
+      when: log_destination
+      vars:
+        log_destination: >-
+          {{ lookup('ansible.builtin.env', 'ANSIBLE_K3S_LOG_DIR', default=False) }}
+    - name: Kill the temporary service used for initialization
+      systemd:
+        name: k3s-init
+        state: stopped
+      failed_when: false
+
+- name: Verify kube-vip is running
+  when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+  ansible.builtin.wait_for:
+    host: "{{ kube_vip_ip }}"
+    port: 6443
+    delay: 10
+  changed_when: false
+  retries: "{{ retry_count | default(20) }}"
+
+## Get the node token and save it for the other nodes later to use
+- name: Wait for node-token
+  wait_for:
+    path: /var/lib/rancher/k3s/server/node-token
+  when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+- name: Register node-token file access mode
+  stat:
+    path: /var/lib/rancher/k3s/server
+  register: p
+  when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+- name: Change file access node-token
+  file:
+    path: /var/lib/rancher/k3s/server
+    mode: "g+rx,o+rx"
+  when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+- name: Read node-token from controlplane
+  slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: node_token
+  when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+- name: Store controlplane node-token
+  set_fact:
+    k3stoken: "{{ hostvars[groups['k3scontrolplane'][0]]['node_token'].content | b64decode | regex_replace('\n', '') }}"
+
+- name: Restore node-token file access
+  file:
+    path: /var/lib/rancher/k3s/server
+    mode: "{{ p.stat.mode }}"
+  when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+## Install k3s on the remaining nodes
+- name: Install K3s server and join the cluster on the remaining nodes
+  shell: curl -sfL https://get.k3s.io | sh -s server --server https://{{ kube_vip_ip }}:6443 --token {{ k3stoken }}
+  when: ansible_hostname != hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+## Verify all k3s nodes are running
+- name: Verify k3s is running
+  block:
+    - name: Verify that node is up (check k3s-init.service if this fails)
+      command:
+        cmd: k3s kubectl get nodes -o=jsonpath="{.items[*].metadata.name}"
+      register: nodes
+      until: nodes.rc == 0 and (nodes.stdout.split() | length) == (groups['k3scontrolplane'] | length)  # yamllint disable-line rule:line-length
+      retries: "{{ retry_count | default(20) }}"
+      delay: 10
+      changed_when: false
+  always:
+    - name: Save logs of k3s-init.service
+      include_tasks: fetch_k3s_init_logs.yml
+      when: log_destination
+      vars:
+        log_destination: >-
+          {{ lookup('ansible.builtin.env', 'ANSIBLE_K3S_LOG_DIR', default=False) }}
+    - name: Kill the temporary service used for initialization
+      systemd:
+        name: k3s-init
+        state: stopped
+      failed_when: false
+
+- name: Create directory .kube
+  file:
+    path: "{{ ansible_user_dir }}/.kube"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    mode: "u=rwx,g=rx,o="
+
+- name: Copy config file to user home directory
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: "{{ ansible_user_dir }}/.kube/config"
+    remote_src: yes
+    owner: "{{ ansible_user_id }}"
+    mode: "u=rw,g=,o="
+
+- name: Configure kubectl cluster to {{ endpoint_url }}
+  command: >-
+    k3s kubectl config set-cluster default
+      --server={{ endpoint_url }}
+      --kubeconfig {{ ansible_user_dir }}/.kube/config
+  changed_when: true
+  vars:
+    endpoint_url: >-
+      https://{{ kube_vip_ip }}:6443
+
+- name: Create kubectl symlink
+  file:
+    src: /usr/local/bin/k3s
+    dest: /usr/local/bin/kubectl
+    state: link
+
+- name: Create crictl symlink
+  file:
+    src: /usr/local/bin/k3s
+    dest: /usr/local/bin/crictl
+    state: link
+
+## Unsure if I should do this ...
+## Remove manifests & folders that are only needed for bootstrapping the cluster so k3s doesn't auto apply on start
+# - name: Get contents of manifests folder
+#   find:
+#     paths: /var/lib/rancher/k3s/server/manifests
+#     file_type: file
+#   register: k3s_server_manifests
+#   when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+# - name: Get sub dirs of manifests folder
+#   find:
+#     paths: /var/lib/rancher/k3s/server/manifests
+#     file_type: directory
+#   register: k3s_server_manifests_directories
+#   when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
+
+# - name: Remove manifests and folders that are only needed for bootstrapping cluster so k3s doesn't auto apply on start
+#   file:
+#     path: "{{ item.path }}"
+#     state: absent
+#   with_items:
+#     - "{{ k3s_server_manifests.files }}"
+#     - "{{ k3s_server_manifests_directories.files }}"
+#   loop_control:
+#     label: "{{ item.path }}"
+#   when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']

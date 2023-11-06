@@ -1,0 +1,32 @@
+- name: Install Helm
+  ansible.builtin.include_tasks: install-helm.yml
+
+- name: Deploy reflector (keeps ConfigMaps and Secrets synchronized across namespaces and/or clusters.)
+  kubernetes.core.k8s:
+    state: present
+    template: reflector-deployment.yaml.j2
+
+- name: Deploy cloudflare secrets in cluster (to be used later by cert-manager to get ssl certificates)
+  kubernetes.core.k8s:
+    state: present
+    template: secrets-deployment.yaml.j2
+
+## NEED TO FIND A WAY TO REMOVE SEARCH DOMAIN FROM RESOLV.CONF IN UBUNTU -> PROBABLY WITH SOME NETPLAN DEPLOYMENT OR CHANGE
+
+- name: Deploy cert-manager (which will get wildcard certificates to be later used by traefik)
+  kubernetes.core.k8s:
+    state: present
+    template: cert-manager-deployment.yaml.j2
+
+- name: Get certificates
+  kubernetes.core.k8s:
+    state: present
+    template: certificates-deployment.yaml.j2
+
+- name: Deploy traefik
+  ansible.builtin.include_tasks: install-helm.yml
+
+- name: Deploy simple nginx example to kubernetes cluster for testing
+  kubernetes.core.k8s:
+    state: present
+    template: nginx-demo-deployment.yaml.j2

@@ -1,0 +1,80 @@
+---
+# Create letsencrypt staging issuer
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: {{ le_email }}
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+      - dns01:
+          cloudflare:
+            email: {{ le_email }}
+            apiTokenSecretRef:
+              name: cloudflare-token-secret
+              key: cloudflare-token
+        selector:
+          dnsZones:
+            - "{{ le_domain }}"
+---
+# Create letsencrypt production issuer
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: {{ le_email }}
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+      - dns01:
+          cloudflare:
+            email: {{ le_email }}
+            apiTokenSecretRef:
+              name: cloudflare-token-secret
+              key: cloudflare-token
+        selector:
+          dnsZones:
+            - "{{ le_domain }}"
+---
+# Create letsencrypt staging certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ staging_certificate_name }}
+  namespace: cert-manager
+spec:
+  secretName: {{ staging_certificate_name }}-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "{{ le_wildcard_domain }}"
+  dnsNames:
+    - "{{ le_wildcard_domain }}"
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"  
+---
+# Create letsencrypt production certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ production_certificate_name }}
+  namespace: cert-manager
+spec:
+  secretName: {{ production_certificate_name }}-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "{{ le_wildcard_domain }}"
+  dnsNames:
+    - "{{ le_wildcard_domain }}"
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"  

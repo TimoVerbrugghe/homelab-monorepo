@@ -1,0 +1,59 @@
+---
+# Create middlewares for traefik, including headers, ratelimit and middlewares for routing certain apps correctly
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: secureheaders
+  namespace: traefik
+spec:
+  headers:
+    accessControlAllowOriginList:
+        - https://kubernetes.timo.be
+        - https://timo.be
+    frameDeny: true
+    browserXssFilter: true
+    contentTypeNosniff: true
+    forceSTSHeader: true       
+    stsSeconds: 15552000
+    stsIncludeSubdomains: true
+    stsPreload: true
+    customRequestHeaders:
+        X-Forwarded-Proto: https
+    customFrameOptionsValue: SAMEORIGIN
+    hostsProxyHeaders:
+        - X-Forwarded-Host
+    customResponseHeaders:
+        X-Robots-Tag: "noindex,nofollow"
+        Permissions-Policy: "geolocation=(), microphone=(), camera=(), payment=(), usb=(), vr=()"
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: ratelimit
+  namespace: traefik
+spec:
+  rateLimit:
+    average: 200
+    burst: 200
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: accountsredirect
+  namespace: traefik
+spec:
+  redirectRegex:
+    regex: "(.)*"
+    replacement: "https://auth.timo.be/realms/HomeServer/account/#/security/linked-accounts"
+    permanent: false
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: statusredirect
+  namespace: traefik
+spec:
+  redirectRegex:
+    regex: "(.)*"
+    replacement: "https://uptime.timo.be/status/default"
+    permanent: false

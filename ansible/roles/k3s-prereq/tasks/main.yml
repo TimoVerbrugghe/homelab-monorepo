@@ -1,0 +1,53 @@
+- name: Set same timezone on every Server
+  community.general.timezone:
+    name: "{{ system_timezone }}"
+  when: (system_timezone is defined) and (system_timezone != "Your/Timezone")
+
+- name: Enable IPv4 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    reload: yes
+  tags: sysctl
+
+- name: Enable IPv6 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: "1"
+    state: present
+    reload: yes
+  tags: sysctl
+
+- name: Enable IPv6 router advertisements
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.accept_ra
+    value: "2"
+    state: present
+    reload: yes
+  tags: sysctl
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - jq
+      - iputils-ping
+      - nfs-common
+      - git
+      - python3-yaml
+      - python3-kubernetes
+    state: present
+    update_cache: true
+  become: true
+
+- name: Configure git email
+  git_config:
+    name: user.email
+    scope: global
+    value: '{{ git_user_email }}'
+
+- name: Configure git username
+  git_config:
+    name: user.name
+    scope: global
+    value: '{{ git_user_name }}'

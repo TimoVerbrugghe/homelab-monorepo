@@ -3,4 +3,5 @@
 - name: Configure iGPU passthrough & Create Ubuntu Cloud Init template
   hosts: all
   roles:
+    - role: ../roles/ubuntu-cloud-img
     - role: ../roles/proxmox-host-setup

@@ -15,6 +15,7 @@
 
 - name: Configure macvlan
   ansible.builtin.include_tasks: macvlan-config.yml
+  when: macvlan_routes
 
 # Increase the UDP buffer size in order to have more stable QUIC connections, necessary for the cloudflare tunnel
 # More information available here: https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes

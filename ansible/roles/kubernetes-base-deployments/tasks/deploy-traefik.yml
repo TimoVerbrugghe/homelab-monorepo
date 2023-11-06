@@ -1,0 +1,14 @@
+- name: Deploy traefik
+  kubernetes.core.k8s:
+    state: present
+    template: 'traefik-deployment.yaml.j2'
+
+- name: Deploy traefik middlewares
+  kubernetes.core.k8s:
+    state: present
+    template: 'traefik-middleware-deployment.yaml.j2'
+
+- name: Deploy traefik dashboard
+  kubernetes.core.k8s:
+    state: present
+    template: 'traefik-dashboard-deployment.yaml.j2'

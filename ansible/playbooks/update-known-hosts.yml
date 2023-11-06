@@ -12,7 +12,7 @@
   connection: local
   vars:
     ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
-    ssh_known_hosts: "{{ groups['proxmox'] }}"
+    ssh_known_hosts: "{{ groups[ host_group | default('all')] }}"
   tasks:
     - known_hosts:
         path: "{{ ssh_known_hosts_file }}"
@@ -21,12 +21,3 @@
         state: present
       loop: "{{ ssh_known_hosts | map('extract', hostvars, ['inventory_hostname']) | list }}"
       become: no
-
-- name: Download ssh keys from github and install them
-  hosts: all
-  tasks:
-    - name: Set authorized keys from GitHub
-      ansible.posix.authorized_key:
-        user: "{{ ansible_user }}"
-        state: present
-        key: https://github.com/{{ github_username }}.keys

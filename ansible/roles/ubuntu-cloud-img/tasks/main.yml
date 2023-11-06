@@ -1,0 +1,2 @@
+- name: Create Cloud Init Template
+  ansible.builtin.include_tasks: create-cloud-init-template.yml

@@ -28,3 +28,6 @@ networks:
     
   dockerproxy:
     name: dockerproxy
+  
+  media-others:
+    external: true

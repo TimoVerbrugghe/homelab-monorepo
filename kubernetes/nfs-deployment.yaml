@@ -26,7 +26,7 @@ metadata:
 spec:
   chart: csi-driver-nfs
   targetNamespace: kube-system
-  repo: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
+  repo: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/controlplane/charts
   valuesContent: |-
     controller:
       replicas: 3
@@ -44,3 +44,34 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 mountOptions:
   - nfsvers=4.1
+---
+# # Create PVC for nginx-demo
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: nginx-nfs-claim
+#   namespace: demo
+#   annotations:
+#     foldername: nginx
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   storageClassName: nfs-other
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# # Create PVC for nfs-tvshows
+# # Create PVC for nginx-demo
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: nginx-nfs-claim-tvshows
+#   namespace: demo
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   storageClassName: nfs-tvshows
+#   resources:
+#     requests:
+#       storage: 1Gi

@@ -1,0 +1,10 @@
+# Deploy kubernetes reflector to keep ConfigMaps and Secrets synchronized across namespaces and/or clusters.
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: reflector
+  namespace: kube-system
+spec:
+  chart: reflector
+  targetNamespace: kube-system
+  repo: https://emberstack.github.io/helm-charts

@@ -1,0 +1,47 @@
+- name: Uninstall existing K3s agent if they are present
+  shell: k3s-agent-uninstall.sh
+  ignore_errors: true
+
+- name: Create config file directory
+  file:
+    path: /etc/rancher/k3s
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy k3s config file to controlplane nodes
+  template:
+    src: "k3s-agent-config.yaml.j2"
+    dest: "/etc/rancher/k3s/config.yaml"
+    owner: root
+    group: root
+    mode: 0644
+
+## Install k3s on the agent nodes
+- name: Install K3s server and join the cluster on the remaining nodes
+  shell: curl -sfL https://get.k3s.io | sh -s agent --server https://{{ kube_vip_ip }}:6443 --token {{ k3stoken }}
+
+## Verify all k3s nodes are running
+- name: Verify k3s agents are running
+  block:
+    - name: Verify that agent nodes are up (check k3s-init.service if this fails)
+      command:
+        cmd: k3s kubectl get nodes -o=jsonpath="{.items[*].metadata.name}"
+      register: nodes
+      until: nodes.rc == 0 and (nodes.stdout.split() | length) == (groups['k3sagents'] | length)  # yamllint disable-line rule:line-length
+      retries: "{{ retry_count | default(20) }}"
+      delay: 10
+      changed_when: false
+  always:
+    - name: Save logs of k3s-init.service
+      include_tasks: fetch_k3s_init_logs.yml
+      when: log_destination
+      vars:
+        log_destination: >-
+          {{ lookup('ansible.builtin.env', 'ANSIBLE_K3S_LOG_DIR', default=False) }}
+    - name: Kill the temporary service used for initialization
+      systemd:
+        name: k3s-init
+        state: stopped
+      failed_when: false

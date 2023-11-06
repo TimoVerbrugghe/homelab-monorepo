@@ -1,16 +1,16 @@
 cluster-init: true
-tls-san:
-- 192.168.0.20
+tls-san: 
+{{ tls_san | default("") }}
 write-kubeconfig-mode: '644'
 
 # Setting IPs for pods & services (needed for tailscale routing)
 cluster-cidr: 10.42.0.0/16
 service-cidr: 10.43.0.0/16
 
-# Disable traefik & servicelb -> Will install traefik manually & using metallb/kube-vip
+# Disable traefik & servicelb -> Will install traefik manually & using kube-vip
 disable:
-- traefik
-- servicelb
+- "traefik"
+- "servicelb"
 
 kubelet-arg:
 - "feature-gates=GracefulNodeShutdown=true"
@@ -20,14 +20,9 @@ kubelet-arg:
 kube-controller-manager-arg:
 - "node-monitor-period=4s"
 - "node-monitor-grace-period=16s"
-- "pod-eviction-timeout=20s"
 
 kube-apiserver-arg:
 - "default-not-ready-toleration-seconds=20"
 - "default-unreachable-toleration-seconds=20" 
 
 etcd-expose-metrics: true
-
-# kube-scheduler-arg:
-# - "config=/var/lib/scheduler/scheduler-config.yaml"
-
