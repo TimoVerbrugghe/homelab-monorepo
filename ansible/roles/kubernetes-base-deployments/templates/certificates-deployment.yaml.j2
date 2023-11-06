@@ -1,7 +1,7 @@
 ---
 # Create letsencrypt staging issuer
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
 spec:
@@ -23,7 +23,7 @@ spec:
 ---
 # Create letsencrypt production issuer
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: letsencrypt-production
 spec:
@@ -59,14 +59,17 @@ spec:
     - "{{ le_wildcard_domain }}"
   secretTemplate:
     annotations:
-      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"  
+      # Reflect (aka sync) this certificate from cert-manager namespace to traefik namespace so it can be used for wildcard domain ssl
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "traefik"
 ---
 # Create letsencrypt production certificate
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ production_certificate_name }}
-  namespace: cert-manager
+ name: {{ production_certificate_name }}
+ namespace: cert-manager
 spec:
   secretName: {{ production_certificate_name }}-tls
   issuerRef:
@@ -77,4 +80,7 @@ spec:
     - "{{ le_wildcard_domain }}"
   secretTemplate:
     annotations:
-      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"  
+      # Reflect (aka sync) this certificate from cert-manager namespace to traefik namespace so it can be used for wildcard domain ssl
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "traefik"

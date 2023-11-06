@@ -1,3 +1,13 @@
+- name: Uninstall existing K3s server if they are present
+  shell: k3s-uninstall.sh
+  ignore_errors: true
+  when: inventory_hostname in groups["k3scontrolplane"]
+
+- name: Uninstall existing K3s agent if they are present
+  shell: k3s-agent-uninstall.sh
+  ignore_errors: true
+  when: inventory_hostname in groups["k3sagents"]
+
 - name: Set same timezone on every Server
   community.general.timezone:
     name: "{{ system_timezone }}"
@@ -51,3 +61,28 @@
     name: user.name
     scope: global
     value: '{{ git_user_name }}'
+
+## Find and remove search domains from Netplan configuration (this is because due to weird coredns behaviour, k3s dns will always append the search domain to any fully qualified domain name f.e. google.com.domain.local, which results in it hitting my wildcard local dns and rerouting every request back to my server)
+- name: Search for Netplan configuration files
+  find:
+    paths: /etc/netplan/
+    patterns: '*.yaml'
+  register: netplan_files
+
+- name: Remove search domains from netplan configuration files
+  replace:
+    path: "{{ item.path }}"
+    regexp: '(search:\s*\n\s*-\s[\w\.]+)'
+    replace: ''
+  when: netplan_files.matched > 0
+  with_items: "{{ netplan_files.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Run netplan apply to make sure changes are persistent across reboots
+  ansible.builtin.shell:
+    cmd: netplan apply
+  when: netplan_files.matched > 0
+
+- name: Reboot (to make sure all settings are applied)
+  ansible.builtin.reboot:

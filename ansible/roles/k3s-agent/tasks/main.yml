@@ -1,7 +1,3 @@
-- name: Uninstall existing K3s agent if they are present
-  shell: k3s-agent-uninstall.sh
-  ignore_errors: true
-
 - name: Create config file directory
   file:
     path: /etc/rancher/k3s

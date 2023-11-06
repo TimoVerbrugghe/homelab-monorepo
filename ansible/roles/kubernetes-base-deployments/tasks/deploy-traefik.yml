@@ -3,12 +3,26 @@
     state: present
     template: 'traefik-deployment.yaml.j2'
 
+- name: Wait Until Traefik is deployed fully
+  kubernetes.core.k8s_info:
+    name: helm-install-traefik
+    kind: Job
+    namespace: kube-system
+    verify_ssl: false
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  register: job_status
+  until: job_status.resources[0].status.succeeded == 1
+  retries: 10
+  delay: 30
+
 - name: Deploy traefik middlewares
   kubernetes.core.k8s:
     state: present
     template: 'traefik-middleware-deployment.yaml.j2'
+    wait: true
 
 - name: Deploy traefik dashboard
   kubernetes.core.k8s:
     state: present
     template: 'traefik-dashboard-deployment.yaml.j2'
+    wait: true
