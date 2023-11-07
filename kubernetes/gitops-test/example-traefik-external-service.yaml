@@ -12,19 +12,19 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`proxmox.kubernetes.timo.be`)
+    - match: Host(`truenas.kubernetes.timo.be`)
       kind: Rule
       services:
-        - name: routerpve-svc
-          port: 80
+        - name: truenas-svc
   tls:
     secretName: wildcard-timo-be-production-tls
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: routerpve-svc
+  name: truenas-svc
   namespace: traefik
 spec:
   externalName: truenas.local.timo.be # Can also be an IP address
   type: ExternalName
+  port: 80
