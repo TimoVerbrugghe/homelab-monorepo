@@ -16,6 +16,7 @@ spec:
       kind: Rule
       services:
         - name: routerpve-svc
+          port: 8006
   tls:
     secretName: wildcard-timo-be-production-tls
 ---
