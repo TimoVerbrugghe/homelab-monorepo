@@ -26,5 +26,5 @@ metadata:
   name: proxmox-svc
   namespace: traefik
 spec:
-  externalName: proxmox.local.timo.be # Can also be an IP address
+  externalName: sectorfive.local.timo.be # Can also be an IP address
   type: ExternalName
