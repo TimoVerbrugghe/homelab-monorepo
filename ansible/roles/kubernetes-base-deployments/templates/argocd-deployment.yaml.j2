@@ -1,0 +1,34 @@
+---
+# Creating argocd namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+---
+# Allowing traefik to route to argocd pods
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`argocd.{{ kubernetes_subdomain }}`)
+      priority: 10
+      services:
+        - name: argocd-server
+          port: 80
+    - kind: Rule
+      match: Host(`argocd.{{ kubernetes_subdomain }}`) && Headers(`Content-Type`, `application/grpc`)
+      priority: 11
+      services:
+        - name: argocd-server
+          port: 80
+          scheme: h2c
+  tls:
+    secretName: {{ staging_certificate_name }}-tls

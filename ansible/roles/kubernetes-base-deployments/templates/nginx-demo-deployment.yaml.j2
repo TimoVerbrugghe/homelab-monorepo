@@ -52,7 +52,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`{{ nginx_demo_url }}`)
+    - match: Host(`nginx.{{ kubernetes_subdomain }}`)
       kind: Rule
       services:
         - name: nginx
@@ -63,4 +63,4 @@ spec:
         - name: ratelimit
           namespace: traefik
   tls:
-    secretName: {{ staging_certificate_name }}-tls
+    secretName: traefik/{{ staging_certificate_name }}-tls

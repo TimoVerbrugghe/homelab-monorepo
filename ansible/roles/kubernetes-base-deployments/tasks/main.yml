@@ -14,8 +14,8 @@
     verify_ssl: false
     kubeconfig: /etc/rancher/k3s/k3s.yaml
   register: job_status
-  until: job_status.resources[0].status.succeeded == 1
-  retries: 10
+  until: job_status.resources[0].status.succeeded is defined and job_status.resources[0].status.succeeded == 1
+  retries: "{{ retry_count | default(20) }}"
   delay: 30
 
 - name: Deploy cloudflare secrets in cluster (to be used later by cert-manager to get ssl certificates)
@@ -37,8 +37,8 @@
     verify_ssl: false
     kubeconfig: /etc/rancher/k3s/k3s.yaml
   register: job_status
-  until: job_status.resources[0].status.succeeded == 1
-  retries: 10
+  until: job_status.resources[0].status.succeeded is defined and job_status.resources[0].status.succeeded == 1
+  retries: "{{ retry_count | default(20) }}"
   delay: 30
 
 - name: Get certificates
@@ -49,14 +49,14 @@
 
 - name: Wait until staging certificate is issued
   kubernetes.core.k8s_info:
-    name: "{{staging_certificate_name}}"
+    name: "{{ staging_certificate_name }}"
     kind: Certificate
     namespace: cert-manager
     verify_ssl: false
     kubeconfig: /etc/rancher/k3s/k3s.yaml
   register: certificate_status
-  until: certificate_status.resources[0].status.conditions[0].status == "True"
-  retries: 10
+  until: certificate_status.resources[0].status.conditions[0].status is defined and certificate_status.resources[0].status.conditions[0].status == "True"
+  retries: "{{ retry_count | default(20) }}"
   delay: 30
 
 - name: Wait until production certificate is issued
@@ -67,8 +67,8 @@
     verify_ssl: false
     kubeconfig: /etc/rancher/k3s/k3s.yaml
   register: certificate_status
-  until: certificate_status.resources[0].status.conditions[0].status == "True"
-  retries: 10
+  until: certificate_status.resources[0].status.conditions[0].status is defined and certificate_status.resources[0].status.conditions[0].status == "True"
+  retries: "{{ retry_count | default(20) }}"
   delay: 30
 
 - name: Deploy traefik
@@ -79,3 +79,25 @@
     state: present
     template: nginx-demo-deployment.yaml.j2
     wait: true
+
+- name: Install Argo CD requirements (namespace & ingress)
+  kubernetes.core.k8s:
+    state: present
+    template: argocd-deployment.yaml.j2
+    wait: true
+
+- name: Install Argo CD
+  kubernetes.core.k8s:
+    state: present
+    namespace: argocd
+    src: https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+    wait: true
+
+- name: Get argo cd password
+  shell:
+    cmd: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+  register: argocd_password
+
+- name: Display password to user
+  debug:
+    msg: "Cluster running & Argo CD is installed. This is the argocd password: {{ argocd_password }}"

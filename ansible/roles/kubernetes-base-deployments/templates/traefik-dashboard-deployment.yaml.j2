@@ -11,7 +11,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`{{ traefik_dashboard_url }}`)
+    - match: Host(`traefik.{{ kubernetes_subdomain }}`)
       kind: Rule
       services:
         - name: api@internal

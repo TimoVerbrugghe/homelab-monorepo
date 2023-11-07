@@ -11,8 +11,8 @@
     verify_ssl: false
     kubeconfig: /etc/rancher/k3s/k3s.yaml
   register: job_status
-  until: job_status.resources[0].status.succeeded == 1
-  retries: 10
+  until: job_status.resources[0].status.succeeded is defined and job_status.resources[0].status.succeeded == 1
+  retries: "{{ retry_count | default(20) }}"
   delay: 30
 
 - name: Deploy traefik middlewares

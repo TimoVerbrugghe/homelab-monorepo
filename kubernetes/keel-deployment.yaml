@@ -27,15 +27,10 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`keeltest.timo.be`)
+    - match: Host(`keel.kubernetes.timo.be`)
       kind: Rule
       services:
         - name: keel
           port: 9300
-      middlewares:
-        - name: secureheaders
-          namespace: traefik
-        - name: ratelimit
-          namespace: traefik
   tls:
     secretName: wildcard-timo-be-production-tls

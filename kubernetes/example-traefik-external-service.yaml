@@ -4,7 +4,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: routerpve
+  name: proxmox
   namespace: traefik
   annotations:
     kubernetes.io/ingress.class: traefik
@@ -12,13 +12,10 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`routerpve.timo.be`)
+    - match: Host(`proxmox.kubernetes.timo.be`)
       kind: Rule
       services:
         - name: routerpve-svc
-      middlewares:
-        - name: EXAMPLE
-          namespace: EXAMPLE
   tls:
     secretName: wildcard-timo-be-production-tls
 ---
@@ -28,7 +25,7 @@ metadata:
   name: routerpve-svc
   namespace: traefik
 spec:
-  externalName: routerpve.timo.local # Can also be an IP address
+  externalName: sectorfive.local.timo.be # Can also be an IP address
   type: ExternalName
   ports:
     - port: 8006

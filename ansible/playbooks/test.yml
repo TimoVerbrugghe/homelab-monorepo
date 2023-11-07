@@ -1,0 +1,17 @@
+- name: Do base deployments on the cluster (critical resources such as traefik, cert-manager, etc...)
+  hosts: k3scontrolplane[0] # only need to run deployment commands on 1 node of the controlplane
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Wait until staging certificate is issued
+      kubernetes.core.k8s_info:
+        name: "{{ staging_certificate_name }}"
+        kind: Certificate
+        namespace: cert-manager
+        verify_ssl: false
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+      register: certificate_status
+
+    - name: test
+      debug: 
+        msg: "{{ certificate_status }}"

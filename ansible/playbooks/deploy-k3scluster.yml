@@ -29,19 +29,19 @@
 #   roles:
 #     - role: ../roles/ubuntu-vm-first-setup
 
-- name: Run prereq for k3s cluster
-  hosts: k3scluster
-  gather_facts: true
-  become: true
-  roles:
-    - role: ../roles/k3s-prereq
+# - name: Run prereq for k3s cluster
+#   hosts: k3scluster
+#   gather_facts: true
+#   become: true
+#   roles:
+#     - role: ../roles/k3s-prereq
 
-- name: Deploy k3s controlplane nodes
-  hosts: k3scontrolplane
-  gather_facts: true
-  become: true
-  roles:
-    - role: ../roles/k3s-controlplane
+# - name: Deploy k3s controlplane nodes
+#   hosts: k3scontrolplane
+#   gather_facts: true
+#   become: true
+#   roles:
+#     - role: ../roles/k3s-controlplane
 
 # # - name: Deploy k3s agent nodes
 # #   hosts: k3sagents
