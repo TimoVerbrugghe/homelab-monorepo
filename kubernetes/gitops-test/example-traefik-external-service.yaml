@@ -16,7 +16,6 @@ spec:
       kind: Rule
       services:
         - name: routerpve-svc
-          port: 8006
   tls:
     secretName: wildcard-timo-be-production-tls
 ---
@@ -26,7 +25,5 @@ metadata:
   name: routerpve-svc
   namespace: traefik
 spec:
-  externalName: sectorfive.local.timo.be # Can also be an IP address
+  externalName: truenas.local.timo.be # Can also be an IP address
   type: ExternalName
-  ports:
-    - port: 8006
