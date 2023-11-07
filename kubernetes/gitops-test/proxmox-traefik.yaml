@@ -1,0 +1,30 @@
+---
+# EXAMPLE: Deploy a traefik route to a service not running in Kubernetes (f.e. proxmox) using Kubernetes External Services (https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-ingressroute:~:text=an%20http%20connection.-,Using%20Kubernetes%20ExternalName%20Service,-Traefik%20backends%20creation)
+# First you define the "router" in traefik (aka IngressRoute) where you point to a Kubernetes external service
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: proxmox
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`proxmox.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: proxmox-svc
+          port: 8006
+  tls:
+    secretName: wildcard-timo-be-production-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxmox-svc
+  namespace: traefik
+spec:
+  externalName: proxmox.local.timo.be # Can also be an IP address
+  type: ExternalName
