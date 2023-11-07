@@ -4,7 +4,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: proxmox
+  name: truenas
   namespace: traefik
   annotations:
     kubernetes.io/ingress.class: traefik
@@ -16,6 +16,7 @@ spec:
       kind: Rule
       services:
         - name: truenas-svc
+          port: 80
   tls:
     secretName: wildcard-timo-be-production-tls
 ---
@@ -27,4 +28,3 @@ metadata:
 spec:
   externalName: truenas.local.timo.be # Can also be an IP address
   type: ExternalName
-  port: 80
