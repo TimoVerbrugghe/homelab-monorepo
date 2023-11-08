@@ -11,10 +11,10 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`traefik.{{ kubernetes_subdomain }}`)
+    - match: Host(`traefik.kubernetes.timo.be`)
       kind: Rule
       services:
         - name: api@internal
           kind: TraefikService
   tls:
-    secretName: {{ staging_certificate_name }}-tls
+    secretName: wildcard-timo-be-production-tls

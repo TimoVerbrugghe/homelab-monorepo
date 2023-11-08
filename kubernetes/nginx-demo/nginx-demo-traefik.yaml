@@ -1,0 +1,25 @@
+---
+# Allowing traefik to route to nginx pods
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nginx
+  namespace: demo
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`nginx.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: nginx
+          port: 80
+      middlewares:
+        - name: secureheaders
+          namespace: traefik
+        - name: ratelimit
+          namespace: traefik
+  tls:
+    secretName: wildcard-timo-be-production-tls

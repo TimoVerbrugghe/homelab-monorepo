@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: reflector
+  namespace: argocd  # Namespace where ArgoCD is installed
+spec:
+  project: default  # Project where the application belongs
+  source:
+    repoURL: https://emberstack.github.io/helm-charts
+    targetRevision: '*' # Specify the version of the Helm chart you want to use
+    path: reflector
+
+  destination:
+    server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
+    namespace: kube-system 

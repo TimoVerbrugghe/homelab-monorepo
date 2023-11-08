@@ -1,0 +1,98 @@
+---
+# Install traefik in traefik namespace using helm
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd  # Namespace where ArgoCD is installed
+spec:
+  project: default 
+  source:
+    repoURL: https://traefik.github.io/charts
+    targetRevision: '*'
+    path: traefik
+    helm:
+      valuesObject:
+        globalArguments:
+          - "--global.sendanonymoususage"
+        additionalArguments:
+          - "--serversTransport.insecureSkipVerify=true"
+
+        logs:
+          general:
+            level: INFO
+          access:
+            enabled: true
+            bufferingSize: 100
+            filters:
+              statuscodes: "400-499"
+
+        deployment:
+          enabled: true
+          replicas: 3
+        ports:
+          traefik:
+            port: 9000
+            exposedPort: 9000
+            protocol: TCP
+          web:
+            expose: false
+          websecure:
+            port: 8443
+            expose: true
+            exposedPort: 443
+            protocol: TCP
+            tls:
+              enabled: true
+              middlewares:
+                - traefik-secureheaders@kubernetescrd
+                - traefik-ratelimit@kubernetescrd
+          metrics:
+            port: 9100
+            expose: true
+            exposedPort: 9100
+            protocol: TCP
+
+        ingressRoute:
+          dashboard:
+            enabled: false
+
+        providers:
+          kubernetesCRD:
+            enabled: true
+            namespaces: []
+            allowCrossNamespace: true
+            allowExternalNameServices: true
+            ingressClass: traefik
+
+          kubernetesIngress:
+            enabled: true
+            namespaces: []
+            ingressClass: traefik
+            allowCrossNamespace: true
+            allowExternalNameServices: true
+            publishedService:
+              enabled: true
+
+        dashboard:
+          enabled: true
+
+        rbac:
+          enabled: true
+          
+        service:
+          enabled: true
+          type: LoadBalancer
+          annotations: {}
+          labels: {}
+          spec:
+            loadBalancerIP: 10.10.10.35 # this should be an IP in the kube-vip range
+          loadBalancerSourceRanges: []
+          externalIPs: {}
+
+  destination:
+    server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
+    namespace: traefik  # Target namespace for the Helm release
+
+  syncPolicy:
+    automated: {}
