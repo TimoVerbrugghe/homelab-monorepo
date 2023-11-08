@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://charts.jetstack.io
-    targetRevision: '*' # latest version
+    targetRevision: ">=0.0.0" # latest version
     chart: cert-manager
     helm:
       valuesObject:
