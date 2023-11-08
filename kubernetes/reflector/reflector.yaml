@@ -8,8 +8,14 @@ spec:
   source:
     repoURL: https://emberstack.github.io/helm-charts
     targetRevision: '*' # Specify the version of the Helm chart you want to use
-    path: reflector
+    chart: reflector
 
   destination:
     server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
     namespace: kube-system 
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true

@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://traefik.github.io/charts
     targetRevision: '*'
-    path: traefik
+    chart: traefik
     helm:
       valuesObject:
         globalArguments:
@@ -95,4 +95,7 @@ spec:
     namespace: traefik  # Target namespace for the Helm release
 
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true

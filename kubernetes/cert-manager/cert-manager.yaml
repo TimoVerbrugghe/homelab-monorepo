@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://charts.jetstack.io
     targetRevision: '*' # latest version
-    path: cert-manager
+    chart: cert-manager
     helm:
       valuesObject:
         installCRDs: true
