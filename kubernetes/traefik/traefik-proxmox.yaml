@@ -4,7 +4,7 @@ metadata:
   name: proxmox-serverstransport
   namespace: traefik
 spec:
-  insecureSkipVerify: true                  # [2]
+  insecureSkipVerify: true
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -21,7 +21,7 @@ spec:
       kind: Rule
       services:
         - name: proxmox-svc
-          port: 443
+          port: 8006
           serversTransport: proxmox-serverstransport
   tls:
     secretName: wildcard-timo-be-production-tls
