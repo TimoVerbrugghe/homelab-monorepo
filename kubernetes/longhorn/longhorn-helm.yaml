@@ -26,3 +26,5 @@ spec:
       valuesObject:
         longhornUI:
           replicas: 3
+        helmPreUpgradeCheckerJob:
+          enabled: false
