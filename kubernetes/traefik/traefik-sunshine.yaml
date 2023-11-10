@@ -1,0 +1,37 @@
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: sunshine-serverstransport
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  insecureSkipVerify: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sunshine
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`sunshine.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: sunshine-svc
+          port: 47990
+          serversTransport: sunshine-serverstransport
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sunshine-svc
+  namespace: traefik
+spec:
+  externalName: gamingvm.local.timo.be # Can also be an IP address
+  type: ExternalName
+  

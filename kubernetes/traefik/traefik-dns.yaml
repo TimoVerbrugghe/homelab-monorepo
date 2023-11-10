@@ -1,0 +1,47 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dns
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`dns.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: dns1-svc
+          port: 80
+        - name: dns2-svc
+          port: 80
+        - name: dns3-svc
+          port: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns1-svc
+  namespace: traefik
+spec:
+  externalName: 10.10.10.20 # Can also be an IP address
+  type: ExternalName
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns2-svc
+  namespace: traefik
+spec:
+  externalName: 10.10.10.21 # Can also be an IP address
+  type: ExternalName
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns3-svc
+  namespace: traefik
+spec:
+  externalName: 10.10.10.22 # Can also be an IP address
+  type: ExternalName
