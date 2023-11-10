@@ -15,8 +15,6 @@ spec:
       valuesObject:
         globalArguments:
           - "--global.sendanonymoususage"
-        additionalArguments:
-          - "--serversTransport.insecureSkipVerify=true"
 
         logs:
           general:
