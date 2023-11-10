@@ -55,7 +55,7 @@ spec:
         tlsStore:
           default:
             defaultCertificate:
-              secretname: wildcard-timo-be-production-tls
+              secretName: wildcard-timo-be-production-tls
       
         ingressRoute:
           dashboard:
