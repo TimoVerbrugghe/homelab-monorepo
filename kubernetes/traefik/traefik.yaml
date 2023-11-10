@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: traefik
+  name: traefik-helm
   namespace: argocd  # Namespace where ArgoCD is installed
 spec:
   project: default 
