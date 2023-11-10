@@ -15,8 +15,6 @@ spec:
       services:
         - name: truenas-svc
           port: 80
-  tls:
-    secretName: wildcard-timo-be-production-tls
 ---
 apiVersion: v1
 kind: Service

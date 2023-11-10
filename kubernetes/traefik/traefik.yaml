@@ -45,6 +45,7 @@ spec:
               middlewares:
                 - traefik-secureheaders@kubernetescrd
                 - traefik-ratelimit@kubernetescrd
+              secretName: wildcard-timo-be-production-tls
           metrics:
             port: 9100
             expose: true

@@ -16,5 +16,3 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-  tls:
-    secretName: wildcard-timo-be-production-tls

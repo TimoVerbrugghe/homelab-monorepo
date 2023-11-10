@@ -16,10 +16,3 @@ spec:
       services:
         - name: nginx
           port: 80
-      middlewares:
-        - name: secureheaders
-          namespace: traefik
-        - name: ratelimit
-          namespace: traefik
-  tls:
-    secretName: wildcard-timo-be-production-tls
