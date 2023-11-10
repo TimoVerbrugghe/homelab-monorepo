@@ -24,6 +24,7 @@ spec:
       services:
         - name: sunshine-svc
           port: 47990
+          scheme: https
           serversTransport: sunshine-serverstransport
 ---
 apiVersion: v1

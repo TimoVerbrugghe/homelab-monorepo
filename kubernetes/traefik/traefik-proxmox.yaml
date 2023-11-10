@@ -14,10 +14,8 @@ metadata:
   name: proxmox-svc
   namespace: traefik
 spec:
-  externalName: forestsector.local.timo.be # Can also be an IP address
+  externalName: sectorfive.local.timo.be # Can also be an IP address
   type: ExternalName
-  ports:
-    - port: 8006
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -35,4 +33,5 @@ spec:
       services:
         - name: proxmox-svc
           port: 8006
+          scheme: https
           serversTransport: proxmox-serverstransport

@@ -24,6 +24,7 @@ spec:
       services:
         - name: scrypted-svc
           port: 10443
+          scheme: https
           serversTransport: scrypted-serverstransport
 ---
 apiVersion: v1
