@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: traefik
+  name: reflector
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -11,10 +11,11 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: kubernetes/traefik
+    path: kubernetes/reflector
     repoURL: https://github.com/TimoVerbrugghe/homelab-monorepo
     targetRevision: master
   syncPolicy:
     automated:
       prune: true
+      allowEmpty: true
       selfHeal: true

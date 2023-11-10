@@ -11,10 +11,11 @@ spec:
     chart: reflector
 
   destination:
-    server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
+    server: https://kubernetes.default.svc  # The Kubernetes API server URL
     namespace: kube-system 
 
   syncPolicy:
     automated:
       prune: true
+      allowEmpty: true
       selfHeal: true
