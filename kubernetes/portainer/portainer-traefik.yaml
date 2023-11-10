@@ -22,7 +22,7 @@ spec:
     - match: Host(`portainer.kubernetes.timo.be`)
       kind: Rule
       services:
-        - name: portainer
+        - name: portainer-helm
           port: 9443
           scheme: https
           serversTransport: portainer-serverstransport
