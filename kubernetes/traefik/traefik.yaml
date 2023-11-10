@@ -51,11 +51,6 @@ spec:
             expose: true
             exposedPort: 9100
             protocol: TCP
-
-        tlsStore:
-          default:
-            defaultCertificate:
-              secretName: wildcard-timo-be-production-tls
       
         ingressRoute:
           dashboard:
