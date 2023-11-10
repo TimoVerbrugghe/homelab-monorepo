@@ -1,5 +1,5 @@
 # Allowing traefik to route to keycloak
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: keycloak
@@ -10,15 +10,8 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`keycloaktest.timo.be`)
+    - match: Host(`keycloak.kubernetes.timo.be`)
       kind: Rule
       services:
         - name: keycloak
           port: 80
-      middlewares:
-        - name: secureheaders
-          namespace: traefik
-        - name: ratelimit
-          namespace: traefik
-  tls:
-    secretName: wildcard-timo-be-production-tls

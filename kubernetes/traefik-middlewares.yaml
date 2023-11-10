@@ -1,6 +1,6 @@
 ---
 # Create middlewares for traefik, including headers, ratelimit and middlewares for routing certain apps correctly
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: secureheaders
@@ -26,7 +26,7 @@ spec:
         X-Robots-Tag: "noindex,nofollow"
         Permissions-Policy: "geolocation=(), microphone=(), camera=(), payment=(), usb=(), vr=()"
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: ratelimit
@@ -36,7 +36,7 @@ spec:
     average: 200
     burst: 200
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: accountsredirect
@@ -47,7 +47,7 @@ spec:
     replacement: "https://auth.timo.be/realms/HomeServer/account/#/security/linked-accounts"
     permanent: false
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: statusredirect

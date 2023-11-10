@@ -28,6 +28,7 @@ spec:
         deployment:
           enabled: true
           replicas: 3
+
         ports:
           traefik:
             port: 9000
@@ -45,13 +46,17 @@ spec:
               middlewares:
                 - traefik-secureheaders@kubernetescrd
                 - traefik-ratelimit@kubernetescrd
-              secretName: wildcard-timo-be-production-tls
           metrics:
             port: 9100
             expose: true
             exposedPort: 9100
             protocol: TCP
 
+        tlsStore:
+          default:
+            defaultCertificate:
+              secretname: wildcard-timo-be-production-tls
+      
         ingressRoute:
           dashboard:
             enabled: false
