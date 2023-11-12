@@ -84,12 +84,15 @@ spec:
   - protocol: TCP
     port: 8096
     targetPort: 8096
+    name: http
   - protocol: UDP
     port: 1900
     targetPort: 1900
+    name: discovery
   - protocol: UDP
     port: 7359
     targetPort: 7359
+    name: discovery2
   type: LoadBalancer
   loadBalancerIP: 10.10.10.36  # Provide an IP address for kube-vip to use
   externalTrafficPolicy: Local
