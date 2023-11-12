@@ -16,11 +16,11 @@ spec:
       labels:
         app: nginx
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 3000
-        runAsGroup: 3000
-        fsGroup: 3000
+      # securityContext:
+      #   runAsNonRoot: true
+      #   runAsUser: 3000
+      #   runAsGroup: 3000
+      #   fsGroup: 3000
       containers:
       - image: nginx
         name: nginx
