@@ -7,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteMany
   capacity:
-    storage: 6000Gi
+    storage: 100Gi
   nfs:
     server: nfs.local.timo.be
     path: "/mnt/X.A.N.A./media/other"
@@ -28,6 +28,9 @@ spec:
   accessModes:
     - ReadWriteMany
   volumeName: nfs-other-pv
+  resources:
+    requests:
+      storage: 100Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
