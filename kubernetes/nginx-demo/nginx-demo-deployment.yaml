@@ -7,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteMany
   capacity:
-    storage: 100Gi
+    storage: 6000Gi
   nfs:
     server: nfs.local.timo.be
     path: "/mnt/X.A.N.A./media/other"
