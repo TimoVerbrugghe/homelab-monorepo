@@ -24,6 +24,7 @@ metadata:
   name: nfs-other-pvc
   namespace: demo
 spec:
+  storageClassName: ""
   accessModes:
     - ReadWriteMany
   volumeName: nfs-other-pv
