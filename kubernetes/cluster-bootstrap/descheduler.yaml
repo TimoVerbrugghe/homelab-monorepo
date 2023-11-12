@@ -1,0 +1,30 @@
+---
+# Install traefik in traefik namespace using helm
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: descheduler-helm
+  namespace: argocd  # Namespace where ArgoCD is installed
+spec:
+  project: default 
+  source:
+    repoURL: https://kubernetes-sigs.github.io/descheduler/
+    targetRevision: '*'
+    chart: descheduler
+    helm:
+      valuesObject:
+        kind: Deployment
+        deschedulingInterval: 5m
+        replicas: 3
+        leaderElection: 
+          enabled: true
+
+  destination:
+    server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
+    namespace: kube-system  # Target namespace for the Helm release
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true

@@ -19,3 +19,11 @@ spec:
       containers:
       - name: nginx
         image: nginx:latest
+        volumeMounts:
+        - name: nfs-vol
+          mountPath: /var/nfs # The mountpoint inside the container
+    volumes:
+    - name: nfs-vol
+      nfs:
+        server: nfs.local.timo.be # IP to our NFS server
+        path: /mnt/X.A.N.A./media/other # The exported directory
