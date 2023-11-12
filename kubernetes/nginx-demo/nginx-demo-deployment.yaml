@@ -1,3 +1,30 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-other-pv
+  namespace: demo
+spec:
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: nfs.local.timo.be
+    path: "/mnt/X.A.N.A./media/other"
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - sec=sys
+    - nolock
+    - relatime
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-other-pvc
+  namespace: demo
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: nfs-other-pv
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -25,10 +52,9 @@ spec:
       - image: nginx
         name: nginx
         volumeMounts:
-        - name: nfs-vol
+        - name: nfs-other
           mountPath: /var/nfs # The mountpoint inside the container
       volumes:
-      - name: nfs-vol
-        nfs:
-          server: nfs.local.timo.be # IP to our NFS server
-          path: /mnt/X.A.N.A./media/other # The exported directory
+      - name: nfs-other
+        persistentVolumeClaim:
+          claimName: nfs-other-pvc
