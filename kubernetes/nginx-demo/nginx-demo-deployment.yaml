@@ -20,6 +20,7 @@ spec:
         runAsNonRoot: true
         runAsUser: 3000
         runAsGroup: 3000
+        fsGroup: 3000
       containers:
       - image: nginx
         name: nginx
