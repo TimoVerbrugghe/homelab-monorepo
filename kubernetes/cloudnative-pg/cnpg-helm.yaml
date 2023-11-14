@@ -19,3 +19,4 @@ spec:
     repoURL: https://cloudnative-pg.github.io/charts
     targetRevision: '*'
     chart: cnpg
+    path: cnpg/cloudnative-pg
