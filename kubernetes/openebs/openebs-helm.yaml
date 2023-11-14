@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openebs-helm
+  namespace: argocd  # Namespace where ArgoCD is installed
+spec:
+  project: default 
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true  
+
+  destination:
+    server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
+    namespace: openebs  # Target namespace for the Helm release
+
+  source:
+    repoURL: https://openebs.github.io/charts
+    targetRevision: '*'
+    chart: openebs
