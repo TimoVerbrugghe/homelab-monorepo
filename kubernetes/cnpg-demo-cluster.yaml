@@ -71,6 +71,7 @@ spec:
     storageClass: standard
     size: 1Gi
 
+  # See https://cloudnative-pg.io/documentation/1.16/backup_recovery/
   backup:
     barmanObjectStore:
       destinationPath: s3://cluster-example-full-backup/
