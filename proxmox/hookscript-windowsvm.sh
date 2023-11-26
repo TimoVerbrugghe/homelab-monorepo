@@ -16,7 +16,7 @@ function vmpid() {
     cat "/var/run/qemu-server/$VMID.pid"
 }
 
-function enable_cpupisolation() {
+function enable_cpuisolation() {
     # Setting proxmox to only use the first core (and its hyperthreaded counterpart) so VM can exclusively use all other cores
 
     systemctl set-property --runtime -- user.slice AllowedCPUs=$HOSTCPUSET
