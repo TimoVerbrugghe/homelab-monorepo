@@ -1,9 +1,7 @@
-#########################
-## Rclone exclude file ##
-#########################
+## Allow Rsync to traverse subdirectories (needed if you want to include certain subdirectories but not all, otherwise the exclude everything rule will apply to everything)
++ */
 
 ## Exclude common files
-
 - .DS_STORE
 - .orig
 - .nfo
@@ -15,22 +13,6 @@
 - *_HIDDEN
 - .cue
 - .Trash-0
-
-## Exclude folders in /mnt/X.A.N.A./media
-- /appdata/**
-- /books/**
-- /domains/**
-- /downloads/**
-- /isos/**
-- /music/**
-- /system/**
-- /iCloudbackup/**
-
-## Exclude specific files in /other
-- /other/appdatabackup/**
-- /other/flashbackup/**
-- /other/rcloneconfig/**
-- /other/nextclouddata/**
 
 ## Include specific movies
 + /movies/A\ Goofy\ Movie\ \(1995\)/**
@@ -55,10 +37,8 @@
 + /tvshows/The\ Colbert\ Report/**
 + /tvshows/The\ Daily\ Show/**
 + /tvshows/Yu-Gi-Oh\!\ Duel\ Monsters/**
-
+ 
 ## Include folders
-+ /games/**
-+ /photos/**
 + /other/**
 
 # Exclude everything else
