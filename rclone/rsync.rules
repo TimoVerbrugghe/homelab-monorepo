@@ -25,9 +25,17 @@
 + /movies/High\ School\ Musical\ 3\ Senior\ Year\ \(2008\)/**
 + /movies/Shrek\ \(2001\)/**
 + /movies/EuroTrip\ \(2004\)/**
++ /movies/Apollo\ 13\ \(1995\)/**
++ /movies/I,\ Robot\ \(2004\)/**
++ /movies/Men\ in\ Black\ \(1997\)/**
++ /movies/Monsters,\ Inc.\ \(2001\)/**
++ /movies/Wallace\ and\ Gromit\ The\ Curse\ of\ the\ Were-Rabbit\ \(2005\)/**
++ /movies/WALL·E\ \(2008\)/**
+
+# All Harry Potter Movies
++ /movies/Harry\ Potter\ and*/**
 
 ## Include specific tvshows
-+ /tvshows/Blue\ Mountain\ State/**
 + /tvshows/Code\ Lyoko/**
 + /tvshows/Code\ Lyoko\ Evolution/**
 + /tvshows/Dag\ Sinterklaas/**
@@ -37,9 +45,13 @@
 + /tvshows/The\ Colbert\ Report/**
 + /tvshows/The\ Daily\ Show/**
 + /tvshows/Yu-Gi-Oh\!\ Duel\ Monsters/**
- 
++ /tvshows/How\ I\ Met\ Your\ Mother/**
++ /tvshows/The\ Man\ in\ the\ High\ Castle/**
++ /tvshows/W817/**
+
 ## Include folders
 + /other/**
++ /games/**
 
 # Exclude everything else
 - *
