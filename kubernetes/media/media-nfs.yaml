@@ -65,3 +65,37 @@ spec:
   resources:
     requests:
       storage: 6000Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-downloads-pv
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 2000Gi
+  nfs:
+    server: nfs.local.timo.be
+    path: "/mnt/FranzHopper/downloads"
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - sec=sys
+    - nolock
+    - relatime
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-downloads-pvc
+  namespace: media
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteMany
+  volumeName: nfs-downloads-pv
+  resources:
+    requests:
+      storage: 2000Gi

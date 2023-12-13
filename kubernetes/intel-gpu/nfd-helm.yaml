@@ -1,0 +1,34 @@
+---
+# Install traefik in traefik namespace using helm
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfd-helm
+  namespace: argocd  # Namespace where ArgoCD is installed
+spec:
+  project: default 
+  source:
+    repoURL: https://kubernetes-sigs.github.io/node-feature-discovery/charts
+    targetRevision: '*'
+    chart: nfd
+    helm:
+      valuesObject:
+        master:
+          extraLabelNs:
+            - gpu.intel.com
+            - sgx.intel.com
+          resourceLabels:
+            - gpu.intel.com/millicores
+            - gpu.intel.com/memory.max
+            - gpu.intel.com/tiles
+            - sgx.intel.com/epc
+
+  destination:
+    server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
+    namespace: node-feature-discovery  # Target namespace for the Helm release
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true

@@ -72,6 +72,7 @@ spec:
       #   hostPath:
       #     path: /dev/dri
 ---
+# Service to expose local discovery ports and also so that traefik can pick up and expose jellyfin service
 apiVersion: v1
 kind: Service
 metadata:
