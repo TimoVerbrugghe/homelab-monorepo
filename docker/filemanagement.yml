@@ -14,7 +14,6 @@ services:
     volumes:
       - media:/srv/media
       - isos:/srv/isos
-      - photos:/srv/photos
       - downloads:/srv/downloads
       - filebrowser:/config
     labels:
@@ -35,7 +34,6 @@ services:
       - filezilla:/config
       - media:/media
       - isos:/isos
-      - photos:/photos
       - downloads:/downloads
     labels:
       traefik.http.routers.filezilla.entrypoints: https
@@ -57,7 +55,6 @@ services:
     volumes:
       - media:/media
       - isos:/isos
-      - photos:/photos
       - downloads:/downloads
       - krusader:/config
     labels:
@@ -73,12 +70,6 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media"
-  photos:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/X.A.N.A./photos"
   isos:
     driver: local
     driver_opts:
