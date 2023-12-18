@@ -40,27 +40,27 @@ services:
       traefik.http.services.filezilla.loadbalancer.server.port: 3000
       traefik.http.routers.filezilla.middlewares: keycloak-auth@file
 
-  krusader:
-    container_name: krusader
-    image: binhex/arch-krusader
-    restart: always
-    privileged: true
-    networks:
-      - dockerproxy
-    environment:
-      - TEMP_FOLDER=/config/krusader/tmp
-      - WEBPAGE_TITLE=krusader
-      - PUID=${PUID}
-      - PGID=${PGID}
-    volumes:
-      - media:/media
-      - isos:/isos
-      - downloads:/downloads
-      - krusader:/config
-    labels:
-      traefik.http.routers.krusader.entrypoints: https
-      traefik.http.services.krusader.loadbalancer.server.port: 6080
-      traefik.http.routers.krusader.middlewares: keycloak-auth@file
+  # krusader:
+  #   container_name: krusader
+  #   image: binhex/arch-krusader
+  #   restart: always
+  #   privileged: true
+  #   networks:
+  #     - dockerproxy
+  #   environment:
+  #     - TEMP_FOLDER=/config/krusader/tmp
+  #     - WEBPAGE_TITLE=krusader
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #   volumes:
+  #     - media:/media
+  #     - isos:/isos
+  #     - downloads:/downloads
+  #     - krusader:/config
+  #   labels:
+  #     traefik.http.routers.krusader.entrypoints: https
+  #     traefik.http.services.krusader.loadbalancer.server.port: 6080
+  #     traefik.http.routers.krusader.middlewares: keycloak-auth@file
 
 volumes:
   filebrowser:
