@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  zitadel:
+    restart: always
+    networks:
+      - dockerproxy
+    image: ghcr.io/zitadel/zitadel:latest
+    command: start-from-init
+    environment:
+      - ZITADEL_DATABASE_COCKROACH_HOST=zitadel-db
+      - ZITADEL_EXTERNALSECURE=false
+      - ZITADEL_MASTERKEY=${CITADEL_MASTERKEY}
+      - ZITADEL_TLS_ENABLED=false
+    depends_on:
+      crdb:
+        condition: service_healthy
+    labels:
+      traefik.http.routers.zitadel.entrypoints: https
+      traefik.http.services.zitadel.loadbalancer.server.port: 8080
+
+  zitadel-db:
+    restart: always
+    networks:
+      - dockerproxy
+    image: cockroachdb/cockroach:latest
+    command: start-single-node --insecure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health?ready=1"]
+      interval: '10s'
+      timeout: '30s'
+      retries: 5
+      start_period: '20s'
+    # ports:
+    #   - '9090:8080'
+    #   - '26257:26257'
+
+networks:
+  dockerproxy:
+    external: true
