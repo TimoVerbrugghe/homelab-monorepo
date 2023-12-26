@@ -6,6 +6,7 @@ metadata:
   namespace: traefik
   annotations:
     kubernetes.io/ingress.class: traefik
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   entryPoints:
     - websecure
@@ -21,6 +22,8 @@ kind: Service
 metadata:
   name: truenas-svc
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   externalName: truenas.local.timo.be # Can also be an IP address
   type: ExternalName

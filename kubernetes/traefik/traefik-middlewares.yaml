@@ -5,6 +5,8 @@ kind: Middleware
 metadata:
   name: secureheaders
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   headers:
     accessControlAllowOriginList:
@@ -31,6 +33,8 @@ kind: Middleware
 metadata:
   name: ratelimit
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   rateLimit:
     average: 200
@@ -41,6 +45,8 @@ kind: Middleware
 metadata:
   name: accountsredirect
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   redirectRegex:
     regex: "(.)*"
@@ -52,6 +58,8 @@ kind: Middleware
 metadata:
   name: statusredirect
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   redirectRegex:
     regex: "(.)*"

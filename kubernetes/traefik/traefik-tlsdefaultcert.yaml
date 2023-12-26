@@ -3,6 +3,8 @@ kind: TLSStore
 metadata:
   name: default
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   certificates:
     - secretName: wildcard-timo-be-production-tls

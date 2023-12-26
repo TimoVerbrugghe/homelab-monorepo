@@ -7,9 +7,9 @@
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"ghcr.io/devcontainers-contrib/features/ansible:1": {},
-		"ghcr.io/devcontainers-contrib/features/terraform-asdf:1": {},
-		"ghcr.io/devcontainers-contrib/features/packer-asdf:1": {}
+		"ghcr.io/devcontainers-contrib/features/ansible:2.0.17": {},
+		"ghcr.io/devcontainers-contrib/features/terraform-asdf:2.0.14": {},
+		"ghcr.io/devcontainers-contrib/features/packer-asdf:2.0.14": {}
 	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

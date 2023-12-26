@@ -5,6 +5,7 @@ metadata:
   namespace: traefik
   annotations:
     kubernetes.io/ingress.class: traefik
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   entryPoints:
     - websecure
@@ -20,6 +21,8 @@ kind: Service
 metadata:
   name: homebridge-svc
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   externalName: homebridge.home.timo.be # Can also be an IP address
   type: ExternalName
