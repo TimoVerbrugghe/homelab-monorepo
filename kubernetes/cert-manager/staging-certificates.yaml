@@ -5,7 +5,7 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
@@ -30,7 +30,7 @@ metadata:
   name: wildcard-timo-be-staging
   namespace: cert-manager
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   secretName: wildcard-timo-be-staging-tls
   issuerRef:
