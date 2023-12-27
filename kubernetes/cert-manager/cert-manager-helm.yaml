@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: cert-manager-helm
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default
   source:
