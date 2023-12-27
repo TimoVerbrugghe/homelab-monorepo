@@ -11,7 +11,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: kubernetes/cluster-bootstrap
+    path: kubernetes/cluster-bootstrap/core-infrastructure
     repoURL: https://github.com/TimoVerbrugghe/homelab-monorepo
     targetRevision: master
     directory:
