@@ -46,6 +46,7 @@
       - git
       - python3-yaml
       - python3-kubernetes
+      - containerd
     state: present
     update_cache: true
   become: true

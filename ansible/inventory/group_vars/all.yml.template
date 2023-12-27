@@ -45,7 +45,6 @@ kube_vip_ip:
 tls_san: |
   - 
   - 
-kube_vip_interface: eth0
 kube_vip_ip_range: 10.10.10.35-10.10.10.45
 git_user_email: 
 git_user_name: 

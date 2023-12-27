@@ -36,7 +36,7 @@
 
 - name: Generate kube-vip manifest
   ansible.builtin.shell:
-    cmd: "ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:{{ kvversion.stdout }} vip /kube-vip manifest daemonset --arp --interface {{ kube_vip_interface }} --address {{ kube_vip_ip }} --inCluster --taint --controlplane --services --leaderElection | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml"
+    cmd: "ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:{{ kvversion.stdout }} vip /kube-vip manifest daemonset --arp --interface {{ ansible_default_ipv4.interface }} --address {{ kube_vip_ip }} --inCluster --taint --controlplane --services --leaderElection | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml"
 
 - name: Put kube-vip controlmap in manifests folder
   template:

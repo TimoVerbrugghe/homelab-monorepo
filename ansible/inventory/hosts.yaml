@@ -58,22 +58,22 @@ proxmox:
     
 k3scontrolplane:
   hosts:
-    william.local.timo.be:
-      ansible_user: william
-      proxmox_node: sectorfive
-      vm_id: 110
-    tower.local.timo.be:
-      ansible_user: tower
-      proxmox_node: sectorfive
-      vm_id: 111
-    skidbladnir.local.timo.be:
-      ansible_user: skidbladnir
-      proxmox_node: sectorfive
-      vm_id: 112
     k3stest.local.timo.be:
       ansible_user: timo
       proxmox_node: icesector
       vm_id: 102
+    # william.local.timo.be:
+    #   ansible_user: william
+    #   proxmox_node: sectorfive
+    #   vm_id: 110
+    # tower.local.timo.be:
+    #   ansible_user: tower
+    #   proxmox_node: sectorfive
+    #   vm_id: 111
+    # skidbladnir.local.timo.be:
+    #   ansible_user: skidbladnir
+    #   proxmox_node: sectorfive
+    #   vm_id: 112
 k3sagents:
   hosts:
 
