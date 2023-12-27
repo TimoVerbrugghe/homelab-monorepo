@@ -21,6 +21,8 @@ kind: Service
 metadata:
   name: hass-svc
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "70"
 spec:
   externalName: hass.home.timo.be # Can also be an IP address
   type: ExternalName

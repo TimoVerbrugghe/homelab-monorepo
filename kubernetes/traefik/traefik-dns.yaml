@@ -25,6 +25,8 @@ kind: Service
 metadata:
   name: dns1-svc
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "70"
 spec:
   externalName: 10.10.10.20 # Can also be an IP address
   type: ExternalName
@@ -34,6 +36,8 @@ kind: Service
 metadata:
   name: dns2-svc
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "70"
 spec:
   externalName: 10.10.10.21 # Can also be an IP address
   type: ExternalName
@@ -43,6 +47,8 @@ kind: Service
 metadata:
   name: dns3-svc
   namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "70"
 spec:
   externalName: 10.10.10.22 # Can also be an IP address
   type: ExternalName
