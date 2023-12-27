@@ -20,4 +20,4 @@ spec:
   source:
     repoURL: https://pkgs.tailscale.com/helmcharts
     targetRevision: '*'
-    chart: tailscale
+    chart: tailscale-operator
