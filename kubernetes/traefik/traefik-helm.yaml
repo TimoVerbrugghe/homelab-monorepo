@@ -5,6 +5,8 @@ kind: Application
 metadata:
   name: traefik-helm
   namespace: argocd  # Namespace where ArgoCD is installed
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default 
   source:
@@ -79,16 +81,9 @@ spec:
         rbac:
           enabled: true
           
+        # Will define my own services because I want to expose traefik both through tailscale and through kube-vip
         service:
-          enabled: true
-          type: LoadBalancer
-          annotations: {}
-          labels: {}
-          loadBalancerClass: tailscale
-          # spec:            
-          #   # loadBalancerIP: 10.10.10.35 # this should be an IP in the kube-vip range
-          loadBalancerSourceRanges: []
-          externalIPs: {}
+          enabled: false
 
   destination:
     server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL

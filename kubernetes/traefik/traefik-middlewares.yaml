@@ -6,7 +6,7 @@ metadata:
   name: secureheaders
   namespace: traefik
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   headers:
     accessControlAllowOriginList:
@@ -34,7 +34,7 @@ metadata:
   name: ratelimit
   namespace: traefik
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   rateLimit:
     average: 200
@@ -46,7 +46,7 @@ metadata:
   name: accountsredirect
   namespace: traefik
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   redirectRegex:
     regex: "(.)*"
@@ -59,7 +59,7 @@ metadata:
   name: statusredirect
   namespace: traefik
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   redirectRegex:
     regex: "(.)*"
