@@ -6,7 +6,7 @@ metadata:
   namespace: argocd
   annotations:
     kubernetes.io/ingress.class: traefik
-    argocd.argoproj.io/sync-wave: "40"
+    argocd.argoproj.io/sync-wave: "70"
 spec:
   entryPoints:
     - websecure

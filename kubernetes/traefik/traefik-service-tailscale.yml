@@ -5,7 +5,7 @@ metadata:
   namespace: traefik
   annotations:
     tailscale.com/hostname: kubernetes-traefik
-    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-wave: "60"
 spec:
   selector:
     app.kubernetes.io/name: traefik
