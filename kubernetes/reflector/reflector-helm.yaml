@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: reflector-helm
   namespace: argocd  # Namespace where ArgoCD is installed
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   project: default  # Project where the application belongs
   source:

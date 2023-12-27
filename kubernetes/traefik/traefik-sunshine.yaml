@@ -4,7 +4,7 @@ metadata:
   name: sunshine-serverstransport
   namespace: traefik
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   insecureSkipVerify: true
 ---
@@ -15,7 +15,7 @@ metadata:
   namespace: traefik
   annotations:
     kubernetes.io/ingress.class: traefik
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   entryPoints:
     - websecure
@@ -34,7 +34,7 @@ metadata:
   name: sunshine-svc
   namespace: traefik
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   externalName: gamingvm.local.timo.be # Can also be an IP address
   type: ExternalName
