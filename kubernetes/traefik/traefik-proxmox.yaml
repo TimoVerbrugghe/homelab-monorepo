@@ -15,7 +15,7 @@ metadata:
   name: proxmox-svc
   namespace: traefik
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   externalName: sectorfive.local.timo.be # Can also be an IP address
   type: ExternalName
@@ -27,7 +27,7 @@ metadata:
   namespace: traefik
   annotations:
     kubernetes.io/ingress.class: traefik
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   entryPoints:
     - websecure

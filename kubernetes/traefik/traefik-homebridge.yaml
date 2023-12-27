@@ -22,7 +22,7 @@ metadata:
   name: homebridge-svc
   namespace: traefik
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   externalName: homebridge.home.timo.be # Can also be an IP address
   type: ExternalName
