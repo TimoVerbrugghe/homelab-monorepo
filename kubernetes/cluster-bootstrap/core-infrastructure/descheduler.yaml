@@ -5,6 +5,8 @@ kind: Application
 metadata:
   name: descheduler-helm
   namespace: argocd  # Namespace where ArgoCD is installed
+  annotations:
+    argocd.argoproj.io/sync-wave: "70"
 spec:
   project: default 
   source:

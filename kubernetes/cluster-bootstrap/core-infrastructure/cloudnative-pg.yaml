@@ -1,17 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: portainer
+  name: cloudnative-pg
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "80"
 spec:
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: kubernetes/portainer
+    path: kubernetes/cloudnative-pg
     repoURL: https://github.com/TimoVerbrugghe/homelab-monorepo
     targetRevision: master
   syncPolicy:

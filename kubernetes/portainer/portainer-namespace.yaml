@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: portainer
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "10"
