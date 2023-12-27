@@ -29,19 +29,19 @@
 #   roles:
 #     - role: ../roles/ubuntu-vm-first-setup
 
-# - name: Run prereq for k3s cluster
-#   hosts: k3scluster
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - role: ../roles/k3s-prereq
+- name: Run prereq for k3s cluster
+  hosts: k3scluster
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/k3s-prereq
 
-# - name: Deploy k3s controlplane nodes
-#   hosts: k3scontrolplane
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - role: ../roles/k3s-controlplane
+- name: Deploy k3s controlplane nodes
+  hosts: k3scontrolplane
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/k3s-controlplane
 
 # # - name: Deploy k3s agent nodes
 # #   hosts: k3sagents
@@ -50,9 +50,9 @@
 # #   roles:
 # #     - role: ../roles/k3s-controlplane
 
-- name: Do base deployments on the cluster (critical resources such as traefik, cert-manager, etc...)
-  hosts: k3scontrolplane[0] # only need to run deployment commands on 1 node of the controlplane
-  gather_facts: true
-  become: true
-  roles:
-    - role: ../roles/k3s-base-deployments
+# - name: Do base deployments on the cluster (critical resources such as traefik, cert-manager, etc...)
+#   hosts: k3scontrolplane[0] # only need to run deployment commands on 1 node of the controlplane
+#   gather_facts: true
+#   become: true
+#   roles:
+#     - role: ../roles/k3s-base-deployments
