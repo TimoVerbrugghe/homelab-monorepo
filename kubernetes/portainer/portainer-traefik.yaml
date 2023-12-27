@@ -5,6 +5,7 @@ metadata:
   namespace: portainer
   annotations:
     kubernetes.io/ingress.class: traefik
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   insecureSkipVerify: true
 ---
@@ -15,6 +16,7 @@ metadata:
   namespace: portainer
   annotations:
     kubernetes.io/ingress.class: traefik
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   entryPoints:
     - websecure

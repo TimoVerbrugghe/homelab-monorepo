@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: nfs-busybox
   namespace: demo
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 3
   selector:

@@ -68,7 +68,7 @@ spec:
     name: cluster-example-superuser
 
   storage:
-    storageClass: standard
+    storageClass: local-path
     size: 1Gi
 
   # See https://cloudnative-pg.io/documentation/1.16/backup_recovery/

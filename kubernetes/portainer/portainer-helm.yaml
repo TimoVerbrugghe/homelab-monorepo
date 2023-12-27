@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: portainer-helm
   namespace: argocd  # Namespace where ArgoCD is installed
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default 
 

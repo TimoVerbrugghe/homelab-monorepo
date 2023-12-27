@@ -3,6 +3,8 @@ kind: PersistentVolume
 metadata:
   name: nfs-other-pv
   namespace: demo
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   accessModes:
     - ReadWriteMany
@@ -23,6 +25,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: nfs-other-pvc
   namespace: demo
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   storageClassName: ""
   accessModes:
@@ -39,6 +43,8 @@ metadata:
   namespace: demo
   labels:
     app: nginx
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 3
   selector:
