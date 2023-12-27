@@ -1,0 +1,23 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-helm
+  namespace: argocd  # Namespace where ArgoCD is installed
+spec:
+  project: default 
+
+  destination:
+    server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
+    namespace: tailscale  # Target namespace for the Helm release
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true
+
+  source:
+    repoURL: https://pkgs.tailscale.com/helmcharts
+    targetRevision: '*'
+    chart: tailscale

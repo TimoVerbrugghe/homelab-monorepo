@@ -86,8 +86,9 @@ spec:
           type: LoadBalancer
           annotations: {}
           labels: {}
-          spec:
-            loadBalancerIP: 10.10.10.35 # this should be an IP in the kube-vip range
+          loadBalancerClass: tailscale
+          # spec:            
+          #   # loadBalancerIP: 10.10.10.35 # this should be an IP in the kube-vip range
           loadBalancerSourceRanges: []
           externalIPs: {}
 

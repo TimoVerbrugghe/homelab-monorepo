@@ -9,17 +9,3 @@ resources:
 
 patchesStrategicMerge:
 - overlays/argocd-cmd-params-cm.yaml
-
-secretGenerator:
-  - name: cloudflare-token-secret
-    envs:
-    - cloudflaretoken.env
-    type: Opaque
-    options:
-      annotations:
-        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager"
-
-generatorOptions:
- disableNameSuffixHash: true
