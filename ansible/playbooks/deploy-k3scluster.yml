@@ -17,17 +17,17 @@
 #       ansible.builtin.pause:
 #         seconds: 30
 
-# - name: Update known hosts with VM ssh keys
-#   vars:
-#     host_group: k3scluster
-#   import_playbook: ./update-known-hosts.yml
+- name: Update known hosts with VM ssh keys
+  vars:
+    host_group: k3scluster
+  import_playbook: ./update-known-hosts.yml
 
-# - name: Do first time Ubuntu setup
-#   hosts: k3scluster
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - role: ../roles/ubuntu-vm-first-setup
+- name: Do first time Ubuntu setup
+  hosts: k3scluster
+  gather_facts: true
+  become: true
+  roles:
+    - role: ../roles/ubuntu-vm-first-setup
 
 - name: Run prereq for k3s cluster
   hosts: k3scluster
