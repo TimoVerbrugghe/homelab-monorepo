@@ -15,7 +15,7 @@
 
 - name: Configure macvlan
   ansible.builtin.include_tasks: macvlan-config.yml
-  when: macvlan_routes
+  when: hostvars[inventory_hostname].macvlan_routes | default(false)
 
 # Increase the UDP buffer size in order to have more stable QUIC connections, necessary for the cloudflare tunnel
 # More information available here: https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
@@ -25,7 +25,7 @@
 
 - name: Install intel driver (if VM has enable_gpu set to true)
   ansible.builtin.include_tasks: install-intel-gpu-driver.yml
-  when: enable_gpu
+  when: hostvars[inventory_hostname].enable_gpu | default(false)
 
 - name: Enable swap
   ansible.builtin.include_tasks: enable-swap.yml
