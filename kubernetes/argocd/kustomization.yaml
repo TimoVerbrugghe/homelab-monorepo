@@ -4,9 +4,19 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-- https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/ha/install.yaml
+- https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml
 - namespace.yaml
 
 patchesStrategicMerge:
 - overlays/argocd-cmd-params-cm.yaml
 - overlays/argocd-cm.yaml
+# - |-
+#   apiVersion: apps/v1
+#   kind: Deployment
+#   metadata:
+#     name: argocd-redis-ha-haproxy
+#   spec:
+#     strategy:
+#       rollingUpdate:
+#         # due to rolling update in combination with anti affinity rules and nodes count=replica count
+#         maxUnavailable: 34%

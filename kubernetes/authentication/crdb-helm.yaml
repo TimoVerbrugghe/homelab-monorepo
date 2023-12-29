@@ -1,0 +1,37 @@
+---
+# Install traefik in traefik namespace using helm
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crdb-helm
+  namespace: argocd  # Namespace where ArgoCD is installed
+spec:
+  project: default 
+  source:
+    repoURL: https://charts.cockroachdb.com/
+    targetRevision: '*'
+    chart: cockroachdb
+    helm:
+      valuesObject:
+        tls:
+          certs:
+            selfSigner:
+              enabled: false
+          certManager: true
+          certManagerIssuer:
+            kind: issuer
+            name: cockroachdb
+
+        init:
+          jobAnnotations:
+            argocd.argoproj.io/hook: Sync
+
+  destination:
+    server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
+    namespace: authentication # Target namespace for the Helm release
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true

@@ -1,0 +1,8 @@
+---
+# Creating namespace for traefik to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: authentication
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
