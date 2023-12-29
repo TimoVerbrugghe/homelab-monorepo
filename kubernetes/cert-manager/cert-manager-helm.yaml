@@ -12,6 +12,10 @@ spec:
     targetRevision: ">=0.0.0" # latest version
     chart: cert-manager
     helm:
+      # Apparently you need to add this because cert-manager does not use the standard way of install CRDs with Helm
+      parameters:
+        - name: installCRDs
+          value: "true"
       valuesObject:
         installCRDs: true
         replicaCount: 3
@@ -26,6 +30,7 @@ spec:
         podDnsConfig:
           nameservers:
             - "1.1.1.1"
+
 
   destination:
     server: https://kubernetes.default.svc
