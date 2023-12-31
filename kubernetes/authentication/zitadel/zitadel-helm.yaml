@@ -1,10 +1,11 @@
 ---
-# Install traefik in traefik namespace using helm
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: zitadel-helm
   namespace: argocd  # Namespace where ArgoCD is installed
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   project: default 
   source:

@@ -3,6 +3,8 @@ kind: Certificate
 metadata:
   name: crdb-zitadel-client
   namespace: authentication
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   commonName: zitadel
   duration: 672h

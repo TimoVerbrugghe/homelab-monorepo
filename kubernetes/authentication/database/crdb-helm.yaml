@@ -5,6 +5,8 @@ kind: Application
 metadata:
   name: crdb-helm
   namespace: argocd  # Namespace where ArgoCD is installed
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   project: default 
   source:
