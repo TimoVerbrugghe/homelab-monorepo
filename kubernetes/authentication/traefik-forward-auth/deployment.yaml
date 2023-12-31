@@ -1,0 +1,62 @@
+#
+# Traefik Forward Auth Deployment
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik-forward-auth
+  labels:
+    app: traefik-forward-auth
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: traefik-forward-auth
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: traefik-forward-auth
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: thomseddon/traefik-forward-auth:2
+        name: traefik-forward-auth
+        ports:
+        - containerPort: 4181
+          protocol: TCP
+        env:
+        - name: DOMAIN
+          value: "timo.be"
+        - name: COOKIE_DOMAIN
+          value: "timo.be"
+        - name: AUTH_HOST
+          value: "auth.kubernetes.timo.be"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: INSECURE_COOKIE
+          value: false
+        - name: DEFAULT_PROVIDER
+          value: "oidc"
+        - name: PROVIDERS_OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: traefik-forward-auth-secrets
+              key: client-id
+        - name: PROVIDERS_OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: traefik-forward-auth-secrets
+              key: client-secret
+        - name: SECRET
+          valueFrom:
+            secretKeyRef:
+              name: traefik-forward-auth-secrets
+              key: secret
+
+      volumes:
+      - name: traefik-forward-auth-secrets
+        secret:
+          secretName: traefik-forward-auth-secrets

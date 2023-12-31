@@ -1,0 +1,13 @@
+# Based on https://github.com/thomseddon/traefik-forward-auth/tree/master/examples/traefik-v2/kubernetes/advanced-separate-pod
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: authentication
+commonLabels:
+  app: traefik-forward-auth
+
+resources:
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+- middleware.yaml

@@ -1,0 +1,30 @@
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: crdb-serverstransport
+  namespace: authentication
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  insecureSkipVerify: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: crdb-ingress
+  namespace: authentication
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`crdb.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: crdb-helm-cockroachdb-public
+          port: 8080
+          scheme: https
+          serversTransport: crdb-serverstransport

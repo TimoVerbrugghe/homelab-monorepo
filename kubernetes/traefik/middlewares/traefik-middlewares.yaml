@@ -65,3 +65,17 @@ spec:
     regex: "(.)*"
     replacement: "https://uptime.timo.be/status/default"
     permanent: false
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: zitadel-auth
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "60"
+spec:
+  forwardAuth:
+    address: http://traefik-forward-auth.authentication:4181
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Forwarded-User

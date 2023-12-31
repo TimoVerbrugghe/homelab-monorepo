@@ -13,14 +13,19 @@ spec:
     chart: cockroachdb
     helm:
       valuesObject:
+        storage:
+          persistentVolume:
+            size: 10Gi
+            storageClass: local-path
+
         tls:
           certs:
             selfSigner:
               enabled: false
-          certManager: true
-          certManagerIssuer:
-            kind: issuer
-            name: cockroachdb
+            certManager: true
+            certManagerIssuer:
+              kind: Issuer
+              name: cockroachdb
 
         init:
           jobAnnotations:

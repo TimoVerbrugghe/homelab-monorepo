@@ -1,0 +1,53 @@
+---
+# Install traefik in traefik namespace using helm
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: zitadel-helm
+  namespace: argocd  # Namespace where ArgoCD is installed
+spec:
+  project: default 
+  source:
+    repoURL: https://charts.zitadel.com
+    targetRevision: '*'
+    chart: zitadel
+    helm:
+      valuesObject:
+        zitadel:
+          masterkeySecretName: zitadel-masterkey
+          configmapConfig:
+            ExternalSecure: true
+            ExternalDomain: zitadel.kubernetes.timo.be
+            ExternalPort: 443
+            TLS:
+              Enabled: false
+            Database:
+              Cockroach:
+                Host: crdb-helm-cockroachdb-public
+                User:
+                  SSL:
+                    Mode: verify-full
+                Admin:
+                  SSL:
+                    Mode: verify-full
+          secretConfig:
+            Database:
+              Cockroach:
+                User:
+                  Password: xyz
+                Admin:
+                  Password: abc
+
+          dbSslCaCrtSecret: cockroach-ca
+          dbSslAdminCrtSecret: cockroachdb-root
+          dbSslUserCrtSecret: crdb-zitadel-client-secret
+
+  destination:
+    server: 'https://kubernetes.default.svc'  # The Kubernetes API server URL
+    namespace: authentication # Target namespace for the Helm release
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true
