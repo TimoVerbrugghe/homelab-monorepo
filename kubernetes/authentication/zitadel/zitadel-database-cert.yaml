@@ -1,0 +1,26 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: crdb-zitadel-client
+  namespace: authentication
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  commonName: zitadel
+  duration: 672h
+  issuerRef:
+    group: cert-manager.io
+    kind: Issuer
+    name: crdb-helm-cockroachdb-ca-issuer
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  renewBefore: 48h
+  secretName: crdb-zitadel-client-secret
+  subject:
+    organizations:
+      - Cockroach
+  usages:
+    - digital signature
+    - key encipherment
+    - client auth
