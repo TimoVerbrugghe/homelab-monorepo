@@ -7,15 +7,6 @@
     backrefs: true
   when: zfs | default(true) | bool == false
 
-- name: Check if /etc/default/grub contains command line parameters for CPU optimizations and enable if missing
-  ansible.builtin.lineinfile:
-    path: /etc/default/grub
-    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?:(?!mitigations=off transparent_hugepage=always).)*?)"$'
-    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 mitigations=off transparent_hugepage=always"'
-    backup: true
-    backrefs: true
-  when: zfs | default(true) | bool == false
-
 - name: Check if /etc/default/grub contains command line parameters for ACS override (if needed by the host) and enable if missing
   ansible.builtin.lineinfile:
     path: /etc/default/grub
@@ -30,15 +21,6 @@
     path: /etc/kernel/cmdline
     regexp: '^(.*?)(intel_iommu=on iommu=pt vfio_pci.ids={{ vfio_pci_ids }}|$)'
     line: '\1 intel_iommu=on iommu=pt vfio_pci.ids={{ vfio_pci_ids }}'
-    backup: true
-    backrefs: true
-  when: zfs
-
-- name: Check if /etc/kernel/cmdline contains command line parameters for CPU optimizations and enable if missing
-  ansible.builtin.lineinfile:
-    path: /etc/kernel/cmdline
-    regexp: '^(.*?)(mitigations=off transparent_hugepage=always|$)'
-    line: '\1 mitigations=off transparent_hugepage=always'
     backup: true
     backrefs: true
   when: zfs
@@ -75,20 +57,3 @@
     dest: /etc/modprobe.d/sas-blacklist.conf
     content: |
       blacklist mpt3sas
-  
-- name: Update initramfs
-  ansible.builtin.command: 
-    cmd: update-initramfs -u -k all
-
-- name: Run update-grub
-  ansible.builtin.command: 
-    cmd: update-grub
-  when: zfs | default(true) | bool == false
-
-- name: Run proxmox-boot-tool (only on systems running systemd-boot, default with zfs)
-  ansible.builtin.command: 
-    cmd: proxmox-boot-tool refresh
-  when: zfs
-
-- name: Reboot (so we can apply all these iGPU passthrough settings)
-  ansible.builtin.reboot:

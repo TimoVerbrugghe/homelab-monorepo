@@ -64,10 +64,17 @@
     cmd: qm importdisk "{{ vm_template_id }}" cloudimg.img "{{ vm_template_storage }}"
   changed_when: false
 
-- name: Attach new disk to the VM as scsi drive on scsi controller
+- name: Attach new disk to the VM as scsi drive on scsi controller (on non-zfs filesystems, you have to append .raw to the file & use the vm_template_id twice)
   ansible.builtin.command:
     cmd: qm set "{{ vm_template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ vm_template_storage }}":"{{ vm_template_id }}"/vm-"{{ vm_template_id }}"-disk-1.raw
   changed_when: false
+  when: zfs | default(true) | bool == false
+
+- name: Attach new disk to the VM as scsi drive on scsi controller
+  ansible.builtin.command:
+    cmd: qm set "{{ vm_template_id }}" --scsihw virtio-scsi-pci --scsi0 "{{ vm_template_storage }}":vm-"{{ vm_template_id }}"-disk-1
+  changed_when: false
+  when: zfs
 
 - name: Make the cloud init drive bootable and restrict BIOS to boot from disk only
   ansible.builtin.command:
