@@ -55,6 +55,7 @@ proxmox:
       proxmox_node: sectorfive
       vfio_pci_ids: 1000:0072,10de:1c03,10de:10f1
       acs_override: true
+      zfs: true
     
 k3scontrolplane:
   hosts:

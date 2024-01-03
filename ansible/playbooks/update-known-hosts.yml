@@ -7,17 +7,18 @@
     - setup:
         gather_subset: network
 
-- name: Add Proxmox SSH keys to known_hosts file
+- name: Add SSH keys to known_hosts file
   hosts: localhost
   connection: local
   vars:
     ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
     ssh_known_hosts: "{{ groups[ host_group | default('all')] }}"
   tasks:
-    - known_hosts:
+    - ansible.builtin.known_hosts:
         path: "{{ ssh_known_hosts_file }}"
         name: "{{ item }}"
         key: "{{ lookup('pipe','ssh-keyscan -T 10 ' + item + ',' + lookup('dig',item)) }}"
         state: present
       loop: "{{ ssh_known_hosts | map('extract', hostvars, ['inventory_hostname']) | list }}"
       become: no
+      ignore_errors: true

@@ -1,6 +1,6 @@
 #!/bin/bash
 ansible-playbook \
      -i ../inventory/hosts.yaml \
-     --limit proxmox,localhost \
+     --limit sectorfive.local.timo.be,localhost \
      -e "github_username=TimoVerbrugghe" \
-     ../playbooks/install-ssh-keys.yml
+     ../playbooks/install-github-keys.yml
