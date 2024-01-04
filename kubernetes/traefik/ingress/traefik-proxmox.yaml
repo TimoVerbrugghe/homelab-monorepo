@@ -17,7 +17,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "70"
 spec:
-  externalName: sectorfive.local.timo.be # Can also be an IP address
+  externalName: forestsector.local.timo.be # Can also be an IP address
   type: ExternalName
 ---
 apiVersion: traefik.io/v1alpha1
