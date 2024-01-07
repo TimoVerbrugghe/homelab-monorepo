@@ -113,6 +113,7 @@ services:
     environment:
       - TEMP_DIR=/tmp
       - DARK_MODE=true
+      - DOWNLOAD_DIR=/downloads/metube
       - YTDL_OPTIONS={"writesubtitles":true,"writeautomaticsub":true,"subtitleslangs":["en","en-US","en-GB","en-orig","nl","nl-BE","nl-NL","-live_chat"],"updatetime":false,"postprocessors":[{"key":"FFmpegEmbedSubtitle","already_have_subtitle":false},{"key":"FFmpegMetadata","add_chapters":true}]}
     volumes:
       - downloads:/downloads
