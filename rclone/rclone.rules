@@ -1,0 +1,47 @@
+## Exclude common files
+- .DS_STORE
+- .orig
+- .nfo
+- .git/**
+- *.backup~*
+- *.partial~*
+- .Recycle.Bin/**
+- .recycle**
+- *_HIDDEN
+- .cue
+- .Trash-0
+
+## Include specific movies
++ /movies/A\ Goofy\ Movie\ \(1995\)/**
++ /movies/Back\ to\ the\ Future\ \(1985\)/**
++ /movies/Back\ to\ the\ Future\ Part\ II\ \(1989\)/**
++ /movies/Back\ to\ the\ Future\ Part\ III\ \(1990\)/**
++ /movies/Hamilton\ \(2020\)/**
++ /movies/High\ School\ Musical\ \(2006\)/**
++ /movies/High\ School\ Musical\ 2\ \(2007\)/**
++ /movies/High\ School\ Musical\ 3\ Senior\ Year\ \(2008\)/**
++ /movies/Shrek\ \(2001\)/**
++ /movies/EuroTrip\ \(2004\)/**
++ /movies/Apollo\ 13\ \(1995\)/**
++ /movies/I,\ Robot\ \(2004\)/**
++ /movies/Men\ in\ Black\ \(1997\)/**
++ /movies/Monsters,\ Inc.\ \(2001\)/**
++ /movies/Wallace\ and\ Gromit\ The\ Curse\ of\ the\ Were-Rabbit\ \(2005\)/**
++ /movies/WALL·E\ \(2008\)/**
+
+## Include specific tvshows
++ /tvshows/Code\ Lyoko/**
++ /tvshows/Code\ Lyoko\ Evolution/**
++ /tvshows/Dag\ Sinterklaas/**
++ /tvshows/Digimon\-\ Digital\ Monsters/**
++ /tvshows/Futurama/**
++ /tvshows/Ned\'s\ Declassified\ School\ Survival\ Guide/**
++ /tvshows/The\ Colbert\ Report/**
++ /tvshows/The\ Daily\ Show/**
++ /tvshows/Yu-Gi-Oh\!\ Duel\ Monsters/**
++ /tvshows/How\ I\ Met\ Your\ Mother/**
++ /tvshows/The\ Man\ in\ the\ High\ Castle/**
++ /tvshows/W817/**
+
+# Exclude everything else
+- *
