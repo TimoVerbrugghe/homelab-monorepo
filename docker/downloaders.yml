@@ -113,7 +113,7 @@ services:
     environment:
       - TEMP_DIR=/tmp
       - DARK_MODE=true
-      - YTDL_OPTIONS={"writesubtitles":true,"subtitleslangs":["en","-live_chat"],"updatetime":false,{"key":"FFmpegEmbedSubtitle","already_have_subtitle":false},{"key":"FFmpegMetadata","add_chapters":true}]}
+      - YTDL_OPTIONS={"writesubtitles":"true","subtitleslangs":["en","-live_chat"],"updatetime":"false",{"key":"FFmpegEmbedSubtitle","already_have_subtitle":"false"},{"key":"FFmpegMetadata","add_chapters":"true"}]}
     volumes:
       - downloads:/downloads
       - /tmp:/tmp
