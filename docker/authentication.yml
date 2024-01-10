@@ -63,16 +63,16 @@ services:
       traefik.http.routers.keycloak.entrypoints: https
       traefik.http.services.keycloak.loadbalancer.server.port: 8080
       traefik.http.routers.keycloak.rule: Host(`auth.home.timo.be`) || Host(`auth.timo.be`)
-    volumes:
-      - keycloakbackup:/opt/keycloak/data/import
+    # volumes:
+    #   - keycloakbackup:/opt/keycloak/data/import
 
 volumes:
   keycloak-postgres:
-  keycloakbackup:
-    driver_opts:
-      type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/X.A.N.A./media/other/keycloakbackup/import"
+  # keycloakbackup:
+  #   driver_opts:
+  #     type: "nfs"
+  #     o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+  #     device: ":/mnt/X.A.N.A./media/other/keycloakbackup/import"
 
 networks:
   dockerproxy:
