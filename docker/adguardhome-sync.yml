@@ -11,13 +11,13 @@ services:
       ORIGIN_USERNAME: ${adguardhome_origin_username}
       ORIGIN_PASSWORD: ${adguardhome_origin_password}
 
-      REPLICA_URL: ${adguardhome_replica_url}
-      REPLICA_USERNAME: ${adguardhome_replica_username}
-      REPLICA_PASSWORD: ${adguardhome_replica_password}
-
       REPLICA1_URL: ${adguardhome_replica1_url}
       REPLICA1_USERNAME: ${adguardhome_replica1_username}
       REPLICA1_PASSWORD: ${adguardhome_replica1_password}
+
+      REPLICA2_URL: ${adguardhome_replica2_url}
+      REPLICA2_USERNAME: ${adguardhome_replica2_username}
+      REPLICA2_PASSWORD: ${adguardhome_replica2_password}
 
       CRON: '*/1 * * * *' # run every minute
       RUNONSTART: true
