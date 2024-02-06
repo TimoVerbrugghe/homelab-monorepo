@@ -1,0 +1,67 @@
+### ADD FOLLOWING FILE TO PORTAINER WITH THESE ENVIRONMENT VARIABLES
+# TS_AUTH_KEY_FILEBROWSER=
+
+version: "3.8"
+
+services:
+
+  ### WATCHTOWER - AUTOMATIC UPDATES
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  tailscale-filebrowser:
+    image: tailscale/tailscale
+    container_name: tailscale-filebrowser
+    hostname: files
+    restart: always
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-filebrowser:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_FILEBROWSER}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+
+  filebrowser:
+    container_name: filebrowser
+    image: filebrowser/filebrowser
+    restart: always
+    environment:
+      - FB_DATABASE=/config/database.db
+      - FB_CONFIG=/config/filebrowser.json
+      - FB_NOAUTH=true
+    network_mode: service:tailscale-filebrowser
+    volumes:
+      - movies:/srv/media
+      - tvshows:/srv/tvshows
+      - downloads:/srv/downloads
+      - filebrowser:/config
+
+volumes:
+  tailscale-filebrowser:
+  filebrowser:
+
+  movies:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/media/movies'
+  tvshows:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/media/tvshows'
+  downloads:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/media/downloads'
