@@ -41,6 +41,11 @@ in
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  # Making sure we're running latest linux kernel
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelParams = [
+    "i915.enable_guc=2"
+  ];
 
   ## Networking
   networking.hostName = "nixos"; # Define your hostname.
@@ -74,7 +79,8 @@ in
   users.users.nixos = {
     isNormalUser = true;
     home = "/home/nixos";
-    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+    # Wheel group enables sudo, render and video groups for iGPU transcoding
+    extraGroups = [ "wheel" "docker" "render" "video" ];
   };
 
   # VS Code Server
@@ -99,6 +105,7 @@ in
     libva-utils
     intel-gpu-tools
     docker-compose
+    pciutils
   ];
 
   # Install Intel GPU Drivers
@@ -108,13 +115,7 @@ in
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver
-      intel-ocl
-      ocl-icd
-      vaapiIntel
-      vaapiVdpau
-      libvdpau-va-gl
       intel-compute-runtime
-      # OneVPL drivers are missing, this will probably be needed to get AV1 quicksync decoding/encoding
     ];
   };
 
