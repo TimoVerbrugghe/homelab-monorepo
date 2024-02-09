@@ -29,8 +29,8 @@ let
   <INSERT TAILSCALE KEY HERE>
   '';
 
-  sshKeysUrl = "";
-  sshKeysSHA = "";
+  sshKeysUrl = "https://github.com/TimoVerbrugghe.keys";
+  sshKeysSHA = "sha256-agx4WrtOqchQCUgn0FqlRE3hcmvG9b+Fm5D/sVMy94U=";
 
 in 
 {
@@ -61,9 +61,15 @@ in
   # Users
   users.users.nixos = {
     isNormalUser = true;
-    home = "/home/nixos";
+    createHome = true;
     # Wheel group enables sudo, render and video groups for iGPU transcoding
     extraGroups = [ "wheel" "docker" "render" "video" ];
+    openssh.authorizedKeys.keys = let
+      authorizedKeys = pkgs.fetchurl {
+        url = sshKeysUrl;
+        sha256 = sshKeysSHA;
+      };
+    in pkgs.lib.splitString "\n" (builtins.readFile authorizedKeys);
   };
 
   # Enable fix so that VS Code remote works
