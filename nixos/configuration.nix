@@ -22,13 +22,15 @@ let
     
     volumes:
         portainer:
-  ''
-;
+  '';
 
   tailscaleDomain = "<INSERT TAILSCALE DOMAIN HERE>";
   tailscaleAuthKey = pkgs.writeText "tailscale_authkey" ''
   <INSERT TAILSCALE KEY HERE>
   '';
+
+  sshKeysUrl = "";
+  sshKeysSHA = "";
 
 in 
 {
@@ -41,6 +43,7 @@ in
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
   # Making sure we're running latest linux kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
@@ -51,26 +54,6 @@ in
   networking.hostName = "nixos"; # Define your hostname.
   services.tailscale.enable = true;
   services.tailscale.authKeyFile = "${tailscaleAuthKey}";
-
-  # Renew tailscale certs on weekly basis and on startup
-  systemd.services.tailscale-cert-renewal = {
-    enable = true;
-    description = "Renew Tailscale certificates weekly";
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.tailscale}/bin/tailscale cert ${tailscaleDomain}";
-    };
-    wantedBy = [ "multi-user.target" ];
-    after = ["network.target"];
-  };
-
-  systemd.timers.tailscale-cert-renewal = {
-    description = "Run Tailscale certificate renewal weekly";
-    timerConfig = {
-      OnCalendar = "weekly";
-      Unit = "tailscale-cert-renewal.service";
-    };
-  };
 
   # Time Settings
   time.timeZone = "Europe/Brussels";
@@ -83,7 +66,7 @@ in
     extraGroups = [ "wheel" "docker" "render" "video" ];
   };
 
-  # VS Code Server
+  # Enable fix so that VS Code remote works
   programs.nix-ld.enable = true;
 
   # Enable QEMU guest agent for better VM integration
@@ -96,7 +79,20 @@ in
   # Increase UDP Buffer size to improve plex performance (since it's running on UDP ports)
   boot.kernel.sysctl = { "net.core.rmem_max" = 2500000; "net.core.wmem_max" = 25000000; };
 
-  # Install packages
+  # Enable the OpenSSH daemon.
+  services.openssh.enable = true;
+
+  # Optimizations
+  nix.optimise.automatic = true;
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
+  ### Install packages ###
+  nixpkgs.config.allowUnfree = true; # For Intel GPU drivers & vscode.fhs
+
   environment.systemPackages = with pkgs; [
     vim
     nano
@@ -106,11 +102,10 @@ in
     intel-gpu-tools
     docker-compose
     pciutils
+    vscode.fhs
   ];
 
   # Install Intel GPU Drivers
-  # Intel OCL has an unfree license
-  nixpkgs.config.allowUnfree = true; 
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
@@ -125,22 +120,53 @@ in
   virtualisation.docker.autoPrune.dates = "weekly";
   virtualisation.docker.enableOnBoot = true;
 
-  systemd.services.portainer = {
-    enable = true;
-    description = "Portainer";
-    after = [ "network.target" "docker.service" "docker.socket"];
-    wantedBy = [ "multi-user.target" ];
+  ## Services to have enabled at startup
+  systemd.services = [ 
+      portainer = {
+        enable = true;
+        description = "Portainer";
+        after = [ "network.target" "docker.service" "docker.socket"];
+        wantedBy = [ "multi-user.target" ];
 
-    serviceConfig = {
-      ExecStart = "${pkgs.docker-compose}/bin/docker-compose -f ${portainerCompose} up";
-      ExecStop = "${pkgs.docker-compose}/bin/docker-compose ${portainerCompose} down";
-      Restart = "always";
-      RestartSec = "30s";
+        serviceConfig = {
+          ExecStart = "${pkgs.docker-compose}/bin/docker-compose -f ${portainerCompose} up";
+          ExecStop = "${pkgs.docker-compose}/bin/docker-compose ${portainerCompose} down";
+          Restart = "always";
+          RestartSec = "30s";
+        }
+      },
+      tailscale-cert-renewal = {
+          enable = true;
+          description = "Renew Tailscale certificates weekly";
+          serviceConfig = {
+            Type = "oneshot";
+            ExecStart = "${pkgs.tailscale}/bin/tailscale cert ${tailscaleDomain}";
+          };
+          wantedBy = [ "multi-user.target" ];
+          after = ["network.target"];
+      },
+      code-tunnel = {
+        enable = true;
+        description = "Enable VS Code tunnel";
+        serviceConfig = {
+          User = "nixos";
+          Group = "nixos";
+          Type = "simple";
+          ExecStart = "${pkgs.vscode.fhs}/bin/code tunnel --accept-server-license-terms --cli-data-dir /home/nixos/.vscode-cli";
+        };
+        wantedBy = [ "default.target" ];
+        after = ["network.target"];
+      }
+  ];
+
+  # Renew tailscale certs on weekly basis and on startup
+  systemd.timers.tailscale-cert-renewal = {
+    description = "Run Tailscale certificate renewal weekly";
+    timerConfig = {
+      OnCalendar = "weekly";
+      Unit = "tailscale-cert-renewal.service";
     };
   };
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
