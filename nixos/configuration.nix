@@ -49,6 +49,7 @@ in
       "--update-input"
       "nixpkgs"
       "--no-write-lock-file"
+      "--impure"
     ];
     dates = "02:00";
     randomizedDelaySec = "45min";
