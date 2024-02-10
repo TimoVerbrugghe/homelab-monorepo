@@ -33,16 +33,37 @@ in
       ./variables.nix
     ];
 
+  ## Enable Flakes
+  nix = {
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+        experimental-features = nix-command flakes
+    '';
+  };
+
+  ## Enable AutoUpgrades
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:TimoVerbrugghe/homelab-monorepo?dir=nixos#nixos";
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "--no-write-lock-file"
+    ];
+    dates = "02:00";
+    randomizedDelaySec = "45min";
+  };
+
   ## Boot Configuration
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 10;
-  # Making sure we're running latest linux kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
     "i915.enable_guc=2"
   ];
+  # Making sure we're running latest linux kernel
+  boot.kernelPackages = pkgs.linuxPackages_latest;  
 
   ## Networking
   networking.hostName = "nixos"; # Define your hostname.
@@ -50,6 +71,9 @@ in
   services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
   ${config.variables.tailscaleAuthKey}
   '';
+  services.tailscale.extraUpFlags = [
+    "--ssh"
+  ];
 
   # Time Settings
   time.timeZone = "Europe/Brussels";
@@ -181,12 +205,6 @@ in
       Unit = "tailscale-cert-renewal.service";
     };
   };
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
