@@ -49,7 +49,8 @@ in
       "--update-input"
       "nixpkgs"
       "--no-write-lock-file"
-      "--refresh" #so that latest commits to github repo get downloaded
+      "--refresh" # so that latest commits to github repo get downloaded
+      "--impure" # needed because I'm referencing a file with variables locally on the system, have to find a better way to deal with secrets
     ];
     dates = "02:00";
     randomizedDelaySec = "45min";
