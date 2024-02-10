@@ -86,6 +86,14 @@ in
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  programs.git = {
+    enable = true;
+    config = {
+        user.name = "${config.variables.gitUserName}";
+        user.email = "${config.variables.gitUserEmail}";
+    };
+  };
+
   # Optimizations
   nix.optimise.automatic = true;
   nix.gc = {
