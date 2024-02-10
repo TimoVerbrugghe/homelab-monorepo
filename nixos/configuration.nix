@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, ssh-keys, ... }:
 
 let 
   portainerCompose = pkgs.writeText "portainer-docker-compose.yml" ''
@@ -52,7 +52,7 @@ in
       "--refresh" # so that latest commits to github repo get downloaded
       "--impure" # needed because I'm referencing a file with variables locally on the system, have to find a better way to deal with secrets
     ];
-    dates = "02:00";
+    dates = "05:00";
     randomizedDelaySec = "45min";
   };
 
@@ -88,12 +88,7 @@ in
     # Wheel group enables sudo, render and video groups for iGPU transcoding
     extraGroups = [ "wheel" "docker" "render" "video" ];
     hashedPassword = "$6$DZe4T.fUOG9S2wRd$noj16mOHH4RR21wIxw.IsrAIR4DK0s8B8P7Zoqt8BfYILE4ZyJdYR/AxSFDtNnYI170cNX7eRHgCMFb12LAqK0";
-    openssh.authorizedKeys.keys = let
-      authorizedKeys = pkgs.fetchurl {
-        url = config.variables.sshKeysUrl;
-        sha256 = config.variables.sshKeysSHA;
-      };
-    in pkgs.lib.splitString "\n" (builtins.readFile authorizedKeys);
+    openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
   };
 
   # Enable fix so that VS Code remote works

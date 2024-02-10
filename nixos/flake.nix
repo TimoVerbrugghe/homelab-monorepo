@@ -5,13 +5,18 @@
     nixpkgs = {
       url = "github:NixOS/nixpkgs/nixos-unstable";
     };
+
+    ssh-keys = {
+      url = "https://github.com/TimoVerbrugghe.keys";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs : {
+  outputs = { self, nixpkgs, ... }@attrs : {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
+        specialArgs = attrs;
         modules = [
           ./configuration.nix
         ];
