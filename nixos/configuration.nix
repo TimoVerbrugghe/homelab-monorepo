@@ -49,7 +49,7 @@ in
       "--update-input"
       "nixpkgs"
       "--no-write-lock-file"
-      "--impure"
+      "--refresh" #so that latest commits to github repo get downloaded
     ];
     dates = "02:00";
     randomizedDelaySec = "45min";
