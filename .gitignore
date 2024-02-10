@@ -9,3 +9,4 @@ ansible/inventory/group_vars/*.yml
 **.env
 terraform/environments/proxmox.tfvars
 *.rom
+nixos/variables.nix

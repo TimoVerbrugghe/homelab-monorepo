@@ -24,19 +24,13 @@ let
         portainer:
   '';
 
-  tailscaleDomain = "<INSERT TAILSCALE DOMAIN HERE>";
-  tailscaleAuthKey = pkgs.writeText "tailscale_authkey" ''
-  <INSERT TAILSCALE KEY HERE>
-  '';
-
-  sshKeysUrl = "https://github.com/TimoVerbrugghe.keys";
-  sshKeysSHA = "sha256-agx4WrtOqchQCUgn0FqlRE3hcmvG9b+Fm5D/sVMy94U=";
-
 in 
+
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./variables.nix
     ];
 
   ## Boot Configuration
@@ -53,21 +47,25 @@ in
   ## Networking
   networking.hostName = "nixos"; # Define your hostname.
   services.tailscale.enable = true;
-  services.tailscale.authKeyFile = "${tailscaleAuthKey}";
+  services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
+  ${config.variables.tailscaleAuthKey}
+  '';
 
   # Time Settings
   time.timeZone = "Europe/Brussels";
 
   # Users
+  users.mutableUsers = false;
   users.users.nixos = {
     isNormalUser = true;
     createHome = true;
     # Wheel group enables sudo, render and video groups for iGPU transcoding
     extraGroups = [ "wheel" "docker" "render" "video" ];
+    hashedPassword = "$6$DZe4T.fUOG9S2wRd$noj16mOHH4RR21wIxw.IsrAIR4DK0s8B8P7Zoqt8BfYILE4ZyJdYR/AxSFDtNnYI170cNX7eRHgCMFb12LAqK0";
     openssh.authorizedKeys.keys = let
       authorizedKeys = pkgs.fetchurl {
-        url = sshKeysUrl;
-        sha256 = sshKeysSHA;
+        url = config.variables.sshKeysUrl;
+        sha256 = config.variables.sshKeysSHA;
       };
     in pkgs.lib.splitString "\n" (builtins.readFile authorizedKeys);
   };
@@ -127,43 +125,45 @@ in
   virtualisation.docker.enableOnBoot = true;
 
   ## Services to have enabled at startup
-  systemd.services = [ 
-      portainer = {
-        enable = true;
-        description = "Portainer";
-        after = [ "network.target" "docker.service" "docker.socket"];
-        wantedBy = [ "multi-user.target" ];
+  systemd.services.NetworkManager-wait-online.enable = true;
+  systemd.services.portainer = {
+    enable = true;
+    description = "Portainer";
+    after = [ "network-online.target" "docker.service" "docker.socket"];
+    wants = [ "network-online.target" ];
+    wantedBy = [ "multi-user.target" ];
 
-        serviceConfig = {
-          ExecStart = "${pkgs.docker-compose}/bin/docker-compose -f ${portainerCompose} up";
-          ExecStop = "${pkgs.docker-compose}/bin/docker-compose ${portainerCompose} down";
-          Restart = "always";
-          RestartSec = "30s";
-        }
-      },
-      tailscale-cert-renewal = {
-          enable = true;
-          description = "Renew Tailscale certificates weekly";
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.tailscale}/bin/tailscale cert ${tailscaleDomain}";
-          };
-          wantedBy = [ "multi-user.target" ];
-          after = ["network.target"];
-      },
-      code-tunnel = {
-        enable = true;
-        description = "Enable VS Code tunnel";
-        serviceConfig = {
-          User = "nixos";
-          Group = "nixos";
-          Type = "simple";
-          ExecStart = "${pkgs.vscode.fhs}/bin/code tunnel --accept-server-license-terms --cli-data-dir /home/nixos/.vscode-cli";
-        };
-        wantedBy = [ "default.target" ];
-        after = ["network.target"];
-      }
-  ];
+    serviceConfig = {
+      ExecStart = "${pkgs.docker-compose}/bin/docker-compose -f ${portainerCompose} up";
+      ExecStop = "${pkgs.docker-compose}/bin/docker-compose ${portainerCompose} down";
+      Restart = "always";
+      RestartSec = "30s";
+    };
+  };
+
+  systemd.services.tailscale-cert-renewal = {
+    enable = true;
+    description = "Renew Tailscale certificates weekly";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.tailscale}/bin/tailscale cert ${config.variables.tailscaleDomain}";
+    };
+    wantedBy = [ "multi-user.target" ];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
+  };
+
+  systemd.services.code-tunnel = {
+    enable = true;
+    description = "Enable VS Code tunnel";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.vscode.fhs}/bin/code --user-data-dir='/home/nixos/.vscode/' tunnel --accept-server-license-terms --cli-data-dir /home/nixos/.vscode-cli";
+    };
+    wantedBy = [ "default.target" ];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
+  };
 
   # Renew tailscale certs on weekly basis and on startup
   systemd.timers.tailscale-cert-renewal = {
