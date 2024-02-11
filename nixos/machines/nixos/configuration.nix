@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ inputs, config, lib, pkgs, ssh-keys, ... }:
+{ config, lib, pkgs, ssh-keys, ... }:
 
 let 
 
@@ -13,7 +13,6 @@ let
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
-  inherit (inputs) ssh-keys;
 
 in 
 
