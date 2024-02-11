@@ -46,7 +46,7 @@ in
   # Load bochs (proxmox standard VGA driver) after the i915 driver so that we can use noVNC while iGPU was passed through
   boot.extraModprobeConfig = ''
   softdep bochs pre: i915
-  ''
+  '';
 
   # Users
   services.user = {
