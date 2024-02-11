@@ -68,7 +68,7 @@ in
   boot.kernelPackages = pkgs.linuxPackages_latest;  
 
   ## Networking
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = ${specialArgs.hostname}; # Define your hostname.
   services.tailscale.enable = true;
   services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
   ${config.variables.tailscaleAuthKey}
@@ -82,13 +82,15 @@ in
 
   # Users
   users.mutableUsers = false;
-  users.users.nixos = {
-    isNormalUser = true;
-    createHome = true;
-    # Wheel group enables sudo, render and video groups for iGPU transcoding
-    extraGroups = [ "wheel" "docker" "render" "video" ];
-    hashedPassword = "$6$DZe4T.fUOG9S2wRd$noj16mOHH4RR21wIxw.IsrAIR4DK0s8B8P7Zoqt8BfYILE4ZyJdYR/AxSFDtNnYI170cNX7eRHgCMFb12LAqK0";
-    openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
+  users.users = {
+    ${specialArgs.username} = {
+      isNormalUser = true;
+      createHome = true;
+      # Wheel group enables sudo, render and video groups for iGPU transcoding
+      extraGroups = [ "wheel" "docker" "render" "video" ];
+      hashedPassword = "$6$DZe4T.fUOG9S2wRd$noj16mOHH4RR21wIxw.IsrAIR4DK0s8B8P7Zoqt8BfYILE4ZyJdYR/AxSFDtNnYI170cNX7eRHgCMFb12LAqK0";
+      openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
+    };
   };
 
   # Enable fix so that VS Code remote works

@@ -16,9 +16,13 @@
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = attrs;
+        specialArgs = {
+          attrs;
+          username = "nixos";
+          hostname = "nixos";
+        };
         modules = [
-          ./configuration.nix
+          ./machines/nixos/configuration.nix
         ];
       };
     };
