@@ -17,7 +17,7 @@
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
-          attrs;
+          inherit attrs;
           username = "nixos";
           hostname = "nixos";
         };
