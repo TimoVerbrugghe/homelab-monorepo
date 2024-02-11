@@ -49,9 +49,9 @@ in
   };
 
   # Tailscale Authkey
-  services.tailscale.authKeyFile = "pkgs.writeText "tailscale_authkey" ''
+  services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
     ${tailscaleAuthKey}
-  ''";
+  '';
 
   ## Enable AutoUpgrades
   system.autoUpgrade = {
