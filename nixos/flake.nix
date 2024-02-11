@@ -16,11 +16,7 @@
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {
-          inherit attrs;
-          username = "nixos";
-          hostname = "nixos";
-        };
+        specialArgs = attrs;
         modules = [
           ./machines/nixos/configuration.nix
         ];
