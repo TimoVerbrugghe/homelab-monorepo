@@ -1,5 +1,11 @@
-{ config, pkgs, ... }:
+{ lib, ... }:
+
+with lib;
 
 {
-  deployment.keys.tailscale-authkey.text = ""; # Put a tailscale authkey in here and place that in /etc/nixos
+  tailscaleAuthKey = mkOption {
+    type = types.str;
+    default = "";
+    description = "Tailscale authentication key";
+  };
 }
