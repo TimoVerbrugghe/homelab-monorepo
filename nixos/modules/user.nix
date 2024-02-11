@@ -34,7 +34,6 @@ in
         createHome = true;
         hashedPassword = "${cfg.hashedPassword}";
         openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
-
       };
     };
 
