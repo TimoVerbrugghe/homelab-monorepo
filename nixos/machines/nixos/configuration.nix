@@ -13,6 +13,7 @@ let
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
+  inherit (inputs) ssh-keys;
 
 in 
 
