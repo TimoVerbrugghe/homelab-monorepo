@@ -68,7 +68,7 @@ in
   boot.kernelPackages = pkgs.linuxPackages_latest;  
 
   ## Networking
-  networking.hostName = ${specialArgs.hostname}; # Define your hostname.
+  networking.hostName = "${specialArgs.hostname}"; # Define your hostname.
   services.tailscale.enable = true;
   services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
   ${config.variables.tailscaleAuthKey}
