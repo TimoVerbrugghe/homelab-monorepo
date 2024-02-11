@@ -13,5 +13,5 @@ with lib;
 
   config = {
     tailscaleAuthKey = ""; # Place tailscale Auth Key here
-  }
+  };
 }
