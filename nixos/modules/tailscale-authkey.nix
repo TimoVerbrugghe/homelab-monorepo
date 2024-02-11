@@ -3,9 +3,15 @@
 with lib;
 
 {
-  tailscaleAuthKey = mkOption {
-    type = types.str;
-    default = "";
-    description = "Tailscale authentication key";
+  options = {
+    tailscaleAuthKey = mkOption {
+      type = types.str;
+      default = "";
+      description = "Tailscale authentication key";
+    };
   };
+
+  config = {
+    tailscaleAuthKey = ""; # Place tailscale Auth Key here
+  }
 }

@@ -50,7 +50,7 @@ in
 
   # Tailscale Authkey
   services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
-    ${tailscaleAuthKey}
+    ${config.tailscaleAuthKey}
   '';
 
   ## Enable AutoUpgrades
