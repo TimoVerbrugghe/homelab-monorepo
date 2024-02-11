@@ -39,7 +39,7 @@ in
   ############################
   system.stateVersion = "23.11";
   networking.hostName = "${hostname}"; # Define your hostname.
-  boot.kernelParams = ${kernelParams};
+  boot.kernelParams = "${kernelParams}";
   time.timeZone = "${timezone}";
 
   # Users
