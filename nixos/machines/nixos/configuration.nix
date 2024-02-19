@@ -8,7 +8,7 @@ let
 
   hostname = "nixos";
   username = "nixos";
-  hashedPassword = "$6$DZe4T.fUOG9S2wRd$noj16mOHH4RR21wIxw.IsrAIR4DK0s8B8P7Zoqt8BfYILE4ZyJdYR/AxSFDtNnYI170cNX7eRHgCMFb12LAqK0";
+  hashedPassword = "$y$j9T$C0wb1ID4TZ6AG28ZPpDJN.$hdlvhNBwHMiutJXOavXlGB38qz93yA3CzitJv/DVDx9";
   timezone = "Europe/Brussels";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
