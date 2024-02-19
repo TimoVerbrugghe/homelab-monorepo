@@ -5,6 +5,6 @@
   services.qemuGuest.enable = true;
   
   # Enable watchdog
-  systemd.watchdog.device = "/dev/watchdog";
-  systemd.watchdog.runtimeTime = "30s";
+  # systemd.watchdog.device = "/dev/watchdog";
+  # systemd.watchdog.runtimeTime = "30s";
 }
