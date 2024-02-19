@@ -49,6 +49,6 @@ in
   ## Enable AutoUpgrades using autoupgrade.nix module
   services.autoUpgrade = {
     hostname = "${hostname}";
-  }
+  };
 
 }
