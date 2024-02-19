@@ -25,19 +25,9 @@ in
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      /etc/nixos/tailscale-authkey.nix
-      ../../modules/boot.nix # Common boot config options
-      ../../modules/default-packages.nix # Install and/or enable some standard packages like nano, ssh, etc...
-      ../../modules/docker.nix # Enable docker & docker-compose
-      ../../modules/flakes.nix # Enable Flakes
-      ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
-      ../../modules/optimizations.nix # Optimizations for nix-store
-      ../../modules/portainer.nix # Enable Portainer at startup
-      ../../modules/tailscale.nix # Common tailscale config options
-      ../../modules/user.nix # Ability to create a user through services.user
-      ../../modules/vars.nix # Import common variables
-      ../../modules/vm-options.nix # Some default options you should enable on VMs
-      ../../modules/vscode-server.nix # Enable VS Code server      
+      ../../modules/default.nix # Add default modules
+      ../../modules/portainer-server.nix # Enable Portainer Server at startup
+      ../../modules/vm-options.nix # Some default options you should enable on VMs      
     ];
 
   ############################
@@ -55,11 +45,6 @@ in
     user = "${username}";
     hashedPassword = "${hashedPassword}";
   };
-
-  # Tailscale Authkey
-  services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
-    ${config.tailscaleAuthKey}
-  '';
 
   ## Enable AutoUpgrades
   system.autoUpgrade = {

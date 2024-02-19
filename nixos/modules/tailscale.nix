@@ -1,10 +1,21 @@
 { config, pkgs, ... }:
 
 {
+
+  imports =
+    [ # Include tailscale authkey file, you need to put this manually in your nixos install
+      /etc/nixos/tailscale-authkey.nix
+    ];
+
   services.tailscale.enable = true;
   services.tailscale.extraUpFlags = [
     "--ssh"
   ];
+
+  # Tailscale Authkey
+  services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
+    ${config.tailscaleAuthKey}
+  '';
 
   systemd.services.tailscale-cert-renewal = {
     enable = true;

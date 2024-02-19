@@ -7,6 +7,9 @@
     nano
     wget
     pciutils
+    jq
+    iputils
+    neofetch
   ];
 
   # Enable the OpenSSH daemon.
