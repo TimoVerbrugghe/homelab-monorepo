@@ -40,25 +40,15 @@ in
   boot.extraModprobeConfig = extraModprobeConfig;
   hardware.cpu.intel.updateMicrocode = true;
 
-  # Users
+  # Set up single user using user.nix module
   services.user = {
     user = "${username}";
     hashedPassword = "${hashedPassword}";
   };
 
-  ## Enable AutoUpgrades
-  system.autoUpgrade = {
-    enable = true;
-    flake = "github:TimoVerbrugghe/homelab-monorepo?dir=nixos#${hostname}";
-    flags = [
-      "--update-input"
-      "nixpkgs"
-      "--no-write-lock-file"
-      "--refresh" # so that latest commits to github repo get downloaded
-      "--impure" # needed because I'm referencing a file with variables locally on the system, have to find a better way to deal with secrets
-    ];
-    dates = "05:00";
-    randomizedDelaySec = "45min";
-  };
+  ## Enable AutoUpgrades using autoupgrade.nix module
+  services.autoUpgrade = {
+    hostname = "${hostname}";
+  }
 
 }

@@ -13,6 +13,7 @@
       ./docker.nix # Enable docker & docker-compose
       ./flakes.nix # Enable Flakes
       ./intel-gpu-drivers.nix # Install Intel GPU drivers
+      ./autoupgrade.nix # Enable autoupgrade
     ];
 
 }
