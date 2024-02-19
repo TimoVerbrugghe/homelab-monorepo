@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  imports =
+    [ (modulesPath + "/profiles/qemu-guest.nix")
+    ];
+
   # Enable QEMU guest agent for better VM integration
   services.qemuGuest.enable = true;
   
