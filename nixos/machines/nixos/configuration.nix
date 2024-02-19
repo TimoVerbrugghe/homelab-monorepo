@@ -48,6 +48,7 @@ in
   boot.kernelParams = kernelParams;
   time.timeZone = "${timezone}";
   boot.extraModprobeConfig = extraModprobeConfig;
+  hardware.cpu.intel.updateMicrocode = true;
 
   # Users
   services.user = {
