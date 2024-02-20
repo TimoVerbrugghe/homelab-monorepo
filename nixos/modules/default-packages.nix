@@ -12,6 +12,10 @@
     neofetch
   ];
 
+	# Allow firmware even with license
+	hardware.enableRedistributableFirmware = true;
+	hardware.enableAllFirmware = true;
+
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
