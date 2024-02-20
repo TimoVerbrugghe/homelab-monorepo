@@ -1,46 +1,6 @@
 version: "3.8"
 
 services:
-  speedtest-tracker:
-    container_name: speedtest-tracker
-    restart: always
-    image: ghcr.io/alexjustesen/speedtest-tracker:v0.11.17
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=Europe/Brussels
-      - DB_CONNECTION=pgsql
-      - DB_HOST=speedtest-tracker-postgres
-      - DB_PORT=5432
-      - DB_DATABASE=${SPEEDTEST_TRACKER_POSTGRES_DB}
-      - DB_USERNAME=${SPEEDTEST_TRACKER_POSTGRES_USER}
-      - DB_PASSWORD=${SPEEDTEST_TRACKER_POSTGRES_PASSWORD}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - speedtest-tracker:/config
-    labels:
-      traefik.http.routers.speedtest-tracker.entrypoints: https
-      traefik.http.services.speedtest-tracker.loadbalancer.server.port: 80
-      traefik.http.routers.speedtest-tracker.middlewares: keycloak-auth@file
-      traefik.http.routers.speedtest-tracker.rule: Host(`speedtest.home.timo.be`) || Host(`speedtest.timo.be`)
-
-  speedtest-tracker-postgres:
-    container_name: speedtest-tracker-postgres
-    image: postgres:15
-    restart: always
-    networks:
-      - dockerproxy
-    environment:
-      - POSTGRES_DB=${SPEEDTEST_TRACKER_POSTGRES_DB}
-      - POSTGRES_USER=${SPEEDTEST_TRACKER_POSTGRES_USER}
-      - POSTGRES_PASSWORD=${SPEEDTEST_TRACKER_POSTGRES_PASSWORD}
-    volumes:
-      - speedtest-tracker-postgres:/var/lib/postgresql/data
-    labels:
-      traefik.enable: false
-
   localspeedtest:
     restart: always
     container_name: localspeedtest
@@ -153,21 +113,6 @@ services:
       traefik.http.services.uptime-kuma.loadbalancer.server.port: 3001
       traefik.http.routers.uptime-kuma.middlewares: keycloak-auth@file    
     
-  homarr:
-    container_name: homarr
-    image: ghcr.io/ajnart/homarr:latest
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    volumes:
-      - homarr-config:/app/data/configs
-      - homarr-icons:/app/public/icons
-    labels:
-      traefik.http.routers.homarr.entrypoints: https
-      traefik.http.services.homarr.loadbalancer.server.port: 7575
-      traefik.http.routers.homarr.middlewares: keycloak-auth@file
-      traefik.http.routers.homarr.rule: Host(`home.timo.be`) || Host(`www.timo.be`) || Host(`timo.be`)
-
   netbootxyz:
     image: ghcr.io/netbootxyz/netbootxyz
     container_name: netbootxyz
@@ -178,14 +123,6 @@ services:
     volumes:
       - netbootxyz-config:/config
       - netbootxyz-assets:/assets
-    labels:
-      traefik.enable: false
-
-  airconnect:
-    network_mode: host
-    image: 1activegeek/airconnect
-    container_name: airconnect
-    restart: always
     labels:
       traefik.enable: false
 
@@ -200,12 +137,7 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/other/bitwarden-export"
   webtop:
-  code-server:
-  homarr-config:
-  homarr-icons:
   uptimekuma:
-  speedtest-tracker:
-  speedtest-tracker-postgres:
   netbootxyz-config:
   netbootxyz-assets:
 
