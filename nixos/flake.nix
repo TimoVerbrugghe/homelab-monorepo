@@ -21,6 +21,13 @@
           ./machines/nixos/configuration.nix
         ];
       };
+      iso-autoinstall = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs;};
+        modules = [
+          ./iso-autoinstall/configuration.nix
+        ];
+      };
     };
   };
-}
+};
