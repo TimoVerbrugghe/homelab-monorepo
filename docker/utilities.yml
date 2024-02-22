@@ -155,6 +155,7 @@ volumes:
   uptimekuma:
   netbootxyz-config:
   netbootxyz-assets:
+  iventoy-config:
   isos:
     driver: local
     driver_opts:
