@@ -126,6 +126,21 @@ services:
     labels:
       traefik.enable: false
 
+  iventoy:
+    image: ziggyds/iventoy
+    container_name: iventory
+    restart: always
+    privileged: true
+    networks:
+      dockervlan:
+        ipv4_address: ${IVENTOY_IP_ADDRESS}
+    volumes:
+      - iventoy-config:/app/data
+      - iventoy-log:/app/log
+      - isos:/app/iso
+    labels:
+      traefik.enable: false
+
 volumes:
   scanservjs-scans:
   scanservjs-config:
@@ -140,6 +155,12 @@ volumes:
   uptimekuma:
   netbootxyz-config:
   netbootxyz-assets:
+  isos:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/isos"
 
 networks:
   dockerproxy:

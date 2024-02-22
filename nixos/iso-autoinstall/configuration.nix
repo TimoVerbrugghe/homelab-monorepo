@@ -21,6 +21,12 @@
 	hardware.enableRedistributableFirmware = true;
 	hardware.enableAllFirmware = true;
 
+  # Filesystem setup
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/nixos";
+    fsType = "btrfs";
+  };
+
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
@@ -37,12 +43,25 @@
 
   # Enable git & sgdisk for partitioning and installing from github flakes later
   environment.systemPackages = with pkgs; [
+    nano
     git
-    parted # check if this can be removed
+    gptfdisk
   ];
 
   # Enable QEMU guest agent for better VM integration
   services.qemuGuest.enable = true;
+
+  # Create user that can be used after install
+  users.mutableUsers = false;
+  users.users = {
+
+    nixos = {
+      extraGroups = [ "wheel" ];
+      isNormalUser = true;
+      hashedPassword = "$y$j9T$C0wb1ID4TZ6AG28ZPpDJN.$hdlvhNBwHMiutJXOavXlGB38qz93yA3CzitJv/DVDx9";
+      openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
+    };
+  };
 
   # ISO Image options
   isoImage.compressImage = false;
@@ -76,39 +95,33 @@
     script = ''
       set -euxo pipefail
 
-      # If the partitions exist already as-is, parted might error out
-      # telling that it can't communicate changes to the kernel...
-      wipefs -fa /dev/sda
+      # Wipe disk and create 3 partitions
+      sgdisk --zap-all /dev/sda
+      sgdisk --new=1:0:+512M --typecode=1:ef00 /dev/sda
+      sgdisk --new=2:0:0 --typecode=2:8300 /dev/sda
+      sgdisk --new=3:0:+4G --typecode=3:8200 /dev/sda
 
-      # These are the exact steps from
-      # https://nixos.org/nixos/manual/index.html#sec-installation-summary
-      # needed to add a few -s (parted) and -F (mkfs.ext4) etc. flags to
-      # supress prompts
-      parted -s /dev/sda -- mklabel gpt
-      parted -s /dev/sda -- mkpart primary 512MiB -8GiB
-      parted -s /dev/sda -- mkpart primary linux-swap -8GiB 100%
-      parted -s /dev/sda -- mkpart ESP fat32 1MiB 512MiB
-      parted -s /dev/sda -- set 3 boot on
-
-      mkfs.ext4 -F -L nixos /dev/sda1
-      mkswap -L swap /dev/sda2
-      swapon /dev/sda2
-      echo "y" | mkfs.fat -F 32 -n boot /dev/sda3
+      echo "y" | mkfs.fat -F 32 -n boot /dev/sda1
+      mkfs.btrfs -F -L nixos /dev/sda2
+      mkswap -L /dev/sda3
+      swapon /dev/sda3
 
       # Labels do not appear immediately, so wait a moment
       sleep 5
 
+      # Mount partitions for installation
       mount /dev/disk/by-label/nixos /mnt
       mkdir -p /mnt/boot
       mount /dev/disk/by-label/boot /mnt/boot
 
+      # Generate nixos configuration and hardware configuration
       nixos-generate-config --root /mnt
 
-      # nixos-install will run "nix build --store /mnt ..." which won't be able
-      # to see what we have in the installer nix store, so copy everything
-      # needed over.
-      nix build -f '<nixpkgs/nixos>' system -I "nixos-config=/mnt/etc/nixos/configuration.nix" -o /out
-      nix copy --no-check-sigs --to local?root=/mnt /out
+      # # nixos-install will run "nix build --store /mnt ..." which won't be able
+      # # to see what we have in the installer nix store, so copy everything
+      # # needed over.
+      # nix build -f '<nixpkgs/nixos>' system -I "nixos-config=/mnt/etc/nixos/configuration.nix" -o /out
+      # nix copy --no-check-sigs --to local?root=/mnt /out
 
       ${installBuild.nixos-install}/bin/nixos-install --no-root-passwd
       reboot
