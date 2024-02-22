@@ -128,7 +128,7 @@ services:
 
   iventoy:
     image: ziggyds/iventoy
-    container_name: iventory
+    container_name: iventoy
     restart: always
     privileged: true
     networks:
