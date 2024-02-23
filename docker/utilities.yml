@@ -86,11 +86,13 @@ services:
     image: lscr.io/linuxserver/webtop:latest
     container_name: webtop
     restart: unless-stopped
+    security_opt:
+      - seccomp=unconfined
     networks:
       - dockerproxy
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
+      - PUID=1000
+      - PGID=1000
       - TZ=Europe/Brussels
     volumes:
       - webtop:/config
