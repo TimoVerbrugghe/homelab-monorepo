@@ -9,7 +9,6 @@ let
   hostname = "aelita";
   username = "aelita";
   hashedPassword = "$y$j9T$3CG7KE5qgfuBLRxsUIgN8/$DG1HbNtEa9VA.oM6ZFyCicO9uJOSwFl.nJo0HNbtIv5";
-  timezone = "Europe/Brussels";
   kernelParams = [
   ];
   extraModprobeConfig = ''
@@ -29,10 +28,8 @@ in
   ############################
   ## Host Specific Settings ##
   ############################
-  system.stateVersion = "23.11";
   networking.hostName = "${hostname}"; # Define your hostname.
   boot.kernelParams = kernelParams;
-  time.timeZone = "${timezone}";
   boot.extraModprobeConfig = extraModprobeConfig;
   hardware.cpu.amd.updateMicrocode = true;
 

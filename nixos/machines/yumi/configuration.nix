@@ -9,7 +9,6 @@ let
   hostname = "yumi";
   username = "yumi";
   hashedPassword = "$y$j9T$Mh0gtGs5dzw.7oMTrWrmV.$7QTuj6tpMnkTmlVGzas/vEh9sdUzezyiv4CS.f8M6I2";
-  timezone = "Europe/Brussels";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
@@ -33,10 +32,8 @@ in
   ############################
   ## Host Specific Settings ##
   ############################
-  system.stateVersion = "23.11";
   networking.hostName = "${hostname}"; # Define your hostname.
   boot.kernelParams = kernelParams;
-  time.timeZone = "${timezone}";
   boot.extraModprobeConfig = extraModprobeConfig;
   hardware.cpu.intel.updateMicrocode = true;
 

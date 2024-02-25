@@ -9,7 +9,6 @@ let
   hostname = "francis";
   username = "francis";
   hashedPassword = "$y$j9T$9Ek82Q9I2UVzBr5ltiXe81$ecbngo9YPvlENaM0gDRJH0P8dgB7X5RrbAbZKsD5Gs4";
-  timezone = "Europe/Brussels";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
@@ -33,10 +32,8 @@ in
   ############################
   ## Host Specific Settings ##
   ############################
-  system.stateVersion = "23.11";
   networking.hostName = "${hostname}"; # Define your hostname.
   boot.kernelParams = kernelParams;
-  time.timeZone = "${timezone}";
   boot.extraModprobeConfig = extraModprobeConfig;
   hardware.cpu.intel.updateMicrocode = true;
 

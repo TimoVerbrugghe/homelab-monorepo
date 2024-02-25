@@ -9,7 +9,6 @@ let
   hostname = "nixos";
   username = "nixos";
   hashedPassword = "$y$j9T$C0wb1ID4TZ6AG28ZPpDJN.$hdlvhNBwHMiutJXOavXlGB38qz93yA3CzitJv/DVDx9";
-  timezone = "Europe/Brussels";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
@@ -33,10 +32,8 @@ in
   ############################
   ## Host Specific Settings ##
   ############################
-  system.stateVersion = "23.11";
   networking.hostName = "${hostname}"; # Define your hostname.
   boot.kernelParams = kernelParams;
-  time.timeZone = "${timezone}";
   boot.extraModprobeConfig = extraModprobeConfig;
   hardware.cpu.intel.updateMicrocode = true;
 
