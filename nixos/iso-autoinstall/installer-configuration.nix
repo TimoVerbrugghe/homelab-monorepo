@@ -20,7 +20,7 @@
 
 
   # When generating the nixos-config for the system, use the install-configuration.nix file
-  system.nixos-generate-config.configuration = builtins.readFile ./install-configuration;
+  system.nixos-generate-config.configuration = builtins.readFile ./install-configuration.nix;
 
   systemd.services.installer = {
     description = "Unattended NixOS installer";
