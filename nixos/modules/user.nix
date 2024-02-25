@@ -1,11 +1,10 @@
-{ inputs, config, lib, pkgs, ... }:
+{ inputs, config, lib, pkgs, ssh-keys, ... }:
 
 with lib;
 with types;
 
 let
   cfg = config.services.user;
-  inherit (inputs) ssh-keys;
 in
 
 {
