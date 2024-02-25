@@ -23,14 +23,12 @@
   ];
 
   # ISO Image options
-  isoImage.compressImage = false;
+  isoImage.squashfsCompression = "gzip -Xcompression-level 1";
   isoImage.isoBaseName = "nixos-auto-installer";
   isoImage.isoName = "${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
   isoImage.makeEfiBootable = true;
   isoImage.makeUsbBootable = true;
   isoImage.volumeID = "NIXOS_ISO";
-  isoImage.storeContents = [ installBuild.toplevel ];
-  isoImage.includeSystemBuildDependencies = true; # unconfirmed if this is really needed
 
 
   # When generating the nixos-config for the system, use the install-configuration.nix file
