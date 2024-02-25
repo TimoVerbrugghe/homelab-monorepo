@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ssh-keys, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # Bootloader options
@@ -71,7 +71,6 @@
       extraGroups = [ "wheel" ];
       isNormalUser = true;
       password = "nixos";
-      openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
     };
 
   };
