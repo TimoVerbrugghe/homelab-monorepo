@@ -3,18 +3,6 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    # Import minimal ISO CD
-    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-
-    # Import tools (needed for certain options such as system.nixos-generate-config)
-    "${inputs.nixpkgs}/nixos/modules/installer/tools/tools.nix"
-
-    # Provide an initial copy of the NixOS channel so that the user
-    # doesn't need to run "nix-channel --update" first.
-    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
-  ];
-
   # Enable git & sgdisk for partitioning and installing from github flakes later
   environment.systemPackages = with pkgs; [
     nano
