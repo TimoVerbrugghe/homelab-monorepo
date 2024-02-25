@@ -53,7 +53,6 @@ in
   networking = {
     usePredictableInterfaceNames = false;
     defaultGateway = "10.10.10.1";
-    nameservers = [ "8.8.8.8" ];
     interfaces = {
       eth0 = {
         ipv4.addresses  = [
