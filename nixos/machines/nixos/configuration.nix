@@ -48,4 +48,14 @@ in
     hostname = "${hostname}";
   };
 
+  ## Networking setup
+  networking = {
+    usePredictableInterfacenames = false;
+    interfaces.eth0.ip4 = [{
+        address= "10.10.10.23";
+        prefixLength = 24;
+    }];
+    defaultGateway = "10.10.10.1";
+    nameservers = [ "8.8.8.8" ];
+  };
 }
