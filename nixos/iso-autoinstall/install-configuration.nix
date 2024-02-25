@@ -1,7 +1,10 @@
-{ config, lib, pkgs, ssh-keys, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # Bootloader options
+  boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" ];
+  boot.kernelModules = [ "kvm-intel" ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest; # Making sure we're running latest linux kernel
@@ -27,10 +30,11 @@
 
   # Console, layout options
   i18n.defaultLocale = "nl_BE.UTF-8";
-  console.keyMap = "nl-be";
+  console.keyMap = "be-latin1";
   time.timeZone = "Europe/Brussels";
 
-  # Making sure DNS works
+  # Networking setup
+  networking.useDHCP = lib.mkDefault true;
   networking.nameservers = [
     "1.1.1.1"
     "8.8.8.8"
