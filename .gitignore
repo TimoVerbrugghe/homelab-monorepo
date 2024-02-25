@@ -10,3 +10,4 @@ ansible/inventory/group_vars/*.yml
 terraform/environments/proxmox.tfvars
 *.rom
 nixos/variables.nix
+.DS_Store

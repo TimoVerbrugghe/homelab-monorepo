@@ -14,6 +14,7 @@
       ./flakes.nix # Enable Flakes
       ./intel-gpu-drivers.nix # Install Intel GPU drivers
       ./autoupgrade.nix # Enable autoupgrade
+      ./networking.nix # Some default networking options
     ];
 
 }

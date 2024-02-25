@@ -1,11 +1,11 @@
-{ config, pkgs, lib, ssh-keys, ... }:
+{ config, lib, pkgs, ssh-keys, ... }:
 
 {
   # Bootloader options
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest; # Making sure we're running latest linux kernel
-
+    
 	# Allow firmware even with license
 	hardware.enableRedistributableFirmware = true;
 	hardware.enableAllFirmware = true;

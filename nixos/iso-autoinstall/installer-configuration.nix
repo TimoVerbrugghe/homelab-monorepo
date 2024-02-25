@@ -10,6 +10,13 @@
     gptfdisk
   ];
 
+  # Making sure DNS works
+  networking.nameservers = [
+    "1.1.1.1"
+    "8.8.8.8"
+    "8.8.4.4"
+  ];
+
   # ISO Image options
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
   isoImage.isoBaseName = "nixos-auto-installer";
@@ -17,7 +24,6 @@
   isoImage.makeEfiBootable = true;
   isoImage.makeUsbBootable = true;
   isoImage.volumeID = "NIXOS_ISO";
-
 
   # When generating the nixos-config for the system, use the install-configuration.nix file
   system.nixos-generate-config.configuration = builtins.readFile ./install-configuration.nix;
@@ -47,14 +53,14 @@
       # Wipe disk and create 3 partitions
       sgdisk --zap-all /dev/sda
       sgdisk --new=1:0:+512M --typecode=1:ef00 /dev/sda
-      sgdisk --new=2:0:0 --typecode=2:8300 /dev/sda
-      sgdisk --new=3:0:+4G --typecode=3:8200 /dev/sda
+      sgdisk --new=2:0:+4G --typecode=2:8200 /dev/sda
+      sgdisk --new=3:0:0 --typecode=3:8300 /dev/sda
 
       # Format the 3 partitions with specific labels
-      echo "y" | mkfs.fat -F 32 -n boot /dev/sda1
-      mkfs.btrfs -F -L nixos /dev/sda2
-      mkswap -L swap /dev/sda3
-      swapon /dev/sda3
+      echo "y" | mkfs.fat -F 32 -n BOOT /dev/sda1
+      mkswap -L swap /dev/sda2
+      swapon /dev/sda2
+      mkfs.btrfs -f -L nixos /dev/sda3
 
       # Labels do not appear immediately, so wait a moment
       sleep 5
@@ -62,7 +68,7 @@
       # Mount partitions for installation
       mount /dev/disk/by-label/nixos /mnt
       mkdir -p /mnt/boot
-      mount /dev/disk/by-label/boot /mnt/boot
+      mount /dev/disk/by-label/BOOT /mnt/boot
 
       # Generate nixos configuration and hardware configuration
       nixos-generate-config --root /mnt
