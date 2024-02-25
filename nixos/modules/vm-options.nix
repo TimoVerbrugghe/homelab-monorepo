@@ -1,11 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixpkgs, ... }:
 
 {
   imports =
     [ 
-      (nixpkgs + "/nixos/modules/profiles/qemu-guest.nix")
+      (nixpkgs + /nixos/modules/profiles/qemu-guest.nix)
     ];
-
+    
   # Enable QEMU guest agent for better VM integration
   services.qemuGuest.enable = true;
   
