@@ -50,7 +50,7 @@ in
 
   ## Networking setup
   networking = {
-    usePredictableInterfacenames = false;
+    usePredictableInterfaceNames = false;
     interfaces.eth0.ip4 = [{
         address= "10.10.10.23";
         prefixLength = 24;
