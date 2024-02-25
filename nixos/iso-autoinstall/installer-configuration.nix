@@ -86,12 +86,6 @@
       # Generate nixos configuration and hardware configuration
       nixos-generate-config --root /mnt
 
-      # # nixos-install will run "nix build --store /mnt ..." which won't be able
-      # # to see what we have in the installer nix store, so copy everything
-      # # needed over.
-      # nix build -f '<nixpkgs/nixos>' system -I "nixos-config=/mnt/etc/nixos/configuration.nix" -o /out
-      # nix copy --no-check-sigs --to local?root=/mnt /out
-
       nixos-install --no-root-passwd
       reboot
     '';
