@@ -18,7 +18,7 @@
       ./git.nix # Set git username and email
       ./firmware.nix # Set firmware options
       ./ssh.nix # Enable & set SSH options
-      ./console-options #Sets some default console layout and keyboard options
+      ./console-options.nix #Sets some default console layout and keyboard options
     ];
 
 }
