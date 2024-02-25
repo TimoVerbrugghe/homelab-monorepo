@@ -30,6 +30,13 @@
   console.keyMap = "nl-be";
   time.timeZone = "Europe/Brussels";
 
+  # Making sure DNS works
+  networking.nameservers = [
+    "1.1.1.1"
+    "8.8.8.8"
+    "8.8.4.4"
+  ];
+
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
@@ -59,7 +66,7 @@
     nixos = {
       extraGroups = [ "wheel" ];
       isNormalUser = true;
-      hashedPassword = "$y$j9T$C0wb1ID4TZ6AG28ZPpDJN.$hdlvhNBwHMiutJXOavXlGB38qz93yA3CzitJv/DVDx9";
+      password = "nixos";
       openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
     };
 
