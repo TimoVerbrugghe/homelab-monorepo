@@ -60,6 +60,6 @@ in
           { address = "10.10.10.23"; prefixLength = 24; }
         ]
       }
-    }
+    };
   };
 }
