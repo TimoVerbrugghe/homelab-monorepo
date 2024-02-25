@@ -9,12 +9,15 @@
       ./vars.nix # Import common variables
       ./optimizations.nix # Optimizations for nix-store
       ./boot.nix # Common boot config options
-      ./default-packages.nix # Install and/or enable some standard packages like nano, ssh, etc...
+      ./packages.nix # Install and/or enable some standard packages like nano, ssh, etc...
       ./docker.nix # Enable docker & docker-compose
       ./flakes.nix # Enable Flakes
       ./intel-gpu-drivers.nix # Install Intel GPU drivers
       ./autoupgrade.nix # Enable autoupgrade
       ./networking.nix # Some default networking options
+      ./git.nix # Set git username and email
+      ./firmware.nix # Set firmware options
+      ./ssh.nix # Enable & set SSH options
     ];
 
 }
