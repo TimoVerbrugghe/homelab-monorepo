@@ -17,7 +17,7 @@
   };
 
   fileSystems."/boot" ={ 
-    device = "/dev/disk/by-label/boot";
+    device = "/dev/disk/by-label/BOOT";
     fsType = "vfat";
   };
 
@@ -62,6 +62,6 @@
       hashedPassword = "$y$j9T$C0wb1ID4TZ6AG28ZPpDJN.$hdlvhNBwHMiutJXOavXlGB38qz93yA3CzitJv/DVDx9";
       openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
     };
-    
+
   };
 }
