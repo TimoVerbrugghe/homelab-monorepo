@@ -25,7 +25,7 @@
         system = "x86_64-linux";
         specialArgs = {inherit inputs;};
         modules = [
-          ./iso-autoinstall/configuration.nix
+          ./iso-autoinstall/installer-configuration.nix
         ];
       };
     };

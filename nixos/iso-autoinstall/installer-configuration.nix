@@ -7,39 +7,13 @@
     # Import minimal ISO CD
     <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix>
 
+    # Import tools (needed for certain options such as system.nixos-generate-config)
+    <nixpkgs/nixos/modules/installer/tools/tools.nix>
+
     # Provide an initial copy of the NixOS channel so that the user
     # doesn't need to run "nix-channel --update" first.
     <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
   ];
-
-  # Bootloader options
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest; # Making sure we're running latest linux kernel
-
-	# Allow firmware even with license
-	hardware.enableRedistributableFirmware = true;
-	hardware.enableAllFirmware = true;
-
-  # Filesystem setup
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "btrfs";
-  };
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  # configure proprietary drivers
-  nixpkgs.config.allowUnfree = true;
-
-  ## Enable Flakes
-  nix = {
-    package = pkgs.nixFlakes;
-    extraOptions = ''
-        experimental-features = nix-command flakes
-    '';
-  };
 
   # Enable git & sgdisk for partitioning and installing from github flakes later
   environment.systemPackages = with pkgs; [
@@ -47,21 +21,6 @@
     git
     gptfdisk
   ];
-
-  # Enable QEMU guest agent for better VM integration
-  services.qemuGuest.enable = true;
-
-  # Create user that can be used after install
-  users.mutableUsers = false;
-  users.users = {
-
-    nixos = {
-      extraGroups = [ "wheel" ];
-      isNormalUser = true;
-      hashedPassword = "$y$j9T$C0wb1ID4TZ6AG28ZPpDJN.$hdlvhNBwHMiutJXOavXlGB38qz93yA3CzitJv/DVDx9";
-      openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
-    };
-  };
 
   # ISO Image options
   isoImage.compressImage = false;
@@ -72,6 +31,10 @@
   isoImage.volumeID = "NIXOS_ISO";
   isoImage.storeContents = [ installBuild.toplevel ];
   isoImage.includeSystemBuildDependencies = true; # unconfirmed if this is really needed
+
+
+  # When generating the nixos-config for the system, use the install-configuration.nix file
+  system.nixos-generate-config.configuration = builtins.readFile ./install-configuration;
 
   systemd.services.installer = {
     description = "Unattended NixOS installer";
@@ -101,9 +64,10 @@
       sgdisk --new=2:0:0 --typecode=2:8300 /dev/sda
       sgdisk --new=3:0:+4G --typecode=3:8200 /dev/sda
 
+      # Format the 3 partitions with specific labels
       echo "y" | mkfs.fat -F 32 -n boot /dev/sda1
       mkfs.btrfs -F -L nixos /dev/sda2
-      mkswap -L /dev/sda3
+      mkswap -L swap /dev/sda3
       swapon /dev/sda3
 
       # Labels do not appear immediately, so wait a moment
@@ -123,8 +87,9 @@
       # nix build -f '<nixpkgs/nixos>' system -I "nixos-config=/mnt/etc/nixos/configuration.nix" -o /out
       # nix copy --no-check-sigs --to local?root=/mnt /out
 
-      ${installBuild.nixos-install}/bin/nixos-install --no-root-passwd
+      nixos-install --no-root-passwd
       reboot
     '';
   };
 }
+
