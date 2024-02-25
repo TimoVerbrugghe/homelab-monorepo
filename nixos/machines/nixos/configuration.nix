@@ -49,15 +49,17 @@ in
   };
 
   ## Networking setup
+
   networking = {
     usePredictableInterfaceNames = false;
-    interfaces.eth0.ip4.addresses = [
-      {
-        address = "10.10.10.23";
-        prefixLength = 24;
-      }
-    ];
     defaultGateway = "10.10.10.1";
     nameservers = [ "8.8.8.8" ];
-  };
+    interfaces = {
+      eth0 = {
+        ipv4.addresses  = [
+          { address = "10.10.10.23"; prefixLength = 24; }
+        ]
+      }
+    }
+  }
 }
