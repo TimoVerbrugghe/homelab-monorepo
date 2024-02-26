@@ -26,7 +26,10 @@ in
       ./hardware-configuration.nix
       ../../modules/default.nix # Add default modules
       ../../modules/portainer-server.nix # Enable Portainer Server at startup
-      ../../modules/vm-options.nix # Some default options you should enable on VMs      
+      ../../modules/vm-options.nix # Some default options you should enable on VMs
+      ../../modules/vscode-server.nix # Enable VS Code server
+      ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey
+      ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
     ];
 
   ############################
