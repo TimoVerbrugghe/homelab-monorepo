@@ -9,6 +9,11 @@ in
 
 {
 
+  imports =[ 
+      # Include tailscale authkey file, you need to put this manually in your nixos install
+      /etc/nixos/tailscale-authkey.nix
+  ];
+
   options.services.tailscale = {
     hostname = mkOption {
       type = types.str;
@@ -16,11 +21,6 @@ in
   };
 
   config = {
-    imports =
-      [ # Include tailscale authkey file, you need to put this manually in your nixos install
-        /etc/nixos/tailscale-authkey.nix
-      ];
-
     services.tailscale.enable = true;
     services.tailscale.extraUpFlags = [
       "--ssh"
