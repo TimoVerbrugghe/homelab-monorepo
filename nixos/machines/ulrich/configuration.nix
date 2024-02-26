@@ -6,10 +6,9 @@
 
 let 
 
-  hostname = "nixos";
-  username = "nixos";
-  hashedPassword = "$y$j9T$C0wb1ID4TZ6AG28ZPpDJN.$hdlvhNBwHMiutJXOavXlGB38qz93yA3CzitJv/DVDx9";
-  ipAddress = "10.10.10.23";
+  hostname = "ulrich";
+  username = "ulrich";
+  hashedPassword = "$y$j9T$Sr3PItfDksWEv1ZtgLRD/0$0ssp/a9HaTHOtnO.KTMqkkpBv7G4aydla2jaFRtZbTC";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
@@ -26,8 +25,8 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ../../modules/default.nix # Add default modules
-      ../../modules/portainer-server.nix # Enable Portainer Server at startup
-      ../../modules/vm-options.nix # Some default options you should enable on VMs
+      ../../modules/portainer-agent.nix # Enable Portainer Server at startup
+      ../../modules/vm-options.nix # Some default options you should enable on VMs      
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey
       ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
@@ -52,41 +51,4 @@ in
     hostname = "${hostname}";
   };
 
-  ## Passthrough hostname for tailscale
-  services.tailscale = {
-    hostname = "${hostname}";
-  };
-
-  ## Networking setup
-
-  networking = {
-
-		macvlans = {
-      macvlan0 = {
-			  interface = "eth0";
-			  mode = "bridge";
-		  };
-    };
-
-    usePredictableInterfaceNames = false;
-    defaultGateway = "${config.vars.defaultGateway}";
-    interfaces = {
-      eth0 = {
-        ipv4.addresses  = [
-          { address = "${ipAddress}"; prefixLength = 24; }
-        ];
-      };
-			
-      macvlan0 = {
-				ipv4.addresses =  [ 
-					{ address = "10.10.10.0"; prefixLength = 24; } 
-				];
-				ipv4.routes = [
-					{ address = "10.10.10.26"; prefixLength = 24; }
-				];
-			};
-    };
-
-
-  };
 }

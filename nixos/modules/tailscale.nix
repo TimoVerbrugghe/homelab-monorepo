@@ -1,6 +1,16 @@
 { config, pkgs, ... }:
 
+let
+  cfg = config.services.tailscale;
+in
+
 {
+
+  options.services.tailscale = {
+    hostname = mkOption {
+      type = types.str;
+    };
+  };
 
   imports =
     [ # Include tailscale authkey file, you need to put this manually in your nixos install
@@ -22,7 +32,7 @@
     description = "Renew Tailscale certificates weekly";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.tailscale}/bin/tailscale cert ${config.vars.tailscaleDomain}";
+      ExecStart = "${pkgs.tailscale}/bin/tailscale cert ${cfg.hostname}.${config.vars.tailscaleDomain}";
     };
     wantedBy = [ "multi-user.target" ];
     after = ["network-online.target"];
