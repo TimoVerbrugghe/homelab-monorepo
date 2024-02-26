@@ -4,6 +4,6 @@ ansible-playbook -vvv \
      -e "tailscaleAuthkey=" \
      -e "nixosFlake=nixos" \
      -e "ansible_username=nixos" \
-     -e "ansible_pass=nixos" \
-     -e "become_pass=nixos" \
+     -e "ansible_password=nixos" \
+     -e "ansible_become_password=nixos" \
      ../playbooks/configure-nixos.yml
