@@ -1,12 +1,32 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <tailscaleauthkey> <nixosFlake>"
-  exit 1
+# Default values
+tailscaleauthkey=""
+nixosFlake=""
+
+# Parse command-line arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --tailscaleauthkey)
+            tailscaleauthkey="$2"
+            shift 2
+            ;;
+        --nixosFlake)
+            nixosFlake="$2"
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+done
+
+# Check if required arguments are provided
+if [ -z "$tailscaleauthkey" ] || [ -z "$nixosFlake" ]; then
+    echo "Usage: $0 --tailscaleauthkey <tailscaleauthkey> --nixosFlake <nixosFlake>"
+    exit 1
 fi
-
-tailscaleauthkey="$1"
-nixosFlake="$2"
 
 # Create tailscale-authkey.nix file
 cat > /etc/nixos/tailscale-authkey.nix << EOF
