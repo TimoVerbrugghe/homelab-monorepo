@@ -50,11 +50,6 @@ in
 
   ## Networking setup
 
-networking.macvlans.mv-eth1-host = {
-          interface = "eth1";
-          mode = "bridge";
-        };
-
   networking = {
     usePredictableInterfaceNames = false;
     defaultGateway = "10.10.10.1";
