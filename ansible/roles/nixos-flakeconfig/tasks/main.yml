@@ -1,14 +1,5 @@
-- name: Create NixOS tailscale authkey configuration file
-  ansible.builtin.template:
-    src: "tailscale-authkey.nix.j2"
-    dest: "/etc/nixos/tailscale-authkey.nix"
-    owner: root
-    group: root
-    mode: 0644
-
-- name: Run NixOS rebuild command
-  ansible.builtin.shell: 
-    msg: "nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#{{ nixosFlake }} --refresh --impure --no-write-lock-file"
+- name: Run bootstrap script
+  ansible.builtin.script: ../templates/bootstrap-script.sh --tailscaleauthkey {{ tailscaleAuthkey }} --nixosFlake {{ nixosFlake }}
 
 - name: Reboot the machine
   reboot:
