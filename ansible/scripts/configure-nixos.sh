@@ -5,6 +5,5 @@ ansible-playbook -vvv \
      -e "nixosFlake=nixos" \
      -e "ansible_username=nixos" \
      -e "ansible_password=nixos" \
-     -e "ansible_become_user=nixos" \
      -e "ansible_become_password=nixos" \
      ../playbooks/configure-nixos.yml
