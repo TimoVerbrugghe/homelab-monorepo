@@ -50,6 +50,11 @@ in
 
   ## Networking setup
 
+networking.macvlans.mv-eth1-host = {
+          interface = "eth1";
+          mode = "bridge";
+        };
+
   networking = {
     usePredictableInterfaceNames = false;
     defaultGateway = "10.10.10.1";
@@ -59,6 +64,21 @@ in
           { address = "10.10.10.23"; prefixLength = 24; }
         ];
       };
+			macvlan0 = {
+				ipv4.adresses =  [ 
+					{ address = "10.10.10.0"; prefixLength = 24; } 
+				];
+				ipv4.routes = [
+					{ address = "10.10.10.22"; }
+				];
+			};
     };
+
+		macvlans.macvlan0 = {
+			interface = "eth0";
+			mode = "bridge";
+		};
+
+
   };
 }
