@@ -52,10 +52,12 @@ in
 
   networking = {
 
-		macvlans.macvlan0 = {
-			interface = "eth0";
-			mode = "bridge";
-		};
+		macvlans = {
+      macvlan0 = {
+			  interface = "eth0";
+			  mode = "bridge";
+		  };
+    };
 
     usePredictableInterfaceNames = false;
     defaultGateway = "10.10.10.1";
@@ -65,7 +67,8 @@ in
           { address = "10.10.10.23"; prefixLength = 24; }
         ];
       };
-			macvlan0 = {
+			
+      macvlan0 = {
 				ipv4.adresses =  [ 
 					{ address = "10.10.10.0"; prefixLength = 24; } 
 				];
@@ -73,6 +76,7 @@ in
 					{ address = "10.10.10.22"; }
 				];
 			};
+    
     };
 
 
