@@ -5,8 +5,6 @@ with types;
 
 {
 
-  
-
   options = {
     vars = mkOption {
       type = attrs;

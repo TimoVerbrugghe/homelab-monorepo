@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+with lib;
+with types;
+
 let
   cfg = config.services.tailscale;
 in
