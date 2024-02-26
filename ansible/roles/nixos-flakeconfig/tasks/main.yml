@@ -1,5 +1,5 @@
 - name: Run bootstrap script
-  ansible.builtin.script: ../templates/bootstrap-script.sh --tailscaleauthkey {{ tailscaleAuthkey }} --nixosFlake {{ nixosFlake }}
+  ansible.builtin.script: ../templates/bootstrap-script.sh --tailscaleauthkey "{{ tailscaleAuthkey }}" --nixosFlake "{{ nixosFlake }}"
 
 - name: Reboot the machine
   reboot:
