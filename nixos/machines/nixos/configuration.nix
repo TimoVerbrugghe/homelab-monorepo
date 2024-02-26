@@ -51,6 +51,12 @@ in
   ## Networking setup
 
   networking = {
+
+		macvlans.macvlan0 = {
+			interface = "eth0";
+			mode = "bridge";
+		};
+
     usePredictableInterfaceNames = false;
     defaultGateway = "10.10.10.1";
     interfaces = {
@@ -68,11 +74,6 @@ in
 				];
 			};
     };
-
-		macvlans.macvlan0 = {
-			interface = "eth0";
-			mode = "bridge";
-		};
 
 
   };
