@@ -34,36 +34,6 @@ services:
     labels:
       traefik.enable: false
 
-  tailscale:
-    image: tailscale/tailscale
-    container_name: tailscale
-    restart: always
-    network_mode: host
-    privileged: true
-    volumes:
-      - /var/lib:/var/lib
-      - /dev/net/tun:/dev/net/tun
-      - tailscale:/state
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY}
-      - TS_ROUTES=${TS_ROUTES}
-      - TS_EXTRA_ARGS=--advertise-exit-node
-      - TS_STATE_DIR=/state
-    labels:
-      traefik.enable: false
-
-  vscode-tunnel:
-    image: ghcr.io/timoverbrugghe/vscode-remote-tunnel-docker:main
-    container_name: vscode-tunnel
-    hostname: ${VSCODE_TUNNEL_NAME}
-    restart: unless-stopped
-    volumes:
-      - /var/lib/docker/volumes:/home/workspace
-      - vscode-tunnel:/root/.vscode # To persist tunnel registration
-      - vscode-tunnel-server:/root/.vscode-server # To persist extensions and other settings
-    labels:
-      traefik.enable: false
-
   dockerproxy:
     image: ghcr.io/tecnativa/docker-socket-proxy:latest
     container_name: dockerproxy
