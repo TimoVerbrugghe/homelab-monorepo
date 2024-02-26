@@ -1,7 +1,10 @@
 - name: Create NixOS tailscale authkey configuration file
   ansible.builtin.template:
-    src: templates/tailscale-authkey.nix.j2
-    dest: /etc/nixos/tailscale-authkey.nix
+    src: "tailscale-authkey.nix.j2"
+    dest: "/etc/nixos/tailscale-authkey.nix"
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Run NixOS rebuild command
   ansible.builtin.shell: 
