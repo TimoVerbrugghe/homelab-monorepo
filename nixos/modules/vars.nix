@@ -21,7 +21,7 @@ with types;
       sshKeysSHA = "sha256-agx4WrtOqchQCUgn0FqlRE3hcmvG9b+Fm5D/sVMy94U=";
       gitUserName = "TimoVerbrugghe";
       gitUserEmail = "timo@hotmail.be";
-      defaultGateway = "10.10.10.1"
+      defaultGateway = "10.10.10.1";
     };
   };
 
