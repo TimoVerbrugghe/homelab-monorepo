@@ -73,7 +73,7 @@ in
 					{ address = "10.10.10.0"; prefixLength = 24; } 
 				];
 				ipv4.routes = [
-					{ address = "10.10.10.22"; }
+					{ address = "10.10.10.22"; prefixLength = 24; }
 				];
 			};
     };
