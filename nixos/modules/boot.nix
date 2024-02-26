@@ -9,4 +9,7 @@
 
   # Making sure we're running latest linux kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # Reduce swappiness
+  boot.kernel.sysctl = { "vm.swappiness" = 20;};
 }
