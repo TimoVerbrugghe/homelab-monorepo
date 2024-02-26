@@ -1,0 +1,8 @@
+---
+- name: Configure and reboot NixOS machine
+  hosts: all
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: ../roles/nixos-flakeconfig
