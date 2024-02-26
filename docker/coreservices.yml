@@ -47,11 +47,8 @@ services:
     restart: unless-stopped
 
 volumes:
-  tailscale:
   adguardhome-work:
   adguardhome-conf:
-  vscode-tunnel:
-  vscode-tunnel-server:
 
 networks:
   dockervlan:
