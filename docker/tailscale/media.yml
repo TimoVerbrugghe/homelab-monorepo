@@ -1,0 +1,394 @@
+version: "3.8"
+
+services:
+
+  tailscale-sonarr:
+    image: tailscale/tailscale
+    container_name: tailscale-sonarr
+    hostname: sonarr
+    restart: always
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-sonarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_SONARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+      - TS_SERVE_CONFIG=/var/lib/tailscale/config/sonarr.json
+
+  sonarr:
+    container_name: sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    restart: always
+    network_mode: service:tailscale-sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - sonarr:/config
+      - tvshows:/tvshows
+      - downloads:/downloads
+
+  tailscale-radarr:
+    image: tailscale/tailscale
+    container_name: tailscale-radarr
+    hostname: radarr
+    restart: always
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-radarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_RADARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+      - TS_SERVE_CONFIG=/var/lib/tailscale/config/radarr.json
+
+  radarr:
+    container_name: radarr
+    image: lscr.io/linuxserver/radarr:latest
+    restart: always
+    network_mode: service:tailscale-radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - radarr:/config
+      - movies:/movies
+      - downloads:/downloads
+
+  tailscale-bazarr:
+    image: tailscale/tailscale
+    container_name: tailscale-bazarr
+    hostname: bazarr
+    restart: always
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-bazarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_BAZARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+      - TS_SERVE_CONFIG=/var/lib/tailscale/config/bazarr.json
+
+  bazarr:
+    container_name: bazarr
+    image: lscr.io/linuxserver/bazarr:latest
+    restart: always
+    network_mode: service:tailscale-bazarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - bazarr:/config
+      - movies:/movies
+      - tvshows:/tv
+
+  tailscale-overseerr:
+    image: tailscale/tailscale
+    container_name: tailscale-overseerr
+    hostname: overseerr
+    restart: always
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-overseerr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_OVERSEERR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+      - TS_SERVE_CONFIG=/var/lib/tailscale/config/overseerr.json
+
+  overseerr:
+    container_name: overseerr
+    image: sctx/overseerr:latest
+    restart: always
+    network_mode: service:tailscale-overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Brussels
+    volumes:
+      - overseerr:/app/config
+      
+  tailscale-prowlarr:
+    image: tailscale/tailscale
+    container_name: tailscale-prowlarr
+    hostname: prowlarr
+    restart: always
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-prowlarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_PROWLARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+      - TS_SERVE_CONFIG=/var/lib/tailscale/config/prowlarr.json
+
+  prowlarr:
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:latest
+    restart: always
+    network_mode: service:tailscale-prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - prowlarr:/config
+  
+  tailscale-emulatorjs:
+    image: tailscale/tailscale
+    container_name: tailscale-emulatorjs
+    hostname: emulatorjs
+    restart: always
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-emulatorjs:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_EMULATORJS}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+      - TS_SERVE_CONFIG=/var/lib/tailscale/config/emulatorjs.json
+
+  emulatorjs:
+    image: lscr.io/linuxserver/emulatorjs:latest
+    container_name: emulatorjs
+    restart: always
+    network_mode: service:tailscale-emulatorjs
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - emulatorjs:/config
+      - emulatorjs-data:/data
+      - dsgames:/data/nds/roms:rw
+      - gbagames:/data/gba/roms:rw
+      - gbcgames:/data/gbc/roms:rw
+      - ps1games:/data/psx/roms:rw
+      - snesgames:/data/snes/roms:rw
+
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    user: ${PUID}:${PGID}
+    networks:
+      - dockerproxy
+    volumes:
+      - recyclarr:/config
+    environment:
+      - TZ=Europe/Brussels
+      - CRON_SCHEDULE=@daily
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/Brussels
+
+  tailscale-lidarr:
+    image: tailscale/tailscale
+    container_name: tailscale-lidarr
+    hostname: lidarr
+    restart: always
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-lidarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_LIDARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+      - TS_SERVE_CONFIG=/var/lib/tailscale/config/lidarr.json
+
+  lidarr:
+    container_name: lidarr
+    image: lscr.io/linuxserver/lidarr:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - lidarr:/config
+      - music:/music
+      - downloads:/downloads
+
+networks:
+  dockerproxy:
+    external: true
+
+volumes:
+  tailscale-sonarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-sonarr"
+  sonarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/sonarr"
+  tailscale-bazarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-bazarr"
+  bazarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/bazarr"
+  tailscale-radarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-radarr"
+  radarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/radarr"
+  tailscale-overseerr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-overseerr"
+  overseerr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/overseerr"
+  tailscale-prowlarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-prowlarr"
+  prowlarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/prowlarr"
+  recyclarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/recyclarr"
+  tailscale-emulatorjs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-emulatorjs"
+  emulatorjs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/emulatorjs"
+  emulatorjs-data:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/emulatorjs-data"
+  tailscale-lidarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-lidarr"
+  lidarr:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/lidarr"
+
+  movies:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/movies"
+  tvshows:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/tvshows"
+  downloads:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/downloads"
+  music:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/music"
+  dsgames:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/DS"
+  gbagames:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/GBA"
+  ps1games:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/PS1"
+  snesgames:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/SNES"
+  gbcgames:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/GBC"

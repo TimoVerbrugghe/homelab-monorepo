@@ -6,10 +6,10 @@
 
 let 
 
-  hostname = "ulrich";
-  username = "ulrich";
-  hashedPassword = "$y$j9T$ImIzH0p/iMPnmB/75rC0e1$ufXQxWY9QTJa2k6z/26T/tGPUxYuRHDOi4FPdwSiMh1";
-  ipAddress = "10.10.10.8";
+  hostname = "odd";
+  username = "odd";
+  hashedPassword = "$y$j9T$d3l2JQldR0LrUA/uSjlrA0$0oxVCvOd1MxN5FbEzhiCMLTJYcOdRIPauRJyYPOtbR6";
+  ipAddress = "10.10.10.9";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
@@ -27,7 +27,7 @@ in
       ./hardware-configuration.nix
       ../../modules/default.nix # Add default modules
       ../../modules/portainer-agent.nix # Enable Portainer Server at startup
-      ../../modules/vm-options.nix # Some default options you should enable on VMs
+      ../../modules/vm-options.nix # Some default options you should enable on VMs      
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey
       ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
@@ -82,11 +82,12 @@ in
 					{ address = "10.10.10.0"; prefixLength = 24; } 
 				];
 				ipv4.routes = [
-					{ address = "10.10.10.21"; prefixLength = 24; }
+					{ address = "10.10.10.22"; prefixLength = 24; }
 				];
 			};
     };
 
 
   };
+
 }

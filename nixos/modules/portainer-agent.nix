@@ -14,6 +14,9 @@ let
           - /var/lib/docker/volumes:/var/lib/docker/volumes
         ports:
           - "9001:9001"
+      
+      networks:
+        dockerproxy:
   '';
 
 in

@@ -9,6 +9,7 @@ let
   hostname = "yumi";
   username = "yumi";
   hashedPassword = "$y$j9T$Mh0gtGs5dzw.7oMTrWrmV.$7QTuj6tpMnkTmlVGzas/vEh9sdUzezyiv4CS.f8M6I2";
+  ipAddress = "10.10.10.7";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
@@ -49,6 +50,44 @@ in
   ## Enable AutoUpgrades using autoupgrade.nix module
   services.autoUpgrade = {
     hostname = "${hostname}";
+  };
+
+  ## Passthrough hostname for tailscale
+  services.tailscale = {
+    hostname = "${hostname}";
+  };
+
+  ## Networking setup
+
+  networking = {
+
+		macvlans = {
+      macvlan0 = {
+			  interface = "eth0";
+			  mode = "bridge";
+		  };
+    };
+
+    usePredictableInterfaceNames = false;
+    defaultGateway = "${config.vars.defaultGateway}";
+    interfaces = {
+      eth0 = {
+        ipv4.addresses  = [
+          { address = "${ipAddress}"; prefixLength = 24; }
+        ];
+      };
+			
+      macvlan0 = {
+				ipv4.addresses =  [ 
+					{ address = "10.10.10.0"; prefixLength = 24; } 
+				];
+				ipv4.routes = [
+					{ address = "10.10.10.20"; prefixLength = 24; }
+				];
+			};
+    };
+
+
   };
 
 }

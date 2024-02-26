@@ -17,7 +17,10 @@ let
           - "9443:9443"
     
     volumes:
-        portainer:
+      portainer:
+
+    networks:
+      dockerproxy:
   '';
 
 in

@@ -9,6 +9,7 @@ let
   hostname = "aelita";
   username = "aelita";
   hashedPassword = "$y$j9T$3CG7KE5qgfuBLRxsUIgN8/$DG1HbNtEa9VA.oM6ZFyCicO9uJOSwFl.nJo0HNbtIv5";
+  ipAddress = "10.10.10.10";
   kernelParams = [
   ];
   extraModprobeConfig = ''
@@ -44,6 +45,44 @@ in
   ## Enable AutoUpgrades using autoupgrade.nix module
   services.autoUpgrade = {
     hostname = "${hostname}";
+  };
+
+  ## Passthrough hostname for tailscale
+  services.tailscale = {
+    hostname = "${hostname}";
+  };
+
+  ## Networking setup
+
+  networking = {
+
+		macvlans = {
+      macvlan0 = {
+			  interface = "eth0";
+			  mode = "bridge";
+		  };
+    };
+
+    usePredictableInterfaceNames = false;
+    defaultGateway = "${config.vars.defaultGateway}";
+    interfaces = {
+      eth0 = {
+        ipv4.addresses  = [
+          { address = "${ipAddress}"; prefixLength = 24; }
+        ];
+      };
+			
+      macvlan0 = {
+				ipv4.addresses =  [ 
+					{ address = "10.10.10.0"; prefixLength = 24; } 
+				];
+				ipv4.routes = [
+					{ address = "10.10.10.20"; prefixLength = 24; }
+				];
+			};
+    };
+
+
   };
 
 }

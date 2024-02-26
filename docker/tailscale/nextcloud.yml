@@ -1,6 +1,24 @@
 version: "3.8"
 
 services:
+  tailscale-nextcloud:
+    image: tailscale/tailscale
+    container_name: tailscale-nextcloud
+    hostname: nextcloud
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-nextcloud:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_NEXTCLOUD}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+      - TS_SERVE_CONFIG=/var/lib/tailscale/config/nextcloud.json
+
   nextcloud-mariadb:
     container_name: nextcloud-mariadb
     image: mariadb
@@ -16,14 +34,11 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-    labels:
-      traefik.enable: false
 
   nextcloud:
     container_name: nextcloud
     image: nextcloud
-    networks:
-      - dockerproxy
+    network_mode: service:tailscale-nextcloud
     restart: always
     depends_on:
       - nextcloud-mariadb
@@ -39,13 +54,6 @@ services:
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=nextcloud-mariadb
       - REDIS_HOST=nextcloud-redis
-    labels:
-      traefik.http.routers.nextcloud.entrypoints: https
-      traefik.http.services.nextcloud.loadbalancer.server.port: 80
-      traefik.http.routers.nextcloud.middlewares: nextcloud_redirectregex
-      traefik.http.middlewares.nextcloud_redirectregex.redirectregex.permanent: true
-      traefik.http.middlewares.nextcloud_redirectregex.redirectregex.regex: 'https://(.*)/.well-known/(?:card|cal)dav'
-      traefik.http.middlewares.nextcloud_redirectregex.redirectregex.replacement: 'https://$${1}/remote.php/dav'
     
   nextcloud-cron:
     container_name: nextcloud-cron
@@ -60,8 +68,6 @@ services:
       - nextcloud:/var/www/html:z
       - nextcloud-data:/data
     entrypoint: /cron.sh
-    labels:
-      traefik.enable: false
 
   nextcloud-redis:
     image: redis:alpine
@@ -69,13 +75,26 @@ services:
     networks:
       - dockerproxy
     container_name: nextcloud-redis
-    labels:
-      traefik.enable: false
 
 volumes:
   nextcloud:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/nextcloud"
   nextcloud-data:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/nextcloud-data"
   mariadb-nextcloud:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/mariadb-nextcloud"
   media:
     driver: local
     driver_opts:
