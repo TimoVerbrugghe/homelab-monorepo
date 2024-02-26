@@ -2,4 +2,5 @@
   ansible.builtin.script: ../templates/bootstrap-script.sh --tailscaleauthkey "{{ tailscaleAuthkey }}" --nixosFlake "{{ nixosFlake }}"
 
 - name: Reboot the machine
-  reboot:
+  ansible.builtin.reboot:
+    reboot_command: reboot
