@@ -9,6 +9,7 @@ let
         image: portainer/portainer-ce:latest
         container_name: portainer
         restart: always
+        hostname: portainer
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock
           - portainer:/data
