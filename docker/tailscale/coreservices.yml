@@ -7,5 +7,21 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      traefik.enable: false
+
+  tailscale-portainer:
+    image: tailscale/tailscale
+    container_name: tailscale-portainer
+    restart: always
+    network_mode: container:portainer
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-portainer:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_PORTAINER}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+
+volumes:
+   tailscale-portainer:
