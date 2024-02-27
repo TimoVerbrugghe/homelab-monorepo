@@ -2,14 +2,17 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ssh-keys, ... }:
+{ config, lib, pkgs, ... }:
 
 let 
 
   hostname = "francis";
   username = "francis";
   hashedPassword = "$y$j9T$zfgP2dDLwZElN/J4eKMcB/$sOQIFZXnBGJXf752bG/hqgmj4hIq3KOW8nGpqQIiR9.";
-  ipAddress = "192.168.0.2";
+  # ipAddress = "192.168.0.2";
+  # defaultGateway = "192.168.0.1";
+  ipAddress = "10.10.10.41";
+  defaultGateway = "10.10.10.1";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
@@ -19,50 +22,135 @@ let
   softdep bochs pre: i915
   '';
 
+  tailscaleDomain = "werewolf-castor.ts.net";
+
+  portainerCompose = pkgs.writeText "portainer-docker-compose.yml" ''
+    version: '3.8'
+
+    services:
+      portainer:
+        image: portainer/portainer-ce:latest
+        container_name: portainer
+        restart: always
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+          - portainer:/data
+        ports:
+          - "8000:8000"
+          - "9443:9443"
+    
+    volumes:
+      portainer:
+
+    networks:
+      dockerproxy:
+  '';
+
 in 
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../../modules/default.nix # Add default modules
-      ../../modules/portainer-server.nix # Enable Portainer Server at startup
-      ../../modules/vm-options.nix # Some default options you should enable on VMs      
-      ../../modules/vscode-server.nix # Enable VS Code server
-      ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey
-      ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
+      
+      # Include tailscale authkey file, you need to put this manually in your nixos install
+      /etc/nixos/tailscale-authkey.nix
     ];
 
-  ############################
-  ## Host Specific Settings ##
-  ############################
-  networking.hostName = "${hostname}"; # Define your hostname.
+  ## Hardware & Firmware settings
+  hardware.cpu.intel.updateMicrocode = true;
+	hardware.enableRedistributableFirmware = true;
+	hardware.enableAllFirmware = true;
+
+  ## Boot settings
   boot.kernelParams = kernelParams;
   boot.extraModprobeConfig = extraModprobeConfig;
-  hardware.cpu.intel.updateMicrocode = true;
 
-  # Set up single user using user.nix module
-  services.user = {
-    user = "${username}";
-    hashedPassword = "${hashedPassword}";
+  # Use the systemd-boot EFI boot loader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.configurationLimit = 3;
+
+  # Making sure we're running latest linux kernel
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # Reduce swappiness
+  boot.kernel.sysctl = { "vm.swappiness" = 20;};
+
+  ## Enable Flakes
+  nix = {
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+        experimental-features = nix-command flakes
+    '';
   };
 
-  ## Enable AutoUpgrades using autoupgrade.nix module
-  services.autoUpgrade = {
-    hostname = "${hostname}";
+  ## Console, layout options
+  i18n.defaultLocale = "en_US.UTF-8";
+  console.keyMap = "be-latin1";
+  time.timeZone = "Europe/Brussels";
+
+  ## VM Options
+  # Enable QEMU guest agent for better VM integration
+  services.qemuGuest.enable = true;
+  
+  # Enable watchdog
+  systemd.watchdog.device = "/dev/watchdog";
+  systemd.watchdog.runtimeTime = "30s";
+
+  ## Autoupgrade settings
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:TimoVerbrugghe/homelab-monorepo?dir=nixos#${hostname}";
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "--no-write-lock-file"
+      "--refresh" # so that latest commits to github repo get downloaded
+      "--impure" # needed because I'm referencing a file with variables locally on the system, have to find a better way to deal with secrets
+    ];
+    dates = "05:00";
+    randomizedDelaySec = "45min";
   };
 
-  ## Passthrough hostname for tailscale
-  services.tailscale = {
-    hostname = "${hostname}";
+  ## Install Intel GPU drivers
+  nixpkgs.config.allowUnfree = true;
+
+  environment.systemPackages = with pkgs; [
+    clinfo
+    libva-utils
+    intel-gpu-tools
+  ];
+
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      intel-compute-runtime
+    ];
+  };
+
+  ## Nix-store optimizations
+  nix.optimise.automatic = true;
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
   };
 
   ## Networking setup
-
   networking = {
+    firewall.enable = true;
+    firewall.allowPing = true;
 
+    hostName = "${hostname}";
     usePredictableInterfaceNames = false;
-    defaultGateway = "192.168.0.1";
+    defaultGateway = "${defaultGateway}";
+    nameservers = [
+    "1.1.1.1"
+    "8.8.8.8"
+    "8.8.4.4"
+    ];
     interfaces = {
       eth0 = {
         ipv4.addresses  = [
@@ -72,6 +160,163 @@ in
     };
 
 
+  };
+
+  ## Increase UDP Buffer size to 25 MB
+  boot.kernel.sysctl = { 
+    "net.core.rmem_max" = 25000000; 
+    "net.core.wmem_max" = 25000000; 
+    "net.core.rmem_default" = 25000000;
+    "net.core.wmem_default" = 25000000;
+  };
+
+  ## SMB shares
+  services.samba = {
+    enable = true;
+    securityType = "user";
+    openFirewall = true;
+    extraConfig = ''
+      workgroup = WORKGROUP
+      server string = smbnix
+      netbios name = smbnix
+      security = user 
+      hosts allow = 192.168.0. 127.0.0.1 localhost
+      hosts deny = 0.0.0.0/0
+      guest account = nobody
+      map to guest = bad user
+    '';
+    shares = {
+      movies = {
+        path = "/mnt/movies";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+        "force user" = "username";
+        "force group" = "groupname";
+      };
+      tvshows = {
+        path = "/mnt/tvshows";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+        "force user" = "username";
+        "force group" = "groupname";
+      };
+      downloads = {
+        path = "/mnt/downloads";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+        "force user" = "username";
+        "force group" = "groupname";
+      };
+      other = {
+        path = "/mnt/other";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+        "force user" = "username";
+        "force group" = "groupname";
+      };
+    };
+  };
+
+  services.samba-wsdd = {
+    enable = true;
+    openFirewall = true;
+  };
+
+  ## Tailscale setup
+  services.tailscale.enable = true;
+  services.tailscale.extraUpFlags = [
+    "--ssh"
+  ];
+
+  # Tailscale Authkey
+  services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
+    ${config.tailscaleAuthKey}
+  '';
+
+  systemd.services.tailscale-cert-renewal = {
+    enable = true;
+    description = "Renew Tailscale certificates weekly";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.tailscale}/bin/tailscale cert ${hostname}.${tailscaleDomain}";
+    };
+    wantedBy = [ "multi-user.target" ];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
+  };
+
+  # Renew tailscale certs on weekly basis and on startup
+  systemd.timers.tailscale-cert-renewal = {
+    description = "Run Tailscale certificate renewal weekly";
+    timerConfig = {
+      OnCalendar = "weekly";
+      Unit = "tailscale-cert-renewal.service";
+    };
+  };
+
+  # Set up single user
+  users.mutableUsers = false;
+
+  users.users = {
+    ${username} = {
+      extraGroups = [ "wheel" "docker" "render" "video" ];
+      isNormalUser = true;
+      createHome = true;
+      hashedPassword = "${hashedPassword}";
+    };
+  };
+
+  ### Install packages ###
+  environment.systemPackages = with pkgs; [
+    vim
+    nano
+    wget
+    pciutils
+    jq
+    iputils
+    neofetch
+  ];
+
+  ## Enable SSH
+  services.openssh.enable = true;
+
+  ## Docker & Docker-compose
+  virtualisation.docker.enable = true;
+  virtualisation.docker.autoPrune.enable = true;
+  virtualisation.docker.autoPrune.dates = "weekly";
+  virtualisation.docker.enableOnBoot = true;
+  virtualisation.docker.liveRestore = false; # will affect running containers when restarting docker daemon, but resolves stuck shutdown/reboot
+
+  environment.systemPackages = with pkgs; [
+    docker-compose
+  ];
+
+  ## Enable Portainer at startup
+  systemd.services.portainer = {
+    enable = true;
+    description = "Portainer";
+    after = [ "network-online.target" "docker.service" "docker.socket"];
+    wants = [ "network-online.target" ];
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      ExecStart = "${pkgs.docker-compose}/bin/docker-compose -f ${portainerCompose} up";
+      ExecStop = "${pkgs.docker-compose}/bin/docker-compose ${portainerCompose} down";
+      Restart = "always";
+      RestartSec = "30s";
+    };
   };
 
 }
