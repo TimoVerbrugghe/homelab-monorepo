@@ -48,11 +48,6 @@ let
       dockerproxy:
   '';
 
-  smbpasswdScript = pkgs.writeText "smbpasswdScript.sh" ''
-    #!/bin/sh
-    printf "nixos\nnixos\n" | smbpasswd -a -s nixos && echo "smbpasswd applied successfully"
-  '';
-
 in 
 
 {
@@ -238,6 +233,7 @@ in
   systemd.services.samba-smbpasswd = {
     enable = true;
     description = "Add user to smbpasswd with default password nixos";
+    path = ["smbpasswd" "printf" "echo"];
     script = ''
     printf "nixos\nnixos\n" | smbpasswd -a -s nixos && echo "smbpasswd applied successfully"
     '';
