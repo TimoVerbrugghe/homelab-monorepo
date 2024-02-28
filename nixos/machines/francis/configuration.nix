@@ -178,6 +178,7 @@ in
       hosts deny = 0.0.0.0/0
       guest account = nobody
       map to guest = bad user
+      server role = standalone server
     '';
     shares = {
       movies = {
