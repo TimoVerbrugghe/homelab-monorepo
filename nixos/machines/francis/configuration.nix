@@ -238,13 +238,13 @@ in
   systemd.services.samba-smbpasswd = {
     enable = true;
     description = "Add user to smbpasswd with default password nixos";
+    script = ''
+    printf "nixos\nnixos\n" | smbpasswd -a -s nixos && echo "smbpasswd applied successfully"
+    ''
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "chmod +x ${smbpasswdScript} && ${smbpasswdScript}";
     };
     wantedBy = [ "multi-user.target" ];
-    after = ["network-online.target"];
-    wants = ["network-online.target"];
   };
 
   ## Tailscale setup
