@@ -101,7 +101,7 @@ in
   ## Autoupgrade settings
   system.autoUpgrade = {
     enable = true;
-    flake = "github:TimoVerbrugghe/homelab-monorepo?dir=nixos#${hostname}";
+    flake = "github:TimoVerbrugghe/homelab-monorepo?dir=nixos#francis";
     flags = [
       "--update-input"
       "nixpkgs"

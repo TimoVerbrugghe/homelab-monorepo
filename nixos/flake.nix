@@ -60,6 +60,16 @@
         ];
       };
 
+      # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#francis --refresh --impure --no-write-lock-file
+      francis = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          ./machines/francis/configuration.nix
+        ];
+      };
+
+
       # Build this iso image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#nixosConfigurations.iso-autoinstall.config.system.build.isoImage --no-write-lock-file --refresh
       iso-autoinstall = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
