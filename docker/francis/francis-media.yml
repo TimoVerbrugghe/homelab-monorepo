@@ -91,6 +91,8 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - sonarr:/config
+      - tvshows:/tv
+      - downloads:/downloads
 
   ### RADARR - MANAGING MOVIES
   tailscale-radarr:
@@ -249,6 +251,16 @@ services:
       - qbittorrent:/config
       - downloads:/downloads
 
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: always
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/Brussels
+
 volumes:
   tailscale-sonarr:
   sonarr:
@@ -270,16 +282,16 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/odd/movies'
+      device: '/media/movies'
   tvshows:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/odd/tvshows'
+      device: '/media/tvshows'
   downloads:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/odd/downloads'
+      device: '/media/downloads'
