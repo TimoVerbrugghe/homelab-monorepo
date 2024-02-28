@@ -9,10 +9,8 @@ let
   hostname = "nixos";
   username = "nixos";
   hashedPassword = "$y$j9T$WICga7IOUb026e7gehsQi.$ZrC/f/Ar/VeP2dRqPIA7PXM0t4EsvoUbx.PueUJPFW8";
-  # ipAddress = "192.168.0.2";
-  # defaultGateway = "192.168.0.1";
-  ipAddress = "10.10.10.41";
-  defaultGateway = "10.10.10.1";
+  ipAddress = "192.168.0.3";
+  defaultGateway = "192.168.0.1";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
@@ -175,7 +173,7 @@ in
       server string = smbnix
       netbios name = smbnix
       security = user 
-      hosts allow = 192.168.0. 10.10.10. 127.0.0.1 localhost
+      hosts allow = 192.168.0. 127.0.0.1 localhost
       hosts deny = 0.0.0.0/0
       guest account = nobody
       map to guest = bad user
