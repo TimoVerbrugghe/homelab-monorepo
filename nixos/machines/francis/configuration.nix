@@ -6,9 +6,9 @@
 
 let 
 
-  hostname = "francis";
-  username = "francis";
-  hashedPassword = "$y$j9T$zfgP2dDLwZElN/J4eKMcB/$sOQIFZXnBGJXf752bG/hqgmj4hIq3KOW8nGpqQIiR9.";
+  hostname = "nixos";
+  username = "nixos";
+  hashedPassword = "$y$j9T$WICga7IOUb026e7gehsQi.$ZrC/f/Ar/VeP2dRqPIA7PXM0t4EsvoUbx.PueUJPFW8";
   # ipAddress = "192.168.0.2";
   # defaultGateway = "192.168.0.1";
   ipAddress = "10.10.10.41";
@@ -187,44 +187,44 @@ in
     '';
     shares = {
       movies = {
-        path = "/mnt/movies";
+        path = "/media/movies";
         browseable = "yes";
         "read only" = "no";
         "guest ok" = "yes";
         "create mask" = "0644";
         "directory mask" = "0755";
-        "force user" = "username";
-        "force group" = "groupname";
+        "force user" = "${username}";
+        "force group" = "users";
       };
       tvshows = {
-        path = "/mnt/tvshows";
+        path = "/media/tvshows";
         browseable = "yes";
         "read only" = "no";
         "guest ok" = "yes";
         "create mask" = "0644";
         "directory mask" = "0755";
-        "force user" = "username";
-        "force group" = "groupname";
+        "force user" = "${username}";
+        "force group" = "users";
       };
       downloads = {
-        path = "/mnt/downloads";
+        path = "/media/downloads";
         browseable = "yes";
         "read only" = "no";
         "guest ok" = "yes";
         "create mask" = "0644";
         "directory mask" = "0755";
-        "force user" = "username";
-        "force group" = "groupname";
+        "force user" = "${username}";
+        "force group" = "users";
       };
       other = {
-        path = "/mnt/other";
+        path = "/media/other";
         browseable = "yes";
         "read only" = "no";
         "guest ok" = "yes";
         "create mask" = "0644";
         "directory mask" = "0755";
-        "force user" = "username";
-        "force group" = "groupname";
+        "force user" = "${username}";
+        "force group" = "users";
       };
     };
   };
@@ -275,6 +275,14 @@ in
       isNormalUser = true;
       createHome = true;
       hashedPassword = "${hashedPassword}";
+      uid = 1000;
+    };
+  };
+
+  users.groups = {
+    ${username} = {
+      gid = 1000;
+      members = [ "${username}" ];
     };
   };
 
