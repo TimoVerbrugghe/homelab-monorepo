@@ -233,7 +233,9 @@ in
   systemd.services.samba-smbpasswd = {
     enable = true;
     description = "Add user to smbpasswd with default password nixos";
-    path = ["smbpasswd" "printf" "echo"];
+    path = with pkgs; [
+      samba
+    ];
     script = ''
     printf "nixos\nnixos\n" | smbpasswd -a -s nixos && echo "smbpasswd applied successfully"
     '';
