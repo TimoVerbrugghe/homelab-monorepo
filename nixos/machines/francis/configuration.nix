@@ -27,6 +27,8 @@ let
   portainerCompose = pkgs.writeText "portainer-docker-compose.yml" ''
     version: '3.8'
 
+    name: portainer
+
     services:
       portainer:
         image: portainer/portainer-ce:latest
