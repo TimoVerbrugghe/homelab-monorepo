@@ -293,21 +293,18 @@ in
     clinfo
     libva-utils
     intel-gpu-tools
+    docker-compose
   ];
 
   ## Enable SSH
   services.openssh.enable = true;
 
-  ## Docker & Docker-compose
+  ## Docker
   virtualisation.docker.enable = true;
   virtualisation.docker.autoPrune.enable = true;
   virtualisation.docker.autoPrune.dates = "weekly";
   virtualisation.docker.enableOnBoot = true;
   virtualisation.docker.liveRestore = false; # will affect running containers when restarting docker daemon, but resolves stuck shutdown/reboot
-
-  environment.systemPackages = with pkgs; [
-    docker-compose
-  ];
 
   ## Enable Portainer at startup
   systemd.services.portainer = {
