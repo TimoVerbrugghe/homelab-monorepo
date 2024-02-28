@@ -48,6 +48,11 @@ let
       dockerproxy:
   '';
 
+  smbpasswdScript = pkgs.writeText "smbpasswdScript.sh" ''
+    #!/bin/sh
+    printf "nixos\nnixos\n" | smbpasswd -a -s nixos && echo "smbpasswd applied successfully"
+  ''
+
 in 
 
 {
@@ -235,7 +240,7 @@ in
     description = "Add user to smbpasswd with default password nixos";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "printf \"nixos\nnixos\n\" | smbpasswd -a -s ${username}";
+      ExecStart = "${smbpasswdScript}"
     };
     wantedBy = [ "multi-user.target" ];
     after = ["network-online.target"];
