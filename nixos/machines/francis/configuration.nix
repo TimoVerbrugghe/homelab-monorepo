@@ -240,7 +240,7 @@ in
     description = "Add user to smbpasswd with default password nixos";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${smbpasswdScript}";
+      ExecStart = "chmod +x ${smbpasswdScript} && ${smbpasswdScript}";
     };
     wantedBy = [ "multi-user.target" ];
     after = ["network-online.target"];
