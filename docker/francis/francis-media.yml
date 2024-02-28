@@ -51,6 +51,8 @@ services:
       - /dev/shm:/dev/shm
     devices:
       - /dev/dri:/dev/dri
+    depends_on:
+      - tailscale-plex
 
   plex-autolanguages:
     container_name: plex-autolanguagues
@@ -60,6 +62,8 @@ services:
       - PLEX_URL=http://plex:32400
       - PLEX_TOKEN=${PLEX_TOKEN}
       - TZ=Europe/Brussels
+    depends_on:
+      - plex
 
   ### MEDIA MANAGEMENT ###
   ### SONARR - MANAGING TVSHOWS
@@ -93,6 +97,8 @@ services:
       - sonarr:/config
       - tvshows:/tv
       - downloads:/downloads
+    depends_on:
+      - tailscale-sonarr
 
   ### RADARR - MANAGING MOVIES
   tailscale-radarr:
@@ -125,6 +131,8 @@ services:
       - radarr:/config
       - movies:/movies
       - downloads:/downloads
+    depends_on:
+      - tailscale-radarr
 
   ### BAZARR - MANAGING SUBTITLES
   tailscale-bazarr:
@@ -157,6 +165,8 @@ services:
       - bazarr:/config
       - movies:/movies
       - tvshows:/tv
+    depends_on:
+      - tailscale-bazarr
 
   ### MEDIA REQUEST MANAGEMENT ###
   ### OVERSEERR - MANAGING REQUESTS
@@ -187,6 +197,8 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - overseerr:/app/config
+    depends_on:
+      - tailscale-overseerr
       
   ### DOWNLOAD MANAGEMENT ###
   ### PROWLARR - MANAGING TORRENT SITES
@@ -218,6 +230,8 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - prowlarr:/config
+    depends_on:
+      - tailscale-prowlarr
   
   ### QBITTORRENT - MANAGING DOWNLOADS
   tailscale-qbittorrent:
@@ -250,6 +264,8 @@ services:
     volumes:
       - qbittorrent:/config
       - downloads:/downloads
+    depends_on:
+      - tailscale-qbittorrent
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest

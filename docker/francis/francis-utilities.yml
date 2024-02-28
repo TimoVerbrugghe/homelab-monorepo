@@ -46,6 +46,8 @@ services:
       - downloads:/srv/downloads
       - other:/srv/other
       - filebrowser:/config
+    depends_on:
+      - tailscale-filebrowser
 
   tailscale-portainer:
     image: tailscale/tailscale
