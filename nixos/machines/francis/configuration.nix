@@ -51,7 +51,7 @@ let
   smbpasswdScript = pkgs.writeText "smbpasswdScript.sh" ''
     #!/bin/sh
     printf "nixos\nnixos\n" | smbpasswd -a -s nixos && echo "smbpasswd applied successfully"
-  ''
+  '';
 
 in 
 
