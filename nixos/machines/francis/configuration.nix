@@ -116,12 +116,6 @@ in
   ## Install Intel GPU drivers
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [
-    clinfo
-    libva-utils
-    intel-gpu-tools
-  ];
-
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
@@ -158,8 +152,6 @@ in
         ];
       };
     };
-
-
   };
 
   ## Increase UDP Buffer size to 25 MB
@@ -298,6 +290,9 @@ in
     jq
     iputils
     neofetch
+    clinfo
+    libva-utils
+    intel-gpu-tools
   ];
 
   ## Enable SSH
