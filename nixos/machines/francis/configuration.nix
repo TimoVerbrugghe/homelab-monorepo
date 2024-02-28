@@ -174,7 +174,7 @@ in
       server string = smbnix
       netbios name = smbnix
       security = user 
-      hosts allow = 192.168.0. 127.0.0.1 localhost
+      hosts allow = 192.168.0. 10.10.10. 127.0.0.1 localhost
       hosts deny = 0.0.0.0/0
       guest account = nobody
       map to guest = bad user
@@ -226,6 +226,20 @@ in
   services.samba-wsdd = {
     enable = true;
     openFirewall = true;
+  };
+
+  # Add user to smbpasswd
+
+  systemd.services.samba-smbpasswd = {
+    enable = true;
+    description = "Add user to smbpasswd with default password nixos";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "printf "nixos\nnixos\n" | smbpasswd -a -s ${username}";
+    };
+    wantedBy = [ "multi-user.target" ];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
   };
 
   ## Tailscale setup
