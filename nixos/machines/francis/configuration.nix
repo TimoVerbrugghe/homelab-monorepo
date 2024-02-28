@@ -240,7 +240,7 @@ in
     description = "Add user to smbpasswd with default password nixos";
     script = ''
     printf "nixos\nnixos\n" | smbpasswd -a -s nixos && echo "smbpasswd applied successfully"
-    ''
+    '';
     serviceConfig = {
       Type = "oneshot";
     };
