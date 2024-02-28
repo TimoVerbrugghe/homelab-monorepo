@@ -28,6 +28,8 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_FILEBROWSER}
       - TS_STATE_DIR=/var/lib/tailscale/state
+    ports:
+      - 8082:80/tcp
 
   filebrowser:
     container_name: filebrowser
@@ -42,6 +44,7 @@ services:
       - movies:/srv/media
       - tvshows:/srv/tvshows
       - downloads:/srv/downloads
+      - other:/srv/other
       - filebrowser:/config
 
   tailscale-portainer:
@@ -77,6 +80,12 @@ volumes:
       o: 'bind'
       device: '/media/tvshows'
   downloads:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/media/downloads'
+  other:
     driver: local
     driver_opts:
       type: 'none'
