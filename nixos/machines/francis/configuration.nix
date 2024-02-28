@@ -235,7 +235,7 @@ in
     description = "Add user to smbpasswd with default password nixos";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "printf \\"nixos\nnixos\n\\" | smbpasswd -a -s ${username}";
+      ExecStart = "printf \"nixos\nnixos\n\" | smbpasswd -a -s ${username}";
     };
     wantedBy = [ "multi-user.target" ];
     after = ["network-online.target"];
