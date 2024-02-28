@@ -77,6 +77,8 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_SONARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
+    ports:
+      - 8989:8989/tcp # web ui
 
   sonarr:
     container_name: sonarr
@@ -105,6 +107,8 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_RADARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
+    ports:
+      - 7878:7878/tcp # web ui
 
   radarr:
     container_name: radarr
@@ -135,6 +139,8 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_BAZARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
+    ports:
+      - 6767:6767/tcp # web ui
 
   bazarr:
     container_name: bazarr
@@ -166,6 +172,8 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_OVERSEERR}
       - TS_STATE_DIR=/var/lib/tailscale/state
+    ports:
+      - 5055:5055/tcp
 
   overseerr:
     container_name: overseerr
@@ -194,6 +202,8 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_PROWLARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
+    ports:
+      - 9696:9696/tcp
 
   prowlarr:
     container_name: prowlarr
@@ -222,6 +232,8 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_QBITTORRENT}
       - TS_STATE_DIR=/var/lib/tailscale/state
+    ports: 
+      - 8080:8080/tcp
 
   qbittorrent: 
     image: lscr.io/linuxserver/qbittorrent:latest
