@@ -18,6 +18,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_NEXTCLOUD}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/nextcloud.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   nextcloud-mariadb:
     container_name: nextcloud-mariadb
@@ -41,7 +46,9 @@ services:
     network_mode: service:tailscale-nextcloud
     restart: always
     depends_on:
-      - nextcloud-mariadb
+      nextcloud-mariadb:
+      tailscale-nextcloud:
+        condition: service_healthy
     volumes:
       - nextcloud:/var/www/html
       - nextcloud-data:/data

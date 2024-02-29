@@ -18,6 +18,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_QBITTORRENT}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/qbittorrent.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   qbittorrent: 
     image: lscr.io/linuxserver/qbittorrent:latest
@@ -32,6 +37,9 @@ services:
     volumes:
       - qbittorrent:/config
       - downloads:/downloads
+    depends_on:
+      tailscale-qbittorrent:
+        condition: service_healthy
 
   tailscale-jdownloader2:
     image: tailscale/tailscale
@@ -50,6 +58,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_JDOWNLOADER2}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/jdownloader2.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   jdownloader2:
     image: jlesage/jdownloader-2
@@ -59,6 +72,9 @@ services:
     volumes:
       - jdownloader2:/config
       - downloads:/output
+    depends_on:
+      tailscale-jdownloader2:
+        condition: service_healthy
 
   tailscale-metube:
     image: tailscale/tailscale
@@ -77,6 +93,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_METUBE}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/metube.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   metube:
     image: ghcr.io/alexta69/metube
@@ -91,6 +112,9 @@ services:
     volumes:
       - downloads:/downloads
       - /dev/shm:/tmp
+    depends_on:
+      tailscale-metube:
+        condition: service_healthy
 
 volumes:
   tailscale-qbittorrent:

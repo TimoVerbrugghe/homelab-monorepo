@@ -17,6 +17,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_SONARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/sonarr.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   sonarr:
     container_name: sonarr
@@ -31,6 +36,14 @@ services:
       - sonarr:/config
       - tvshows:/tvshows
       - downloads:/downloads
+    depends_on:
+      tailscale-sonarr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8989/ping || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   tailscale-radarr:
     image: tailscale/tailscale
@@ -47,6 +60,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_RADARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/radarr.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   radarr:
     container_name: radarr
@@ -61,6 +79,14 @@ services:
       - radarr:/config
       - movies:/movies
       - downloads:/downloads
+    depends_on:
+      tailscale-radarr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:7878/ping || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   tailscale-bazarr:
     image: tailscale/tailscale
@@ -77,6 +103,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_BAZARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/bazarr.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   bazarr:
     container_name: bazarr
@@ -91,11 +122,19 @@ services:
       - bazarr:/config
       - movies:/movies
       - tvshows:/tv
+    depends_on:
+      tailscale-bazarr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget http://localhost:6767/api/v1/status -qO /dev/null || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   tailscale-overseerr:
     image: tailscale/tailscale
     container_name: tailscale-overseerr
-    hostname: overseerr
+    hostname: request
     restart: always
     volumes:
       - /dev/net/tun:/dev/net/tun
@@ -107,6 +146,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_OVERSEERR}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/overseerr.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   overseerr:
     container_name: overseerr
@@ -118,7 +162,15 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - overseerr:/app/config
-      
+    depends_on:
+      tailscale-overseerr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget http://localhost:5055/api/v1/status -qO /dev/null || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
   tailscale-prowlarr:
     image: tailscale/tailscale
     container_name: tailscale-prowlarr
@@ -134,6 +186,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_PROWLARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/prowlarr.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   prowlarr:
     container_name: prowlarr
@@ -146,6 +203,14 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - prowlarr:/config
+    depends_on:
+      tailscale-prowlarr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:9696/ping || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
   
   tailscale-emulatorjs:
     image: tailscale/tailscale
@@ -162,6 +227,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_EMULATORJS}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/emulatorjs.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   emulatorjs:
     image: lscr.io/linuxserver/emulatorjs:latest
@@ -180,6 +250,9 @@ services:
       - gbcgames:/data/gbc/roms:rw
       - ps1games:/data/psx/roms:rw
       - snesgames:/data/snes/roms:rw
+    depends_on:
+      tailscale-emulatorjs:
+        condition: service_healthy
 
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
@@ -220,6 +293,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_LIDARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/lidarr.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   lidarr:
     container_name: lidarr
@@ -235,6 +313,14 @@ services:
       - lidarr:/config
       - music:/music
       - downloads:/downloads
+    depends_on:
+      tailscale-lidarr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8686/ping || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
 networks:
   dockerproxy:

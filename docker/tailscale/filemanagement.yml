@@ -18,6 +18,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_FILEBROWSER}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/filebrowser.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   filebrowser:
     container_name: filebrowser
@@ -33,6 +38,9 @@ services:
       - isos:/srv/isos
       - downloads:/srv/downloads
       - filebrowser:/config
+    depends_on:
+      tailscale-filebrowser:
+        condition: service_healthy
 
   tailscale-filezilla:
     image: tailscale/tailscale
@@ -51,6 +59,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_FILEZILLA}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/filezilla.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   filezilla:
     image: lscr.io/linuxserver/filezilla:latest
@@ -64,6 +77,9 @@ services:
       - media:/media
       - isos:/isos
       - downloads:/downloads
+    depends_on:
+      tailscale-filezilla:
+        condition: service_healthy
 
   tailscale-krusader:
     image: tailscale/tailscale
@@ -82,6 +98,11 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_KRUSADER}
       - TS_STATE_DIR=/var/lib/tailscale/state
       - TS_SERVE_CONFIG=/var/lib/tailscale/config/krusader.json
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
 
   krusader:
     container_name: krusader
@@ -99,6 +120,9 @@ services:
       - isos:/isos
       - downloads:/downloads
       - krusader:/config
+    depends_on:
+      tailscale-krusader:
+        condition: service_healthy
 
 volumes:
   tailscale-filebrowser:
