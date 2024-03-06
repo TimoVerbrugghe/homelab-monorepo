@@ -7,6 +7,8 @@ services:
     container_name: tailscale-sonarr
     hostname: sonarr
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-sonarr:/var/lib/tailscale
@@ -44,12 +46,17 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    labels:
+      traefik.http.routers.sonarr.entrypoints: https
+      traefik.http.services.sonarr.loadbalancer.server.port: 8989
 
   tailscale-radarr:
     image: tailscale/tailscale
     container_name: tailscale-radarr
     hostname: radarr
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-radarr:/var/lib/tailscale
@@ -87,12 +94,17 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    labels:
+      traefik.http.routers.radarr.entrypoints: https
+      traefik.http.services.radarr.loadbalancer.server.port: 7878
 
   tailscale-bazarr:
     image: tailscale/tailscale
     container_name: tailscale-bazarr
     hostname: bazarr
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-bazarr:/var/lib/tailscale
@@ -130,12 +142,17 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    labels:
+      traefik.http.routers.bazarr.entrypoints: https
+      traefik.http.services.bazarr.loadbalancer.server.port: 6767
 
   tailscale-overseerr:
     image: tailscale/tailscale
     container_name: tailscale-overseerr
     hostname: request
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-overseerr:/var/lib/tailscale
@@ -170,12 +187,18 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    labels:
+      traefik.http.routers.overseerr.rule: Host(`request.thefactory.timo.be`) || Host(`request.timo.be`)
+      traefik.http.routers.overseerr.entrypoints: https
+      traefik.http.services.overseerr.loadbalancer.server.port: 5055
 
   tailscale-prowlarr:
     image: tailscale/tailscale
     container_name: tailscale-prowlarr
     hostname: prowlarr
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-prowlarr:/var/lib/tailscale
@@ -211,12 +234,17 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    labels:
+      traefik.http.routers.prowlarr.entrypoints: https
+      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
   
   tailscale-emulatorjs:
     image: tailscale/tailscale
     container_name: tailscale-emulatorjs
-    hostname: emulatorjs
+    hostname: games
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-emulatorjs:/var/lib/tailscale
@@ -253,6 +281,15 @@ services:
     depends_on:
       tailscale-emulatorjs:
         condition: service_healthy
+    labels:
+      traefik.http.routers.emulatorjs.rule: Host(`games.thefactory.timo.be`) || Host(`games.timo.be`)
+      traefik.http.routers.emulatorjs.entrypoints: https
+      traefik.http.services.emulatorjs.loadbalancer.server.port: 80
+      traefik.http.routers.emulatorjs.service: emulatorjs
+      traefik.http.routers.emulatorjs-config.service: emulatorjs-config
+      traefik.http.routers.emulatorjs-config.rule: Host(`gamesconfig.thefactory.timo.be`) || Host(`gamesconfig.timo.be`)
+      traefik.http.routers.emulatorjs-config.entrypoints: https
+      traefik.http.services.emulatorjs-config.loadbalancer.server.port: 3000
 
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
@@ -283,6 +320,8 @@ services:
     container_name: tailscale-lidarr
     hostname: lidarr
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-lidarr:/var/lib/tailscale
@@ -303,8 +342,7 @@ services:
     container_name: lidarr
     image: lscr.io/linuxserver/lidarr:latest
     restart: always
-    networks:
-      - dockerproxy
+    networks_mode: service:tailscale-lidarr
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -321,6 +359,9 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    labels:
+      traefik.http.routers.lidarr.entrypoints: https
+      traefik.http.services.lidarr.loadbalancer.server.port: 8686
 
 networks:
   dockerproxy:

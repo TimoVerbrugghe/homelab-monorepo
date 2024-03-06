@@ -41,6 +41,9 @@ services:
     depends_on:
       tailscale-filebrowser:
         condition: service_healthy
+    labels:
+      traefik.http.routers.filebrowser.entrypoints: https
+      traefik.http.services.filebrowser.loadbalancer.server.port: 80
 
   tailscale-filezilla:
     image: tailscale/tailscale
@@ -80,6 +83,9 @@ services:
     depends_on:
       tailscale-filezilla:
         condition: service_healthy
+    labels:
+      traefik.http.routers.filezilla.entrypoints: https
+      traefik.http.services.filezilla.loadbalancer.server.port: 3000
 
   tailscale-krusader:
     image: tailscale/tailscale
@@ -123,6 +129,9 @@ services:
     depends_on:
       tailscale-krusader:
         condition: service_healthy
+    labels:
+      traefik.http.routers.krusader.entrypoints: https
+      traefik.http.services.krusader.loadbalancer.server.port: 6080
 
 volumes:
   tailscale-filebrowser:

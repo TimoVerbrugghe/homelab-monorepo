@@ -40,6 +40,9 @@ services:
     depends_on:
       tailscale-qbittorrent:
         condition: service_healthy
+    labels:
+      traefik.http.routers.qbittorrent.entrypoints: https
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
 
   tailscale-jdownloader2:
     image: tailscale/tailscale
@@ -75,6 +78,9 @@ services:
     depends_on:
       tailscale-jdownloader2:
         condition: service_healthy
+    labels:
+      traefik.http.routers.qbittorrent.entrypoints: https
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 5800
 
   tailscale-metube:
     image: tailscale/tailscale
@@ -115,6 +121,9 @@ services:
     depends_on:
       tailscale-metube:
         condition: service_healthy
+    labels:
+      traefik.http.routers.qbittorrent.entrypoints: https
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8081
 
 volumes:
   tailscale-qbittorrent:
