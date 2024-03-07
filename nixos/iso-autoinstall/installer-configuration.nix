@@ -64,16 +64,16 @@
       set -euxo pipefail
 
       # Wipe disk and create 3 partitions
-      sgdisk --zap-all /dev/sda
-      sgdisk --new=1:0:+512M --typecode=1:ef00 /dev/sda
-      sgdisk --new=2:0:+4G --typecode=2:8200 /dev/sda
-      sgdisk --new=3:0:0 --typecode=3:8300 /dev/sda
+      sgdisk --zap-all /dev/vda
+      sgdisk --new=1:0:+512M --typecode=1:ef00 /dev/vda
+      sgdisk --new=2:0:+4G --typecode=2:8200 /dev/vda
+      sgdisk --new=3:0:0 --typecode=3:8300 /dev/vda
 
       # Format the 3 partitions with specific labels
-      echo "y" | mkfs.fat -F 32 -n BOOT /dev/sda1
-      mkswap -L swap /dev/sda2
-      swapon /dev/sda2
-      mkfs.btrfs -f -L nixos /dev/sda3
+      echo "y" | mkfs.fat -F 32 -n BOOT /dev/vda1
+      mkswap -L swap /dev/vda2
+      swapon /dev/vda2
+      mkfs.btrfs -f -L nixos /dev/vda3
 
       # Labels do not appear immediately, so wait a moment
       sleep 5
