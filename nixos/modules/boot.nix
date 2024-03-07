@@ -12,4 +12,11 @@
 
   # Reduce swappiness
   boot.kernel.sysctl = { "vm.swappiness" = 20;};
+
+  # Add ability to mount nfs shares
+  environment.systemPackages = with pkgs; [ nfs-utils ];
+  boot.initrd = {
+    supportedFilesystems = [ "nfs" ];
+    kernelModules = [ "nfs" ];
+  };
 }
