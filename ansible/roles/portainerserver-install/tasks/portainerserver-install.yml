@@ -14,7 +14,7 @@
         portainer:
           image: portainer/portainer-ce:latest
           container_name: portainer
-          restart: unless-stopped
+          restart: always
           volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - portainer:/data
