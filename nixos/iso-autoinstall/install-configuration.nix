@@ -2,7 +2,8 @@
 
 {
   # Bootloader options
-  boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "virtio_blk" "sd_mod" "sr_mod" ];
+  boot.supportedFilesystems = [ "btrfs" "vfat" ];
   boot.kernelModules = [ "kvm-intel" ];
 
   boot.loader.systemd-boot.enable = true;

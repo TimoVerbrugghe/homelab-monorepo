@@ -85,7 +85,7 @@
 
       # Check if both /dev/sda and /dev/vda are available
       if [ -e "/dev/sda" ] && [ -e "/dev/vda" ]; then
-        echo "Multiple hard drives are attached. The auto installer doesn't support this."
+        echo "Both /dev/sda and /dev/vda has been found. The auto installer doesn't support this."
         echo "Shutting down the machine in 10 seconds."
         sleep 10
         shutdown -h now
@@ -115,6 +115,8 @@
       nixos-generate-config --root /mnt
 
       nixos-install --no-root-passwd
+      echo "Installation succeeded. Will shutdown machine in 5 seconds"
+      sleep 5
       shutdown -h now
 
     '';
