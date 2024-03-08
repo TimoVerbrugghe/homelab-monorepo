@@ -92,16 +92,16 @@
       fi
 
       # Wipe disk and create 3 partitions
-      sgdisk --zap-all "${DEVICE}"
-      sgdisk --new=1:0:+512M --typecode=1:ef00 "${DEVICE}"
-      sgdisk --new=2:0:+4G --typecode=2:8200 "${DEVICE}"
-      sgdisk --new=3:0:0 --typecode=3:8300 "${DEVICE}"
+      sgdisk --zap-all "''${DEVICE}"
+      sgdisk --new=1:0:+512M --typecode=1:ef00 "''${DEVICE}"
+      sgdisk --new=2:0:+4G --typecode=2:8200 "''${DEVICE}"
+      sgdisk --new=3:0:0 --typecode=3:8300 "''${DEVICE}"
 
       # Format the 3 partitions with specific labels
-      echo "y" | mkfs.fat -F 32 -n BOOT "${DEVICE}1"
-      mkswap -L swap "${DEVICE}2"
-      swapon "${DEVICE}2"
-      mkfs.btrfs -f -L nixos "${DEVICE}3"
+      echo "y" | mkfs.fat -F 32 -n BOOT "''${DEVICE}1"
+      mkswap -L swap "''${DEVICE}2"
+      swapon "''${DEVICE}2"
+      mkfs.btrfs -f -L nixos "''${DEVICE}3"
 
       # Labels do not appear immediately, so wait a moment
       sleep 5
