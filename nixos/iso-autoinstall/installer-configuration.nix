@@ -72,31 +72,51 @@
     script = ''
       set -euxo pipefail
 
+      # Check if /dev/sda is available
+      if [ -e "/dev/sda" ]; then
+        DEVICE="/dev/sda"
+      # Check if /dev/vda is available
+      elif [ -e "/dev/vda" ]; then
+        DEVICE="/dev/vda"
+      else
+        echo "Error: No suitable disk found (/dev/sda or /dev/vda)."
+        exit 1
+      fi
+
+      # Check if both /dev/sda and /dev/vda are available
+      if [ -e "/dev/sda" ] && [ -e "/dev/vda" ]; then
+        echo "Multiple hard drives are attached. The auto installer doesn't support this."
+        echo "Shutting down the machine in 10 seconds."
+        sleep 10
+        shutdown -h now
+      fi
+
       # Wipe disk and create 3 partitions
-      sgdisk --zap-all /dev/vda
-      sgdisk --new=1:0:+512M --typecode=1:ef00 /dev/vda
-      sgdisk --new=2:0:+4G --typecode=2:8200 /dev/vda
-      sgdisk --new=3:0:0 --typecode=3:8300 /dev/vda
+      sgdisk --zap-all "${DEVICE}"
+      sgdisk --new=1:0:+512M --typecode=1:ef00 "${DEVICE}"
+      sgdisk --new=2:0:+4G --typecode=2:8200 "${DEVICE}"
+      sgdisk --new=3:0:0 --typecode=3:8300 "${DEVICE}"
 
       # Format the 3 partitions with specific labels
-      echo "y" | mkfs.fat -F 32 -n BOOT /dev/vda1
-      mkswap -L swap /dev/vda2
-      swapon /dev/vda2
-      mkfs.btrfs -f -L nixos /dev/vda3
+      echo "y" | mkfs.fat -F 32 -n BOOT "${DEVICE}1"
+      mkswap -L swap "${DEVICE}2"
+      swapon "${DEVICE}2"
+      mkfs.btrfs -f -L nixos "${DEVICE}3"
 
       # Labels do not appear immediately, so wait a moment
       sleep 5
 
       # Mount partitions for installation
-      mount /dev/disk/by-label/nixos /mnt
+      mount "/dev/disk/by-label/nixos" /mnt
       mkdir -p /mnt/boot
-      mount /dev/disk/by-label/BOOT /mnt/boot
+      mount "/dev/disk/by-label/BOOT" /mnt/boot
 
       # Generate nixos configuration and hardware configuration
       nixos-generate-config --root /mnt
 
       nixos-install --no-root-passwd
-      reboot
+      shutdown -h now
+
     '';
   };
 }
