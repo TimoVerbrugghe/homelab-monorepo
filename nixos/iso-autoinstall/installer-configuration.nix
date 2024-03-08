@@ -52,7 +52,7 @@
   systemd.services.installer = {
     description = "Unattended NixOS installer";
     wantedBy = [ "multi-user.target" ];
-    after = [ "getty.target" "nscd.service" ];
+    after = [ "getty.target" "nscd.service" "network.target" ];
     conflicts = [ "getty@tty1.service" ];
     serviceConfig = {
       Type="oneshot";
