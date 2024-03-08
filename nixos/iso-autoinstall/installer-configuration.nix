@@ -53,6 +53,7 @@
     description = "Unattended NixOS installer";
     wantedBy = [ "multi-user.target" ];
     after = [ "getty.target" "nscd.service" "network-online.target" ];
+    wants = [ "getty.target" "nscd.service" "network-online.target" ];
     conflicts = [ "getty@tty1.service" ];
     serviceConfig = {
       Type="oneshot";
