@@ -30,6 +30,14 @@
     "8.8.4.4"
   ];
 
+  ## Enable Flakes
+  nix = {
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+        experimental-features = nix-command flakes
+    '';
+  };
+
   # ISO Image options
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
   isoImage.isoBaseName = "nixos-auto-installer";
