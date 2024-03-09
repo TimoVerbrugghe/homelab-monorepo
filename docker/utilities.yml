@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  stirling-pdf:
+    image: frooodle/s-pdf:latest
+    volumes:
+      - stirlingpdf-trainingdata:/usr/share/tessdata #Required for extra OCR languages
+      - stirlingpdf-configs:/configs
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
+    labels:
+      traefik.http.routers.stirlingpdf.entrypoints: https
+      traefik.http.services.stirlingpdf.loadbalancer.server.port: 8080
+      traefik.http.routers.stirlingpdf.middlewares: keycloak-auth@file
+
   localspeedtest:
     restart: always
     container_name: localspeedtest
@@ -159,6 +172,8 @@ volumes:
   netbootxyz-assets:
   iventoy-config:
   iventoy-log:
+  stirlingpdf-configs:
+  stirlingpdf-trainingdata:
   isos:
     driver: local
     driver_opts:
