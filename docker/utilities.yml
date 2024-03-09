@@ -3,6 +3,9 @@ version: "3.8"
 services:
   stirling-pdf:
     image: frooodle/s-pdf:latest
+    networks:
+      - dockerproxy
+    container_name: stirlingpdf
     volumes:
       - stirlingpdf-trainingdata:/usr/share/tessdata #Required for extra OCR languages
       - stirlingpdf-configs:/configs
