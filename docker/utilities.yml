@@ -99,7 +99,7 @@ services:
       traefik.enable: false
 
   webtop:
-    image: lscr.io/linuxserver/webtop:latest
+    image: lscr.io/linuxserver/webtop:ubuntu-kde
     container_name: webtop
     restart: unless-stopped
     security_opt:
