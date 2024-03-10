@@ -112,6 +112,9 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - webtop:/config
+      - downloads:/thefactory-downloads
+      - media:/thefactory-media
+      - isos:/thefactory-isos
     shm_size: "1gb"
     labels:
       traefik.http.routers.webtop.entrypoints: https
@@ -183,6 +186,18 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/isos"
+  media:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media"
+  downloads:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/downloads"
 
 networks:
   dockerproxy:
