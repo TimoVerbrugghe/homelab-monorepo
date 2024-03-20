@@ -35,7 +35,3 @@ services:
       # FEATURES_DNS_ACCESSLISTS: true
       # FEATURES_DNS_REWRITES: true
     restart: unless-stopped
-
-volumes:
-  adguardhome-work:
-  adguardhome-conf:
