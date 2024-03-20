@@ -46,23 +46,23 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
     restart: unless-stopped
 
-  vscode-tunnel:
-    image: ghcr.io/timoverbrugghe/vscode-remote-tunnel-docker:main
-    container_name: vscode-tunnel
-    hostname: ${VSCODE_TUNNEL_NAME}
-    restart: unless-stopped
-    volumes:
-      - /var/lib/docker/volumes:/home/workspace
-      - vscode-tunnel:/root/.vscode # To persist tunnel registration
-      - vscode-tunnel-server:/root/.vscode-server # To persist extensions and other settings
-    labels:
-      traefik.enable: false
+  # vscode-tunnel:
+  #   image: ghcr.io/timoverbrugghe/vscode-remote-tunnel-docker:main
+  #   container_name: vscode-tunnel
+  #   hostname: ${VSCODE_TUNNEL_NAME}
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /var/lib/docker/volumes:/home/workspace
+  #     - vscode-tunnel:/root/.vscode # To persist tunnel registration
+  #     - vscode-tunnel-server:/root/.vscode-server # To persist extensions and other settings
+  #   labels:
+  #     traefik.enable: false
 
 volumes:
   adguardhome-work:
   adguardhome-conf:
-  vscode-tunnel:
-  vscode-tunnel-server:
+  # vscode-tunnel:
+  # vscode-tunnel-server:
 
 networks:
   dockervlan:
