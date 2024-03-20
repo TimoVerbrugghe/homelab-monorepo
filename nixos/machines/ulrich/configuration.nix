@@ -29,8 +29,9 @@ in
       ../../modules/portainer-agent.nix # Enable Portainer Server at startup
       ../../modules/vm-options.nix # Some default options you should enable on VMs
       ../../modules/vscode-server.nix # Enable VS Code server
-      ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey
+      ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
       ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
+      ../../modules/certbot.nix # Enable certbot container to get certs, you need to add a cloudflare api key file to /etc/nixos/cloudflare-apikey.nix
     ];
 
   ############################
