@@ -31,8 +31,8 @@ services:
     ports:
       - 8082:80/tcp
     healthcheck:
-      test: ["CMD-SHELL", "sleep 10 && tailscale status"]
-      interval: 1s
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 10s
       timeout: 5s
       retries: 60
 
@@ -70,12 +70,10 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_PORTAINER}
       - TS_STATE_DIR=/var/lib/tailscale/state
     healthcheck:
-      test: ["CMD-SHELL", "sleep 10 && tailscale status"]
-      interval: 1s
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 10s
       timeout: 5s
       retries: 60
-
-
 
 volumes:
   tailscale-filebrowser:

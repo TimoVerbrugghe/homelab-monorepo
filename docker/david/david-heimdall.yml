@@ -4,7 +4,7 @@ services:
   tailscale-heimdall:
     image: tailscale/tailscale ## Always use this
     container_name: tailscale-heimdall ## rename to tailscale-<SERVICE YOU WANT TO DEPLOY>
-    hostname: home ## this will be the first part of the URL in <hostname>.werewolf-castor.ts.net
+    hostname: home ## this will be the first part of the URL in <hostname>.<tailscaledomain>
     restart: always ## always use this
     volumes: ## these volumes always have to be defined for tailscale, rename to tailscale-<SERVICE YOU WANT TO DEPLOY>
       - /dev/net/tun:/dev/net/tun
@@ -20,7 +20,7 @@ services:
       - 443:443/tcp
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
+      interval: 10s
       timeout: 5s
       retries: 60
 
