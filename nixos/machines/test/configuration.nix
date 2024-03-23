@@ -126,6 +126,8 @@ in
       intel-compute-runtime
       vaapiVdpau
       libvdpau-va-gl
+      vaapiIntel
+      intel-ocl
     ];
   };
 
