@@ -351,6 +351,7 @@ in
     docker-compose
     tmux
     nfs-utils
+    ocl-icd
   ];
 
   ## Enable SSH
