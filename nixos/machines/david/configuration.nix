@@ -104,7 +104,7 @@ in
   ## Autoupgrade settings
   system.autoUpgrade = {
     enable = true;
-    flake = "github:TimoVerbrugghe/homelab-monorepo?dir=nixos#francis";
+    flake = "github:TimoVerbrugghe/homelab-monorepo?dir=nixos#david";
     flags = [
       "--update-input"
       "nixpkgs"
@@ -124,8 +124,14 @@ in
     extraPackages = with pkgs; [
       intel-media-driver
       intel-compute-runtime
+      vaapiVdpau
+      libvdpau-va-gl
+      vaapiIntel
+      intel-ocl
     ];
   };
+
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
 
   ## Nix-store optimizations
   nix.optimise.automatic = true;
