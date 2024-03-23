@@ -22,7 +22,7 @@ let
   softdep bochs pre: i915
   '';
 
-  tailscaleDomain = "david-david.ts.net";
+  tailscaleDomain = "mermaid-alpha.ts.net";
 
   portainerCompose = pkgs.writeText "portainer-docker-compose.yml" ''
     version: '3.8'
