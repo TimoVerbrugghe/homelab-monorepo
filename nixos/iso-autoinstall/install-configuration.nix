@@ -59,6 +59,7 @@
   environment.systemPackages = with pkgs; [
     git
     nano
+    gptfdisk
   ];
 
   # Enable QEMU guest agent for better VM integration
