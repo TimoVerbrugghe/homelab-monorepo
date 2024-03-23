@@ -10,6 +10,8 @@
     jq
     iputils
     neofetch
+    tmux
+    nfs-utils
   ];
 
 }

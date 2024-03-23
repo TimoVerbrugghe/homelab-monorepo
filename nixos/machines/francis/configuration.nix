@@ -341,6 +341,8 @@ in
     libva-utils
     intel-gpu-tools
     docker-compose
+    tmux
+    nfs-utils
   ];
 
   ## Enable SSH
