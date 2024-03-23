@@ -124,8 +124,12 @@ in
     extraPackages = with pkgs; [
       intel-media-driver
       intel-compute-runtime
+      vaapiVdpau
+      libvdpau-va-gl
     ];
   };
+
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
 
   ## Nix-store optimizations
   nix.optimise.automatic = true;
