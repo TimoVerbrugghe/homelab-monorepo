@@ -46,7 +46,7 @@ services:
       - FB_NOAUTH=true
     network_mode: service:tailscale-filebrowser
     volumes:
-      - movies:/srv/media
+      - movies:/srv/movies
       - tvshows:/srv/tvshows
       - downloads:/srv/downloads
       - other:/srv/other
