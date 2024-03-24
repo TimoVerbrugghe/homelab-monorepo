@@ -1,0 +1,98 @@
+version: "3.8"
+
+services:
+
+  tailscale-homeassistant:
+    image: tailscale/tailscale
+    container_name: tailscale-homeassistant
+    hostname: hass
+    restart: always
+    networks:
+      dockervlan:
+        ipv4_address: ${HASS_IP_ADDRESS}
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-homeassistant:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_HASS}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: always
+    network_mode: service:tailscale-homeassistant
+    privileged: true
+    volumes:
+      - homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    restart: always
+    volumes:
+      - mqtt:/mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+
+  tailscale-zigbee2mqtt:
+    image: tailscale/tailscale
+    container_name: tailscale-zigbee2mqtt
+    hostname: zigbee2mqtt
+    restart: always
+    network_mode: host
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-zigbee2mqtt:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    ports:
+      - 9442:9442
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_Z2M}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt
+    restart: always
+    network_mode: service:tailscale-zigbee2mqtt
+    volumes:
+      - zigbee2mqtt:/app/data
+    environment:
+      - TZ=Europe/Brussels
+
+volumes:
+  homeassistant:
+  mqtt:
+  zigbee2mqtt:
+  tailscale-zigbee2mqtt:
+  tailscale-homeassistant:
+
+networks:
+  dockervlan:
+    name: dockervlan
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "10.10.10.0/24"
+          gateway: "10.10.10.1"
+    
