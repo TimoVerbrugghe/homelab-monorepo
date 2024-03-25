@@ -27,11 +27,8 @@ in
     ];
 
     certs = {
-      "dns.timo.be" = {
-      };
-      "home.timo.be" = {
-      };
-      "*.home.timo.be" = {
+      "timo.be" = {
+        extraDomainNames = [ "*.home.timo.be" "dns.timo.be" "home.timo.be" ];
       };
     };
   };
