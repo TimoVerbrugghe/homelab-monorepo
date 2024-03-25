@@ -14,7 +14,7 @@ let
       state: started
       volumes:
         - /etc/letsencrypt:/etc/letsencrypt
-      dns_servers:
+      dns:
         - "8.8.8.8"
         - "1.1.1.1"
       command: >-
