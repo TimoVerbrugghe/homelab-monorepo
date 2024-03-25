@@ -17,7 +17,7 @@ let
       dns_servers:
         - "8.8.8.8"
         - "1.1.1.1"
-      command: |
+      command: >-
         certonly 
         --non-interactive --keep-until-expiring --agree-tos --no-eff-email
         --dns-cloudflare

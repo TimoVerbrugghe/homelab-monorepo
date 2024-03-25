@@ -17,8 +17,8 @@ let
         ports:
           - "9001:9001"
       
-      networks:
-        dockerproxy:
+    networks:
+      dockerproxy:
   '';
 
 in
