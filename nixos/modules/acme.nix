@@ -23,7 +23,7 @@ in
     defaults.dnsProvider = "cloudflare";
     defaults.dnsResolver = "1.1.1.1:53";
     defaults.extraLegoFlags = [ # Store certificates in /etc/letsencrypt folder
-      "--path /etc/letsencrypt"
+      "--path '/etc/letsencrypt'"
     ];
 
     certs = {
