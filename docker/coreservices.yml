@@ -69,7 +69,7 @@ networks:
     name: dockervlan
     driver: macvlan
     driver_opts:
-      parent: eth0 macvlan0
+      parent: eth0
     ipam:
       config:
         - subnet: "10.10.10.0/24"
