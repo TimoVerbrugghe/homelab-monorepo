@@ -9,10 +9,8 @@ let
   hostname = "nixos";
   username = "nixos";
   hashedPassword = "$y$j9T$WICga7IOUb026e7gehsQi.$ZrC/f/Ar/VeP2dRqPIA7PXM0t4EsvoUbx.PueUJPFW8";
-  # ipAddress = "192.168.0.3";
-  # defaultGateway = "192.168.0.1";
-  ipAddress = "10.10.10.16";
-  defaultGateway = "10.10.10.1";
+  ipAddress = "192.168.0.3";
+  defaultGateway = "192.168.0.1";
   kernelParams = [
      "i915.enable_guc=2" # Enable Intel Quicksync
   ];
