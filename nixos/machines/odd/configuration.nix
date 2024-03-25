@@ -30,7 +30,7 @@ in
       ../../modules/vm-options.nix # Some default options you should enable on VMs      
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey
-      ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
+      # ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
       ../../modules/acme.nix # Get certs using nixos's built-in acme function (which uses lego), you need to add a cloudflare api key file to /etc/nixos/cloudflare-apikey.nix
     ];
 
@@ -87,8 +87,25 @@ in
 				];
 			};
     };
+  };
 
+  # Necessary to install GPU drivers
+  nixpkgs.config.allowUnfree = true;
 
+  environment.systemPackages = with pkgs; [
+    clinfo
+    libva-utils
+    intel-gpu-tools
+  ];
+
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      (pkgs.callPackage ./onevpl-intel-gpu.nix { })
+      intel-media-driver
+      intel-compute-runtime
+      intel-ocl
+    ];
   };
 
 }
