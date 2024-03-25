@@ -14,6 +14,8 @@ in
       /etc/nixos/cloudflare-apikey.nix
   ];
 
+
+  # Certificates generated will be stored in /var/lib/acme
   security.acme = {
     acceptTerms = true;
     defaults.email = acmeEmail;
