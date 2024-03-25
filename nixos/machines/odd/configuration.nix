@@ -105,6 +105,7 @@ in
       intel-media-driver
       intel-compute-runtime
       intel-ocl
+      intel-gmmlib
     ];
   };
 
