@@ -104,8 +104,7 @@ in
       (pkgs.callPackage ./onevpl-intel-gpu.nix { })
       intel-media-driver
       intel-compute-runtime
-      # intel-ocl
-      intel-media-sdk
+      intel-ocl
     ];
   };
 
