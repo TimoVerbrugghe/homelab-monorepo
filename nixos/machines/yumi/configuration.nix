@@ -11,7 +11,7 @@ let
   hashedPassword = "$y$j9T$Mh0gtGs5dzw.7oMTrWrmV.$7QTuj6tpMnkTmlVGzas/vEh9sdUzezyiv4CS.f8M6I2";
   ipAddress = "10.10.10.7";
   kernelParams = [
-     "i915.enable_guc=2" # Enable Intel Quicksync
+     "i915.enable_guc=3" # Enable Intel Quicksync
   ];
   
   # Load bochs (proxmox standard VGA driver) after the i915 driver so that we can use noVNC while iGPU was passed through
