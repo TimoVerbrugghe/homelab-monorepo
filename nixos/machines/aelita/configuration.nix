@@ -9,7 +9,7 @@ let
   hostname = "aelita";
   username = "aelita";
   hashedPassword = "$y$j9T$3CG7KE5qgfuBLRxsUIgN8/$DG1HbNtEa9VA.oM6ZFyCicO9uJOSwFl.nJo0HNbtIv5";
-  ipAddress = "10.10.10.10";
+  ipAddress = "10.10.10.11";
   kernelParams = [
   ];
   extraModprobeConfig = ''
@@ -57,14 +57,14 @@ in
 
   networking = {
     usePredictableInterfaceNames = false;
-    # defaultGateway = "${config.vars.defaultGateway}";
-    # interfaces = {
-    #   eth0 = {
-    #     ipv4.addresses  = [
-    #       { address = "${ipAddress}"; prefixLength = 24; }
-    #     ];
-    #   };
-    # };
+    defaultGateway = "${config.vars.defaultGateway}";
+    interfaces = {
+      eth0 = {
+        ipv4.addresses  = [
+          { address = "${ipAddress}"; prefixLength = 24; }
+        ];
+      };
+    };
   };
 
 }
