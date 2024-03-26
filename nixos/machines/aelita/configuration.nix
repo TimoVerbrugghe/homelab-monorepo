@@ -57,6 +57,15 @@ in
   ## Networking setup
 
   networking = {
+
+    macvlans = {
+      macvlan0 = {
+			  interface = "eth0";
+			  mode = "bridge";
+		  };
+    };
+
+
     usePredictableInterfaceNames = false;
     defaultGateway = "${config.vars.defaultGateway}";
     interfaces = {
@@ -65,6 +74,15 @@ in
           { address = "${ipAddress}"; prefixLength = 24; }
         ];
       };
+			
+      macvlan0 = {
+				ipv4.addresses =  [ 
+					{ address = "10.10.10.0"; prefixLength = 24; } 
+				];
+				ipv4.routes = [
+					{ address = "10.10.10.23"; prefixLength = 32; }
+				];
+			};
     };
   };
 
