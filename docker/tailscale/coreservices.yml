@@ -43,3 +43,14 @@ services:
 volumes:
   adguardhome-work:
   adguardhome-conf:
+
+networks:
+  dockervlan:
+    name: dockervlan
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "10.10.10.0/24"
+          gateway: "10.10.10.1"
