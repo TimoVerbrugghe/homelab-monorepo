@@ -3,8 +3,8 @@
 {
   # Adding default DNS servers
   networking.nameservers = [
-    "1.1.1.1"
-    "8.8.8.8"
-    "8.8.4.4"
+    "10.10.10.20"
+    "10.10.10.21"
+    "10.10.10.22"
   ];
 }
