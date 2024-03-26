@@ -58,16 +58,16 @@ in
 
   ## Networking setup
 
-  networking = {
-    usePredictableInterfaceNames = false;
-    defaultGateway = "${config.vars.defaultGateway}";
-    interfaces = {
-      eth0 = {
-        ipv4.addresses  = [
-          { address = "${ipAddress}"; prefixLength = 24; }
-        ];
-      };
-    };
-  };
+  # networking = {
+  #   usePredictableInterfaceNames = false;
+  #   defaultGateway = "${config.vars.defaultGateway}";
+  #   interfaces = {
+  #     eth0 = {
+  #       ipv4.addresses  = [
+  #         { address = "${ipAddress}"; prefixLength = 24; }
+  #       ];
+  #     };
+  #   };
+  # };
 
 }
