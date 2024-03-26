@@ -41,6 +41,7 @@ in
   boot.kernelParams = kernelParams;
   boot.extraModprobeConfig = extraModprobeConfig;
   hardware.cpu.intel.updateMicrocode = true;
+  console.keyMap = "be-latin1";
 
   # Set up single user using user.nix module
   services.user = {

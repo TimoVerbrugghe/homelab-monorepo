@@ -36,6 +36,7 @@ in
   boot.kernelParams = kernelParams;
   boot.extraModprobeConfig = extraModprobeConfig;
   hardware.cpu.amd.updateMicrocode = true;
+  console.keyMap = "us"; # truenas spice display will translate be-latin keymap to us keymap
 
   # Set up single user using user.nix module
   services.user = {
