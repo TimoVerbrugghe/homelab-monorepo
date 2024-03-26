@@ -8,20 +8,38 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-  tailscale-portainer:
-    image: tailscale/tailscale
-    container_name: tailscale-portainer
-    restart: always
-    network_mode: container:portainer
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    restart: unless-stopped
+    networks:
+      dockervlan:
+        ipv4_address: ${ADGUARDHOME_IP_ADDRESS}
     volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-portainer:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
+      - adguardhome-work:/opt/adguardhome/work
+      - adguardhome-conf:/opt/adguardhome/conf
+      - /etc/letsencrypt:/etc/letsencrypt
+
+  dockerproxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy:latest
+    container_name: dockerproxy
     environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_PORTAINER}
-      - TS_STATE_DIR=/var/lib/tailscale/state
+        - CONTAINERS=1 # Allow access to viewing containers
+        - POST=0 # Disallow any POST operations (effectively read-only)
+    ports:
+        - 2375:2375
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
+    restart: unless-stopped
+
+  cloudflared-tunnel:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
+    restart: always
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
 
 volumes:
-   tailscale-portainer:
+  adguardhome-work:
+  adguardhome-conf:
