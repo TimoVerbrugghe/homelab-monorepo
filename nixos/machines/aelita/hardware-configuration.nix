@@ -9,7 +9,7 @@
       (nixpkgs + /nixos/modules/profiles/qemu-guest.nix)
     ];
     
-  boot.initrd.availableKernelModules = [ "ata_piix" "xhci_pci" "uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "virtio_blk" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [ "ata_piix" "xhci_pci" "ahci" "virtio_pci" "virtio_blk" ];
   boot.initrd.kernelModules = [ ];
   
   # Running on truenas with AMD Ryzen cpu
