@@ -67,43 +67,6 @@ services:
       traefik.http.services.jdownloader.loadbalancer.server.port: 5800
       traefik.http.routers.jdownloader.middlewares: keycloak-auth@file
     
-  aria2-pro:
-    image: p3terx/aria2-pro
-    container_name: aria2-pro
-    restart: always
-    networks: 
-      - dockerproxy
-    logging:
-      options:
-        max-size: 1m
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - UMASK_SET=022
-      - RPC_SECRET=${ARIA2_RPC_SECRET}
-      - RPC_PORT=6800
-      - LISTEN_PORT=6888
-    volumes:
-      - aria2-pro:/config
-      - downloads:/downloads
-    labels:
-      traefik.http.routers.aria2pro.entrypoints: https
-      traefik.http.services.aria2pro.loadbalancer.server.port: 6800
-
-  ariang:
-    image: p3terx/ariang
-    container_name: ariang
-    restart: always
-    networks:
-      - dockerproxy
-    logging:
-      options:
-        max-size: 1m
-    labels:
-      traefik.http.routers.ariang.entrypoints: https
-      traefik.http.services.ariang.loadbalancer.server.port: 6880
-      traefik.http.routers.ariang.middlewares: keycloak-auth@file    
-
   metube:
     image: ghcr.io/alexta69/metube
     container_name: metube
