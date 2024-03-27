@@ -382,6 +382,9 @@ in
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     enable = true;
+    path = with pkgs; [
+      docker
+    ];
     script = ''
       docker ps -a --filter "status=exited" --format "{{.ID}}" | while read -r container_id; do
         error=$(docker inspect --format "{{.State.Error}}" "$container_id")
