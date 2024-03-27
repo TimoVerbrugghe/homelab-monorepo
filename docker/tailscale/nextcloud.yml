@@ -45,10 +45,10 @@ services:
     network_mode: service:tailscale-nextcloud
     restart: always
     depends_on:
-      nextcloud-redis:
-      nextcloud-mariadb:
-      tailscale-nextcloud:
-        condition: service_healthy
+      - nextcloud-redis
+      - nextcloud-mariadb
+      - tailscale-nextcloud:
+          condition: service_healthy
     volumes:
       - nextcloud:/var/www/html
       - nextcloud-data:/data
@@ -91,6 +91,12 @@ services:
     container_name: nextcloud-redis
 
 volumes:
+  tailscale-nextcloud:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-nextcloud"
   nextcloud:
     driver: local
     driver_opts:
