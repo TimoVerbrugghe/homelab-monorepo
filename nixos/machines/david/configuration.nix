@@ -281,7 +281,6 @@ in
   services.tailscale.enable = true;
   services.tailscale.useRoutingFeatures = "both";
   services.tailscale.extraUpFlags = [
-    "--ssh"
     "--advertise-exit-node"
     "--advertise-routes=192.168.0.0/24"
   ];

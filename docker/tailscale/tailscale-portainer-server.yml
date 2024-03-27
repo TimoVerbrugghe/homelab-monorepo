@@ -17,13 +17,5 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_PORTAINER}
       - TS_STATE_DIR=/var/lib/tailscale/state
 
-  cloudflared-tunnel:
-    container_name: cloudflared-tunnel
-    image: cloudflare/cloudflared
-    restart: always
-    command: tunnel run
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
-
 volumes:
    tailscale-portainer:
