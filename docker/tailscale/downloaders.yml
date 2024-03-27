@@ -17,7 +17,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_QBITTORRENT}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/qbittorrent.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -60,7 +59,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_JDOWNLOADER2}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/jdownloader2.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -98,7 +96,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_METUBE}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/metube.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s

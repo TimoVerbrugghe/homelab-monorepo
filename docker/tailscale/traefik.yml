@@ -17,7 +17,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_TRAEFIK}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/traefik.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s

@@ -18,7 +18,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_SONARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/sonarr.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -66,7 +65,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_RADARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/radarr.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -114,7 +112,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_BAZARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/bazarr.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -162,7 +159,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_OVERSEERR}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/overseerr.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -208,7 +204,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_PROWLARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/prowlarr.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -254,7 +249,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_EMULATORJS}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/emulatorjs.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -331,7 +325,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_LIDARR}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/lidarr.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s

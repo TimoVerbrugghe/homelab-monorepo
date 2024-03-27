@@ -6,8 +6,6 @@ services:
     container_name: tailscale-filebrowser
     hostname: filebrowser
     restart: always
-    # networks: 
-    #   - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-filebrowser:/var/lib/tailscale
@@ -17,7 +15,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_FILEBROWSER}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/filebrowser.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -50,8 +47,6 @@ services:
     container_name: tailscale-filezilla
     hostname: filezilla
     restart: always
-    # networks: 
-    #   - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-filezilla:/var/lib/tailscale
@@ -61,7 +56,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_FILEZILLA}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/filezilla.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
@@ -92,8 +86,6 @@ services:
     container_name: tailscale-krusader
     hostname: krusader
     restart: always
-    # networks: 
-    #   - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-krusader:/var/lib/tailscale
@@ -103,7 +95,6 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_KRUSADER}
       - TS_STATE_DIR=/var/lib/tailscale/state
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/krusader.json
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
