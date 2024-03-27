@@ -391,8 +391,8 @@ in
       done
     '';
     serviceConfig = {
-      User = root;
-      Group = root;
+      User = "root";
+      Group = "root";
       Type = "oneshot";
       restart = "no";
     };
