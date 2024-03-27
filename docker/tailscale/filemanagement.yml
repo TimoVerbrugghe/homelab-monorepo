@@ -135,11 +135,12 @@ services:
 
 volumes:
   tailscale-filebrowser:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/FranzHopper/appdata/tailscale-filebrowser"
+  # tailscale-filebrowser:
+  #   driver: local
+  #   driver_opts:
+  #     type: "nfs"
+  #     o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+  #     device: ":/mnt/FranzHopper/appdata/tailscale-filebrowser"
   tailscale-filezilla:
     driver: local
     driver_opts:
