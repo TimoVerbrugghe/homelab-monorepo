@@ -45,6 +45,7 @@ services:
     network_mode: service:tailscale-nextcloud
     restart: always
     depends_on:
+      nextcloud-redis:
       nextcloud-mariadb:
       tailscale-nextcloud:
         condition: service_healthy
