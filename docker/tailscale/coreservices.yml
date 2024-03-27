@@ -45,6 +45,9 @@ volumes:
   adguardhome-conf:
 
 networks:
+  dockerproxy:
+    name: dockerproxy
+    
   dockervlan:
     name: dockervlan
     driver: macvlan
