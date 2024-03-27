@@ -42,21 +42,6 @@ services:
       traefik.http.routers.homebridge.entrypoints: https
       traefik.http.services.homebridge.loadbalancer.server.port: 9442
 
-  homebridge:
-    container_name: homebridge
-    image: homebridge/homebridge:latest
-    restart: always
-    network_mode: host
-    volumes:
-      - homebridge:/homebridge
-    logging:
-      driver: json-file
-      options:
-        max-size: "10mb"
-        max-file: "1"
-    labels:
-      traefik.enable: false
-
   scrypted:
     container_name: scrypted
     restart: always
