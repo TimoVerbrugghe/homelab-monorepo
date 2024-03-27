@@ -376,7 +376,7 @@ in
 
   ## Add this systemd service because docker keeps quitting containers on startup that I have connected with tailscale even with docker compose healthchecks -_-'
 
-  services.systemd.services.docker-container-restart = {
+  systemd.services.docker-container-restart = {
     description = "Periodically restart Docker containers with specific error - cannot join network of running container";
     after = [ "network-online.target" "docker.service" "docker.socket"];
     wants = [ "network-online.target" ];
@@ -397,7 +397,7 @@ in
     
   };
 
-  services.systemd.timers.docker-container-restart = {
+  systemd.timers.docker-container-restart = {
     description = "Timer to periodically restart Docker containers";
     wantedBy = [ "timers.target" ];
     timerConfig = {
