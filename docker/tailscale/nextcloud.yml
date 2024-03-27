@@ -54,10 +54,10 @@ services:
       - isos:/isos
       - downloads:/downloads
     environment:
-      - MYSQL_PASSWORD={$MYSQL_PASSWORD}
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_HOST=nextcloud-postgres
+      - POSTGRES_PASSWORD=${NEXTCLOUD_POSTGRES_PASSWORD}
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_HOST=nextcloud-postgres
       - REDIS_HOST=nextcloud-redis
     labels:
       traefik.http.routers.nextcloud.entrypoints: https
