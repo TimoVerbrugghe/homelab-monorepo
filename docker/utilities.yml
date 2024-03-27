@@ -147,21 +147,6 @@ services:
     labels:
       traefik.enable: false
 
-  iventoy:
-    image: ziggyds/iventoy
-    container_name: iventoy
-    restart: always
-    privileged: true
-    networks:
-      dockervlan:
-        ipv4_address: ${IVENTOY_IP_ADDRESS}
-    volumes:
-      - iventoy-config:/app/data
-      - iventoy-log:/app/log
-      - isos:/app/iso
-    labels:
-      traefik.enable: false
-
 volumes:
   scanservjs-scans:
   scanservjs-config:
