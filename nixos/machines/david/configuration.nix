@@ -382,9 +382,7 @@ in
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     enable = true;
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = ''
+    script = ''
       docker ps -a --filter "status=exited" --format "{{.ID}}" | while read -r container_id; do
         error=$(docker inspect --format "{{.State.Error}}" "$container_id")
         if [[ "$error" == *"cannot join network of a non running container"* ]]; then
@@ -392,7 +390,9 @@ in
         fi
       done
     '';
-    restart = "no";
+    serviceConfig = {
+      Type = "oneshot";
+      restart = "no";
     };
     
   };
