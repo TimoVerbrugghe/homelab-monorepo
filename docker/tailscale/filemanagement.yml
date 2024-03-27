@@ -6,6 +6,8 @@ services:
     container_name: tailscale-filebrowser
     hostname: filebrowser
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-filebrowser:/var/lib/tailscale
@@ -47,6 +49,8 @@ services:
     container_name: tailscale-filezilla
     hostname: filezilla
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-filezilla:/var/lib/tailscale
@@ -86,6 +90,8 @@ services:
     container_name: tailscale-krusader
     hostname: krusader
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-krusader:/var/lib/tailscale
