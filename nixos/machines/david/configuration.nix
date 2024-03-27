@@ -382,8 +382,8 @@ in
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     enable = true;
-    type = "oneshot";
     serviceConfig = {
+      Type = "oneshot";
       ExecStart = ''
       docker ps -a --filter "status=exited" --format "{{.ID}}" | while read -r container_id; do
         error=$(docker inspect --format "{{.State.Error}}" "$container_id")
