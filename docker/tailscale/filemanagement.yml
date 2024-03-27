@@ -121,11 +121,11 @@ services:
       - isos:/isos
     restart: unless-stopped
     depends_on:
-      tailscale-krusader:
+      tailscale-doublecommander:
         condition: service_healthy
     labels:
-      traefik.http.routers.krusader.entrypoints: https
-      traefik.http.services.krusader.loadbalancer.server.port: 3000
+      traefik.http.routers.doublecommander.entrypoints: https
+      traefik.http.services.doublecommander.loadbalancer.server.port: 3000
 
 volumes:
   tailscale-filebrowser:
