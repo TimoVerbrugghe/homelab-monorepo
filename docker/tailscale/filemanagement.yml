@@ -6,8 +6,8 @@ services:
     container_name: tailscale-filebrowser
     hostname: filebrowser
     restart: always
-    networks: 
-      - dockerproxy
+    # networks: 
+    #   - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-filebrowser:/var/lib/tailscale
@@ -38,9 +38,9 @@ services:
       - isos:/srv/isos
       - downloads:/srv/downloads
       - filebrowser:/config
-    # depends_on:
-    #   tailscale-filebrowser:
-    #     condition: service_healthy
+    depends_on:
+      tailscale-filebrowser:
+        condition: service_healthy
     labels:
       traefik.http.routers.filebrowser.entrypoints: https
       traefik.http.services.filebrowser.loadbalancer.server.port: 80
@@ -50,8 +50,8 @@ services:
     container_name: tailscale-filezilla
     hostname: filezilla
     restart: always
-    networks: 
-      - dockerproxy
+    # networks: 
+    #   - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-filezilla:/var/lib/tailscale
@@ -80,9 +80,9 @@ services:
       - media:/media
       - isos:/isos
       - downloads:/downloads
-    # depends_on:
-    #   tailscale-filezilla:
-    #     condition: service_healthy
+    depends_on:
+      tailscale-filezilla:
+        condition: service_healthy
     labels:
       traefik.http.routers.filezilla.entrypoints: https
       traefik.http.services.filezilla.loadbalancer.server.port: 3000
@@ -92,8 +92,8 @@ services:
     container_name: tailscale-krusader
     hostname: krusader
     restart: always
-    networks: 
-      - dockerproxy
+    # networks: 
+    #   - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-krusader:/var/lib/tailscale
@@ -126,21 +126,20 @@ services:
       - isos:/isos
       - downloads:/downloads
       - krusader:/config
-    # depends_on:
-    #   tailscale-krusader:
-    #     condition: service_healthy
+    depends_on:
+      tailscale-krusader:
+        condition: service_healthy
     labels:
       traefik.http.routers.krusader.entrypoints: https
       traefik.http.services.krusader.loadbalancer.server.port: 6080
 
 volumes:
   tailscale-filebrowser:
-  # tailscale-filebrowser:
-  #   driver: local
-  #   driver_opts:
-  #     type: "nfs"
-  #     o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-  #     device: ":/mnt/FranzHopper/appdata/tailscale-filebrowser"
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-filebrowser"
   tailscale-filezilla:
     driver: local
     driver_opts:
@@ -190,7 +189,7 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/downloads"
 
-networks:
-  dockerproxy:
-    external: true
+# networks:
+#   dockerproxy:
+#     external: true
 
