@@ -110,6 +110,7 @@ services:
   doublecommander:
     image: lscr.io/linuxserver/doublecommander:latest
     container_name: doublecommander
+    network_mode: service:tailscale-doublecommander
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
