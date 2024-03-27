@@ -85,21 +85,21 @@ services:
       traefik.http.routers.filezilla.entrypoints: https
       traefik.http.services.filezilla.loadbalancer.server.port: 3000
 
-  tailscale-krusader:
+  tailscale-doublecommander:
     image: tailscale/tailscale
-    container_name: tailscale-krusader
-    hostname: krusader
+    container_name: tailscale-doublecommander
+    hostname: doublecommander
     restart: always
     networks:
       - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
-      - tailscale-krusader:/var/lib/tailscale
+      - tailscale-doublecommander:/var/lib/tailscale
     cap_add:
       - net_admin
       - sys_module
     environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_KRUSADER}
+      - TS_AUTH_KEY=${TS_AUTH_KEY_DOUBLECOMMANDER}
       - TS_STATE_DIR=/var/lib/tailscale/state
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
@@ -107,28 +107,25 @@ services:
       timeout: 5s
       retries: 60
 
-  krusader:
-    container_name: krusader
-    image: binhex/arch-krusader
-    restart: always
-    privileged: true
-    network_mode: service:tailscale-krusader
+  doublecommander:
+    image: lscr.io/linuxserver/doublecommander:latest
+    container_name: doublecommander
     environment:
-      - TEMP_FOLDER=/config/krusader/tmp
-      - WEBPAGE_TITLE=krusader
       - PUID=${PUID}
       - PGID=${PGID}
+      - TZ=Etc/UTC
     volumes:
+      - doublecommander:/config
       - media:/media
-      - isos:/isos
       - downloads:/downloads
-      - krusader:/config
+      - isos:/isos
+    restart: unless-stopped
     depends_on:
       tailscale-krusader:
         condition: service_healthy
     labels:
       traefik.http.routers.krusader.entrypoints: https
-      traefik.http.services.krusader.loadbalancer.server.port: 6080
+      traefik.http.services.krusader.loadbalancer.server.port: 3000
 
 volumes:
   tailscale-filebrowser:
@@ -143,12 +140,12 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/appdata/tailscale-filezilla"
-  tailscale-krusader:
+  tailscale-doublecommander:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/FranzHopper/appdata/tailscale-krusader"
+      device: ":/mnt/FranzHopper/appdata/tailscale-doublecommander"
   filebrowser:
     driver: local
     driver_opts:
@@ -161,12 +158,12 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/appdata/filezilla"
-  krusader:
+  doublecommander:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/FranzHopper/appdata/krusader"
+      device: ":/mnt/FranzHopper/appdata/doublecommander"
   media:
     driver: local
     driver_opts:
