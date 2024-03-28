@@ -162,3 +162,6 @@ volumes:
 networks:
   dockervlan:
     external: true
+  
+  dockerproxy:
+    external: true
