@@ -18,7 +18,7 @@ services:
     container_name: mqtt
     restart: always
     networks:
-      - defaultbridge
+      - dockerproxy
     volumes:
       - mqtt:/mosquitto
     ports:
@@ -32,13 +32,12 @@ services:
     image: koenkk/zigbee2mqtt
     restart: always
     networks:
-      - defaultbridge
+      - dockerproxy
     volumes:
       - zigbee2mqtt:/app/data
     environment:
       - TZ=Europe/Brussels
     labels:
-      traefik.docker.network: defaultbridge
       traefik.http.routers.homebridge.entrypoints: https
       traefik.http.services.homebridge.loadbalancer.server.port: 9442
 
@@ -65,5 +64,5 @@ volumes:
 networks:
   dockervlan:
     external: true
-  defaultbridge:
+  dockerproxy:
     external: true
