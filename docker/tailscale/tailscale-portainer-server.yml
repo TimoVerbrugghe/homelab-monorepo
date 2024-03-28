@@ -18,6 +18,8 @@ services:
     labels:
       traefik.http.routers.filebrowser.entrypoints: https
       traefik.http.services.filebrowser.loadbalancer.server.port: 9443
+      traefik.http.routers.overseerr.rule: Host(`portainer.home.timo.be`) || Host(`portainer.timo.be`)
+
 
 volumes:
    tailscale-portainer:
