@@ -14,8 +14,30 @@ services:
       - iventoy-log:/app/log
       - isos:/app/iso
 
+  tailscale-webtop:
+    image: tailscale/tailscale
+    container_name: tailscale-webtop
+    hostname: webtop
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-webtop:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_WEBTOP}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
   webtop:
-    image: lscr.io/linuxserver/webtop:ubuntu-kde
+    image: lscr.io/linuxserver/webtop:ubuntu-xfce
     container_name: webtop
     restart: unless-stopped
     security_opt:
@@ -35,9 +57,65 @@ services:
     labels:
       traefik.http.routers.webtop.entrypoints: https
       traefik.http.services.webtop.loadbalancer.server.port: 3000
-      traefik.http.routers.webtop.middlewares: keycloak-auth@file
+
+  tailscale-scanservjs:
+    image: tailscale/tailscale
+    container_name: tailscale-scanservjs
+    hostname: scan
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-scanservjs:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_SCANSERVJS}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  scanservjs:
+    image: sbs20/scanservjs:latest
+    container_name: scanservjs
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - scanservjs-scans:/app/data/output
+      - scanservjs-config:/app/config
+    devices: 
+      - /dev/bus/usb:/dev/bus/usb
+    labels:
+      traefik.http.routers.scanservjs.entrypoints: https
+      traefik.http.services.scanservjs.loadbalancer.server.port: 8080
+      traefik.http.routers.scanservjs.rule: Host(`scan.thefactory.timo.be`) || Host(`scan.timo.be`)
+
 
 volumes:
+  scanservjs-scans:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/scanservjs-scans"
+  scanservjs-config:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/scanservjs-config"
+  tailscale-scanservjs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-scanservjs"
   iventoy-config:
     driver: local
     driver_opts:
@@ -50,26 +128,36 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/appdata/iventoy-log"
-  isos:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/FranzHopper/isos"
-
   webtop:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/appdata/webtop"
-
-  webtop-tailscale:
+  tailscale-webtop:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/FranzHopper/appdata/webtop-tailscale"
+      device: ":/mnt/FranzHopper/appdata/tailscale-webtop"
+  media:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media"
+  isos:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/isos"
+  downloads:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/downloads"
 
 networks:
   dockervlan:

@@ -28,38 +28,6 @@ services:
       traefik.http.services.localspeedtest.loadbalancer.server.port: 3000
       traefik.http.routers.localspeedtest.middlewares: keycloak-auth@file
 
-  scanservjs:
-    image: sbs20/scanservjs:latest
-    container_name: scanservjs
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    volumes:
-      - scanservjs-scans:/app/data/output
-      - scanservjs-config:/app/config
-    devices: 
-      - /dev/bus/usb:/dev/bus/usb
-    labels:
-      traefik.http.routers.scanservjs.entrypoints: https
-      traefik.http.services.scanservjs.loadbalancer.server.port: 8080
-      traefik.http.routers.scanservjs.middlewares: keycloak-auth@file
-      traefik.http.routers.scanservjs.rule: Host(`scan.home.timo.be`) || Host(`scan.timo.be`)
-
-  airsane:
-    image: claytsay/docker-airsane
-    container_name: airsane
-    restart: unless-stopped
-    networks: # Separate dockervlan network because this container runs avahi and don't want this to clash with other containers running avahi as well
-      dockervlan:
-        ipv4_address: ${AIRSANE_IP_ADDRESS}
-    environment:
-      SANED_ACL: 10.10.10.0/24
-      SANED_DEVICE: genesys:libusb:009:002
-    devices: 
-      - /dev/bus/usb:/dev/bus/usb
-    labels:
-      traefik.enable: false
-
   bitwarden:
     image: vaultwarden/server:latest
     container_name: bitwarden
@@ -98,29 +66,6 @@ services:
     labels:
       traefik.enable: false
 
-  webtop:
-    image: lscr.io/linuxserver/webtop:ubuntu-kde
-    container_name: webtop
-    restart: unless-stopped
-    security_opt:
-      - seccomp=unconfined
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - webtop:/config
-      - downloads:/thefactory-downloads
-      - media:/thefactory-media
-      - isos:/thefactory-isos
-    shm_size: "1gb"
-    labels:
-      traefik.http.routers.webtop.entrypoints: https
-      traefik.http.services.webtop.loadbalancer.server.port: 3000
-      traefik.http.routers.webtop.middlewares: keycloak-auth@file  
-
   uptimekuma:
     image: louislam/uptime-kuma
     container_name: uptimekuma
@@ -148,8 +93,6 @@ services:
       traefik.enable: false
 
 volumes:
-  scanservjs-scans:
-  scanservjs-config:
   bitwarden:
   bitwarden-export:
     driver: local
@@ -157,7 +100,6 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/other/bitwarden-export"
-  webtop:
   uptimekuma:
   netbootxyz-config:
   netbootxyz-assets:
@@ -171,18 +113,6 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/isos"
-  media:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/X.A.N.A./media"
-  downloads:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/FranzHopper/downloads"
 
 networks:
   dockerproxy:
