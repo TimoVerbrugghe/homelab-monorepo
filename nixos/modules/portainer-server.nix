@@ -18,6 +18,8 @@ let
         ports:
           - "8000:8000"
           - "9443:9443"
+        labels:
+          traefik.enable: false
     
     volumes:
       portainer:
