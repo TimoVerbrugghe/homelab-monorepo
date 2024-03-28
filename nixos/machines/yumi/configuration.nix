@@ -86,6 +86,9 @@ in
 				ipv4.routes = [
 					{ address = "10.10.10.20"; prefixLength = 32; }
 				];
+        ipv4.routes = [
+					{ address = "10.10.10.28"; prefixLength = 32; }
+				];
 			};
     };
 
