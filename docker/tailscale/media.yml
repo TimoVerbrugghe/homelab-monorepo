@@ -335,7 +335,7 @@ services:
     container_name: lidarr
     image: lscr.io/linuxserver/lidarr:latest
     restart: always
-    networks_mode: service:tailscale-lidarr
+    network_mode: service:tailscale-lidarr
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
