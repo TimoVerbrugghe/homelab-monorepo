@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-
   tailscale-portainer:
     image: tailscale/tailscale
     container_name: tailscale-portainer
@@ -16,6 +15,9 @@ services:
     environment:
       - TS_AUTH_KEY=${TS_AUTH_KEY_PORTAINER}
       - TS_STATE_DIR=/var/lib/tailscale/state
+    labels:
+      traefik.http.routers.filebrowser.entrypoints: https
+      traefik.http.services.filebrowser.loadbalancer.server.port: 9443
 
 volumes:
    tailscale-portainer:
