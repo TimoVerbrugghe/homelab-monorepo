@@ -5,7 +5,9 @@ services:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: always
-    network_mode: host
+    networks:
+      dockervlan:
+        ipv4_address: ${HASS_IP_ADDRESS}
     privileged: true
     volumes:
       - homeassistant:/config
