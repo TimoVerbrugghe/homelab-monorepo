@@ -16,9 +16,9 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_PORTAINER}
       - TS_STATE_DIR=/var/lib/tailscale/state
     labels:
-      traefik.http.routers.filebrowser.entrypoints: https
-      traefik.http.services.filebrowser.loadbalancer.server.port: 9443
-      traefik.http.routers.overseerr.rule: Host(`portainer.home.timo.be`) || Host(`portainer.timo.be`)
+      traefik.http.routers.portainer.entrypoints: https
+      traefik.http.services.portainer.loadbalancer.server.port: 9443
+      traefik.http.routers.portainer.rule: Host(`portainer.home.timo.be`) || Host(`portainer.timo.be`)
 
 
 volumes:
