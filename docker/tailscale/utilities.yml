@@ -14,6 +14,29 @@ services:
       - iventoy-log:/app/log
       - isos:/app/iso
 
+  webtop:
+    image: lscr.io/linuxserver/webtop:ubuntu-kde
+    container_name: webtop
+    restart: unless-stopped
+    security_opt:
+      - seccomp=unconfined
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - webtop:/config
+      - downloads:/thefactory-downloads
+      - media:/thefactory-media
+      - isos:/thefactory-isos
+    shm_size: "1gb"
+    labels:
+      traefik.http.routers.webtop.entrypoints: https
+      traefik.http.services.webtop.loadbalancer.server.port: 3000
+      traefik.http.routers.webtop.middlewares: keycloak-auth@file
+
 volumes:
   iventoy-config:
     driver: local
@@ -33,6 +56,20 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/isos"
+
+  webtop:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/webtop"
+
+  webtop-tailscale:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/webtop-tailscale"
 
 networks:
   dockervlan:

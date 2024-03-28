@@ -134,11 +134,15 @@ services:
     depends_on:
       tailscale-bazarr:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "wget http://localhost:6767/api/v1/status -qO /dev/null || exit 1"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
+      sonarr:
+        condition: service_started
+      radarr:
+        condition: service_started
+    # healthcheck:
+    #   test: ["CMD-SHELL", "wget http://localhost:6767/api/v1/status -qO /dev/null || exit 1"]
+    #   interval: 1s
+    #   timeout: 5s
+    #   retries: 60
     labels:
       traefik.http.routers.bazarr.entrypoints: https
       traefik.http.services.bazarr.loadbalancer.server.port: 6767
