@@ -42,8 +42,7 @@ services:
     restart: unless-stopped
     security_opt:
       - seccomp=unconfined
-    networks:
-      - dockerproxy
+    network_mode: service:tailscale-webtop
     environment:
       - PUID=1000
       - PGID=1000
@@ -57,6 +56,9 @@ services:
     labels:
       traefik.http.routers.webtop.entrypoints: https
       traefik.http.services.webtop.loadbalancer.server.port: 3000
+    depends_on:
+      tailscale-webtop:
+        condition: service_healthy
 
   tailscale-scanservjs:
     image: tailscale/tailscale
@@ -84,8 +86,7 @@ services:
     image: sbs20/scanservjs:latest
     container_name: scanservjs
     restart: unless-stopped
-    networks:
-      - dockerproxy
+    network_mode: service:tailscale-scanservjs
     volumes:
       - scanservjs-scans:/app/data/output
       - scanservjs-config:/app/config
@@ -95,6 +96,9 @@ services:
       traefik.http.routers.scanservjs.entrypoints: https
       traefik.http.services.scanservjs.loadbalancer.server.port: 8080
       traefik.http.routers.scanservjs.rule: Host(`scan.thefactory.timo.be`) || Host(`scan.timo.be`)
+    depends_on:
+      tailscale-scanservjs:
+        condition: service_healthy
 
 
 volumes:
