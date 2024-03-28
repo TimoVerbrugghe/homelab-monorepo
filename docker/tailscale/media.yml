@@ -372,11 +372,11 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/appdata/tailscale-sonarr"
   sonarr:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/FranzHopper/appdata/sonarr"
+    # driver: local
+    # driver_opts:
+    #   type: "nfs"
+    #   o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+    #   device: ":/mnt/FranzHopper/appdata/sonarr"
   tailscale-bazarr:
     driver: local
     driver_opts:
