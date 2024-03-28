@@ -20,7 +20,8 @@ services:
     hostname: webtop
     restart: always
     networks:
-      - dockerproxy
+      dockervlan:
+        ipv4_address: ${WEBTOP_IP_ADDRESS}
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-webtop:/var/lib/tailscale
