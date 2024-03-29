@@ -1,0 +1,40 @@
+## Exclude common files
+- .DS_STORE
+- .orig
+- .nfo
+- .git/**
+- *.backup~*
+- *.partial~*
+- .Recycle.Bin/**
+- .recycle**
+- *_HIDDEN
+- .cue
+- .Trash-0
+
+## Bitwarden Export
++ /other/bitwarden-export/**
+
+## Rclone configuration files
++ /other/rclone.conf
+
+## Truenas backup
++ /other/Truenas-Backup-29032024.tar
+
+## Include specific movies
++ /movies/A\ Goofy\ Movie\ \(1995\)/**
++ /movies/Back\ to\ the\ Future\ \(1985\)/**
++ /movies/Back\ to\ the\ Future\ Part\ II\ \(1989\)/**
++ /movies/Back\ to\ the\ Future\ Part\ III\ \(1990\)/**
++ /movies/I,\ Robot\ \(2004\)/**
++ /movies/Hamilton\ \(2020\)/**
++ /movies/Wallace\ and\ Gromit\ The\ Curse\ of\ the\ Were-Rabbit\ \(2005\)/**
+
+## Include specific tvshows
++ /tvshows/Code\ Lyoko/**
++ /tvshows/Code\ Lyoko\ Evolution/**
++ /tvshows/Dag\ Sinterklaas/**
++ /tvshows/Ned\'s\ Declassified\ School\ Survival\ Guide/**
++ /tvshows/W817/**
+
+# Exclude everything else
+- *

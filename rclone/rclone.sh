@@ -1,0 +1,4 @@
+#  Rclone command for azure blob storage
+rclone sync /mnt/X.A.N.A./media azureblobcrypt:truenasbackup --filter-from /mnt/X.A.N.A./media/other/rclone-azureblob.rules --transfers 8 --checkers 16 --retries 3 --low-level-retries 10 --config /mnt/X.A.N.A./media/other/rclone.conf --fast-list --azureblob-access-tier cool --log-level INFO --log-file /tmp/rclone-azureblob.log
+
+rclone sync /mnt/X.A.N.A./media onedrive:truenasbackup --filter-from /mnt/X.A.N.A./media/other/rclone-onedrive.rules --transfers 8 --checkers 16 --retries 3 --low-level-retries 10 --config /mnt/X.A.N.A./media/other/rclone.conf --fast-list --azureblob-access-tier cool --log-level INFO --log-file /tmp/rclone-onedrive.log
