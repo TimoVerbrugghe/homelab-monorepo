@@ -89,7 +89,7 @@ in
 			};
     };
 
-  # Firewall setup
+  # Firewall setup for traefik
     firewall = {
       enable = true;
       allowedTCPPorts = [ 443 ];
