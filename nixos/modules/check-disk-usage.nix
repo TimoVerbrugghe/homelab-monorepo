@@ -20,7 +20,7 @@ in {
     script = ''
       disk_usage=$(df -h / | sed -n '2s/.* \([0-9]*\)%/\1/p' | tr -d '/')
       echo "Disk usage is $disk_usage"
-      if [ "$disk_usage" -gt 80 ]; then
+      if [ "$disk_usage" -gt 10 ]; then
           echo "Disk Usage above 80%, sending teams message"
 
           # Construct the Adaptive Card payload
