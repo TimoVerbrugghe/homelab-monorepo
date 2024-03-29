@@ -89,10 +89,10 @@ in
 			};
     };
 
-  # Firewall setup for traefik
-    firewall = {
-      enable = false;
-    };
+  # # Firewall setup for traefik
+  #   firewall = {
+  #     enable = false;
+  #   };
 
   };
 
