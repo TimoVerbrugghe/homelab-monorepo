@@ -85,14 +85,10 @@ in
 				ipv4.routes = [
 					{ address = "10.10.10.20"; prefixLength = 32; }
           { address = "10.10.10.28"; prefixLength = 32; }
+          { address = "10.10.10.29"; prefixLength = 32; }
 				];
 			};
     };
-
-  # # Firewall setup for traefik
-  #   firewall = {
-  #     enable = false;
-  #   };
 
   };
 

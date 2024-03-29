@@ -50,7 +50,9 @@ services:
   scrypted:
     container_name: scrypted
     restart: always
-    network_mode: host
+    networks:
+      dockervlan:
+        ipv4_address: ${SCRYPTED_IP_ADDRESS}
     image: koush/scrypted
     # hardware accelerated video decoding
     devices:
