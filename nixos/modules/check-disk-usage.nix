@@ -55,7 +55,7 @@ in {
                                       },
                                       {
                                           "title": "Disk Usage",
-                                          "value": "$disk_usage"
+                                          "value": ""$disk_usage""
                                       }
                                   ]
                               }
