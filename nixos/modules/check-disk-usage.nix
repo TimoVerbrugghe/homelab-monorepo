@@ -83,7 +83,7 @@ in {
     wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "daily";  # Run once a day
-    };
-    unit = "disk-usage-monitor.service";
+      Unit = "disk-usage-monitor.service";
+    }; 
   };
 }
