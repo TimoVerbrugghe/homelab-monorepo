@@ -371,7 +371,7 @@ services:
       - APIKEY=${RADARR_API_KEY}      # Radarr API Key       (Required)                
       - PLATFORM=radarr               # "radarr", "sonarr".. (Optional) default: radarr
       - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
-      - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - SIZE_THRESHOLD=100GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
       - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
       - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
@@ -387,7 +387,7 @@ services:
       - APIKEY=${SONARR_API_KEY}      # Radarr API Key       (Required)                
       - PLATFORM=radarr               # "radarr", "sonarr".. (Optional) default: radarr
       - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
-      - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - SIZE_THRESHOLD=100GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
       - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
       - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false
