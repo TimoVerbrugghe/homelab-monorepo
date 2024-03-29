@@ -90,6 +90,9 @@ in
 			};
     };
 
+    # Open firewall again for cloudflared-tunnel
+    firewall.allowedTCPPorts = [ 443 ];
+
   };
 
 }
