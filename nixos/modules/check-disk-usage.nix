@@ -3,7 +3,6 @@
 let
   # Get the hostname of the NixOS system
   hostname = config.networking.hostName;
-  ipAddress = config.networking.interfaces.eth0.ipv4_addresses[0].address;
 
 in {
 
@@ -54,10 +53,6 @@ in {
                                       {
                                           "title": "Hostname:",
                                           "value": "${hostname}"
-                                      },
-                                      {
-                                          "title": "IP",
-                                          "value": "${ipAddress}"
                                       },
                                       {
                                           "title": "Disk Usage",
