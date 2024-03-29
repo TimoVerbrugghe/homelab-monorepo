@@ -91,8 +91,7 @@ in
 
   # Firewall setup for traefik
     firewall = {
-      enable = true;
-      allowedTCPPorts = [ 443 ];
+      enable = false;
     };
 
   };
