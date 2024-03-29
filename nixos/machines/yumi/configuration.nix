@@ -60,7 +60,6 @@ in
   };
 
   ## Networking setup
-
   networking = {
 
 		macvlans = {
@@ -90,6 +89,11 @@ in
 			};
     };
 
+  # Firewall setup
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 443 ];
+    };
 
   };
 
