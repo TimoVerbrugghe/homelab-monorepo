@@ -16,7 +16,6 @@ in {
     description = "Monitor disk usage and send Slack notifications";
     path = with pkgs; [
       curl
-      echo
     ];
     script = ''
       disk_usage=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
