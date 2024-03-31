@@ -71,7 +71,9 @@ services:
     container_name: matter-server
     restart: unless-stopped
     # Required for mDNS to work correctly
-    network_mode: host
+    networks:
+      dockervlan:
+        ipv4_address: ${MATTER_IP_ADDRESS}
     security_opt:
       # Needed for Bluetooth via dbus
       - apparmor:unconfined
