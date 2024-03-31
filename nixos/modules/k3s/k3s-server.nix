@@ -34,8 +34,18 @@ let
 in
 
 {
+
+  imports =[ 
+    # Include k3s token key file, you need to put this manually in your nixos install
+    /etc/nixos/k3stoken.nix
+  ];
+
   # k3s configuration
-  services.k3s.configPath = "${k3sConfig}";
-  services.k3s.role = "server";
-  services.k3s.clusterInit = true;
+  services.k3s = {
+    configPath = "${k3sConfig}";
+    role = "server";
+    clusterInit = true;
+    token = "${config.k3stoken}";
+  }
+
 }

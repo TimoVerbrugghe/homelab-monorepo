@@ -1,9 +1,0 @@
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: cockroachdb
-  namespace: authentication
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-spec:
-  selfSigned: {}
