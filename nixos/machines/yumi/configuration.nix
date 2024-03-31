@@ -35,8 +35,6 @@ in
       ../../modules/check-disk-usage.nix # Notify if disk usage is above 80%
     ];
 
-  networking.firewall.enable = false;
-
   ############################
   ## Host Specific Settings ##
   ############################
@@ -92,6 +90,9 @@ in
 				];
 			};
     };
+
+    # Open firewall again for cloudflared-tunnel
+    firewall.allowedTCPPorts = [ 443 ];
 
   };
 
