@@ -81,6 +81,10 @@ services:
       # Create an .env file that sets the USERDIR environment variable.
       - matter-server:/data/
       - /run/dbus:/run/dbus:ro
+    dns:
+      - "10.10.10.20"
+      - "10.10.10.21"
+      - "10.10.10.22"
 
 volumes:
   homeassistant:
