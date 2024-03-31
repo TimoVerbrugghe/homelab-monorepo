@@ -85,6 +85,8 @@ services:
       - "10.10.10.20"
       - "10.10.10.21"
       - "10.10.10.22"
+    labels:
+      traefik.enable: false
 
 volumes:
   homeassistant:
