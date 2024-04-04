@@ -13,6 +13,10 @@ services:
       - iventoy-config:/app/data
       - iventoy-log:/app/log
       - isos:/app/iso
+    dns:
+      - "8.8.8.8"
+      - "8.8.4.4"
+      - "1.1.1.1"
 
   tailscale-webtop:
     image: tailscale/tailscale
