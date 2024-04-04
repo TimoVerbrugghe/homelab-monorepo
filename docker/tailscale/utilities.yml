@@ -17,6 +17,8 @@ services:
       - "8.8.8.8"
       - "8.8.4.4"
       - "1.1.1.1"
+    environment:
+      - AUTO_START_PXE=true
 
   tailscale-webtop:
     image: tailscale/tailscale
