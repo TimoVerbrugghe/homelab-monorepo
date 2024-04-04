@@ -6,9 +6,11 @@ services:
     container_name: iventoy
     restart: always
     privileged: true
-    networks:
-      dockervlan:
-        ipv4_address: ${IVENTOY_IP_ADDRESS}
+    ports:
+      - 26000:26000
+      - 16000:16000
+      - 10809:10809
+      - 69:69
     volumes:
       - iventoy-config:/app/data
       - iventoy-log:/app/log
