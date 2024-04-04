@@ -81,7 +81,9 @@ in
 					{ address = "10.10.10.0"; prefixLength = 24; } 
 				];
 				ipv4.routes = [
-					{ address = "10.10.10.23"; prefixLength = 32; }
+					{ address = "10.10.10.23"; prefixLength = 32; } # Adguardhome IP Address
+          { address = "10.10.10.26"; prefixLength = 32; } # iVentoy IP Address
+          { address = "10.10.10.27"; prefixLength = 32; } # Webtop IP Address
 				];
 			};
     };
