@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   iventoy:
-    image: ziggyds/iventoy
+    image: thedrobe/iventoy-docker
     container_name: iventoy
     restart: always
     privileged: true
