@@ -89,7 +89,7 @@ in
     };
 
     # Open firewall again for cloudflared-tunnel
-    firewall.allowedTCPPorts = [ 16000 10809 26000 69 ];
+    firewall.enable = false;
   };
 
 }
