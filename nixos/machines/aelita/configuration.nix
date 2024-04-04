@@ -82,14 +82,9 @@ in
 				];
 				ipv4.routes = [
 					{ address = "10.10.10.23"; prefixLength = 32; } # Adguardhome IP Address
-          { address = "10.10.10.26"; prefixLength = 32; } # iVentoy IP Address
-          { address = "10.10.10.27"; prefixLength = 32; } # Webtop IP Address
 				];
 			};
     };
-
-    # Open firewall again for cloudflared-tunnel
-    firewall.enable = false;
   };
 
 }
