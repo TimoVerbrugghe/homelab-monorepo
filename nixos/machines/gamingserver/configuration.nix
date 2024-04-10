@@ -98,7 +98,7 @@ in
 
   services.xserver = {
     enable = true;
-    layout = "be";
+    xkb.layout = "be";
     videoDrivers = ["amdgpu"];
     displayManager = {
       defaultSession = "plasmawayland";
