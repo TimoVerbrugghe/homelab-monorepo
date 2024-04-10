@@ -130,7 +130,7 @@ in
     # emulationstation-de
     ryujinx
 
-    (pkgs.callPackage ./godot-alpha12.nix {})
+    (pkgs.callPackage ./emulationstation-de {})
   ];
 
   # Need this for emulationstation-de
