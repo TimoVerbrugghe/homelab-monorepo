@@ -95,22 +95,29 @@ in
     driSupport = true;
     driSupport32Bit = true;
   };
-  services.xserver.videoDrivers = ["amdgpu"];
-  services.xserver.enable = true;
-  services.xserver.displayManager = {
-    
-    defaultSession = "plasmawayland";
-    autoLogin.enable = true;
-    autoLogin.user = "gamer";
-    sddm = {
-      enable = true;
-      wayland.enable = true;
-      wayland.compositor = "kwin";
+
+  services.xserver = {
+    enable = true;
+    layout = "be";
+    videoDrivers = ["amdgpu"];
+    displayManager = {
+      defaultSession = "plasmawayland";
+      autoLogin.enable = true;
+      autoLogin.user = "gamer";
+      sddm = {
+        enable = true;
+        wayland.enable = true;
+        wayland.compositor = "kwin";
+      };
     };
   };
+
   services.xserver.desktopManager.plasma5.enable = true;
 
   services.input-remapper.enable = true;
+  services.input-remapper.serviceWantedBy = [
+     "graphical-session.target"
+  ];
 
   ## Sunshine config
   environment.systemPackages = with pkgs; [
