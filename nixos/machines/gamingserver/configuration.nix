@@ -99,6 +99,7 @@ in
   services.xserver.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
+    wayland.compositor = "kwin";
     autoLogin.enable = true;
     autoLogin.user = "gamer";
   };
