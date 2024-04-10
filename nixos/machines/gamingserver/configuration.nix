@@ -127,6 +127,11 @@ in
     ryujinx
   ];
 
+  # Need this for emulationstation-de
+  nixpkgs.config.permittedInsecurePackages = [
+    "freeimage-unstable-2021-11-01"
+  ];
+
   security.wrappers.sunshine = {
       owner = "root";
       group = "root";
