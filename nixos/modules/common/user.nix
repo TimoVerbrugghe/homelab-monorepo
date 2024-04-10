@@ -18,7 +18,7 @@ in
     };
     extragroups = mkOption {
       type = types.listOf types.str;
-      default = [ "wheel" "docker" "render" "video" ];
+      default = [ "wheel" "docker" "render" "video" "input" ];
     };
   };
 
