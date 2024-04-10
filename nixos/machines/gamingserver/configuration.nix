@@ -144,6 +144,15 @@ in
       source = "${pkgs.sunshine}/bin/sunshine";
   };
 
+  systemd.user.services.sunshine =
+    {
+      description = "sunshine";
+      wantedBy = [ "graphical-session.target" ];
+      serviceConfig = {
+        ExecStart = "${config.security.wrapperDir}/sunshine";
+      };
+    };
+
   services.avahi.publish.enable = true;
   services.avahi.publish.userServices = true;
 
