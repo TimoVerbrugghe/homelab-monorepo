@@ -58,7 +58,7 @@ in
     usePredictableInterfaceNames = false;
     defaultGateway = "${config.vars.defaultGateway}";
     interfaces = {
-      eth0 = {
+      eth2 = {
         ipv4.addresses  = [
           { address = "${ipAddress}"; prefixLength = 24; }
         ];
@@ -96,7 +96,6 @@ in
     driSupport32Bit = true;
   };
   services.xserver.videoDrivers = ["amdgpu"];
-
   services.xserver.enable = true;
   services.xserver.displayManager = {
     autoLogin.enable = true;
@@ -107,12 +106,25 @@ in
       wayland.compositor = "kwin";
     };
   };
-
   services.xserver.desktopManager.plasma5.enable = true;
 
   ## Sunshine config
   environment.systemPackages = with pkgs; [
     sunshine
+    chromium
+
+    # Emulators
+    retroarchFull
+    duckstation
+    cemu
+    dolphin-emu
+    melonDS
+    rpcs3
+    mgba
+    pcsx2
+    ppsspp
+    emulationstation-de
+    ryujinx
   ];
 
   security.wrappers.sunshine = {
@@ -133,7 +145,7 @@ in
     ];
   };
 
-   # Enable sound with pipewire.
+  # Enable sound with pipewire.
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -142,12 +154,6 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
 
 }
