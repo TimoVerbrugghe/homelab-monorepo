@@ -99,18 +99,21 @@ in
   services.xserver.videoDrivers = ["amdgpu"];
 
   services.xserver.enable = true;
-  services.xserver.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
-    wayland.compositor = "kwin";
+  services.xserver.displayManager = {
     autoLogin.enable = true;
     autoLogin.user = "gamer";
+    sddm = {
+      enable = true;
+      wayland.enable = true;
+      wayland.compositor = "kwin";
+    };
   };
+
   services.xserver.desktopManager.plasma5.enable = true;
 
   ## Sunshine config
   environment.systemPackages = with pkgs; [
-    pkgs.Sunshine
+    sunshine
   ];
 
   security.wrappers.sunshine = {
