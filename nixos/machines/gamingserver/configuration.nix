@@ -127,6 +127,9 @@ in
     ppsspp
     emulationstation-de
     ryujinx
+
+    # Other tools
+    input-remapper
   ];
 
   # Need this for emulationstation-de
