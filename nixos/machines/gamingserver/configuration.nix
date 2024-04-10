@@ -98,6 +98,8 @@ in
   services.xserver.videoDrivers = ["amdgpu"];
   services.xserver.enable = true;
   services.xserver.displayManager = {
+    
+    defaultSession = "plasmawayland";
     autoLogin.enable = true;
     autoLogin.user = "gamer";
     sddm = {
