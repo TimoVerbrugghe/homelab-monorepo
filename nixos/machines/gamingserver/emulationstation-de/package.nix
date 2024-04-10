@@ -24,7 +24,7 @@ stdenv.mkDerivation (finalAttrs: {
     hash = "sha256:8hkHD0vdGo6iYr76S4It97YJyvY27vCkT9DBL+cKUTE=";
   };
 
-  patches = [ ./001-add-nixpkgs-retroarch-cores.patch ];
+  # patches = [ ./001-add-nixpkgs-retroarch-cores.patch ];
 
   nativeBuildInputs = [
     cmake
