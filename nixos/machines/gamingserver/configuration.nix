@@ -92,10 +92,12 @@ in
   boot.kernel.sysctl."net.ipv4.tcp_mtu_probing" = true;
 
   hardware.opengl = {
+    enable = true;
+    drisupport = true;
     driSupport32Bit = true;
   };
+  services.xserver.videoDrivers = ["amdgpu"];
 
-  hardware.pulseaudio.support32Bit = true;
   services.xserver.enable = true;
   services.xserver.displayManager.sddm = {
     enable = true;
