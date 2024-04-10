@@ -100,6 +100,7 @@ in
     enable = true;
     xkb.layout = "be";
     videoDrivers = ["amdgpu"];
+    desktopManager.plasma5.enable = true;
     displayManager = {
       defaultSession = "plasmawayland";
       autoLogin.enable = true;
@@ -111,8 +112,6 @@ in
       };
     };
   };
-
-  services.xserver.desktopManager.plasma5.enable = true;
 
   services.input-remapper.enable = true;
   services.input-remapper.serviceWantedBy = [
