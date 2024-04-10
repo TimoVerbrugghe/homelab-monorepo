@@ -130,7 +130,8 @@ in
     # emulationstation-de
     ryujinx
 
-    (pkgs.callPackage ./emulationstation-de {})
+    # Current emulationstation-de is old (2.2.1), so temporarily building the package 3.0.1 myself using the commit https://github.com/NixOS/nixpkgs/pull/299298 until it's pulled
+    (pkgs.callPackage ./emulationstation-de/package.nix {})
   ];
 
   # Need this for emulationstation-de
