@@ -110,6 +110,8 @@ in
   };
   services.xserver.desktopManager.plasma5.enable = true;
 
+  services.input-remapper.enable = true;
+
   ## Sunshine config
   environment.systemPackages = with pkgs; [
     sunshine
@@ -125,11 +127,10 @@ in
     mgba
     pcsx2
     ppsspp
-    emulationstation-de
+    # emulationstation-de
     ryujinx
 
-    # Other tools
-    input-remapper
+    (pkgs.callPackage ./godot-alpha12.nix {})
   ];
 
   # Need this for emulationstation-de
