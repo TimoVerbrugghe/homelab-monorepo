@@ -63,7 +63,7 @@ in
 
   ## Networking setup
   networking = {
-    usePredictableInterfaceNames = false;
+    # usePredictableInterfaceNames = false;
     defaultGateway = "${config.vars.defaultGateway}";
     interfaces = {
       eth2 = {
