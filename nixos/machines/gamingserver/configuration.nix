@@ -33,6 +33,7 @@ in
       ./sunshine.nix
       ./steam.nix
       ./emulators.nix
+      ./plasma-vapor-theme.nix
     ];
 
   ############################
