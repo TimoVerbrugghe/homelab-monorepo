@@ -18,8 +18,8 @@ stdenv.mkDerivation rec {
     runHook preInstall
     mkdir -p $out/share/plasma/desktoptheme/${themeName}
     mkdir -p $out/share/plasma/look-and-feel/${themeName}
-    cp -a $src/${themeName}/desktoptheme/ $out/share/plasma/desktoptheme/
-    cp -a $src/${themeName}/look-and-feel/ $out/share/plasma/look-and-feel/
+    cp -a $src/${themeName}/desktoptheme/. $out/share/plasma/desktoptheme/${themeName}
+    cp -a $src/${themeName}/look-and-feel/. $out/share/plasma/look-and-feel/${themeName}
     runHook postInstall
   '';
 
