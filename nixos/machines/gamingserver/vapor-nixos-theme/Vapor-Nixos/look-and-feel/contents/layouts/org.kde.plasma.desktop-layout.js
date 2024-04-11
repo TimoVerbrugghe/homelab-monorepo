@@ -10,5 +10,5 @@ for( var i = 0; i < desktopsArray.length; i++) {
 
     // Set default application launcher icon
     desktopsArray[i].currentConfigGroup = ["General"];
-    desktop.writeConfig("icon", "/run/current-system/sw/share/plasma/desktoptheme/Vapor-Nixos/icons/distributor-logo-steamdeck.svg");
+    desktop.writeConfig("icon", "/run/current-system/sw/share/plasma/desktoptheme/Vapor-Nixos/icons/start.svg");
 }
