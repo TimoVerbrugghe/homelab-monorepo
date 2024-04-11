@@ -63,10 +63,9 @@ in
 
   ## Networking setup
   networking = {
-    # usePredictableInterfaceNames = false;
     defaultGateway = "${config.vars.defaultGateway}";
     interfaces = {
-      eth2 = {
+      enp6s0f1 = {
         ipv4.addresses  = [
           { address = "${ipAddress}"; prefixLength = 24; }
         ];
