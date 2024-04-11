@@ -6,7 +6,7 @@ X-KDE-PluginInfo-Category=Plasma Theme
 X-KDE-PluginInfo-Email=
 X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-PluginInfo-License=GPL version 3
-X-KDE-PluginInfo-Name=Vapor
+X-KDE-PluginInfo-Name=Vapor-Nixos
 X-KDE-PluginInfo-Version=0.0.17
 X-KDE-PluginInfo-Website=
 X-Plasma-API=5.0
@@ -14,5 +14,5 @@ X-Plasma-API=5.0
 [Wallpaper]
 defaultFileSuffix=.png
 defaultHeight=1080
-defaultWallpaperTheme=Vapor
+defaultWallpaperTheme=Vapor-Nixos
 defaultWidth=1920
