@@ -3,7 +3,7 @@
 let
   themeName = "Vapor-Nixos";
   fs = lib.fileset;
-  sourceFiles = ./vapor;
+  sourceFiles = ./Vapor-Nixos;
 in
 stdenv.mkDerivation rec {
   pname = "vapor-nixos-theme";
@@ -18,8 +18,8 @@ stdenv.mkDerivation rec {
     runHook preInstall
     mkdir -p $out/share/plasma/desktoptheme/${themeName}
     mkdir -p $out/share/plasma/look-and-feel/${themeName}
-    cp -aR $src/vapor/desktoptheme/${themeName}/ $out/share/plasma/desktoptheme/${themeName}
-    cp -a $src/vapor/look-and-feel/${themeName}/ $out/share/plasma/look-and-feel/${themeName}
+    cp -a $src/${themeName}/desktoptheme/ $out/share/plasma/desktoptheme/${themeName}
+    cp -a $src/${themeName}/look-and-feel/ $out/share/plasma/look-and-feel/${themeName}
     runHook postInstall
   '';
 
