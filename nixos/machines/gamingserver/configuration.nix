@@ -33,7 +33,7 @@ in
       ./sunshine.nix
       ./steam.nix
       ./emulators.nix
-      ./plasma-vapor-theme.nix
+      ./gaming-optimizations.nix
     ];
 
   ############################
@@ -73,11 +73,6 @@ in
       };
     };
   };
-
-  # Enable MTU probing, as vendor does
-  # See: https://github.com/ValveSoftware/SteamOS/issues/1006
-  # See also: https://www.reddit.com/r/SteamDeck/comments/ymqvbz/ubisoft_connect_connection_lost_stuck/j36kk4w/?context=3
-  boot.kernel.sysctl."net.ipv4.tcp_mtu_probing" = true;
 
   ## Additional packages
   environment.systemPackages = with pkgs; [

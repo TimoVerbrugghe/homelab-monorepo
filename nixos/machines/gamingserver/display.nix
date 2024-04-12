@@ -24,10 +24,12 @@
       defaultSession = "plasmawayland";
       autoLogin.enable = true;
       autoLogin.user = "gamer";
+      autoLogin.relogin = true;
       sddm = {
         enable = true;
         wayland.enable = true;
         wayland.compositor = "kwin";
+        theme = "Vapor-Nixos";
       };
     };
   };
