@@ -20,6 +20,7 @@ stdenv.mkDerivation rec {
     mkdir -p $out/share/plasma/look-and-feel/${themeName}
     cp -a $src/${themeName}/desktoptheme/. $out/share/plasma/desktoptheme/${themeName}
     cp -a $src/${themeName}/look-and-feel/. $out/share/plasma/look-and-feel/${themeName}
+    cp -a $src/${themeName}/desktoptheme/colors $out/share/color-schemes/${themeName}.colors
     runHook postInstall
   '';
 
