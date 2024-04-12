@@ -3,7 +3,8 @@
 {
 
   environment.systemPackages = with pkgs; [
-    retroarchFull
+    # Uncomment until https://github.com/NixOS/nixpkgs/pull/303494 is pulled
+    # retroarchFull
     duckstation
     cemu
     dolphin-emu
