@@ -35,4 +35,12 @@
   # Networkmanager is needed for integration with KDE Plasma
   networking.networkmanager.enable = true;
 
+  # Install a custom version of the KDE theme that Valve ships on SteamDeck
+  ## TO-DO: Automatic configuration of plasma theme management - Find a way to make this theme the default
+  # Create a systemd service that executes plasma-apply-lookandfeel -a Vapor-Nixos --resetLayout to apply the theme and all of its look-and-feel settings
+
+  environment.systemPackages = with pkgs; [
+    (pkgs.callPackage ./vapor-nixos-theme/package.nix {})
+  ];
+
 }

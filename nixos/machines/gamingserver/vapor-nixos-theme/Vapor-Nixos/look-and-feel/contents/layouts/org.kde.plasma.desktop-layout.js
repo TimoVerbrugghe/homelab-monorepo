@@ -2,7 +2,6 @@ loadTemplate("org.kde.plasma.desktop.defaultPanel")
 
 var desktopsArray = desktopsForActivity(currentActivity());
 for( var i = 0; i < desktopsArray.length; i++) {
-
     // Set default wallpaper
     desktopsArray[i].wallpaperPlugin = 'org.kde.image';
     desktopsArray[i].currentConfigGroup = new Array("Wallpaper", "org.kde.image", "General");
