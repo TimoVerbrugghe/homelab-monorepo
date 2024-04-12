@@ -20,13 +20,10 @@
     "kernel.sched_wakeup_granularity_ns" = 500000;
     "kernel.sched_migration_cost_ns" = 50000;
     "kernel.sched_nr_migrate" = 128;
-    
+
     # 20-net-timeout.conf
     # This is required due to some games being unable to reuse their TCP ports
     # if they're killed and restarted quickly - the default timeout is too large.
     "net.ipv4.tcp_fin_timeout" = 5;
-  }
-
-
-
+  };
 }
