@@ -20,17 +20,18 @@
     xkb.layout = "be";
     videoDrivers = ["amdgpu"];
     desktopManager.plasma5.enable = true;
-    displayManager = {
-      defaultSession = "plasmawayland";
-      autoLogin.enable = true;
-      autoLogin.user = "gamer";
-      autoLogin.relogin = true;
-      sddm = {
-        enable = true;
-        wayland.enable = true;
-        wayland.compositor = "kwin";
-        theme = "Vapor-Nixos";
-      };
+  };
+
+  services.displayManager = {
+    defaultSession = "plasmawayland";
+    autoLogin.enable = true;
+    autoLogin.user = "gamer";
+    autoLogin.relogin = true;
+    sddm = {
+      enable = true;
+      wayland.enable = true;
+      wayland.compositor = "kwin";
+      theme = "Vapor-Nixos";
     };
   };
 
