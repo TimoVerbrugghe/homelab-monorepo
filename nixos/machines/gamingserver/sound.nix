@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
 {
+
+  sound.enable = false;
+
   # Enable sound with pipewire.
   security.rtkit.enable = true;
   services.pipewire = {
@@ -38,35 +41,5 @@
   #     resample.quality = 1;
   #   };
   # };
-
-
-  # # Add realtime capabilities to user to mitigate audio crackling
-  # users = {
-  #   users.gamer.extraGroups = [ "realtime" ];
-  #   groups.realtime = { };
-  # };
-  # services.udev.extraRules = ''
-  #   KERNEL=="cpu_dma_latency", GROUP="realtime"
-  # '';
-  # security.pam.loginLimits = [
-  #   {
-  #     domain = "@realtime";
-  #     type = "-";
-  #     item = "rtprio";
-  #     value = 98;
-  #   }
-  #   {
-  #     domain = "@realtime";
-  #     type = "-";
-  #     item = "memlock";
-  #     value = "unlimited";
-  #   }
-  #   {
-  #     domain = "@realtime";
-  #     type = "-";
-  #     item = "nice";
-  #     value = -11;
-  #   }
-  # ];
 
 }
