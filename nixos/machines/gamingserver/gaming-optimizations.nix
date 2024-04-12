@@ -2,7 +2,9 @@
 
 {
 
-    boot.kernel.sysctl = {
+  powerManagement.cpuFreqGovernor = "performance";
+
+  boot.kernel.sysctl = {
 
     # Enable MTU probing, as SteamOS does
     # See: https://github.com/ValveSoftware/SteamOS/issues/1006
@@ -25,7 +27,5 @@
     # This is required due to some games being unable to reuse their TCP ports
     # if they're killed and restarted quickly - the default timeout is too large.
     "net.ipv4.tcp_fin_timeout" = 5;
-
-    powerManagement.cpuFreqGovernor = "performance";
   };
 }
