@@ -71,6 +71,8 @@ in
           uuid = "4d71d0d6-76b9-4bd9-bbf3-4bfef80a28bb";
           type = "ethernet";
           autoconnect-priority = "1";
+          autoconnect = "true";
+          interface-name = "enp6s0f1";
         };
         ethernet = {
           mac-address = "6C:92:BF:5E:38:43";
