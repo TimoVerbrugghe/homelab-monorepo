@@ -76,5 +76,9 @@
         ShowPopups=false
       '';
     };
+
+    ".steam/root/config/uioverrides/movies" = {
+      source = ./steamstartupvideos
+    };
   };
 }
