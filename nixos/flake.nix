@@ -18,7 +18,7 @@
 
   };
 
-  outputs = { self, nixpkgs, ... } @inputs : {
+  outputs = { self, nixpkgs, home-manager, ... } @inputs : {
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
