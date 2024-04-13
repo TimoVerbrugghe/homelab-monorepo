@@ -81,7 +81,7 @@
       text = ''
       '';
       recursive = true;
-    }
+    };
 
     ".steam/root/config/uioverrides/movies" = {
       source = ./steamstartupvideos;
