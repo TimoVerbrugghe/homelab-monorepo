@@ -81,5 +81,14 @@
       source = ./steamstartupvideos;
       recursive = true;
     };
+
+    # Tested and need this file for faster Steam downloads - see https://www.reddit.com/r/linux_gaming/comments/16e1l4h/slow_steam_downloads_try_this/
+    ".steam/steam/steam_dev.cfg" = {
+      text = ''
+        @fDownloadRateImprovementToAddAnotherConnection 1.0
+        @nClientDownloadEnableHTTP2PlatformLinux 0
+      '';
+      recursive = true;
+    };
   };
 }

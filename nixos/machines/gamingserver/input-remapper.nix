@@ -17,7 +17,6 @@
       input-remapper
     ];
     wantedBy = [ "graphical-session.target" ];
-    requires = [ "input-remapper.service" ];
     after = [ "input-remapper.service" ];
     script = ''
       input-remapper-control --command stop-all
