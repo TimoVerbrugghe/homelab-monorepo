@@ -11,12 +11,12 @@
 
   # Create input-remapper-autoload service that gets triggered by the udev rule so that input-remapper rules get reloaded again when controller gets plugged in again (because they stop when controller disconnects)
   
-  systemd.services.input-remapper-autoload = {
+  systemd.user.services.input-remapper-autoload = {
     enable = true;
     path = with pkgs; [
       input-remapper
     ];
-    wantedBy = [ "default.target" ];
+    wantedBy = [ "graphical-session.target" ];
     requires = [ "input-remapper.service" ];
     after = [ "input-remapper.service" ];
     script = ''
