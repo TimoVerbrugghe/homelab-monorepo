@@ -34,7 +34,6 @@ in
       ./steam.nix
       ./emulators.nix
       ./gaming-optimizations.nix
-      ./default-plasma-settings.nix
     ];
 
   ############################
