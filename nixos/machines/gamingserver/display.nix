@@ -123,7 +123,7 @@
         MicrophoneSensitivityOsd=false
         MuteOsd=false
         VolumeOsd=false
-      ''
+      '';
     };
 
     # Desktop Session Settings
@@ -131,7 +131,7 @@
       text = ''
         [General]
         confirmLogout=false
-      ''
+      '';
     };
 
     # Disable KDE Wallet
@@ -139,7 +139,7 @@
       text = ''
         [Wallet]
         Enabled=false
-      ''
+      '';
     };
 
     # Do not load several KDE modules
@@ -210,7 +210,7 @@
 
         [Module-statusnotifierwatcher]
         autoload=false
-      ''
+      '';
     };
 
     # Disable KDE Search Indexing
@@ -218,7 +218,7 @@
       text = ''
         [Basic Settings]
         Indexing-Enabled=false
-      ''
+      '';
     };
 
     # Set AC Power Settings
@@ -234,7 +234,7 @@
         lidAction=1
         powerButtonAction=1
         powerDownAction=16
-      ''
+      '';
     };
 
   };
