@@ -10,6 +10,12 @@
       url = "https://github.com/TimoVerbrugghe.keys";
       flake = false;
     };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = { self, nixpkgs, ... } @inputs : {
@@ -85,6 +91,15 @@
         specialArgs = inputs;
         modules = [
           ./machines/gamingserver/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.gamer = import ./machines/gamingserver/home.nix;
+
+            # Optionally, use home-manager.extraSpecialArgs to pass
+            # arguments to home.nix
+          }
         ];
       };
 
