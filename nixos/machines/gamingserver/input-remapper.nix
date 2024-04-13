@@ -19,8 +19,11 @@
     wantedBy = [ "default.target" ];
     requires = [ "input-remapper.service" ];
     after = [ "input-remapper.service" ];
+    script = ''
+      input-remapper-control --command stop-all
+      input-remapper-control --command autoload
+    '';
     serviceConfig = {
-      ExecStart = "${pkgs.input-remapper}/bin/input-remapper-control --command stop-all && ${pkgs.input-remapper}/bin/input-remapper-control --command autoload";
       Type="oneshot";
     };
   };
