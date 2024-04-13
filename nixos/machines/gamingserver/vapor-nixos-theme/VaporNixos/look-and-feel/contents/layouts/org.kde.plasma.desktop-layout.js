@@ -5,5 +5,5 @@ for( var i = 0; i < desktopsArray.length; i++) {
     // Set default wallpaper
     desktopsArray[i].wallpaperPlugin = 'org.kde.image';
     desktopsArray[i].currentConfigGroup = new Array("Wallpaper", "org.kde.image", "General");
-    desktopsArray[i].writeConfig("Image", "/run/current-system/sw/share/plasma/desktoptheme/Vapor-Nixos/wallpapers/Steam Deck Logo Default.jpg");
+    desktopsArray[i].writeConfig("Image", "/run/current-system/sw/share/plasma/desktoptheme/VaporNixos/wallpapers/Steam Deck Logo Default.jpg");
 }

@@ -131,8 +131,8 @@ ForegroundPositive=126,166,75
 ForegroundVisited=127,140,141
 
 [General]
-ColorScheme=Vapor-Nixos
-Name=Vapor-Nixos
+ColorScheme=VaporNixos
+Name=VaporNixos
 shadeSortColumn=true
 
 [KDE]

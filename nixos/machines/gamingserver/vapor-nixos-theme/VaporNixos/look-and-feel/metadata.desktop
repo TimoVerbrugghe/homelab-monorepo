@@ -1,6 +1,6 @@
 [Desktop Entry]
-Comment=Vapor-NixOS - SteamOS Theme from Valve based on KDE Breeze and Breath modified to be installed on NixOS
-Name=Vapor-Nixos
+Comment=VaporNixos - SteamOS Theme from Valve based on KDE Breeze and Breath modified to be installed on NixOS
+Name=VaporNixos
 Type=Service
 
 X-KDE-ServiceTypes=Plasma/LookAndFeel
@@ -9,7 +9,7 @@ X-KDE-PluginInfo-Author=Valve
 X-KDE-PluginInfo-Category=
 X-KDE-PluginInfo-Email=
 X-KDE-PluginInfo-License=GPL-2.0+
-X-KDE-PluginInfo-Name=Vapor-Nixos
+X-KDE-PluginInfo-Name=VaporNixos
 X-KDE-PluginInfo-Version=0.01
 X-KDE-PluginInfo-Website=
 X-Plasma-MainScript=defaults

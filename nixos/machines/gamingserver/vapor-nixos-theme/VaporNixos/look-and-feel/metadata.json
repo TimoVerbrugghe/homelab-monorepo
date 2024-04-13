@@ -8,9 +8,9 @@
         ],
         "Category": "",
         "Description": "A customized version of the Vapor theme from Valve used on SteamOS to use on Nixos",
-        "Id": "Vapor-Nixos",
+        "Id": "VaporNixos",
         "License": "GPLv2+",
-        "Name": "Vapor-Nixos",
+        "Name": "VaporNixos",
         "ServiceTypes": [
             "Plasma/LookAndFeel"
         ],

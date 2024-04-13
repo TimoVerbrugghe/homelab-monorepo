@@ -30,7 +30,7 @@
       enable = true;
       wayland.enable = true;
       wayland.compositor = "kwin";
-      theme = "Vapor-Nixos";
+      theme = "VaporNixos";
       autoLogin.relogin = true;
     };
   };
@@ -40,7 +40,7 @@
 
   # Install a custom version of the KDE theme that Valve ships on SteamDeck
   ## TO-DO: Automatic configuration of plasma theme management - Find a way to make this theme the default
-  # Create a systemd service that executes plasma-apply-lookandfeel -a Vapor-Nixos --resetLayout to apply the theme and all of its look-and-feel settings
+  # Create a systemd service that executes plasma-apply-lookandfeel -a VaporNixos --resetLayout to apply the theme and all of its look-and-feel settings
 
   environment.systemPackages = with pkgs; [
     (pkgs.callPackage ./vapor-nixos-theme/package.nix {})
@@ -241,7 +241,7 @@
     "xdg/kdeglobals" = {
       text = ''
         [KDE]
-        LookAndFeelPackage=Vapor-Nixos
+        LookAndFeelPackage=VaporNixos
         SingleClick=false
 
         [KDE Action Restrictions][$i]
@@ -250,7 +250,7 @@
         action/lock_screen=false
       
         [General]
-        ColorScheme=Vapor-Nixos
+        ColorScheme=VaporNixos
         font=Noto Sans,11,-1,5,50,0,0,0,0,0
         menuFont=Noto Sans,11,-1,5,50,0,0,0,0,0
         smallestReadableFont=Noto Sans,9,-1,5,50,0,0,0,0,0

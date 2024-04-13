@@ -1,9 +1,9 @@
 { stdenv, lib }:
 
 let
-  themeName = "Vapor-Nixos";
+  themeName = "VaporNixos";
   fs = lib.fileset;
-  sourceFiles = ./Vapor-Nixos;
+  sourceFiles = ./VaporNixos;
 in
 stdenv.mkDerivation rec {
   pname = "vapor-nixos-theme";

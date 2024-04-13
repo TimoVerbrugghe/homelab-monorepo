@@ -2,13 +2,13 @@
 widgetStyle=Breeze
 
 [kdeglobals][General]
-ColorScheme=Vapor-Nixos
+ColorScheme=VaporNixos
 
 [kdeglobals][Icons]
 Theme=breeze-dark
 
 [plasmarc][Theme]
-name=Vapor-Nixos
+name=VaporNixos
 
 [kcminputrc][Mouse]
 cursorTheme=breeze_cursors
@@ -23,4 +23,4 @@ LayoutName=org.kde.breeze.desktop
 library=org.kde.breeze
 
 [KSplash]
-Theme=Vapor-Nixos
+Theme=VaporNixos
