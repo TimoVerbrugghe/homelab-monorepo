@@ -9,6 +9,9 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  # Apparently this is required for home manager
+  home-manager.users.gamer.home.stateVersion = "23.11";
+
   home.file = {
     ".config/plasmanotifyrc" = {
       text = ''
