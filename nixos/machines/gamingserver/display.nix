@@ -237,6 +237,27 @@
       '';
     };
 
+    # Set KDE Global Settings (f.e. theme and color scheme)
+    "xdg/kdeglobals" = {
+      text = ''
+        [KDE]
+        LookAndFeelPackage=Vapor-Nixos
+        SingleClick=false
+
+        [KDE Action Restrictions][$i]
+        action/switch_user=false
+        action/start_new_session=false
+        action/lock_screen=false
+      
+        [General]
+        ColorScheme=Vapor-Nixos
+        font=Noto Sans,11,-1,5,50,0,0,0,0,0
+        menuFont=Noto Sans,11,-1,5,50,0,0,0,0,0
+        smallestReadableFont=Noto Sans,9,-1,5,50,0,0,0,0,0
+        toolBarFont=Noto Sans,11,-1,5,50,0,0,0,0,0
+      ''
+    }
+
   };
 
 }
