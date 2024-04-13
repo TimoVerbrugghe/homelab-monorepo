@@ -71,7 +71,7 @@
         [Services][xdg-desktop-portal-kde]
         ShowInHistory=false
         ShowPopups=false
-      ''
-    }
+      '';
+    };
   }
 }
