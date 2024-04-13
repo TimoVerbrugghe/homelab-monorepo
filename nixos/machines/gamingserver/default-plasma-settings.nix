@@ -2,7 +2,7 @@
 
 {
 
-  environment.etc."plasmanotifyrc" = {
+  environment.etc.xdg."plasmanotifyrc" = {
     text = ''
       [Applications][@other]
       ShowPopups=false
