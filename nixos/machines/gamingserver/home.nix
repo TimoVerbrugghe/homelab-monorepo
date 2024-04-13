@@ -79,6 +79,7 @@
 
     ".steam/root/config/uioverrides/.keep" = {
       text = ''
+        DO NOT DELETE THIS FILE
       '';
       recursive = true;
     };
