@@ -79,6 +79,7 @@
 
     ".steam/root/config/uioverrides/movies" = {
       source = ./steamstartupvideos;
+      recursive = true;
     };
   };
 }
