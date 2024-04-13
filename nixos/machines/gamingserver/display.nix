@@ -255,8 +255,8 @@
         menuFont=Noto Sans,11,-1,5,50,0,0,0,0,0
         smallestReadableFont=Noto Sans,9,-1,5,50,0,0,0,0,0
         toolBarFont=Noto Sans,11,-1,5,50,0,0,0,0,0
-      ''
-    }
+      '';
+    };
 
   };
 
