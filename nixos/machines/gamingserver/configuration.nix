@@ -64,6 +64,29 @@ in
 
   ## Networking setup
   networking = {
+    networkmanager.ensureProfiles.profiles = {
+      {
+        enp6s0f1 = {
+          connection = {
+            id = "10Gbps Connection";
+            uuid = "4d71d0d6-76b9-4bd9-bbf3-4bfef80a28bb";
+            type = "ethernet";
+            autoconnect-priority = "1";
+          };
+          ethernet = {
+            mac-address = "6C:92:BF:5E:38:43";
+          };
+          ipv4 = {
+            address1 = "10.10.10.15/24,10.10.10.1";
+            method = "manual";
+          };
+          ipv6 = {
+            addr-gen-mode = "stable-privacy";
+            method = "ignore";
+          };
+        };
+      }
+    };
     defaultGateway = "${config.vars.defaultGateway}";
     interfaces = {
       enp6s0f1 = {
