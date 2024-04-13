@@ -235,7 +235,7 @@
         powerButtonAction=1
         powerDownAction=16
       ''
-    }
+    };
 
   };
 
