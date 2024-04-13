@@ -73,5 +73,5 @@
         ShowPopups=false
       '';
     };
-  }
+  };
 }
