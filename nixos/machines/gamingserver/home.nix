@@ -15,7 +15,7 @@
   home.file = {
     # Input remapper config files to enable L3+R3 -> Alt-F4 conversion
     ".config/input-remapper-2" = {
-      source = .dotfiles/input-remapper-2;
+      source = dotfiles/input-remapper-2;
       recursive = true;
     };
 
