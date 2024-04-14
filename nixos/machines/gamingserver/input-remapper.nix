@@ -19,6 +19,7 @@
     serviceConfig = {
       Type="dbus";
       BusName="inputremapper.Control";
+      ExecStart="";
       ExecStart="${pkgs.input-remapper}/bin/input-remapper-service -d";
     };
   };
