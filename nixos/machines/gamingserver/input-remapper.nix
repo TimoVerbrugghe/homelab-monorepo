@@ -9,7 +9,7 @@
     enableUdevRules = true;
   };
 
-  systemd.user.services.input-remapper = {
+  systemd.services.input-remapper = {
     path = with pkgs; [
       input-remapper
     ];
@@ -19,7 +19,7 @@
     serviceConfig = {
       Type="dbus";
       BusName="inputremapper.Control";
-      ExecStart="${pkgs.input-remapper}/bin/input-remapper-service";
+      ExecStart="${pkgs.input-remapper}/bin/input-remapper-service -d";
     };
   };
 }
