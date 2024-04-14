@@ -28,8 +28,8 @@
         Name=input-remapper-autoload
         Icon=/usr/share/input-remapper/input-remapper.svg
         Comment=Starts injecting all presets that are set to automatically load for the user
-      ''
-    }
+      '';
+    };
 
     ".steam/root/config/uioverrides/.keep" = {
       text = ''
