@@ -19,6 +19,18 @@
       recursive = true;
     };
 
+    # Input Remapper autoload desktop file placed in autostart so that it autostarts on login
+    ".config/autostart/input-remapper-autoload.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Exec=bash -c "input-remapper-control --command stop-all && input-remapper-control --command autoload"
+        Name=input-remapper-autoload
+        Icon=/usr/share/input-remapper/input-remapper.svg
+        Comment=Starts injecting all presets that are set to automatically load for the user
+      ''
+    }
+
     ".steam/root/config/uioverrides/.keep" = {
       text = ''
         DO NOT DELETE THIS FILE
