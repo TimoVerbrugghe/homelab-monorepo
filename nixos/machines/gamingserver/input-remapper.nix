@@ -2,28 +2,31 @@
 
 {
   # Enable input-remapper
-  services.input-remapper.enable = true;
-
-  ## Udev rule for when Xbox controller gets plugged in
-  services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="input", KERNELS=="input[0-9]*", ATTRS{id/vendor}=="045e", ATTRS{id/product}=="028e", RUN+="${pkgs.systemd}/bin/systemctl restart input-remapper-autoload.service"
-  '';
-
-  # Create input-remapper-autoload service that gets triggered by the udev rule so that input-remapper rules get reloaded again when controller gets plugged in again (because they stop when controller disconnects)
-  
-  systemd.services.input-remapper-autoload = {
-    path = with pkgs; [
-      input-remapper
-    ];
-    wantedBy = [ "graphical-session.target" ];
-    after = [ "input-remapper.service" ];
-    script = ''
-      input-remapper-control --command stop-all
-      input-remapper-control --command autoload
-    '';
-    serviceConfig = {
-      Type="oneshot";
-    };
+  services.input-remapper = {
+    enable = true;
+    enableUdevRules = true;
   };
+
+  # ## Udev rule for when Xbox controller gets plugged in
+  # services.udev.extraRules = ''
+  #   ACTION=="add", SUBSYSTEM=="input", KERNELS=="input[0-9]*", ATTRS{id/vendor}=="045e", ATTRS{id/product}=="028e", RUN+="${pkgs.systemd}/bin/systemctl restart input-remapper-autoload.service"
+  # '';
+
+  # # Create input-remapper-autoload service that gets triggered by the udev rule so that input-remapper rules get reloaded again when controller gets plugged in again (because they stop when controller disconnects)
+  
+  # systemd.services.input-remapper-autoload = {
+  #   path = with pkgs; [
+  #     input-remapper
+  #   ];
+  #   wantedBy = [ "graphical-session.target" ];
+  #   after = [ "input-remapper.service" ];
+  #   script = ''
+  #     input-remapper-control --command stop-all
+  #     input-remapper-control --command autoload
+  #   '';
+  #   serviceConfig = {
+  #     Type="oneshot";
+  #   };
+  # };
   
 }
