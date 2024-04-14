@@ -7,10 +7,6 @@
 
     ## Enable built-in udev rules for when Xbox Controller is plugged in/connected through sunshine
     enableUdevRules = true;
-
-    serviceWantedBy = [
-      "graphical.target"
-    ];
   };
   
 }
