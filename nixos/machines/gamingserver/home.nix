@@ -31,6 +31,7 @@
       '';
     };
 
+    # Custom steam intro videos (need to add a .keep file in order for the empty uioverrides directory to be created)
     ".steam/root/config/uioverrides/.keep" = {
       text = ''
         DO NOT DELETE THIS FILE
