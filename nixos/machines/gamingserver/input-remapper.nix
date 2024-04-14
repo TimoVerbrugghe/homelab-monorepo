@@ -9,18 +9,6 @@
     enableUdevRules = true;
   };
 
-  systemd.services.input-remapper = {
-    path = with pkgs; [
-      input-remapper
-    ];
-    wantedBy = [ "graphical.target" ];
-    requires = ["dbus.service"];
-    after = ["dbus.service"];
-    serviceConfig = {
-      Type="dbus";
-      BusName="inputremapper.Control";
-      ExecStart="";
-      ExecStart="${pkgs.input-remapper}/bin/input-remapper-service -d";
-    };
-  };
+  systemd.services.input-remapper.serviceConfig.ExecStart = lib.mkForce "${pkgs.input-remapper}/bin/input-remapper-service -d";
+  
 }
