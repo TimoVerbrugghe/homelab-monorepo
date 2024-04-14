@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # Enable input-remapper
@@ -10,5 +10,5 @@
   };
 
   systemd.services.input-remapper.serviceConfig.ExecStart = lib.mkForce "${pkgs.input-remapper}/bin/input-remapper-service -d";
-  
+
 }
