@@ -9,7 +9,7 @@
     enableUdevRules = true;
 
     serviceWantedBy = [
-      "graphical-session.target"
+      "graphical.target"
     ];
   };
   
