@@ -100,5 +100,6 @@ in
   ## Additional packages
   environment.systemPackages = with pkgs; [
     chromium
+    p7zip
   ];
 }
