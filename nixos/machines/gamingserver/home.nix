@@ -66,7 +66,7 @@
         Categories=Application;Game
         Comment=Ratchet and Clank® Future: Tools of Destruction™
         Icon=/home/gamer/.config/rpcs3/Icons/game_icons/NPUA80965/shortcut.png
-      ''
-    }
+      '';
+    };
   };
 }
