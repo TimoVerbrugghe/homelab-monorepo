@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!-- This is the ES-DE find rules configuration file for Linux -->
+<ruleList>
+    <emulator name="MGBA">
+        <!-- Nintendo Game Boy Advance emulator mGBA -->
+        <rule type="systempath">
+            <!-- Forcing use of mgba-qt instead of mgba because mgba does not load in correct settings -->
+            <!-- <entry>mgba</entry> -->
+            <entry>mgba-qt</entry>
+            <entry>io.mgba.mGBA</entry>
+        </rule>
+        <rule type="staticpath">
+            <entry>~/Applications/mGBA*.AppImage</entry>
+            <entry>~/.local/share/applications/mGBA*.AppImage</entry>
+            <entry>~/.local/bin/mGBA*.AppImage</entry>
+            <entry>~/bin/mGBA*.AppImage</entry>
+            <entry>/var/lib/flatpak/exports/bin/io.mgba.mGBA</entry>
+            <entry>~/.local/share/flatpak/exports/bin/io.mgba.mGBA</entry>
+        </rule>
+    </emulator>
+</ruleList>

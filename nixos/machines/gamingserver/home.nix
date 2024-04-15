@@ -135,5 +135,10 @@
       recursive = true;
     };
 
+    "ES-DE/custom_systems/es_find_rules.xml" = {
+      source = ./dotfiles/es_find_rules.xml;
+      recursive = true;
+    };
+
   };
 }
