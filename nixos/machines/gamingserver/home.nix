@@ -130,8 +130,8 @@
     };
 
     # Custom configuration for Emulationstation-DE Emulators
-    "ES-DE/custom_systems/es_systems_custom.xml" = {
-      source = ./dotfiles/es_systems_custom.xml;
+    "ES-DE/custom_systems/es_systems.xml" = {
+      source = ./dotfiles/es_systems.xml;
       recursive = true;
     };
 
