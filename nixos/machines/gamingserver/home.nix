@@ -52,5 +52,21 @@
       '';
       recursive = true;
     };
+
+    # PS3 ROM File shortcuts for RPCS3
+    "test.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Encoding=UTF-8
+        Version=1.0
+        Type=Application
+        Terminal=false
+        Exec="${pkgs.rpcs3}/bin/.rpcs3-wrapped" --no-gui "%%RPCS3_GAMEID%%:NPUA80965"
+        Name=Ratchet and Clank® Future: Tools of Destruction™
+        Categories=Application;Game
+        Comment=Ratchet and Clank® Future: Tools of Destruction™
+        Icon=/home/gamer/.config/rpcs3/Icons/game_icons/NPUA80965/shortcut.png
+      ''
+    }
   };
 }
