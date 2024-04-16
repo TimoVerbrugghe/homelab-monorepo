@@ -17,7 +17,7 @@
     ryujinx
 
     # Trying to build ppsspp without the system_ffmpeg flag because getting severe graphical glitches
-    (pkgs.callPackage ./ppsspp/package.nix {})
+    (pkgs.callPackage ./ppsspp-standard-ffmpeg/package.nix {})
 
     # Current emulationstation-de is old (2.2.1), so temporarily building the package 3.0.1 myself using the commit https://github.com/NixOS/nixpkgs/pull/299298 until it's pulled
     (pkgs.callPackage ./emulationstation-de/package.nix {})
