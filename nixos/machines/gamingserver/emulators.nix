@@ -12,7 +12,7 @@
     rpcs3
     mgba
     pcsx2
-    ppsspp
+    ppsspp-sdl-wayland
     # emulationstation-de
     ryujinx
 
