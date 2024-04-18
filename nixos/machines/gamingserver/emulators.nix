@@ -2,7 +2,7 @@
 
 {
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs qt6Packages; [
     # Uncomment until https://github.com/NixOS/nixpkgs/pull/303494 is pulled
     # retroarchFull
     duckstation
