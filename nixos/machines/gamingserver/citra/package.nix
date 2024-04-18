@@ -37,7 +37,7 @@ let
 in
 stdenv.mkDerivation {
   pname = "citra-nightly";
-  version = ${version};
+  version = version;
 
   src = source;
 
