@@ -1,6 +1,4 @@
-{ pname
-, version
-, src
+{ src
 , lib
 , stdenv
 , cmake
