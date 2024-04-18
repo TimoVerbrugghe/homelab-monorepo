@@ -1,6 +1,7 @@
 { qt6Packages
 , fetchFromGitHub
 , fetchurl
+, ...
 }:
 
 let
