@@ -4,7 +4,7 @@
 }:
 
 let
-  source = /etc/nixos/citra-unified-source.tar;
+  source = /etc/nixos/citra-unified-source.tar.xz;
 in {
   nightly = qt6Packages.callPackage ./generic.nix rec {
     pname = "citra-nightly";
