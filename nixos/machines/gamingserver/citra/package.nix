@@ -33,8 +33,14 @@
 , enableCubeb ? true, cubeb
 , useDiscordRichPresence ? false, rapidjson
 }:
+let
+  source = /etc/nixos/citra-unified-source.tar.xz;
+in
 stdenv.mkDerivation {
-  inherit pname version src;
+  pname = "citra-nightly";
+  version = "2088";
+
+  src = source;
 
   unpackPhase = ''
     runHook preUnpack

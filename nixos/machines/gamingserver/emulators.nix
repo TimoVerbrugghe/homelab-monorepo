@@ -22,12 +22,7 @@
     # Current emulationstation-de is old (2.2.1), so temporarily building the package 3.0.1 myself using the commit https://github.com/NixOS/nixpkgs/pull/299298 until it's pulled
     (pkgs.callPackage ./emulationstation-de/package.nix {})
 
-    (pkgs.qt6Packages.callPackage ./citra/package.nix rec {
-      pname = "citra-nightly";
-      version = "2088";
-
-      src = source;
-    })
+    (pkgs.qt6Packages.callPackage ./citra/package.nix {})
   ];
 
   # Need this for emulationstation-de
