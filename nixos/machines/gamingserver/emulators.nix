@@ -1,11 +1,6 @@
-{ config, pkgs, ... }:
+{ config, pkgs, qt6Packages, ... }:
 
 {
-
-  # Setting up citra package (you have to bring your own source)
-  imports = [
-    ./citra/default.nix
-  ];
 
   environment.systemPackages = with pkgs; [
     # Uncomment until https://github.com/NixOS/nixpkgs/pull/303494 is pulled
@@ -26,6 +21,13 @@
 
     # Current emulationstation-de is old (2.2.1), so temporarily building the package 3.0.1 myself using the commit https://github.com/NixOS/nixpkgs/pull/299298 until it's pulled
     (pkgs.callPackage ./emulationstation-de/package.nix {})
+
+    (qt6Packages.callPackage ./citra/package.nix rec {
+      pname = "citra-nightly";
+      version = "2088";
+
+      src = source;
+    })
   ];
 
   # Need this for emulationstation-de
