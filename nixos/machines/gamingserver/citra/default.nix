@@ -1,7 +1,4 @@
-{ qt6Packages
-, fetchFromGitHub
-, fetchurl
-}:
+{ qt6Packages }:
 
 let
   source = /etc/nixos/citra-unified-source.tar.xz;
