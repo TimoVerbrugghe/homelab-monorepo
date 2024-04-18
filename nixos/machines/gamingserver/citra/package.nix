@@ -33,10 +33,11 @@
 }:
 let
   source = /etc/nixos/citra-unified-source.tar.xz;
+  version = "2088";
 in
 stdenv.mkDerivation {
   pname = "citra-nightly";
-  version = "2088";
+  version = ${version};
 
   src = source;
 
