@@ -4,7 +4,7 @@
 
   ## Packages needed for backup
   environment.systemPackages = with pkgs; [
-    tar
+    gnutar
     mount
     rsync
   ];
@@ -43,7 +43,7 @@
 
       output_tar="/tmp/nfs/gamer_backup.tar.xz"
 
-      ${pkgs.tar} --exclude="''${exclude_dirs[@]}" -cJf "$output_tar" "''${backup_dirs[@]}"
+      ${pkgs.gnutar}/bin/tar --exclude="''${exclude_dirs[@]}" -cJf "$output_tar" "''${backup_dirs[@]}"
 
       # Check if the tar creation was successful
       if [ $? -eq 0 ]; then
@@ -84,7 +84,7 @@
       temp_dir=$(mktemp -d)
 
       # Extract the tar archive
-      ${pkgs.tar}/bin/tar -xJf "$input_tar" -C "$temp_dir"
+      ${pkgs.gnutar}/bin/tar -xJf "$input_tar" -C "$temp_dir"
 
       # Restore each directory to its original location
       restore_dirs=(
