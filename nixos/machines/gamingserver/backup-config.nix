@@ -40,7 +40,6 @@
         "/home/gamer/.local/share/Steam/steamapps"
       )
 
-
       # Mounting NFS share
       temp_dir_mount=$(mktemp -d)
       ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir_mount
@@ -54,7 +53,7 @@
 
       # Check if the tar creation was successful
       if [ $? -eq 0 ]; then
-        ${pkgs.rsync} -avhP $output_tar $temp_dir_mount/gamer_backup.tar
+        ${pkgs.rsync}/bin/rsync -avhP $output_tar $temp_dir_mount/gamer_backup.tar
 
         # Check if rsync was successful
         if [ $? -eq 0 ]; then
