@@ -4,7 +4,14 @@
 
   environment.systemPackages = with pkgs; [
     # Uncomment until https://github.com/NixOS/nixpkgs/pull/303494 is pulled
-    # retroarchFull
+    (retroarch.override {
+      cores = with libretro; [
+        genesis-plus-gx # Genesis
+        snes9x # SNES
+        flycast # Dreamcast
+        nestopia # NES
+      ];
+    })
     duckstation
     cemu
     dolphin-emu
@@ -22,6 +29,7 @@
     # Current emulationstation-de is old (2.2.1), so temporarily building the package 3.0.1 myself using the commit https://github.com/NixOS/nixpkgs/pull/299298 until it's pulled
     (pkgs.callPackage ./emulationstation-de/package.nix {})
 
+    # Installing citra, source has to be provided yourself
     (pkgs.qt6Packages.callPackage ./citra/package.nix {})
   ];
 
