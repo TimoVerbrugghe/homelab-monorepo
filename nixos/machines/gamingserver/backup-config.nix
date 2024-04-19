@@ -7,11 +7,15 @@
     gnutar
     mount
     rsync
+    xz
   ];
 
   systemd.services.backup-gamingserver = {
     description = "Backup gamingserver core directories";
     requires = [ "network.target" ];
+    path = with pkgs; [
+      xz
+    ];
     script = ''
       mkdir -p /tmp/nfs
       ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup /tmp/nfs
