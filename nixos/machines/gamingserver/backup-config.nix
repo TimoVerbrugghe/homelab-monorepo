@@ -7,6 +7,7 @@
     gnutar
     mount
     rsync
+    umount
   ];
 
   systemd.services.backup-gamingserver = {
@@ -57,7 +58,7 @@
 
         # Check if rsync was successful
         if [ $? -eq 0 ]; then
-          ${pkgs.mount}/bin/umount $temp_dir
+          ${pkgs.umount}/bin/umount $temp_dir
           echo "Backup completed successfully. Archive saved at: $output_tar"
         else
           echo "Failed moving backup archive to NAS share"
@@ -137,7 +138,7 @@
       done
 
       # Clean up
-      ${pkgs.mount}/bin/umount $temp_dir_mount
+      ${pkgs.umount}/bin/umount $temp_dir_mount
       rm -rf "$temp_dir_mount"
       rm -rf "$temp_dir_tar"
       rm -rf "$temp_dir_extract"
