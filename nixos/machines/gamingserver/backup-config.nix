@@ -7,20 +7,16 @@
     gnutar
     mount
     rsync
-    xz
   ];
 
   systemd.services.backup-gamingserver = {
     description = "Backup gamingserver core directories";
     requires = [ "network.target" ];
-    path = with pkgs; [
-      xz
-    ];
     script = ''
       # Temporary directory for mounting nfs share
-      temp_dir=$(mktemp -d)
+      temp_dir_mount=$(mktemp -d)
 
-      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir
+      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir_mount
 
       backup_dirs=(
         "/home/gamer/ES-DE"
@@ -47,15 +43,20 @@
         "/home/gamer/.local/share/Steam/steamapps"
       )
 
-      output_tar="$temp_dir/gamer_backup.tar.xz"
+      temp_dir_tar=$(mktemp -d)
+      output_tar="$temp_dir_tar/gamer_backup.tar"
 
       echo "Starting backup"
-      ${pkgs.gnutar}/bin/tar --verbose --exclude="''${exclude_dirs[@]}" -cJf "$output_tar" "''${backup_dirs[@]}"
+      ${pkgs.gnutar}/bin/tar --verbose --exclude="''${exclude_dirs[@]}" -cf "$output_tar" "''${backup_dirs[@]}"
 
       # Check if the tar creation was successful
       if [ $? -eq 0 ]; then
-        ${pkgs.mount}/bin/mount umount $temp_dir
-        echo "Backup completed successfully. Archive saved at: $output_tar"
+        ${pkgs.rsync} -avhP $output_tar $temp_dir_mount/gamer_backup.tar
+        if [ $? -eq 0 ]; then
+          ${pkgs.mount}/bin/mount umount $temp_dir
+          echo "Backup completed successfully. Archive saved at: $output_tar"
+        else
+          echo "Failed moving backup archive to NAS share"
       else
         echo "Backup failed."
       fi
@@ -86,13 +87,13 @@
       ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir_mount
 
       # Input tar file to restore
-      input_tar="$temp_dir_mount/gamer_backup.tar.xz"
+      input_tar="$temp_dir_mount/gamer_backup.tar"
 
       # Temporary directory for extraction
       temp_dir_extract=$(mktemp -d)
 
       # Extract the tar archive
-      ${pkgs.gnutar}/bin/tar -xJf "$input_tar" -C "$temp_dir_extract"
+      ${pkgs.gnutar}/bin/tar -xf "$input_tar" -C "$temp_dir_extract"
 
       # Restore each directory to its original location
       restore_dirs=(
