@@ -16,24 +16,24 @@
       mkdir -p /tmp/nfs
       ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup /tmp/nfs
 
-      backup_dirs = (
-          "/home/gamer/ES-DE"
-          "/home/gamer/.config/Cemu"
-          "/home/gamer/.config/citra-emu"
-          "/home/gamer/.config/dolphin-emu"
-          "/home/gamer/.config/melonDS"
-          "/home/gamer/.config/mgba"
-          "/home/gamer/.config/PCSX2"
-          "/home/gamer/.config/ppsspp"
-          "/home/gamer/.config/retroarch"
-          "/home/gamer/.config/rpcs3"
-          "/home/gamer/.config/Ryujinx"
-          "/home/gamer/.config/sunshine"
-          "/home/gamer/.local/share/Cemu"
-          "/home/gamer/.local/share/citra-emu"
-          "/home/gamer/.local/share/dolphin-emu"
-          "/home/gamer/.local/share/duckstation"
-          "/home/gamer/.local/share/Steam"
+      backup_dirs=(
+        "/home/gamer/ES-DE"
+        "/home/gamer/.config/Cemu"
+        "/home/gamer/.config/citra-emu"
+        "/home/gamer/.config/dolphin-emu"
+        "/home/gamer/.config/melonDS"
+        "/home/gamer/.config/mgba"
+        "/home/gamer/.config/PCSX2"
+        "/home/gamer/.config/ppsspp"
+        "/home/gamer/.config/retroarch"
+        "/home/gamer/.config/rpcs3"
+        "/home/gamer/.config/Ryujinx"
+        "/home/gamer/.config/sunshine"
+        "/home/gamer/.local/share/Cemu"
+        "/home/gamer/.local/share/citra-emu"
+        "/home/gamer/.local/share/dolphin-emu"
+        "/home/gamer/.local/share/duckstation"
+        "/home/gamer/.local/share/Steam"
       )
 
       # Exclude the steamapps subdirectory
