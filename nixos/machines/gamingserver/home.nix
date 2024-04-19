@@ -140,9 +140,32 @@
       recursive = true;
     };
 
+    # Install overlays
     ".config/retroarch/overlays" = {
       source = ./dotfiles/overlays;
       recursive = true;
+    };
+
+    # Set up overlay configuration per core
+    ".config/retroarch/config/Snes9x/Snes9x.cfg" = {
+      text = ''
+        input_overlay_enable ="true"
+        input_overlay = "/home/gamer/.config/retroarch/overlays/consoles/snesplain.cfg"
+      '';
+    };
+
+    ".config/retroarch/config/Flycast/Flycast.cfg" = {
+      text = ''
+        input_overlay_enable ="true"
+        input_overlay = "/home/gamer/.config/retroarch/overlays/consoles/DCPLAIN1.cfg"
+      '';
+    };
+
+    ".config/retroarch/config/Genesis Plus GX/Genesis Plus GX.cfg" = {
+      text = ''
+        input_overlay_enable ="true"
+        input_overlay = "/home/gamer/.config/retroarch/overlays/consoles/genesisplain.cfg"
+      '';
     };
 
   };
