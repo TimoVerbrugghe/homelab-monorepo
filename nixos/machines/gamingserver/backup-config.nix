@@ -17,8 +17,10 @@
       xz
     ];
     script = ''
-      mkdir -p /tmp/nfs
-      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup /tmp/nfs
+      # Temporary directory for mounting nfs share
+      temp_dir=$(mktemp -d)
+
+      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir
 
       backup_dirs=(
         "/home/gamer/ES-DE"
@@ -45,12 +47,14 @@
         "/home/gamer/.local/share/Steam/steamapps"
       )
 
-      output_tar="/tmp/nfs/gamer_backup.tar.xz"
+      output_tar="$temp_dir/gamer_backup.tar.xz"
 
-      ${pkgs.gnutar}/bin/tar --exclude="''${exclude_dirs[@]}" -cJf "$output_tar" "''${backup_dirs[@]}"
+      echo "Starting backup"
+      ${pkgs.gnutar}/bin/tar --verbose --exclude="''${exclude_dirs[@]}" -cJf "$output_tar" "''${backup_dirs[@]}"
 
       # Check if the tar creation was successful
       if [ $? -eq 0 ]; then
+        ${pkgs.mount}/bin/mount umount $temp_dir
         echo "Backup completed successfully. Archive saved at: $output_tar"
       else
         echo "Backup failed."
@@ -77,18 +81,18 @@
     description = "Restore gamingserver core directories";
     requires = [ "network.target" ];
     script = ''
-      # Mount nfs share
-      mkdir -p /tmp/nfs
-      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup /tmp/nfs
+      # Temporary directory for mounting nfs share
+      temp_dir_mount=$(mktemp -d)
+      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir_mount
 
       # Input tar file to restore
-      input_tar="/tmp/nfs/gamer_backup.tar.xz"
+      input_tar="$temp_dir_mount/gamer_backup.tar.xz"
 
       # Temporary directory for extraction
-      temp_dir=$(mktemp -d)
+      temp_dir_extract=$(mktemp -d)
 
       # Extract the tar archive
-      ${pkgs.gnutar}/bin/tar -xJf "$input_tar" -C "$temp_dir"
+      ${pkgs.gnutar}/bin/tar -xJf "$input_tar" -C "$temp_dir_extract"
 
       # Restore each directory to its original location
       restore_dirs=(
@@ -116,11 +120,11 @@
         mkdir -p "$dir"
         
         # Restore files from temp_dir to the original location
-        ${pkgs.rsync}/bin/rsync -av "$temp_dir/$dir/" "$dir"
+        ${pkgs.rsync}/bin/rsync -avhP "$temp_dir_extract/$dir/" "$dir"
       done
 
       # Clean up temporary directory
-      rm -rf "$temp_dir"
+      rm -rf "$temp_dir_extract"
 
       echo "Restoration completed successfully."
     '';
