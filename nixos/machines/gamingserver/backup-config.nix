@@ -13,11 +13,8 @@
     description = "Backup gamingserver core directories";
     requires = [ "network.target" ];
     script = ''
-      # Temporary directory for mounting nfs share
-      temp_dir_mount=$(mktemp -d)
-
-      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir_mount
-
+    
+    # Setting up backup & exclude directories
       backup_dirs=(
         "/home/gamer/ES-DE"
         "/home/gamer/.config/Cemu"
@@ -43,20 +40,30 @@
         "/home/gamer/.local/share/Steam/steamapps"
       )
 
+
+      # Mounting NFS share
+      temp_dir_mount=$(mktemp -d)
+      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir_mount
+
       temp_dir_tar=$(mktemp -d)
       output_tar="$temp_dir_tar/gamer_backup.tar"
 
+      # Creating tar archive
       echo "Starting backup"
       ${pkgs.gnutar}/bin/tar --verbose --exclude="''${exclude_dirs[@]}" -cf "$output_tar" "''${backup_dirs[@]}"
 
       # Check if the tar creation was successful
       if [ $? -eq 0 ]; then
         ${pkgs.rsync} -avhP $output_tar $temp_dir_mount/gamer_backup.tar
+
+        # Check if rsync was successful
         if [ $? -eq 0 ]; then
           ${pkgs.mount}/bin/mount umount $temp_dir
           echo "Backup completed successfully. Archive saved at: $output_tar"
         else
           echo "Failed moving backup archive to NAS share"
+        fi
+
       else
         echo "Backup failed."
       fi
