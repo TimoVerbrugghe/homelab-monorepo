@@ -57,7 +57,7 @@
 
         # Check if rsync was successful
         if [ $? -eq 0 ]; then
-          ${pkgs.mount}/bin/mount umount $temp_dir
+          ${pkgs.mount}/bin/umount $temp_dir
           echo "Backup completed successfully. Archive saved at: $output_tar"
         else
           echo "Failed moving backup archive to NAS share"
@@ -95,11 +95,17 @@
       # Input tar file to restore
       input_tar="$temp_dir_mount/gamer_backup.tar"
 
+      # Temp dir to put tar file
+      temp_dir_tar=$(mktemp -d)
+
+      # Rsync tar file from NAS server to local machine
+      ${pkgs.rsync}/bin/rsync -avhP $input_tar $temp_dir_tar/gamer_backup.tar
+
       # Temporary directory for extraction
       temp_dir_extract=$(mktemp -d)
 
       # Extract the tar archive
-      ${pkgs.gnutar}/bin/tar -xf "$input_tar" -C "$temp_dir_extract"
+      ${pkgs.gnutar}/bin/tar -xf "$temp_dir_tar/gamer_backup.tar" -C "$temp_dir_extract"
 
       # Restore each directory to its original location
       restore_dirs=(
@@ -130,7 +136,10 @@
         ${pkgs.rsync}/bin/rsync -avhP "$temp_dir_extract/$dir/" "$dir"
       done
 
-      # Clean up temporary directory
+      # Clean up
+      ${pkgs.mount}/bin/umount $temp_dir_mount
+      rm -rf "$temp_dir_mount"
+      rm -rf "$temp_dir_tar"
       rm -rf "$temp_dir_extract"
 
       echo "Restoration completed successfully."
