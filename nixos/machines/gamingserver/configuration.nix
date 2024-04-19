@@ -34,6 +34,7 @@ in
       ./steam.nix
       ./emulators.nix
       ./gaming-optimizations.nix
+      ./backup-config.nix
     ];
 
   ############################
