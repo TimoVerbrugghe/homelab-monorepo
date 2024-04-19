@@ -140,5 +140,10 @@
       recursive = true;
     };
 
+    ".config/retroarch/overlays" = {
+      source = ./dotfiles/overlays;
+      recursive = true;
+    };
+
   };
 }
