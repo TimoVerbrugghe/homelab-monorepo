@@ -168,7 +168,7 @@
       '';
     };
 
-    ".config/retroarch/config/Mupen64Plus-Next" = {
+    ".config/retroarch/config/Mupen64Plus-Next/Mupen64Plus-Next.cfg" = {
       text = ''
         input_overlay_enable ="true"
         input_overlay = "/home/gamer/.config/retroarch/overlays/consoles/n64plain.cfg"
