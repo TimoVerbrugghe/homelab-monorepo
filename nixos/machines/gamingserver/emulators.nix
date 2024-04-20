@@ -10,6 +10,7 @@
         snes9x # SNES
         flycast # Dreamcast
         nestopia # NES
+        mupen64plus # N64
       ];
     })
     duckstation
@@ -22,6 +23,7 @@
     # ppsspp-sdl-wayland
     # emulationstation-de
     ryujinx
+    xemu
 
     # Trying to build ppsspp without the system_ffmpeg flag because getting severe graphical glitches
     (pkgs.callPackage ./ppsspp-standard-ffmpeg/package.nix {})
