@@ -26,7 +26,7 @@
     xemu
     lutris
     dosbox-x
-    wineWoWPackages.full
+    wineWowPackages.full
 
     # Trying to build ppsspp without the system_ffmpeg flag because getting severe graphical glitches
     (pkgs.callPackage ./ppsspp-standard-ffmpeg/package.nix {})
