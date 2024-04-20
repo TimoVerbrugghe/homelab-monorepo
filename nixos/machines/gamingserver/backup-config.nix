@@ -1,5 +1,12 @@
 { config, pkgs, ... }:
 
+let
+  nasURL = "truenas.local.timo.be";
+  nasBackupDir = "/mnt/X.A.N.A./backup-gamingserver";
+  nasROMsDir = "/mnt/X.A.N.A./media/games/ROMs";
+  ROMsDir = "/home/gamer/ROMs";
+in
+
 {
 
   ## Packages needed for backup
@@ -34,6 +41,7 @@
         "/home/gamer/.local/share/dolphin-emu"
         "/home/gamer/.local/share/duckstation"
         "/home/gamer/.local/share/Steam"
+        "/home/gamer/.local/share/xemu"
       )
 
       # Exclude the steamapps subdirectory
@@ -43,7 +51,7 @@
 
       # Mounting NFS share
       temp_dir_mount=$(mktemp -d)
-      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir_mount
+      ${pkgs.mount}/bin/mount -t nfs ${nasURL}:${nasBackupDir} $temp_dir_mount
 
       temp_dir_tar=$(mktemp -d)
       output_tar="$temp_dir_tar/gamer_backup.tar"
@@ -58,7 +66,7 @@
 
         # Check if rsync was successful
         if [ $? -eq 0 ]; then
-          ${pkgs.umount}/bin/umount $temp_dir
+          ${pkgs.umount}/bin/umount $temp_dir_mount
           echo "Backup completed successfully. Archive saved at: $output_tar"
         else
           echo "Failed moving backup archive to NAS share"
@@ -68,22 +76,26 @@
         echo "Backup failed."
       fi
 
+      # Clean Up
+      rm -rf $temp_dir_mount
+      rm -rf $temp_dir_tar
+
     '';
 
     serviceConfig = {
-      type = "oneshot";
+      Type = "oneshot";
     };
 
   };
 
   # Backup gamingserver config directories on a monthly basis
-  # systemd.timers.tailscale-cert-renewal = {
-  #   description = "Backup gamingserver config directories on a monthly basis";
-  #   timerConfig = {
-  #     OnCalendar = "monthly";
-  #     Unit = "backup-gamingserver.service";
-  #   };
-  # };
+  systemd.timers.backup-gamingserver = {
+    description = "Backup gamingserver config directories on a monthly basis";
+    timerConfig = {
+      OnCalendar = "monthly";
+      Unit = "backup-gamingserver.service";
+    };
+  };
 
   systemd.services.restore-gamingserver = {
     description = "Restore gamingserver core directories";
@@ -91,7 +103,7 @@
     script = ''
       # Temporary directory for mounting nfs share
       temp_dir_mount=$(mktemp -d)
-      ${pkgs.mount}/bin/mount -t nfs 10.10.10.2:/mnt/X.A.N.A./gamingserver-backup $temp_dir_mount
+      ${pkgs.mount}/bin/mount -t nfs ${nasURL}:${nasBackupDir} $temp_dir_mount
 
       # Input tar file to restore
       input_tar="$temp_dir_mount/gamer_backup.tar"
@@ -127,6 +139,7 @@
         "/home/gamer/.local/share/dolphin-emu"
         "/home/gamer/.local/share/duckstation"
         "/home/gamer/.local/share/Steam"
+        "/home/gamer/.local/share/xemu"
       )
 
       for dir in "''${restore_dirs[@]}"; do
@@ -139,16 +152,57 @@
 
       # Clean up
       ${pkgs.umount}/bin/umount $temp_dir_mount
-      rm -rf "$temp_dir_mount"
-      rm -rf "$temp_dir_tar"
-      rm -rf "$temp_dir_extract"
+      rm -rf $temp_dir_mount
+      rm -rf $temp_dir_tar
+      rm -rf $temp_dir_extract
 
       echo "Restoration completed successfully."
     '';
 
     serviceConfig = {
-      type = "oneshot";
+      Type = "oneshot";
     };
     
   };
+
+  systemd.services.rom-sync = {
+    description = "Sync ROMs directory with NAS ";
+    requires = [ "network.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+    };
+
+    script = ''
+      # Temporary directory for mounting nfs share
+      temp_dir_mount=$(mktemp -d)
+      ${pkgs.mount}/bin/mount -t nfs ${nasURL}:${nasROMsDir} $temp_dir_mount
+
+      # Rsync contents of ROMs dir locally to ROMs dir on NAS to f.e. sync over savegames that are stored with the ROMs folder
+      ${pkgs.rsync} -avhP --no-o --no-g ${ROMsDir}/ $temp_dir_mount/
+
+      # Rsync contents of ROMs dir on the NAS to system locally to sync over new games that might have been added
+      ${pkgs.rsync} -avhP $temp_dir_mount/ ${ROMsDir}/
+
+        # Check if rsync was successful
+        if [ $? -eq 0 ]; then
+          ${pkgs.umount}/bin/umount $temp_dir_mount
+          echo "ROMs directory sync successful"
+        else
+          echo "Failed moving backup archive to NAS share"
+        fi
+
+      # Clean up
+      rm -rf $temp_dir_mount
+    '';
+  };
+
+  # Do ROMs sync weekly
+  systemd.timers.rom-sync = {
+    description = "Sync ROMs folder on a weekly basis";
+    timerConfig = {
+      OnCalendar = "weekly";
+      Unit = "rom-sync.service";
+    };
+  };
+
 }
