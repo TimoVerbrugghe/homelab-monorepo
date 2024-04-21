@@ -182,6 +182,25 @@
       '';
     };
 
+    "ROMs/windows/harry-potter-and-the-sorcerer-stone.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Name=Harry Potter and the Philosopher's Stone
+        Exec=env WINEPREFIX=/home/gamer/lutrisgames/harry-potter-and-the-philosophers-stone wine start /unix "/home/gamer/lutrisgames/harry-potter-and-the-philosophers-stone/drive_c/Program Files (x86)/EA Games/Harry Potter TM/System/HP.exe"
+        Type=Application
+        Categories=Game
+      '';
+    };
+
+    "ROMs/windows/harry-potter-and-the-chamber-of-secrets.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Name=Harry Potter and the Chamber of Secrets
+        Exec=env WINEPREFIX=/home/gamer/lutrisgames/harry-potter-and-the-chamber-of-secrets wine start /unix "/home/gamer/lutrisgames/harry-potter-and-the-chamber-of-secrets/drive_c/Program Files (x86)/EA Games/Harry Potter and the Chamber of Secrets/system/HP2.exe"
+        Type=Application
+        Categories=Game
+      '';
+    };
 
   };
 }

@@ -8,7 +8,6 @@ let
 in
 
 {
-
   ## Packages needed for backup
   environment.systemPackages = with pkgs; [
     gnutar
