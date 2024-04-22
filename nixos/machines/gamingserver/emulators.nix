@@ -26,7 +26,7 @@
     xemu
     lutris
     wineWowPackages.full
-    _86Box
+    _86Box-with-roms
     winetricks
 
     # Trying to build ppsspp without the system_ffmpeg flag because getting severe graphical glitches
