@@ -26,7 +26,7 @@
     xemu
     lutris
     wineWowPackages.full
-    _86Box-with-roms
+    # _86Box-with-roms
     winetricks
 
     # Trying to build ppsspp without the system_ffmpeg flag because getting severe graphical glitches
@@ -34,6 +34,9 @@
 
     # Current emulationstation-de is old (2.2.1), so temporarily building the package 3.0.1 myself using the commit https://github.com/NixOS/nixpkgs/pull/299298 until it's pulled
     (pkgs.callPackage ./emulationstation-de/package.nix {})
+
+    # Current 86Box is old (4.1) and I need to wrap the 86Box program with env variable QT_QPA_PLATFORM=xcb in order for 86Box mouse capture to work
+    (pkgs.callPackage ./86Box-git/package.nix {})
 
     # Installing citra, source has to be provided yourself
     (pkgs.qt6Packages.callPackage ./citra/package.nix {})

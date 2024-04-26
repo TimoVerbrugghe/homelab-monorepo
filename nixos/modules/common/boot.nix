@@ -8,7 +8,6 @@
   boot.loader.systemd-boot.configurationLimit = 3;
 
   # Making sure we're running latest linux kernel
-  # Temporarily moving to kernel 6.7 due to bug in intel-compute-runtime which doesn't work with kernel 6.8, see https://github.com/intel/compute-runtime/issues/710
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Reduce swappiness
