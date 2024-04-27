@@ -9,6 +9,7 @@ let
   hostname = "gamer";
   username = "gamer";
   hashedPassword = "$y$j9T$OQ3/pU28qXBFymHBymT8l0$ilSqIw/x28PWmGDdN5lXnbj.bt4EXFaQYwfRzC8X1l1";
+  rootHashedPassword = "$y$j9T$2sT2z5BHCK0LBV7c0fsJ/.$gV/Zys8CV.V/nsXNRMRLRlUxWkLnnYdMCTP4UzmxX.4";
   ipAddress = "10.10.10.15";
   kernelParams = [
   ];
@@ -22,7 +23,15 @@ in
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../../modules/common.nix # Add default modules
+      ../../modules/common/autoupgrade.nix # Add autoupgrade module
+      ../../modules/common/console-options.nix # Add console options
+      ../../modules/common/dns.nix # Add my own dns servers
+      ../../modules/common/firmware.nix # Enable firmware updates
+      ../../modules/common/flakes.nix # Enable flakes
+      ../../modules/common/git.nix # Add git configuration
+      ../../modules/common/optimizations.nix # Enable nix cache optimizations
+      ../../modules/common/packages.nix # Add default packages
+      ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
     
@@ -47,10 +56,36 @@ in
   hardware.cpu.intel.updateMicrocode = true;
   console.keyMap = "be-latin1";
 
-  # Set up single user using user.nix module
-  services.user = {
-    user = "${username}";
-    hashedPassword = "${hashedPassword}";
+  # User setup (root user has to be enabled to make it easier for truenas to take ZFS snapshots)
+
+  users.mutableUsers = false;
+
+  users.users = {
+
+    ${username} = {
+      extraGroups = [ "wheel" "render" "video" "input" ];
+      isNormalUser = true;
+      createHome = true;
+      hashedPassword = "${hashedPassword}";
+      openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
+    };
+
+    root = {
+      hashedPassword = "${rootHashedPassword}";
+    };
+  };
+
+  ## SSH setup
+  services.openssh = {
+    enable = true;
+    ports = [ 22 ];
+    settings = {
+      PasswordAuthentication = true;
+      AllowUsers = ["root" "${username}"]; # Allows all users by default. Can be [ "user1" "user2" ]
+      UseDns = true;
+      X11Forwarding = false;
+      PermitRootLogin = "yes"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
+    };
   };
 
   ## Enable AutoUpgrades using autoupgrade.nix module
