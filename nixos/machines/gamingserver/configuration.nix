@@ -102,6 +102,5 @@ in
   environment.systemPackages = with pkgs; [
     chromium
     p7zip
-    gamescope
   ];
 }

@@ -27,6 +27,8 @@
     wineWowPackages.full
     # _86Box-with-roms
     winetricks
+    steam-rom-manager
+    gamescope
 
     # Trying to build ppsspp without the system_ffmpeg flag because getting severe graphical glitches
     (pkgs.callPackage ./ppsspp-standard-ffmpeg/package.nix {})
