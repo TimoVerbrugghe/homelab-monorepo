@@ -301,7 +301,7 @@
         StartupNotify=true
         Hidden=false
         Categories=Game;Emulator;
-        Name=ES-DE
+        Name=EmulationStation Desktop Edition
         GenericName=Gaming Frontend
         Keywords=emulator;emulation;front-end;frontend;
       '';
