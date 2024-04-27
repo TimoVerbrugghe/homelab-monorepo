@@ -307,5 +307,10 @@
       '';
     };
 
+    ".local/share/manifests/emulationstation-manifest.json" = {
+      source = ./dotfiles/emulationstation-manifest.json;
+      recursive = true;
+    };
+
   };
 }
