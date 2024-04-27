@@ -290,5 +290,22 @@
       '';
     };
 
+    ".local/share/applications/org.es_de.frontend.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Version=1.0
+        Exec=es-de
+        Icon=org.es_de.frontend
+        Terminal=false
+        Type=Application
+        StartupNotify=true
+        Hidden=false
+        Categories=Game;Emulator;
+        Name=ES-DE
+        GenericName=Gaming Frontend
+        Keywords=emulator;emulation;front-end;frontend;
+      '';
+    };
+
   };
 }
