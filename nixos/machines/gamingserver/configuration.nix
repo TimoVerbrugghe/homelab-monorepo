@@ -9,7 +9,7 @@ let
   hostname = "gamer";
   username = "gamer";
   hashedPassword = "$y$j9T$OQ3/pU28qXBFymHBymT8l0$ilSqIw/x28PWmGDdN5lXnbj.bt4EXFaQYwfRzC8X1l1";
-  rootHashedPassword = "$y$j9T$2sT2z5BHCK0LBV7c0fsJ/.$gV/Zys8CV.V/nsXNRMRLRlUxWkLnnYdMCTP4UzmxX.4";
+  rootHashedPassword = "$y$j9T$7E6wHbcJEJQPiXVueGTNV1$M7mPU6KWENkeSHJbvplkHVZyQgc97cxavaFB.uziYC.";
   ipAddress = "10.10.10.15";
   kernelParams = [
   ];
