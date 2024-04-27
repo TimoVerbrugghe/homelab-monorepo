@@ -35,6 +35,9 @@ in
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
     
+      # Boot inputs (with specific zfs settings)
+      ./boot.nix
+      
       # Gaming specific inputs
       ./input-remapper.nix
       ./sound.nix
