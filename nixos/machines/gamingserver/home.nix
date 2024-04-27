@@ -224,6 +224,28 @@
       '';
     };
 
+    "ROMs/windows/miel-monteur-huis-op-stelten.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Miel Monteur Huis op Stelten
+        Icon=lutris_miel-monteur-huis-op-stelten
+        Exec=env LUTRIS_SKIP_INIT=1 lutris lutris:rungame/miel-monteur-huis-op-stelten
+        Categories=Game
+      '';
+    };
+
+    "ROMs/windows/miel-monteur-verkent-de-ruimte.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Miel Monteur Huis op Stelten
+        Icon=lutris_miel-monteur-verkent-de-ruimte
+        Exec=env LUTRIS_SKIP_INIT=1 lutris lutris:rungame/miel-monteur-verkent-de-ruimte
+        Categories=Game
+      '';
+    };
+
     "ROMs/windows/miel-monteur-bouwt-autos.desktop" = {
       text = ''
         [Desktop Entry]
