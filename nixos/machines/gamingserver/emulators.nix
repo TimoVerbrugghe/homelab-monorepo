@@ -3,7 +3,6 @@
 {
 
   environment.systemPackages = with pkgs; [
-    # Uncomment until https://github.com/NixOS/nixpkgs/pull/303494 is pulled
     (retroarch.override {
       cores = with libretro; [
         genesis-plus-gx # Genesis

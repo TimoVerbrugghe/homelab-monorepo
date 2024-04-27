@@ -202,5 +202,71 @@
       '';
     };
 
+    "ROMs/windows/minecraft-story-mode-season-2.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Minecraft Story Mode Season 2
+        Icon=lutris_minecraft-story-mode-season-2
+        Exec=env LUTRIS_SKIP_INIT=1 lutris lutris:rungame/minecraft-story-mode-season-2
+        Categories=Game
+      '';
+    };
+
+    "ROMs/windows/miel-monteur-vliegt-de-wereld-rond.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Miel Monteur Vliegt De Wereld Rond
+        Icon=lutris_miel-monteur-vliegt-de-wereld-rond
+        Exec=env LUTRIS_SKIP_INIT=1 lutris lutris:rungame/miel-monteur-vliegt-de-wereld-rond
+        Categories=Game
+      '';
+    };
+
+    "ROMs/windows/miel-monteur-bouwt-autos.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Miel Monteur Bouwt Auto's
+        Exec=86Box --config /home/gamer/ROMs/windows/mielmonteur1/86Boxconfig.cfg --rompath /home/gamer/ROMs/windows/mielmonteur1/roms --fullscreen
+        Categories=Game
+        Path=/home/gamer/ROMs/windows/mielmonteur1
+      '';
+    };
+
+    "ROMs/windows/miel-monteur-recht-door-zee.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Miel Monteur Recht Door Zee!
+        Exec=86Box --config /home/gamer/ROMs/windows/mielmonteur2/86Boxconfig.cfg --rompath /home/gamer/ROMs/windows/mielmonteur2/roms --fullscreen
+        Categories=Game
+        Path=/home/gamer/ROMs/windows/mielmonteur2
+      '';
+    };
+
+    "ROMs/windows/boeboeks-tocht-naar-opa-kakadoris.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Boeboeks - De Tocht Naar Opa Kakadoris
+        Exec=86Box --config /home/gamer/ROMs/windows/boeboeks/86Boxconfig.cfg --rompath /home/gamer/ROMs/windows/boeboeks/roms --fullscreen
+        Categories=Game
+        Path=/home/gamer/ROMs/windows/boeboeks
+      '';
+    };
+
+    "ROMs/windows/skippy-geheim-van-de-gestolen-papyrusrol.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Skippy en Het Geheim van de Gestolen Papyrusrol
+        Exec=86Box --config /home/gamer/ROMs/windows/skippy/86Boxconfig.cfg --rompath /home/gamer/ROMs/windows/skippy/roms --fullscreen
+        Categories=Game
+        Path=/home/gamer/ROMs/windows/skippy
+      '';
+    };
+
   };
 }
