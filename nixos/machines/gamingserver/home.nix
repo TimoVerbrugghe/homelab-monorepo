@@ -295,7 +295,7 @@
         [Desktop Entry]
         Version=1.0
         Exec=es-de
-        Icon=org.es_de.frontend
+        Icon=es-de
         Terminal=false
         Type=Application
         StartupNotify=true
