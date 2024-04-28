@@ -9,6 +9,9 @@
   services.zfs.autoScrub.enable = true;
   services.zfs.trim.enable = true;
 
+  # Force import all pools (except for the root pool) on boot. This is to avoid that zfs import fails after restoring /home from truenas
+  boot.zfs.forceImportAll = true;
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.zfs.latestCompatibleLinuxPackages; # Making sure we're running latest linux kernel that is ZFS compatible

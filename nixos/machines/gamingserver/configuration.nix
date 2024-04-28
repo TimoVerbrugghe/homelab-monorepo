@@ -78,7 +78,7 @@ in
       hashedPassword = "${rootHashedPassword}";
 
       # Add public key for TheFactory TrueNAS so that TrueNAS can take zfs snapshots using a replication task
-      openssh.authorizedKeys.keys = [ "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdCFVmYlR8LQu4/B8clt2MrjSEVDpHkzsAIsEpDyKG0eQluWQnnv17AQFDRi1qTw1yDxbx/scJJ90LIDSXLrB0Vu+Lqo3okFghQXpVxfa8BO3WDM7h2s1dd4Ok6H8CrUDo0/IjF/fE4RqyoRlKHXICaJf9GnnvaxT+Eze9qwafbMjsTsKmX7q/MoNk27wI7qNrUlP4LEaF6ttqzbJM8UVLcjcu7ZtzZKwOMNvR8ouJObrkpkNeDPw4Hk6R3vm/IoZIN9YcT39MmfZcawtItIrTR+2s8R1o/DwGvFK5ZCeXFeikAzKKZ3K+M/rnPHSuzThnjr5yDln8N9YLPN/D1o/kVx7bYSdGmWWvZtxMiucKQW3ZEpMxGFwf1OIW7IDzbk5+B4lvjItBI8kluBqVq/ZIjE1OhAlvP2kUO8lNP/iMtVeGU7g6rBvYgK8yADvrhC8LGMfnKklr6T3YkahAFsEBzNhzlP33aSOB7u8H33DuXmJ+B2StwVeWp2jEHXe8658= root@TheFactory"];
+      openssh.authorizedKeys.keys = [ "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC2BZgvsUxnbuSWfVaL7aP9UPGHIkc4SRwiwTU0uXVY35v8wBCfVmeHj552IjcluQy7JReQCmLDm6lepWPWjMagr9aw/CaXLJ/cvMHcAqaPDdVkuBX9M0xEq60isr9yj9gUq+FZW/8c1WAbaAVzD2M2PzZG19JPmvqrljWD90YTpRZbM5vWXYenVXj97t8OaRGnXrkENYfyIb2SxPLcbtou1W9IE6jLiNpsW8vqZgcPWwBfG4BJ06xwrgdrSjIsjBwVia9spHBnk3uz/F5/ziQvQRZfqDsXFAUX2V3VD0LNg4Vx3SAbN8cQYZraFnZHsyzxFPCdJsYroVsMFmhZN0Z1V0k54X+wp/DnUs4lU36jGIWEHW3ibvHD+BETUwb2OrRWNZLhmFTFeuk/J11nb8zCJwPkRuO1tH87KZQSZFLT3l1oCzEXx1UQecIxr+0uSk9N64OSV0+NjosAXc4kt2YmlV2P93wM4uadpUliZZXNM/EBoBDCS0jABAX12wniTq0= root@TheFactory"];
     };
   };
 
