@@ -75,7 +75,8 @@ in
 
     root = {
       hashedPassword = "${rootHashedPassword}";
-      # Add public key for TheFactory TrueNAS so that I can take zfs snapshots
+
+      # Add public key for TheFactory TrueNAS so that TrueNAS can take zfs snapshots using a replication task
       openssh.authorizedKeys.keys = [ "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdCFVmYlR8LQu4/B8clt2MrjSEVDpHkzsAIsEpDyKG0eQluWQnnv17AQFDRi1qTw1yDxbx/scJJ90LIDSXLrB0Vu+Lqo3okFghQXpVxfa8BO3WDM7h2s1dd4Ok6H8CrUDo0/IjF/fE4RqyoRlKHXICaJf9GnnvaxT+Eze9qwafbMjsTsKmX7q/MoNk27wI7qNrUlP4LEaF6ttqzbJM8UVLcjcu7ZtzZKwOMNvR8ouJObrkpkNeDPw4Hk6R3vm/IoZIN9YcT39MmfZcawtItIrTR+2s8R1o/DwGvFK5ZCeXFeikAzKKZ3K+M/rnPHSuzThnjr5yDln8N9YLPN/D1o/kVx7bYSdGmWWvZtxMiucKQW3ZEpMxGFwf1OIW7IDzbk5+B4lvjItBI8kluBqVq/ZIjE1OhAlvP2kUO8lNP/iMtVeGU7g6rBvYgK8yADvrhC8LGMfnKklr6T3YkahAFsEBzNhzlP33aSOB7u8H33DuXmJ+B2StwVeWp2jEHXe8658= root@TheFactory"];
     };
   };

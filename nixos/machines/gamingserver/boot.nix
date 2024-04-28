@@ -19,4 +19,7 @@
     supportedFilesystems = [ "nfs" ];
     kernelModules = [ "nfs" ];
   };
+
+  # Clean /tmp folder on reboot (apparantly false by default)
+  boot.tmp.cleanOnBoot = true;
 }
