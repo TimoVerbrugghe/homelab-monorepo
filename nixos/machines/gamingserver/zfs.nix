@@ -11,4 +11,10 @@
   networking.hostId = "e6b5d6a5";
 
   boot.kernelPackages = pkgs.zfs.latestCompatibleLinuxPackages; # Making sure we're running latest linux kernel that is ZFS compatible
+
+  # Mount temporary home folder from zfs on 1tb drive
+  fileSystems."/home" =
+    { device = "zpool1/home";
+      fsType = "zfs";
+    };
 }
