@@ -8,7 +8,7 @@
   boot.loader.systemd-boot.configurationLimit = 3;
 
   # Making sure we're running latest linux kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Reduce swappiness
   boot.kernel.sysctl = { "vm.swappiness" = 20;};

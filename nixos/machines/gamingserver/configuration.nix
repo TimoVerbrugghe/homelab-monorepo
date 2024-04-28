@@ -47,6 +47,7 @@ in
       ./emulators.nix
       ./gaming-optimizations.nix
       ./backup-config.nix
+      ./zfs.nix
     ];
 
   ############################

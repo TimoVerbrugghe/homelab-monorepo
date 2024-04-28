@@ -85,6 +85,16 @@
         ];
       };
 
+      # Build this iso image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#nixosConfigurations.gamingserver-iso-autoinstall.config.system.build.isoImage --no-write-lock-file --refresh
+      gamingserver-iso-autoinstall = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          # Basic installer & install configuration
+          ./gamingserver-iso-autoinstall/installer-configuration.nix
+        ];
+      };
+
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file
       gamingserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
