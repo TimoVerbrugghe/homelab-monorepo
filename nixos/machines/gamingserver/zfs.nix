@@ -12,12 +12,22 @@
 
   boot.kernelPackages = pkgs.zfs.latestCompatibleLinuxPackages; # Making sure we're running latest linux kernel that is ZFS compatible
 
-  # Mount temporary home folder from zfs on 1tb drive
+  # Mount filesystems
+  fileSystems."/" =
+    { device = "zpool/root";
+      fsType = "zfs";
+    };
+
   fileSystems."/home" =
     { device = "zpool/home";
       fsType = "zfs";
     };
-  
+
+  fileSystems."/nix" =
+    { device = "zpool/nix";
+      fsType = "zfs";
+    };
+
   services.sanoid = {
     enable = true;
     templates.backup = {

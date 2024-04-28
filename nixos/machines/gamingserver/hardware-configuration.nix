@@ -15,10 +15,10 @@
   boot.extraModulePackages = [ ];
   boot.supportedFilesystems = [ "btrfs" "vfat" ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/52ad782e-c576-4e59-b01f-78ffef0b081f";
-      fsType = "ext4";
-    };
+  # fileSystems."/" =
+  #   { device = "/dev/disk/by-uuid/52ad782e-c576-4e59-b01f-78ffef0b081f";
+  #     fsType = "ext4";
+  #   };
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/461B-3C22";

@@ -95,8 +95,7 @@
       zfs create -o mountpoint=legacy zpool/root
       zfs create -o mountpoint=legacy zpool/nix
       zfs create -o mountpoint=legacy zpool/home
-
-      mkdir -p /mnt/root
+      
       mount -t zfs zpool/root /mnt
       mkdir -p /mnt/nix /mnt/home
 
