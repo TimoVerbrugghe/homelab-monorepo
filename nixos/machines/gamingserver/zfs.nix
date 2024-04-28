@@ -5,6 +5,7 @@
   boot.initrd.kernelModules = [ "zfs" ];
   services.zfs.autoScrub.enable = true;
   services.zfs.trim.enable = true;
+  boot.supportedFilesystems = [ "zfs" ];
 
   boot.kernelPackages = pkgs.zfs.latestCompatibleLinuxPackages; # Making sure we're running latest linux kernel that is ZFS compatible
 }
