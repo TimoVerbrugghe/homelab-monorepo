@@ -14,17 +14,17 @@
 
   # Mount filesystems
   fileSystems."/" =
-    { device = "zpool/root";
+    { device = "gamingpool/root";
       fsType = "zfs";
     };
 
   fileSystems."/home" =
-    { device = "zpool/home";
+    { device = "gamingpool/home";
       fsType = "zfs";
     };
 
   fileSystems."/nix" =
-    { device = "zpool/nix";
+    { device = "gamingpool/nix";
       fsType = "zfs";
     };
 
@@ -38,11 +38,11 @@
       autosnap = true;
     };
 
-    datasets."zpool/home" = {
+    datasets."gamingpool/home" = {
       useTemplate = [ "backup" ];
     };
 
-    datasets."zpool/root" = {
+    datasets."gamingpool/root" = {
       useTemplate = [ "backup" ];
     };
   };
