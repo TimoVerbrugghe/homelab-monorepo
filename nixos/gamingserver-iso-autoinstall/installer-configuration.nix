@@ -22,7 +22,14 @@
     git
     gptfdisk
     dialog
+    nfs-utils
   ];
+
+  # Add ability to mount nfs shares
+  boot.initrd = {
+    supportedFilesystems = [ "nfs" ];
+    kernelModules = [ "nfs" ];
+  };
 
   # Making sure DNS works
   networking.nameservers = [
