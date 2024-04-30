@@ -161,7 +161,7 @@
 
       echo "Creating ZFS gamingpool"
       # Using -f option to override existing pools
-      zpool create -O compression=on -O mountpoint=none -O xattr=sa -O acltype=posixacl -o ashift=12 -f gamingpool ''${DEVICE}p3
+      zpool create -O compression=on -O mountpoint=none -O xattr=sa -O acltype=posixacl -o ashift=12 -f gamingpool "''${DEVICE}p3"
 
       zfs create -o mountpoint=legacy gamingpool/root
       zfs create -o mountpoint=legacy gamingpool/nix
