@@ -137,7 +137,8 @@
       swapon "''${DEVICE}p2"
 
       echo "Creating ZFS gamingpool"
-      zpool create -O compression=on -O mountpoint=none -O xattr=sa -O acltype=posixacl -o ashift=12 gamingpool /dev/nvme0n1p3
+      # Using -f option to override existing pools
+      zpool create -O compression=on -O mountpoint=none -O xattr=sa -O acltype=posixacl -o ashift=12 -f gamingpool /dev/nvme0n1p3
 
       zfs create -o mountpoint=legacy gamingpool/root
       zfs create -o mountpoint=legacy gamingpool/nix
@@ -145,11 +146,14 @@
       
       # Showing message to user to restore zfs snapshots to gamingpool
       dialog --backtitle "ZFS Restore of gaming server" --msgbox "Please restore zfs snapshots to gamingpool/root and gamingpool/home. IP address of this system: $(ifconfig | grep 'inet ' | awk '{ print $2 }' | head -n 1). Once snapshot restore is complete, press enter." 10 40
-      dialog --backtitle "WARNING" --msgbox "FINAL WARNING: NixOS will now be installed" 10 40
       clear
 
       # Mount partitions for installation
-      echo "Mounting drives"
+      echo "setting mountpoint to legacy and Mounting drives"
+      zfs set mountpoint=legacy gamingpool/root
+      zfs set mountpoint=legacy gamingpool/nix
+      zfs set mountpoint=legacy gamingpool/home
+
       mount -t zfs gamingpool/root /mnt
       mkdir -p /mnt/nix /mnt/home
 
@@ -161,6 +165,11 @@
       
       mkdir -p /mnt/boot
       mount "/dev/disk/by-label/BOOT" /mnt/boot
+
+      # Notifying user that he has to manually transfer a /etc/nixos/tailscale-authkey.nix file
+      dialog --backtitle "Tailscale Setup" --msgbox "A tailscale-authkey nix file is required for this installation. Please ssh with username and password root to this system (IP: $(ifconfig | grep 'inet ' | awk '{ print $2 }' | head -n 1)) and transfer it to /mnt/etc/nixos/tailscale-authkey.nix" 10 50
+      dialog --backtitle "WARNING" --title "Warning" --msgbox "FINAL WARNING: NixOS Installation will now begin" 10 40
+      clear
 
       echo "Starting Installation"
       nixos-install --no-root-passwd --impure --no-write-lock-file -v --show-trace --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver
