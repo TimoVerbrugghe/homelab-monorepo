@@ -102,17 +102,40 @@
       dialog --backtitle "Gaming Server NixOS installation" --msgbox "Starting installation of NixOS based Gaming Server. This installation requires existing snapshots of gamingpool/root and gamingpool/home to be restored. Press enter to start." 30 50
       clear
 
-      echo "Checking if right device is available"
+      ## NVME DEVICE CHECK
+      echo "Checking if NVME device is available"
 
-      # Check if /dev/sda is available
+      # Check if an nvme device is available
       if [ -e "/dev/nvme0n1" ]; then
-        DEVICE="/dev/nvme0n1"
-        echo "Installation medium will be $DEVICE"
+        echo "NVME drive found, continuing installation"
       else
         echo "Error: No NVME drive (/dev/nvme0n1) found. Cancelling installation."
         exit 1
       fi
 
+      ## NVME DEVICE SELECTION
+      # Get list of NVMe devices and their sizes in bytes
+      mapfile -t devices < <(lsblk -b -d -o NAME,SIZE -e 7,11 | grep nvme)
+
+      # Initialize variables
+      largest_size=0
+      largest_device=""
+
+      # Loop through devices and their sizes
+      for i in "''${devices[@]}"; do
+        name=$(echo "$i" | awk '{print $1}')
+        size=$(echo "$i" | awk '{print $2}')
+
+        # Check if this device is the largest so far
+        if [ "$size" -gt "$largest_size" ]; then
+          largest_size=$size
+          largest_device="/dev/$name"
+        fi
+      done
+
+      DEVICE=$largest_device
+
+      ## WIPING DISKS
       # Wipe disk and create 3 partitions
       echo "Wiping installation medium and creating partitions"
 
@@ -138,7 +161,7 @@
 
       echo "Creating ZFS gamingpool"
       # Using -f option to override existing pools
-      zpool create -O compression=on -O mountpoint=none -O xattr=sa -O acltype=posixacl -o ashift=12 -f gamingpool /dev/nvme0n1p3
+      zpool create -O compression=on -O mountpoint=none -O xattr=sa -O acltype=posixacl -o ashift=12 -f gamingpool ''${DEVICE}p3
 
       zfs create -o mountpoint=legacy gamingpool/root
       zfs create -o mountpoint=legacy gamingpool/nix
@@ -166,23 +189,55 @@
       mkdir -p /mnt/boot
       mount "/dev/disk/by-label/BOOT" /mnt/boot
 
-      # Notifying user that he has to manually transfer a /etc/nixos/tailscale-authkey.nix file
-      dialog --backtitle "Tailscale Setup" --msgbox "A tailscale-authkey nix file is required for this installation. Please ssh with username and password root to this system (IP: $(ifconfig | grep 'inet ' | awk '{ print $2 }' | head -n 1)) and transfer it to /mnt/etc/nixos/tailscale-authkey.nix" 10 50
-      dialog --backtitle "WARNING" --title "Warning" --msgbox "FINAL WARNING: NixOS Installation will now begin" 10 40
+      ## Tailscale Setup
+      # Checking if zfs snapshot restore has restored a tailscale authkey file, if yes, copy it to /etc directory (from /mnt/etc)
+      if [ -e "/mnt/etc/nixos/tailscale-authkey.nix" ]; then
+        mkdir -p /etc/nixos
+        cp /mnt/etc/nixos/tailscale-authkey.nix /etc/nixos/tailscale-authkey.nix
+      else
+        # Notifying user that he has to manually transfer a /mnt/etc/nixos/tailscale-authkey.nix file
+        dialog --backtitle "Tailscale Setup" --msgbox "A tailscale-authkey nix file is required for this installation and was NOT found in the zfs snapshot restore. Please ssh with username and password root to this system (IP: $(ifconfig | grep 'inet ' | awk '{ print $2 }' | head -n 1)) and transfer it to /etc/nixos/tailscale-authkey.nix" 12 60
+      fi
+
+      ## Citra source setup
+      # Checking if zfs snapshot restore has restored a citra source file, if yes, copy it to /etc directory (from /mnt/etc)
+      if [ -e "/mnt/etc/nixos/citra-unified-source.tar.xz" ]; then
+        mkdir -p /etc/nixos
+        cp /mnt/etc/nixos/citra-unified-source.tar.xz /etc/nixos/citra-unified-source.tar.xz
+      else
+        # Notifying user that he has to manually transfer a /mnt/etc/nixos/citra-unified-source.tar.xz file
+        dialog --backtitle "Citra Setup" --msgbox "A citra source file is required for this installation and was NOT found in the zfs snapshot restore. Please ssh with username and password root to this system (IP: $(ifconfig | grep 'inet ' | awk '{ print $2 }' | head -n 1)) and transfer it to /etc/nixos/citra-unified-source.tar.xz" 12 60
+      fi
+
+      dialog --backtitle "Starting Installation" --title "Warning" --msgbox "FINAL WARNING: NixOS Installation will now begin" 10 40
       clear
 
       echo "Starting Installation"
-      nixos-install --no-root-passwd --impure --no-write-lock-file -v --show-trace --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver
+      nixos-install --no-root-passwd --impure --no-write-lock-file -v --show-trace --root /mnt --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver
       echo "Installation succeeded. Will umount all drives, export pools and then shutdown machine in 5 seconds"
 
-      # unmounting drives
+      # Making sure any caches are flushed and installation has done everything it needed to do so that I can "safely" unmount drives
+      sleep 20
+
+      ## Home Manager Fixes
+      # Home Manager restored from a zfs snapshot and then installed as new has an issues where previous generation number & paths are in conflict.
+      # If you don't mind losing previous profile generations (and I don't on a restore) then the easiest solutions is by removing certain folders mentioned below
+      rm -rf /mnt/home/gamer/.local/state/nix/profiles/home-manager*
+      rm -rf /mnt/home/gamer/.local/state/home-manager/gcroots/current-home
+
+      ## Unmounting drives
       umount /mnt/nix
       umount /mnt/home
-      umount /mnt
+
+      # I have to force unmount here and I really don't know why, lsof doesn't show anything so...???
+      umount -l /mnt
 
       # exporting pools
       zpool export gamingpool
 
+      dialog --backtitle "Installation Complete" --title "Post-Installation Instructions" --msgbox "Installation is complete. When restarting into the system, don't forget to test out truenas zfs backups (might need to rediscover host key of SSH target)" 12 50
+      clear
+      
       sleep 5
       shutdown -h now
 
