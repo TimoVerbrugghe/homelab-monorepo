@@ -38,6 +38,9 @@
     '';
   };
 
+  # Enabling SSH
+
+
   # ISO Image options
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
   isoImage.isoBaseName = "nixos-auto-installer";
@@ -90,17 +93,17 @@
       echo "y" | mkfs.fat -F 32 -n BOOT "''${DEVICE}p1"
       mkswap -L swap "''${DEVICE}p2"
       swapon "''${DEVICE}p2"
-      zpool create -O compression=on -O mountpoint=none -O xattr=sa -O acltype=posixacl -o ashift=12 zpool /dev/nvme0n1p3
+      zpool create -O compression=on -O mountpoint=none -O xattr=sa -O acltype=posixacl -o ashift=12 gamingpool /dev/nvme0n1p3
 
-      zfs create -o mountpoint=legacy zpool/root
-      zfs create -o mountpoint=legacy zpool/nix
-      zfs create -o mountpoint=legacy zpool/home
+      zfs create -o mountpoint=legacy gamingpool/root
+      zfs create -o mountpoint=legacy gamingpool/nix
+      zfs create -o mountpoint=legacy gamingpool/home
       
-      mount -t zfs zpool/root /mnt
+      mount -t zfs gamingpool/root /mnt
       mkdir -p /mnt/nix /mnt/home
 
-      mount -t zfs zpool/nix /mnt/nix
-      mount -t zfs zpool/home /mnt/home
+      mount -t zfs gamingpool/nix /mnt/nix
+      mount -t zfs gamingpool/home /mnt/home
 
       # Labels do not appear immediately, so wait a moment
       sleep 5

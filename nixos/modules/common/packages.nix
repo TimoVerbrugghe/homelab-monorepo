@@ -9,7 +9,7 @@
     pciutils
     jq
     iputils
-    neofetch
+    fastfetch
     tmux
     nfs-utils
   ];
