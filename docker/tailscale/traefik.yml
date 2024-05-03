@@ -8,7 +8,6 @@ services:
     restart: always
     networks:
       - dockerproxy
-      - portainer_default
     volumes:
       - /dev/net/tun:/dev/net/tun
       - tailscale-traefik:/var/lib/tailscale
@@ -57,9 +56,6 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/appdata/traefik"
 
-networks:
-  portainer_default:
-    external: true
-    
+networks:    
   dockerproxy:
     name: dockerproxy
