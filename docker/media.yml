@@ -43,6 +43,7 @@ services:
       - tvshows:/tv:rw
       - plex:/config:rw
       - /dev/shm:/dev/shm
+      - music:/music
     devices:
       - /dev/dri:/dev/dri
     labels:
@@ -75,6 +76,13 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/tvshows"
+  music:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/music"
+
 
   jellyfin:
   plex:
