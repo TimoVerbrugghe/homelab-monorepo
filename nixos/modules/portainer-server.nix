@@ -11,7 +11,7 @@ let
         image: portainer/portainer-ce:latest
         container_name: portainer
         restart: always
-        network:
+        networks:
           - dockerproxy
         hostname: portainer
         volumes:
