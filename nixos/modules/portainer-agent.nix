@@ -11,6 +11,8 @@ let
         container_name: portainer-agent
         image: portainer/agent:latest
         restart: always
+        networks:
+          - dockerproxy
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock
           - /var/lib/docker/volumes:/var/lib/docker/volumes
@@ -18,7 +20,7 @@ let
           - "9001:9001"
       
     networks:
-      dockerproxy:
+      dockerproxy
   '';
 
 in
