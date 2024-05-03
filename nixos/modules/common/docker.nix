@@ -9,7 +9,7 @@
   virtualisation.docker.liveRestore = false; # will affect running containers when restarting docker daemon, but resolves stuck shutdown/reboot
 
   # Disable the docker-proxy userland proxy and instead use iptables for all docker routing. Disabled because having issues with docker-proxy holding on to ports across reboots, which causes container startup to fail.
-  virtualisation.docker.extraOptions = "--userland-proxy false";
+  virtualisation.docker.extraOptions = "--userland-proxy=false";
 
   environment.systemPackages = with pkgs; [
     docker-compose
