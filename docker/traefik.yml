@@ -10,7 +10,6 @@ services:
       - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
     networks:
       - dockerproxy
-      - portainer_default
     ports:
       - 443:443/tcp
     volumes:
@@ -22,9 +21,6 @@ services:
 volumes:
   traefik:
 
-networks:
-  portainer_default:
-    external: true
-    
+networks:    
   dockerproxy:
     name: dockerproxy
