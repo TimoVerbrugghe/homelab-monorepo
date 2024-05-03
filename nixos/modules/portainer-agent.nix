@@ -34,7 +34,7 @@ in
 
     serviceConfig = {
       ExecStart = "${pkgs.docker-compose}/bin/docker-compose -f ${portainerCompose} up";
-      ExecStop = "${pkgs.docker-compose}/bin/docker-compose ${portainerCompose} down";
+      ExecStop = "${pkgs.docker-compose}/bin/docker-compose -f ${portainerCompose} down";
       Restart = "always";
       RestartSec = "30s";
     };
