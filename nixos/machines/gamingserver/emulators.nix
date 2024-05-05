@@ -23,7 +23,6 @@
     # emulationstation-de
     ryujinx
     xemu
-    lutris
     wineWowPackages.full
     # _86Box-with-roms
     winetricks

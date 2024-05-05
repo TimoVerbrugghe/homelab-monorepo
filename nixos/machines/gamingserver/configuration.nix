@@ -43,7 +43,7 @@ in
       ./sound.nix
       ./display.nix
       ./sunshine.nix
-      ./steam.nix
+      ./gamelaunchers.nix
       ./emulators.nix
       ./gaming-optimizations.nix
       ./backup-config.nix
