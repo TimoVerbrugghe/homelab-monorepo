@@ -1,0 +1,31 @@
+- name: Install unattended-upgrades and apt-listchanges packages
+  ansible.builtin.apt:
+    name:
+      - unattended-upgrades
+      - apt-listchanges
+    state: present
+
+- name: Add configuration file for unattended-upgrades (named 99unattendedupgrades so that every setting here will override default settings from 50unattended-upgrades and 20auto-upgrades)
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/99unattended-upgrades-proxmox
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+
+      Unattended-Upgrade::Origins-Pattern {
+          "origin=Debian,label=Debian";
+          "origin=Debian,label=Debian-Security"
+          "origin=Proxmox,label=Proxmox Debian Repository";
+          "origin=Proxmox,label=Proxmox Debian Repository";
+      };
+
+      Unattended-Upgrade::MinimalSteps "false";
+      Unattended-Upgrade::Automatic-Reboot "true";
+      Unattended-Upgrade::Automatic-Reboot-Time "05:00";
+
+      Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+      Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+      Unattended-Upgrade::Remove-Unused-Dependencies "true";
+
+      Unattended-Upgrade::Mail "timo@hotmail.be";
+      Unattended-Upgrade::MailReport "only-on-error";

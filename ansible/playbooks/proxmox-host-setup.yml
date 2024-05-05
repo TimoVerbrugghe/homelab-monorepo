@@ -1,10 +1,9 @@
 # Playbook to set up a new proxmox host, this includes setting up iGPU passthrough & installing cloud-init template
 
-# - name: Update known hosts
-#   ansible.builtin.import_playbook: update-known-hosts.yml
+- name: Update known hosts
+  ansible.builtin.import_playbook: update-known-hosts.yml
 
 - name: Configure Proxmox host & Create Ubuntu Cloud Init template
   hosts: all
   roles:
-    # - role: ../roles/ubuntu-cloud-img
     - role: ../roles/proxmox-host-setup

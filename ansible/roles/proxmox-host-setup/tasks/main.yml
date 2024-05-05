@@ -1,5 +1,11 @@
+- name: Setup automatic upgrades
+  ansible.builtin.include_tasks: automatic-upgrades.yml
+
 - name: Setup proxmox host (iGPU passthrough)
   ansible.builtin.include_tasks: proxmox-igpu-passthrough.yml
+
+- name: Download & setup ubuntu cloud image
+  ansible.builtin.include_tasks: create-cloud-init-template.yml
 
 - name: Check if /etc/default/grub contains command line parameters for CPU optimizations and enable if missing
   ansible.builtin.lineinfile:
@@ -18,12 +24,6 @@
     backup: true
     backrefs: true
   when: zfs
-
-# - name: Setup ZFS ARC to limit to 4GiB
-#   ansible.builtin.copy:
-#     dest: /etc/modprobe.d/zfs.conf
-#     content: |
-#       options zfs zfs_arc_max=4294967296
 
 - name: Update initramfs
   ansible.builtin.command: 

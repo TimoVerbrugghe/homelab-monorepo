@@ -3,13 +3,14 @@
 {
 	"name": "Ubuntu",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"ghcr.io/devcontainers-contrib/features/ansible:2.0.17": {},
-		"ghcr.io/devcontainers-contrib/features/terraform-asdf:2.0.14": {},
-		"ghcr.io/devcontainers-contrib/features/packer-asdf:2.0.14": {}
+		"ghcr.io/devcontainers-contrib/features/ansible": {},
+		"ghcr.io/devcontainers-contrib/features/terraform-asdf": {},
+		"ghcr.io/devcontainers-contrib/features/packer-asdf": {},
+		"ghcr.io/devcontainers/features/nix": {}
 	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
