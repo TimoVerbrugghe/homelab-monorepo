@@ -10,5 +10,13 @@
 
   environment.systemPackages = with pkgs; [
     mangohud
+    # Install Proton-GE (a more extended, better version of proton)
+    protonup
   ];
+
+  home.sessionVariables = {
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS =
+      "\${HOME}/.steam/root/compatibilitytools.d";
+  };
+
 }
