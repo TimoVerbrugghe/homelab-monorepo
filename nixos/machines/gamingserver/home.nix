@@ -12,6 +12,15 @@
   # Apparently this is required for home manager
   home.stateVersion = "23.11";
 
+  # Install Proton-GE (a more extended, better version of proton)
+  home.packages = with pkgs; [
+    protonup
+  ];
+
+  home.sessionVariables = {
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\\\${HOME}/.steam/root/compatibilitytools.d";
+  };
+
   home.file = {
     # Input remapper config files to enable L3+R3 -> Alt-F4 conversion
     ".config/input-remapper-2" = {

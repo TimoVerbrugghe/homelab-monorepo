@@ -2,6 +2,8 @@
 
 {
 
+  programs.gamemode.enable = true;
+
   powerManagement.cpuFreqGovernor = "performance";
 
   boot.kernel.sysctl = {

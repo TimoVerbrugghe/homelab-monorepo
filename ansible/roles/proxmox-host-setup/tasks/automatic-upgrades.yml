@@ -16,7 +16,8 @@
           "origin=Debian,label=Debian";
           "origin=Debian,label=Debian-Security"
           "origin=Proxmox,label=Proxmox Debian Repository";
-          "origin=Proxmox,label=Proxmox Debian Repository";
+          "origin=Proxmox,label=Proxmox Ceph Debian Repository";
+          "origin=Tailscale,label=Tailscale"
       };
 
       Unattended-Upgrade::MinimalSteps "false";
