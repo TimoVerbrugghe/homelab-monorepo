@@ -1,47 +1,47 @@
 - name: Setup automatic upgrades
   ansible.builtin.include_tasks: automatic-upgrades.yml
 
-- name: Setup proxmox host (iGPU passthrough)
-  ansible.builtin.include_tasks: proxmox-igpu-passthrough.yml
+# - name: Setup proxmox host (iGPU passthrough)
+#   ansible.builtin.include_tasks: proxmox-igpu-passthrough.yml
 
-- name: Download & setup ubuntu cloud image
-  ansible.builtin.include_tasks: create-cloud-init-template.yml
+# - name: Download & setup ubuntu cloud image
+#   ansible.builtin.include_tasks: create-cloud-init-template.yml
 
-- name: Check if /etc/default/grub contains command line parameters for CPU optimizations and enable if missing
-  ansible.builtin.lineinfile:
-    path: /etc/default/grub
-    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?:(?!mitigations=off transparent_hugepage=always).)*?)"$'
-    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 mitigations=off transparent_hugepage=always"'
-    backup: true
-    backrefs: true
-  when: zfs | default(true) | bool == false
+# - name: Check if /etc/default/grub contains command line parameters for CPU optimizations and enable if missing
+#   ansible.builtin.lineinfile:
+#     path: /etc/default/grub
+#     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?:(?!mitigations=off transparent_hugepage=always).)*?)"$'
+#     line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 mitigations=off transparent_hugepage=always"'
+#     backup: true
+#     backrefs: true
+#   when: zfs | default(true) | bool == false
 
-- name: Check if /etc/kernel/cmdline contains command line parameters for CPU optimizations and enable if missing
-  ansible.builtin.lineinfile:
-    path: /etc/kernel/cmdline
-    regexp: '^(.*?)(mitigations=off transparent_hugepage=always|$)'
-    line: '\1 mitigations=off transparent_hugepage=always'
-    backup: true
-    backrefs: true
-  when: zfs
+# - name: Check if /etc/kernel/cmdline contains command line parameters for CPU optimizations and enable if missing
+#   ansible.builtin.lineinfile:
+#     path: /etc/kernel/cmdline
+#     regexp: '^(.*?)(mitigations=off transparent_hugepage=always|$)'
+#     line: '\1 mitigations=off transparent_hugepage=always'
+#     backup: true
+#     backrefs: true
+#   when: zfs
 
-- name: Update initramfs
-  ansible.builtin.command: 
-    cmd: update-initramfs -u -k all
+# - name: Update initramfs
+#   ansible.builtin.command: 
+#     cmd: update-initramfs -u -k all
 
-- name: Run update-grub
-  ansible.builtin.command: 
-    cmd: update-grub
-  when: zfs | default(true) | bool == false
+# - name: Run update-grub
+#   ansible.builtin.command: 
+#     cmd: update-grub
+#   when: zfs | default(true) | bool == false
 
-- name: Run proxmox-boot-tool (only on systems running systemd-boot, default with zfs)
-  ansible.builtin.command: 
-    cmd: proxmox-boot-tool refresh
-  when: zfs
+# - name: Run proxmox-boot-tool (only on systems running systemd-boot, default with zfs)
+#   ansible.builtin.command: 
+#     cmd: proxmox-boot-tool refresh
+#   when: zfs
 
-- name: Reboot (so we can apply all these iGPU passthrough settings)
-  ansible.builtin.reboot:
+# - name: Reboot (so we can apply all these iGPU passthrough settings)
+#   ansible.builtin.reboot:
 
-- name: Wait 20 seconds to make sure proxmox API is running for potential other playbooks
-  ansible.builtin.pause:
-    seconds: 20
+# - name: Wait 20 seconds to make sure proxmox API is running for potential other playbooks
+#   ansible.builtin.pause:
+#     seconds: 20
