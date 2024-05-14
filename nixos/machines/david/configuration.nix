@@ -146,9 +146,9 @@ in
     usePredictableInterfaceNames = false;
     defaultGateway = "${defaultGateway}";
     nameservers = [
-    "1.1.1.1"
-    "8.8.8.8"
-    "8.8.4.4"
+      "1.1.1.1"
+      "8.8.8.8"
+      "8.8.4.4"
     ];
     interfaces = {
       eth0 = {
@@ -409,6 +409,15 @@ in
       OnCalendar = "*:0/5";  # Run every 5 minutes
       Persistent = true;
     };
+  };
+
+  # Add a dns manager so that tailscale does not overwrite /etc/resolv.conf. Ensures that docker dns keeps working
+  services.resolved = {
+    enable = true;
+    dnssec = "true";
+    domains = [ "~." ];
+    fallbackDns = [ "8.8.8.8" "8.8.4.4" "1.1.1.1" ];
+    dnsovertls = "true";
   };
 
 }
