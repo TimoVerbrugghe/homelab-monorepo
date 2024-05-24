@@ -58,7 +58,7 @@ services:
     volumes:
       - bitwarden-export:/appdata
     environment:
-      CRON_SCHEDULE: 0
+      CRON_SCHEDULE: 0 0 * * 0
       BW_CLIENTID: ${BW_CLIENTID}
       BW_CLIENTSECRET: ${BW_CLIENTSECRET}
       BW_SERVER: http://bitwarden
