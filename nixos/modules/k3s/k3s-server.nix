@@ -46,6 +46,6 @@ in
     role = "server";
     clusterInit = true;
     token = "${config.k3stoken}";
-  }
+  };
 
 }
