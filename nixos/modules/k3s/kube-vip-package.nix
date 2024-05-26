@@ -1,4 +1,4 @@
-{ stdenv, writeTextFile, curl, containerd, lib }:
+{ stdenv, writeTextFile, curl, containerd, jq, lib }:
 
 let 
 
@@ -16,6 +16,7 @@ stdenv.mkDerivation rec {
   buildInputs = [ 
     curl 
     containerd
+    jq
   ];
 
   src = ./.;
