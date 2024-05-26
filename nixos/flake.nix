@@ -113,6 +113,15 @@
         ];
       };
 
+      # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#k3stest --refresh --impure --no-write-lock-file
+      k3stest = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          ./machines/k3stest/configuration.nix
+        ];
+      };
+
     };
   };
 }
