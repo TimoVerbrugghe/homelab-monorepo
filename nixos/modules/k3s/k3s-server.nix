@@ -4,7 +4,7 @@ let
   k3sConfig = pkgs.writeText "k3sConfig.yml" ''
     cluster-init: true
     tls-san: 
-      - kubernetes.local.timo.be
+      - kubernetes.timo.be
     write-kubeconfig-mode: '644'
 
     # Setting IPs for pods & services (needed for tailscale routing)

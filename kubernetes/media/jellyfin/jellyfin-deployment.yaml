@@ -48,10 +48,10 @@ spec:
           mountPath: /movies
         - name: tvshows
           mountPath: /tv
-        # - name: devshm
-        #   mountPath: /dev/shm
-        # - name: devdri
-        #   mountPath: /dev/dri
+        - name: devshm
+          mountPath: /dev/shm
+        - name: devdri
+          mountPath: /dev/dri
       volumes:
       - name: config
         persistentVolumeClaim:
