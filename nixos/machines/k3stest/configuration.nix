@@ -37,10 +37,6 @@ in
       ../../modules/k3s/kube-vip.nix
     ];
 
-  ## KUBERNETES SETUP ##
-
-  environment.system
-
   ############################
   ## Host Specific Settings ##
   ############################
