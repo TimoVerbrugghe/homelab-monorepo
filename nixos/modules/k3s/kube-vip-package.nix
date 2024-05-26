@@ -1,4 +1,4 @@
-{ stdenv, writeTextFile }:
+{ stdenv, writeTextFile, curl, containerd }:
 
 let 
 
