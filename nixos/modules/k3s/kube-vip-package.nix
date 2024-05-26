@@ -1,4 +1,4 @@
-{ stdenv, writeTextFile, curl, containerd }:
+{ stdenv, writeTextFile, curl, containerd, lib }:
 
 let 
 
@@ -62,7 +62,7 @@ stdenv.mkDerivation rec {
     chown root:root $out/var/lib/rancher/k3s/server/manifests/kube-vip-config.yaml
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "kube-vip Installer";
     license = licenses.mit;
   };
