@@ -49,7 +49,7 @@ stdenv.mkDerivation rec {
     EOF
   '';
 
-  fixupPhase += ''
+  fixupPhase = ''
     chown root:root $out/var/lib/rancher/k3s/server/manifests
     chmod 0644 $out/var/lib/rancher/k3s/server/manifests
 
