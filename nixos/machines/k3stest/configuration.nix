@@ -29,7 +29,7 @@ in
       ../../modules/vm-options.nix # Some default options you should enable on VMs      
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey
       ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
-      ../../modules/check-disk-usage.nix # Notify if disk usage is above 80%
+      # ../../modules/check-disk-usage.nix # Notify if disk usage is above 80%
     
       ## KUBERNETES SETUP ##
       ../../modules/k3s/k3s-common.nix
