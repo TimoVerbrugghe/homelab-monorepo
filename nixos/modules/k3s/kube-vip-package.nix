@@ -18,6 +18,8 @@ stdenv.mkDerivation rec {
     containerd
   ];
 
+  src = ./.;
+
   installPhase = ''
     # Create manifests directory
     mkdir -p $out/var/lib/rancher/k3s/server/manifests
