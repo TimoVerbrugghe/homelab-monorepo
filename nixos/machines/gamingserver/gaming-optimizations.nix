@@ -4,6 +4,8 @@
 
   programs.gamemode.enable = true;
 
+  hardware.xone.enable = true;
+
   powerManagement.cpuFreqGovernor = "performance";
 
   boot.kernel.sysctl = {

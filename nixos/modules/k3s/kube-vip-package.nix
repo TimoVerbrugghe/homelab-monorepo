@@ -1,4 +1,4 @@
-{ stdenv, writeTextFile, curl, containerd, jq, lib }:
+{ stdenv, writeTextFile, curl, containerd, jq, lib, fetchurl }:
 
 let 
 
@@ -6,7 +6,7 @@ let
   kube_vip_ip = "10.10.10.40";
   kube_vip_ip_range = "10.10.10.45-10.10.10.50";
   pname = "kube-vip";
-  version = "1.0-timo";
+  version = "0.8.0";
 
 in
 
@@ -14,31 +14,35 @@ stdenv.mkDerivation rec {
   inherit pname version;
 
   buildInputs = [ 
-    curl 
-    containerd
+    curl
+    docker
     jq
   ];
 
   src = ./.;
 
+  phases = ["buildPhase" "installPhase" "fixupPhase"];
+
+  buildPhase = ''
+    # Pull kube-vip image
+    docker image pull "ghcr.io/kube-vip/kube-vip:${version}"
+
+    # Generate kube-vip manifest
+    docker run --rm --net-host "ghcr.io/kube-vip/kube-vip:${version}" vip /kube-vip manifest daemonset --arp --interface "${interface}" --address "${kube_vip_ip}" --inCluster --taint --controlplane --services --leaderElection | tee $out/kube-vip.yaml
+  '';
+
   installPhase = ''
+    runHook preInstall
+
     # Create manifests directory
     mkdir -p $out/var/lib/rancher/k3s/server/manifests
-
-    # Get latest kube-vip version from GitHub
-    kvversion=$(curl -sL https://api.github.com/repos/kube-vip/kube-vip/releases | jq -r '.[0].name')
+    mv $out/kube-vip.yaml $out/var/lib/rancher/k3s/server/manifests/kube-vip.yaml
 
     # Download vip rbac manifest
     curl -sL "https://kube-vip.io/manifests/rbac.yaml" -o $out/var/lib/rancher/k3s/server/manifests/vip-rbac.yaml
 
     # Download kube-vip cloud controller manifest
     curl -sL "https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml" -o $out/var/lib/rancher/k3s/server/manifests/kube-vip-cloud-controller.yaml
-
-    # Pull kube-vip image
-    ctr image pull "ghcr.io/kube-vip/kube-vip:$kvversion"
-
-    # Generate kube-vip manifest
-    ctr run --rm --net-host "ghcr.io/kube-vip/kube-vip:$kvversion" vip /kube-vip manifest daemonset --arp --interface "${interface}" --address "${kube_vip_ip}" --inCluster --taint --controlplane --services --leaderElection | tee $out/var/lib/rancher/k3s/server/manifests/kube-vip.yaml
 
     # Put kube-vip controlmap in manifests folder
     cat <<EOF > $out/var/lib/rancher/k3s/server/manifests/kube-vip-config.yaml
@@ -50,6 +54,8 @@ stdenv.mkDerivation rec {
       data:
         cidr-global: ${kube_vip_ip_range}
     EOF
+
+    runHook postInstall
   '';
 
   fixupPhase = ''
