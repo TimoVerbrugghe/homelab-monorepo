@@ -28,7 +28,7 @@ services:
     container_name: cloudflared-tunnel
     image: cloudflare/cloudflared
     restart: always
-    command: tunnel run
+    command: tunnel --no-autoupdate run
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
     labels:
