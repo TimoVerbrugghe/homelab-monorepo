@@ -24,16 +24,6 @@ services:
     labels:
       traefik.enable: false
 
-  # cloudflared-tunnel:
-  #   container_name: cloudflared-tunnel
-  #   image: cloudflare/cloudflared
-  #   restart: always
-  #   command: tunnel --no-autoupdate run
-  #   environment:
-  #     - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
-  #   labels:
-  #     traefik.enable: false
-
   dockerproxy:
     image: ghcr.io/tecnativa/docker-socket-proxy:latest
     container_name: dockerproxy
