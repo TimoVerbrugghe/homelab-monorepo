@@ -11,7 +11,7 @@ in
 
   imports =[ 
       # Include cloudflare API key file, you need to put this manually in your nixos install
-      /etc/nixos/cloudflare-apikey.nix
+      /etc/nixos/cloudflare-keys.nix
   ];
 
 
@@ -34,6 +34,16 @@ in
 
   services.cloudflared.enable = true;
 
+  systemd.services.cloudflareTunnel = {
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
+    serviceConfig = {
+        ExecStart = "${pkgs.cloudflared}/bin/cloudflared tunnel --no-autoupdate run --token=${config.cloudflareTunnelToken}";
+        Restart = "always";
+        User = "cloudflared";
+        Group = "cloudflared";
+    };
+  };
 
 }
 
