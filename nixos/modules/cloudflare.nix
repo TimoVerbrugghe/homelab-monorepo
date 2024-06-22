@@ -32,6 +32,8 @@ in
     };
   };
 
+  services.cloudflared.enable = true;
+
 
 }
 
