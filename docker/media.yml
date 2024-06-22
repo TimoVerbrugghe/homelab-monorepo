@@ -49,7 +49,7 @@ services:
       traefik.http.services.plex.loadbalancer.server.port: 32400
 
   plex-autolanguages:
-    container_name: plex-autolanguagues
+    container_name: plex-autolanguages
     image: remirigal/plex-auto-languages:latest
     networks:
       - dockerproxy
@@ -58,6 +58,8 @@ services:
       - PLEX_URL=http://plex:32400
       - PLEX_TOKEN=${PLEX_TOKEN}
       - TZ=Europe/Brussels
+    depends_on:
+      - plex
     labels:
       traefik.enable: false
 
