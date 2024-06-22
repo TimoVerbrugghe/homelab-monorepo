@@ -9,7 +9,7 @@ let
     services:
       portainer-agent:
         container_name: portainer-agent
-        image: portainer/agent:latest
+        image: portainer/agent:sts
         restart: always
         networks:
           - dockerproxy
