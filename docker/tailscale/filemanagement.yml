@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   tailscale-filebrowser:
     image: tailscale/tailscale

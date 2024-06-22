@@ -11,8 +11,6 @@
 # PLEX_CLAIM_TOKEN=
 # TS_AUTH_KEY_PLEX=
 
-version: "3.8"
-
 services:
 
   ### MEDIA PLAYBACK ###

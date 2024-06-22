@@ -13,8 +13,6 @@
 # TS_AUTH_KEY_READARR=
 # TS_AUTH_KEY_JELLYFIN=
 
-version: "3.8"
-
 services:
 
   ### MEDIA PLAYBACK ###

@@ -2,8 +2,6 @@
 # TS_AUTH_KEY_FILEBROWSER=
 # TS_AUTH_KEY_PORTAINER=
 
-version: "3.8"
-
 services:
 
   ### WATCHTOWER - AUTOMATIC UPDATES
