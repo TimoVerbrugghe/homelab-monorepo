@@ -99,6 +99,7 @@ services:
     volumes:
       - downloads:/downloads
       - games:/nsp
+      - ns-usbloader-config:/root/.java/.userPrefs/NS-USBloader
     ports:
       - 8080:8080
       - 6042:6042
@@ -139,6 +140,7 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/games/ROMs"
+  ns-usbloader-config:
 
 networks:
   dockerproxy:

@@ -8,6 +8,7 @@ ENV LANGUAGE=en_US.UTF-8
 ENV DISPLAY=:0
 
 VOLUME /nsp
+VOLUME /root/.java/.userPrefs/NS-USBloader
 
 # Install wget (if not already installed)
 RUN apt-get update && apt-get install -y \
