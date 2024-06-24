@@ -100,9 +100,9 @@ services:
       - downloads:/downloads
       - games:/nsp
     labels:
-      traefik.http.routers.uptime-kuma.entrypoints: https
-      traefik.http.services.uptime-kuma.loadbalancer.server.port: 8080
-      traefik.http.routers.uptime-kuma.middlewares: keycloak-auth@file
+      traefik.http.routers.ns-usbloader.entrypoints: https
+      traefik.http.services.ns-usbloader.loadbalancer.server.port: 8080
+      traefik.http.routers.ns-usbloader.middlewares: keycloak-auth@file
 
 volumes:
   bitwarden:
