@@ -1,5 +1,5 @@
 # Use an official OpenJDK image with Debian
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LC_ALL C.UTF-8
@@ -42,4 +42,4 @@ EXPOSE 8080
 EXPOSE 6042
 
 # Start Xvfb, Fluxbox, x11vnc & novnc server, and run the Java application
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
