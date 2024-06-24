@@ -105,7 +105,6 @@ services:
       tailscale-scanservjs:
         condition: service_healthy
 
-
 volumes:
   scanservjs-scans:
     driver: local

@@ -90,6 +90,20 @@ services:
     labels:
       traefik.enable: false
 
+  ns-usbloader:
+    image: ghcr.io/timoverbrugghe/ns-usbloader
+    container_name: ns-usbloader
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - downloads:/downloads
+      - games:/nsp
+    labels:
+      traefik.http.routers.uptime-kuma.entrypoints: https
+      traefik.http.services.uptime-kuma.loadbalancer.server.port: 8080
+      traefik.http.routers.uptime-kuma.middlewares: keycloak-auth@file
+
 volumes:
   bitwarden:
   bitwarden-export:
@@ -111,6 +125,17 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/isos"
+  downloads:
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/downloads"
+  games:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/ROMs"
 
 networks:
   dockerproxy:
