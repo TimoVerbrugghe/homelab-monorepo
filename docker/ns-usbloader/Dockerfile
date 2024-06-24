@@ -1,10 +1,11 @@
 # Use an official OpenJDK image with Debian
 FROM ubuntu:22.04
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV LC_ALL C.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LC_ALL=C.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US.UTF-8
+ENV DISPLAY=:0
 
 VOLUME /nsp
 
@@ -37,8 +38,6 @@ RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html
 
 # Set the working directory
 WORKDIR /usr/local/app/
-
-ENV DISPLAY=:0
 
 # Expose port 8080 for noVNC and 6042 for NS-USBLoader file transfers
 EXPOSE 8080
