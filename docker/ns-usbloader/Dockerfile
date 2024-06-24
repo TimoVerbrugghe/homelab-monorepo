@@ -34,6 +34,9 @@ ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Add the Openbox config file for maximizing windows
 ADD rc.xml /root/.config/openbox/rc.xml
 
+# Add preformatted preferences file for NS-USBLoader
+ADD prefs.xml /root/.java/.userPrefs/NS-USBloader/prefs.xml
+
 # Create a symbolic link between /usr/share/novnc/vnc.html and index.html
 RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html
 
