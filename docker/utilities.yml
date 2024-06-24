@@ -99,6 +99,9 @@ services:
     volumes:
       - downloads:/downloads
       - games:/nsp
+    ports:
+      - 8080:8080
+      - 6042:6042
     labels:
       traefik.http.routers.ns-usbloader.entrypoints: https
       traefik.http.services.ns-usbloader.loadbalancer.server.port: 8080
