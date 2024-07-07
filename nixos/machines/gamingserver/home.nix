@@ -53,6 +53,30 @@
       recursive = true;
     };
 
+    # Emulation Station Desktop Edition autostart desktop file
+    ".config/autostart/emulationstation.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Exec=es-de
+        Name=Emulation Station DE
+        Comment=Front-end for retro gaming
+        Icon=emulationstation
+      '';
+    };
+
+    # Add steam to ROMs folder so that it can be launched from Emulation Station
+    "ROMs/windows/steam.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Steam
+        Exec=steam
+        Icon=steam
+        Categories=Game;
+      '';
+    };
+
     # PS3 ROM File shortcuts for RPCS3
     "ROMs/ps3/Ratchet & Clank Future： A Crack In Time.desktop" = {
       text = ''
