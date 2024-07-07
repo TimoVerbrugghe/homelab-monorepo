@@ -48,6 +48,7 @@ in
       ./gaming-optimizations.nix
       ./backup-config.nix
       ./zfs.nix
+      ./controllers.nix
     ];
 
   ############################
