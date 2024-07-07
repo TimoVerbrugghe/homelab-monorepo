@@ -71,7 +71,7 @@
         [Desktop Entry]
         Type=Application
         Name=Steam
-        Exec=steam
+        Exec=steam steam://open/bigpicture
         Icon=steam
         Categories=Game;
       '';
