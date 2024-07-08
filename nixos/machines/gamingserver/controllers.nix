@@ -1,39 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  bluetoothReconnectScript = ''
-    #!/bin/bash
-
-    # Specify the MAC address you want to check
-    mac_address="28:C5:D2:EF:60:77"
-
-    # Check if the device is already connected
-    connected=$(bluetoothctl info $mac_address | grep "Connected: yes")
-
-    if [ -n "$connected" ]; then
-        echo "Device is already connected"
-        exit 0
-    else
-        echo "Device is not connected, trying to connect..."
-        
-        # Connect to the device
-        bluetoothctl connect $mac_address
-
-        # Sleep 5 to wait for connection
-        sleep 5
-        
-        # Check if the connection was successful
-        connected=$(bluetoothctl info $mac_address | grep "Connected: yes")
-        
-        if [ -n "$connected" ]; then
-            echo "Device connected successfully"
-            exit 0
-        else
-            echo "Failed to connect to the device"
-            exit 1
-        fi
-    fi
-  '';
+  macAddressProController = "28:C5:D2:EF:60:77";
 in
 
 {
@@ -54,9 +22,41 @@ in
     after = [ "bluetooth.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
-      ExecStart = "${pkgs.bash}/bin/bash -c '${bluetoothReconnectScript}'";
-      Restart = "on-failure";
+      Restart="on-failure";
+      Type="oneshot";
     };
+    path = with pkgs; [
+      bluez
+    ];
+    enable = true;
+    script = ''
+      # Check if the device is already connected
+      connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes")
+
+      if [ -n "$connected" ]; then
+          echo "Device is already connected"
+          exit 0
+      else
+          echo "Device is not connected, trying to connect..."
+          
+          # Connect to the device
+          bluetoothctl connect ${macAddressProController}
+
+          # Sleep 5 to wait for connection
+          sleep 5
+          
+          # Check if the connection was successful
+          connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes")
+          
+          if [ -n "$connected" ]; then
+              echo "Device connected successfully"
+              exit 0
+          else
+              echo "Failed to connect to the device"
+              exit 1
+          fi
+      fi
+    ''
   };
 
 }
