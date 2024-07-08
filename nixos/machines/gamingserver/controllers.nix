@@ -1,5 +1,41 @@
 { config, pkgs, ... }:
 
+let
+  bluetoothReconnectScript = ''
+    #!/bin/bash
+
+    # Specify the MAC address you want to check
+    mac_address="28:C5:D2:EF:60:77"
+
+    # Check if the device is already connected
+    connected=$(bluetoothctl info $mac_address | grep "Connected: yes")
+
+    if [ -n "$connected" ]; then
+        echo "Device is already connected"
+        exit 0
+    else
+        echo "Device is not connected, trying to connect..."
+        
+        # Connect to the device
+        bluetoothctl connect $mac_address
+
+        # Sleep 5 to wait for connection
+        sleep 5
+        
+        # Check if the connection was successful
+        connected=$(bluetoothctl info $mac_address | grep "Connected: yes")
+        
+        if [ -n "$connected" ]; then
+            echo "Device connected successfully"
+            exit 0
+        else
+            echo "Failed to connect to the device"
+            exit 1
+        fi
+    fi
+  '';
+in
+
 {
 
   # Bluetooth
@@ -9,11 +45,18 @@
   # AX200 Bluetooth module
   boot.kernelModules = [ "btintel" ];
 
-  # Joycon & Switch Pro Controller support
-  # services.joycond.enable = true;
+  services.udev.extraRules = ''
+    ACTION=="remove", SUBSYSTEM=="bluetooth", ATTR{address}=="28:C5:D2:EF:60:77", RUN+="/bin/systemctl start bluetooth-reconnect.service"
+  '';
 
-  # services.udev.extraRules = ''
-  #   KERNEL=="hidraw*", KERNELS=="*057E:2009*", TAG+="uaccess"
-  # '';
+  systemd.services.switch-procontroller-bluetooth-reconnect = {
+    description = "Bluetooth Reconnect Service for Switch Pro Controller";
+    after = [ "bluetooth.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.bash}/bin/bash -c '${bluetoothReconnectScript}'";
+      Restart = "on-failure";
+    };
+  };
 
 }
