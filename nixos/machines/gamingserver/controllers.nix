@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  macAddressProController = "28:C5:D2:EF:60:77";
+  macAddressProController = "28:CF:51:A5:86:6E";
 in
 
 {
@@ -14,7 +14,7 @@ in
   boot.kernelModules = [ "btintel" ];
 
   services.udev.extraRules = ''
-    ACTION=="remove", SUBSYSTEM=="bluetooth", ATTR{address}=="28:C5:D2:EF:60:77", RUN+="${pkgs.systemd}/bin/systemctl start bluetooth-reconnect.service"
+    ACTION=="remove", SUBSYSTEM=="bluetooth", ATTR{address}=="${macAddressProController}", RUN+="${pkgs.systemd}/bin/systemctl start bluetooth-reconnect.service"
   '';
 
   systemd.services.switch-procontroller-bluetooth-reconnect = {
