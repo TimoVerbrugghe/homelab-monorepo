@@ -33,10 +33,7 @@ in
       # Check if the device is already connected
       connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes")
 
-      if [ -n "$connected" ]; then
-          echo "Device is already connected"
-          exit 0
-      else
+      while [ -z "$connected" ]; do
           echo "Device is not connected, trying to connect..."
           
           # Connect to the device
@@ -47,15 +44,9 @@ in
           
           # Check if the connection was successful
           connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes")
-          
-          if [ -n "$connected" ]; then
-              echo "Device connected successfully"
-              exit 0
-          else
-              echo "Failed to connect to the device"
-              exit 1
-          fi
-      fi
+      done
+
+      echo "Device connected successfully"
     '';
   };
 
