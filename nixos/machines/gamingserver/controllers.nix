@@ -14,7 +14,7 @@ in
   boot.kernelModules = [ "btintel" ];
 
   services.udev.extraRules = ''
-    ACTION=="remove", SUBSYSTEM=="bluetooth", ATTR{address}=="${macAddressProController}", RUN+="${pkgs.systemd}/bin/systemctl start bluetooth-reconnect.service"
+    ACTION=="remove", SUBSYSTEM=="bluetooth", ATTR{address}=="${macAddressProController}", RUN+="${pkgs.systemd}/bin/systemctl start switch-procontroller-bluetooth-reconnect.service"
   '';
 
   systemd.services.switch-procontroller-bluetooth-reconnect = {
