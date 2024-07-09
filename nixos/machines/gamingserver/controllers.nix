@@ -30,20 +30,22 @@ in
     ];
     enable = true;
     script = ''
+      ## NEED TO PUT || true in this script because nixos puts set -e in the script automatically which exits script on any non-zero exit code
+
       # Check if the device is already connected
-      connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes")
+      connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes" || true)
 
       while [ -z "$connected" ]; do
           echo "Device is not connected, trying to connect..."
           
           # Connect to the device
-          bluetoothctl connect ${macAddressProController}
+          bluetoothctl connect ${macAddressProController} || true
 
-          # Sleep 5 to wait for connection
-          sleep 5
-          
           # Check if the connection was successful
-          connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes")
+          connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes" || true)
+
+          # Sleep for 5 seconds before trying again
+          sleep 5
       done
 
       echo "Device connected successfully"
