@@ -32,6 +32,9 @@ in
     script = ''
       ## NEED TO PUT || true in this script because nixos puts set -e in the script automatically which exits script on any non-zero exit code
 
+      # Power on the Bluetooth adapter
+      bluetoothctl power on || true
+
       # Check if the device is already connected
       connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes" || true)
 

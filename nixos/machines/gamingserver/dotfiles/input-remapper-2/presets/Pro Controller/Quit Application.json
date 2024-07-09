@@ -1,0 +1,20 @@
+[
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 318,
+                "origin_hash": "3e54359ab646ec4adb9b70981f17eefc"
+            },
+            {
+                "type": 1,
+                "code": 317,
+                "origin_hash": "3e54359ab646ec4adb9b70981f17eefc"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "Alt_L+KEY_F4",
+        "mapping_type": "key_macro",
+        "gain": 0.98
+    }
+]

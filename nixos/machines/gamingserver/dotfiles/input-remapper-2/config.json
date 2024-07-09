@@ -1,6 +1,7 @@
 {
     "version": "2.0.1",
     "autoload": {
-        "Microsoft X-Box 360 pad": "Quit Application"
+        "Microsoft X-Box 360 pad": "Quit Application",
+        "Pro Controller": "Quit Application"
     }
 }
