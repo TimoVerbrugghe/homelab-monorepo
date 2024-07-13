@@ -38,7 +38,7 @@
       text = ''
         [Desktop Entry]
         Type=Application
-        Exec=sleep 5 && es-de
+        Exec=sh -c "sleep 5 && es-de"
         Name=Emulation Station DE
         Comment=Front-end for retro gaming
         Icon=emulationstation
