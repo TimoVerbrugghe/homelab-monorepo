@@ -19,6 +19,8 @@
       recursive = true;
     };
 
+    ### AUTOSTART APPLICATIONS ###
+
     # Input Remapper autoload desktop file placed in autostart so that it autostarts on login
     ".config/autostart/input-remapper-autoload.desktop" = {
       text = ''
@@ -30,6 +32,19 @@
         Comment=Starts injecting all presets that are set to automatically load for the user
       '';
     };
+
+    # Emulation Station Desktop Edition autostart desktop file
+    ".config/autostart/emulationstation.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Exec=sleep 5 && es-de
+        Name=Emulation Station DE
+        Comment=Front-end for retro gaming
+        Icon=emulationstation
+      '';
+    };
+
 
     # Custom steam intro videos (need to add a .keep file in order for the empty uioverrides directory to be created)
     ".steam/root/config/uioverrides/.keep" = {
@@ -51,18 +66,6 @@
         @nClientDownloadEnableHTTP2PlatformLinux 0
       '';
       recursive = true;
-    };
-
-    # Emulation Station Desktop Edition autostart desktop file
-    ".config/autostart/emulationstation.desktop" = {
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Exec=es-de
-        Name=Emulation Station DE
-        Comment=Front-end for retro gaming
-        Icon=emulationstation
-      '';
     };
 
     # Add steam to ROMs folder so that it can be launched from Emulation Station
