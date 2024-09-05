@@ -120,6 +120,21 @@ services:
       traefik.http.routers.qbittorrent.entrypoints: https
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8081
 
+  ariang:
+    image: hurlenko/aria2-ariang
+    volumes:
+      - downloads:/aria2/data
+      - aria2-conf:/aria2/conf
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - RPC_SECRET=secret
+      - ARIA2RPCPORT=443
+    restart: always
+		labels:
+      traefik.http.routers.ariang.entrypoints: https
+      traefik.http.services.ariang.loadbalancer.server.port: 8080
+
 volumes:
   tailscale-qbittorrent:
     driver: local
@@ -156,6 +171,12 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/downloads"
+	aria2-conf:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/aria2"
 
 networks:
   dockerproxy:
