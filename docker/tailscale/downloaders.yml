@@ -128,10 +128,13 @@ services:
       - downloads:/aria2/data
       - aria2-conf:/aria2/conf
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - RPC_SECRET=secret
       - ARIA2RPCPORT=443
+    labels:
+      traefik.http.routers.ariang.entrypoints: https
+      traefik.http.services.ariang.loadbalancer.server.port: 8080
 
 volumes:
   tailscale-qbittorrent:
