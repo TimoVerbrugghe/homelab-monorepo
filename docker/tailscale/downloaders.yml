@@ -131,7 +131,7 @@ services:
       - RPC_SECRET=secret
       - ARIA2RPCPORT=443
     restart: always
-		labels:
+	  labels:
       traefik.http.routers.ariang.entrypoints: https
       traefik.http.services.ariang.loadbalancer.server.port: 8080
 
