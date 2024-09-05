@@ -132,6 +132,8 @@ services:
       - PGID=${PGID}
       - RPC_SECRET=secret
       - ARIA2RPCPORT=443
+    ports:
+      - 8085:8080
     labels:
       traefik.http.routers.ariang.entrypoints: https
       traefik.http.services.ariang.loadbalancer.server.port: 8080
