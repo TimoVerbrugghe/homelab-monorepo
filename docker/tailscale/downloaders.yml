@@ -120,10 +120,33 @@ services:
       traefik.http.routers.qbittorrent.entrypoints: https
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8081
 
+  tailscale-ariang:
+    image: tailscale/tailscale
+    container_name: tailscale-ariang
+    hostname: ariang
+    restart: always
+    networks: 
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-metube:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_ARIANG}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
   ariang:
     image: hurlenko/aria2-ariang
     container_name: ariang
     restart: always
+    network_mode: service:tailscale-ariang
     volumes:
       - downloads:/aria2/data
       - aria2-conf:/aria2/conf
@@ -132,8 +155,9 @@ services:
       - PGID=${PGID}
       - RPC_SECRET=secret
       - ARIA2RPCPORT=443
-    ports:
-      - 8085:8080
+    depends_on:
+      tailscale-ariang:
+        condition: service_healthy
     labels:
       traefik.http.routers.ariang.entrypoints: https
       traefik.http.services.ariang.loadbalancer.server.port: 8080
