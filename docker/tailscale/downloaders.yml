@@ -129,7 +129,7 @@ services:
       - dockerproxy
     volumes:
       - /dev/net/tun:/dev/net/tun
-      - tailscale-metube:/var/lib/tailscale
+      - tailscale-ariang:/var/lib/tailscale
     cap_add:
       - net_admin
       - sys_module
@@ -203,6 +203,16 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/downloads"
   aria2-conf:
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/aria2-conf"
+  tailscale-ariang:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/appdata/tailscale-ariang"
       
 networks:
   dockerproxy:
