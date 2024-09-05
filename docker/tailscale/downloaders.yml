@@ -122,6 +122,8 @@ services:
 
   ariang:
     image: hurlenko/aria2-ariang
+    container_name: ariang
+    restart: always
     volumes:
       - downloads:/aria2/data
       - aria2-conf:/aria2/conf
@@ -130,7 +132,6 @@ services:
       - PGID=1000
       - RPC_SECRET=secret
       - ARIA2RPCPORT=443
-    restart: always
 	  labels:
       traefik.http.routers.ariang.entrypoints: https
       traefik.http.services.ariang.loadbalancer.server.port: 8080
