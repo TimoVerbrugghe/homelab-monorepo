@@ -132,9 +132,6 @@ services:
       - PGID=1000
       - RPC_SECRET=secret
       - ARIA2RPCPORT=443
-	  labels:
-      traefik.http.routers.ariang.entrypoints: https
-      traefik.http.services.ariang.loadbalancer.server.port: 8080
 
 volumes:
   tailscale-qbittorrent:
