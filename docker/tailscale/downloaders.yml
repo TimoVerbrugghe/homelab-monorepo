@@ -138,7 +138,7 @@ services:
       traefik.http.routers.ariang.entrypoints: https
       traefik.http.services.ariang.loadbalancer.server.port: 8080
       traefik.http.routers.ariangrpc.service: ariarpc
-      "traefik.http.routers.ariangrpc.rule: Host(`ariang.timo.be`) && PathPrefix(`/jsonrpc`)"
+      traefik.http.routers.ariangrpc.rule: Host(`ariang.timo.be`) && PathPrefix(`/jsonrpc`)
       traefik.http.routers.ariangrpc.entrypoints: https
       traefik.http.services.ariangrpc.loadbalancer.server.port: 6800
 
