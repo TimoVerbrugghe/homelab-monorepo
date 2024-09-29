@@ -476,28 +476,28 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/X.A.N.A./media/games/DS"
+      device: ":/mnt/X.A.N.A./media/games/ROMs/nds"
   gbagames:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/X.A.N.A./media/games/GBA"
+      device: ":/mnt/X.A.N.A./media/games/ROMs/gba"
   ps1games:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/X.A.N.A./media/games/PS1"
+      device: ":/mnt/X.A.N.A./media/games/ROMs/psx"
   snesgames:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/X.A.N.A./media/games/SNES"
+      device: ":/mnt/X.A.N.A./media/games/ROMs/snes"
   gbcgames:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/X.A.N.A./media/games/GBC"
+      device: ":/mnt/X.A.N.A./media/games/ROMs/gbc"
