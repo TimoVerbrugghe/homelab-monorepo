@@ -16,7 +16,8 @@
       ./common/ssh.nix # Enable & set SSH options
       ./common/user.nix # Ability to create a user through services.user
       ./common/vars.nix # Import common variables 
-      ./common/networking.nix # Some specific networking settings     
+      ./common/networking.nix # Some specific networking settings    
+      ./common/check-disk-usage.nix # Check disk usage and send a slack message if it's over a certain threshold
     ];
 
 }
