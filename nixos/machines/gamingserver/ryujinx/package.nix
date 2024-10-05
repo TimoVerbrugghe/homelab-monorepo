@@ -24,14 +24,29 @@
 , fontconfig
 }:
 
+let
+  source = /etc/nixos/ryujinx-source.tar.xz;
+in
+
 buildDotnetModule rec {
   pname = "ryujinx";
   version = "1.1.1401"; # Based off of the official github actions builds: https://github.com/Ryujinx/Ryujinx/actions/workflows/release.yml
 
-  src = fetchzip {
-    url = "https://archive.org/download/ryujinx-5dbba-07e-33e-83c-9047dcbb-701c-9655edbbe-89086.tar/Ryujinx-5dbba07e33e83c9047dcbb701c9655edbbe89086.tar.gz";
-    hash = "sha256-UeJ3KE5e5H9crqroAxjmxYTf/Z4cbj41a6/1HW2nLcA=";
-  };
+  # Official GitHub source got deleted, you need to provide the source manually
+  src = source;
+
+  unpackPhase = ''
+    runHook preUnpack
+    tar --extract --file=${source}
+    runHook postUnpack
+  '';
+
+  # src = fetchFromGitHub {
+  #   owner = "Ryujinx";
+  #   repo = "Ryujinx";
+  #   rev = "319507f2a12a6751f3ab833e498a3efd3119f806";
+  #   hash = "sha256-3DM/kahNhl8EhSIRuqH0trYoR51OrGxSE+GuOKxKr2c=";
+  # };
 
   enableParallelBuilding = false;
 
@@ -93,7 +108,7 @@ buildDotnetModule rec {
 
   preFixup = ''
     mkdir -p $out/share/{applications,icons/hicolor/scalable/apps,mime/packages}
-    pushd ${src}/distribution/linux
+    pushd distribution/linux
 
     install -D ./Ryujinx.desktop $out/share/applications/Ryujinx.desktop
     install -D ./Ryujinx.sh $out/bin/Ryujinx.sh
