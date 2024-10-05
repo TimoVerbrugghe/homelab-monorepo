@@ -25,7 +25,7 @@ in
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../../modules/common.nix # Add default modules
+      ../../modules/common.nix # Add default modules (some default settings, user setup, boot setup, etc...) - needs a slack webhook url file in /etc/nixos/slack-webhook-url.nix
       ../../modules/portainer-agent.nix # Enable Portainer Server at startup
       ../../modules/vm-options.nix # Some default options you should enable on VMs      
       ../../modules/vscode-server.nix # Enable VS Code server
