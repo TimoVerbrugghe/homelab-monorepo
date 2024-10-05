@@ -30,14 +30,6 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
     restart: unless-stopped
 
-  cloudflared-tunnel:
-    container_name: cloudflared-tunnel
-    image: cloudflare/cloudflared
-    restart: always
-    command: tunnel run
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
-
 volumes:
   adguardhome-work:
   adguardhome-conf:

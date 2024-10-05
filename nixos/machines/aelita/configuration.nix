@@ -26,8 +26,8 @@ in
       ../../modules/vm-options.nix # Some default options you should enable on VMs    
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey
-      ../../modules/cloudflare.nix # Get certs using nixos's built-in acme function (which uses lego), you need to add a cloudflare api key file to /etc/nixos/cloudflare-apikey.nix
-      ../../modules/check-disk-usage.nix # Notify if disk usage is above 80%
+      ../../modules/cloudflare.nix # Get certs using nixos's built-in acme function (which uses lego), you need to add a cloudflare api key file to /etc/nixos/cloudflare-keys.nix
+      ../../modules/check-disk-usage.nix # Notify if disk usage is above 80%, needs a teams webhook url file in /etc/nixos/teams-webhook-url.nix
     ];
 
   ############################

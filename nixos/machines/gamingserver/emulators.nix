@@ -21,7 +21,6 @@
     pcsx2
     # ppsspp-sdl-wayland
     # emulationstation-de
-    ryujinx
     xemu
     wineWowPackages.full
     # _86Box-with-roms
@@ -39,6 +38,9 @@
 
     # Installing citra, source has to be provided yourself
     (pkgs.qt6Packages.callPackage ./citra/package.nix {})
+
+    # Installing ryujinx, source has to be provided yourself
+    (pkgs.callPackage ./ryujinx/package.nix {})
   ];
 
   # Need this for emulationstation-de
