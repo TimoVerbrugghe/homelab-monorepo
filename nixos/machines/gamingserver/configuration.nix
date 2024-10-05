@@ -56,6 +56,7 @@ in
   ## Host Specific Settings ##
   ############################
   system.stateVersion = "23.11";
+  
   networking.hostName = "${hostname}"; # Define your hostname.
   boot.kernelParams = kernelParams;
   boot.extraModprobeConfig = extraModprobeConfig;
