@@ -108,11 +108,6 @@
           # Basic installer configuration
           ./surface-iso-install/installer-configuration.nix
         ];
-
-        # Add the surface specific hardware configuration
-        microsoft-surface.ipts.enable = true;
-        config.microsoft-surface.surface-control.enable = true;
-
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file

@@ -16,6 +16,10 @@
       (nixpkgs + /nixos/modules/installer/cd-dvd/channel.nix)
     ];
 
+  # Add the surface specific hardware configuration
+  microsoft-surface.ipts.enable = true;
+  config.microsoft-surface.surface-control.enable = true;
+
   # Enable git & sgdisk for partitioning and installing from github flakes later
   environment.systemPackages = with pkgs; [
     nano
