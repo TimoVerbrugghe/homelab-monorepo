@@ -104,14 +104,10 @@
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
-          nixos-hardware.nixosModules.microsoft-surface-common
           # Basic installer configuration
           ./surface-iso-install/installer-configuration.nix
-          {
-            # Add the surface specific hardware configuration
-            microsoft-surface.ipts.enable = true;
-            microsoft-surface.surface-control.enable = true;
-          }
+
+          nixos-hardware.nixosModules.microsoft-surface-common
         ];
       };
 
