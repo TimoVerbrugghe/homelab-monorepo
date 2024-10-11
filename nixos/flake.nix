@@ -107,6 +107,11 @@
           nixos-hardware.nixosModules.microsoft-surface-common
           # Basic installer configuration
           ./surface-iso-install/installer-configuration.nix
+          {
+            # Add the surface specific hardware configuration
+            microsoft-surface.ipts.enable = true;
+            microsoft-surface.surface-control.enable = true;
+          }
         ];
       };
 
@@ -128,12 +133,12 @@
         ];
       };
 
-      # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#k3stest --refresh --impure --no-write-lock-file
-      k3stest = nixpkgs.lib.nixosSystem {
+      # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#surface --refresh --impure --no-write-lock-file
+      surface = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
-          ./machines/k3stest/configuration.nix
+          ./machines/surface/configuration.nix
         ];
       };
 
