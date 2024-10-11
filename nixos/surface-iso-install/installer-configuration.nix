@@ -1,6 +1,6 @@
 # A nix configuration for an autoinstaller ISO (to be used to install on Surface Laptop)
 
-{ config, pkgs, nixpkgs, ... }:
+{ config, pkgs, nixpkgs, nixos-hardware, ... }:
 
 {
   imports =
@@ -14,6 +14,8 @@
         # Provide an initial copy of the NixOS channel so that the user
       # doesn't need to run "nix-channel --update" first.
       (nixpkgs + /nixos/modules/installer/cd-dvd/channel.nix)
+    
+      nixos-hardware.nixosModules.microsoft-surface-common
     ];
 
   microsoft-surface.ipts.enable = true;

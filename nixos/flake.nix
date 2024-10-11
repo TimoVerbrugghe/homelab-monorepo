@@ -106,8 +106,6 @@
         modules = [
           # Basic installer configuration
           ./surface-iso-install/installer-configuration.nix
-
-          nixos-hardware.nixosModules.microsoft-surface-common
         ];
       };
 
