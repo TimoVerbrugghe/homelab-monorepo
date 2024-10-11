@@ -69,7 +69,7 @@ in
 
   ## Enable AutoUpgrades using autoupgrade.nix module
   services.autoUpgrade = {
-    hostname = "${hostname}";
+    hostname = "surface";
   };
 
   ## Passthrough hostname for tailscale
@@ -78,8 +78,8 @@ in
   };
 
   ## Networking setup
-  networking.networkmanager.wifi.powersave = true;
   networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.powersave = true;
   networking.useDHCP = true;
 
   ## Additional packages
@@ -87,5 +87,6 @@ in
     chromium
     p7zip
     bitwarden-desktop
+    gparted
   ];
 }

@@ -16,20 +16,27 @@
   services.xserver = {
     enable = true;
     xkb.layout = "be";
-    videoDrivers = ["amdgpu"];
-    desktopManager.plasma5.enable = true;
+    displayManager.gdm.enable = true;
+    desktopManager.gdm.enable = true;
   };
 
-  services.displayManager = {
-    defaultSession = "plasmawayland";
-    sddm = {
-      enable = true;
-      wayland.enable = true;
-      wayland.compositor = "kwin";
-    };
-  };
-
-  # Networkmanager is needed for integration with KDE Plasma
-  networking.networkmanager.enable = true;
+  environment.gnome.excludePackages = (with pkgs; [
+    gnome-photos
+    gnome-tour
+    ]) ++ (with pkgs.gnome; [
+    cheese # webcam tool
+    gnome-music
+    gnome-terminal
+    gedit # text editor
+    epiphany # web browser
+    geary # email reader
+    evince # document viewer
+    gnome-characters
+    totem # video player
+    tali # poker game
+    iagno # go game
+    hitori # sudoku game
+    atomix # puzzle game
+  ]);
 
 }

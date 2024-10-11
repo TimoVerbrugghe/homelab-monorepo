@@ -6,6 +6,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 3;
+
+  # Try to detect BitLocker encrypted drives along with an active TPM. If both are found and Windows Boot Manager is selected in the boot menu, set the “BootNext” EFI variable and restart the system. The firmware will then start Windows Boot Manager directly, leaving the TPM PCRs in expected states so that Windows can unseal the encryption key.
+  boot.loader.systemd-boot.rebootForBitlocker = true;
   
   # Reduce swappiness
   boot.kernel.sysctl = { "vm.swappiness" = 20;};

@@ -139,6 +139,7 @@
         specialArgs = inputs;
         modules = [
           ./machines/surface/configuration.nix
+          nixos-hardware.nixosModules.microsoft-surface-common
         ];
       };
 
