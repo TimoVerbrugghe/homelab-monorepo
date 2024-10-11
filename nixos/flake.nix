@@ -106,6 +106,12 @@
         modules = [
           # Basic installer configuration
           ./surface-iso-install/installer-configuration.nix
+
+          nixos-hardware.nixosModules.microsoft-surface-common
+          # {
+          #   microsoft-surface.ipts.enable = true;
+          #   microsoft-surface.surface-control.enable = true;
+          # }
         ];
       };
 

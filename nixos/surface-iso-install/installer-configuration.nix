@@ -1,6 +1,6 @@
 # A nix configuration for an autoinstaller ISO (to be used to install on Surface Laptop)
 
-{ config, pkgs, nixpkgs, nixos-hardware, ... }:
+{ config, pkgs, nixpkgs, ... }:
 
 {
   imports =
@@ -14,12 +14,11 @@
         # Provide an initial copy of the NixOS channel so that the user
       # doesn't need to run "nix-channel --update" first.
       (nixpkgs + /nixos/modules/installer/cd-dvd/channel.nix)
-    
-      nixos-hardware.nixosModules.microsoft-surface-common
+
     ];
 
-  microsoft-surface.ipts.enable = true;
-  microsoft-surface.surface-control.enable = true;
+  # microsoft-surface.ipts.enable = true;
+  # microsoft-surface.surface-control.enable = true;
 
   # Enable git & sgdisk for partitioning and installing from github flakes later
   environment.systemPackages = with pkgs; [
