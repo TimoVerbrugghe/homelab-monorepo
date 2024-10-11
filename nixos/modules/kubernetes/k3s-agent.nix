@@ -1,16 +1,7 @@
 { config, pkgs, ... }:
 
 let 
-  k3sConfig = pkgs.writeText "k3sConfig.yml" ''
-    # Setting IPs for pods & services (needed for tailscale routing)
-    cluster-cidr: 10.42.0.0/16
-    service-cidr: 10.43.0.0/16
-
-    # Disable traefik & servicelb -> Will install traefik manually & using kube-vip
-    disable:
-    - "traefik"
-    - "servicelb"
-  '';
+  k3sConfig = ./k3s-agent-config.yaml;
 
   ip_k3s_server = "10.10.10.9";
 

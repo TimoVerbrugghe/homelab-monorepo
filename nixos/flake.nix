@@ -16,9 +16,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
+
   };
 
-  outputs = { self, nixpkgs, home-manager, ... } @inputs : {
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... } @inputs : {
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
@@ -93,6 +97,22 @@
           # Basic installer & install configuration
           ./gamingserver-iso-autoinstall/installer-configuration.nix
         ];
+      };
+
+      # Build this iso image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#nixosConfigurations.surface-iso-install.config.system.build.isoImage --no-write-lock-file --refresh
+      surface-iso-install = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          nixos-hardware.nixosModules.microsoft-surface-common
+          # Basic installer configuration
+          ./surface-iso-install/installer-configuration.nix
+        ];
+
+        # Add the surface specific hardware configuration
+        microsoft-surface.ipts.enable = true;
+        config.microsoft-surface.surface-control.enable = true;
+
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file
