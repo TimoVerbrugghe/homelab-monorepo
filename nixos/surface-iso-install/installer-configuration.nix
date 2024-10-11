@@ -6,7 +6,7 @@
   imports =
     [ 
       # Import minimal ISO CD
-      (nixpkgs + /nixos/modules/installer/cd-dvd/installation-cd-minimal.nix)
+      (nixpkgs + /nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix)
 
       # Import tools (needed for certain options such as system.nixos-generate-config)
       (nixpkgs + /nixos/modules/installer/tools/tools.nix)
