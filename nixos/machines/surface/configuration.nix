@@ -30,7 +30,7 @@ in
     
       # Intel GPU drivers
       ../../modules/intel-gpu-drivers.nix
-      
+
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
 
@@ -90,7 +90,6 @@ in
   ## Networking setup
   networking.networkmanager.wifi.powersave = true;
   networking.networkmanager.enable = true; # Enable NetworkManager for integration with Gnome/KDE/etc...
-  networking.useDHCP = true;
   services.avahi.enable = true; # Enable avahi for network discovery
   services.printing.enable = true; # Enable printing services
 
