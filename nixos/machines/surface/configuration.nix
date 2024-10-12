@@ -30,6 +30,13 @@ in
     
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
+
+      # Applications
+      ./apps.nix
+
+      # Desktop Environment
+      ./display.nix
+      ./gnome.nix
     ];
 
   ############################
@@ -79,22 +86,10 @@ in
 
   ## Networking setup
   networking.networkmanager.wifi.powersave = true;
-  networking.networkmanager.enable = true;
+  networking.networkmanager.enable = true; # Enable NetworkManager for integration with Gnome/KDE/etc...
   networking.useDHCP = true;
 
-  ## Additional packages
-  environment.systemPackages = with pkgs; [
-    (google-chrome.override 
-      { commandLineArgs = [
-        "--enable-features=TouchpadOverscrollHistoryNavigation" # Enable touchpad back/forward navigation
-        "--ozone-platform=wayland" # Enable zoom in with 2 fingers touchpad
-        ]
-      }
-    )
-    p7zip
-    bitwarden-desktop
-    vscode
-  ];
-
+  # Set time correctly when dualbooting with Windows
+  time.hardwareClockInLocalTime = true;
 
 }

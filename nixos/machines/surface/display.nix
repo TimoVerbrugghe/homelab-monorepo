@@ -15,21 +15,8 @@
   # Basic config of wayland and desktop manager
   services.xserver = {
     enable = true;
-    xkb.layout = "be";
-    videoDrivers = ["amdgpu"];
-    desktopManager.plasma5.enable = true;
+    displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
   };
-
-  services.displayManager = {
-    defaultSession = "plasmawayland";
-    sddm = {
-      enable = true;
-      wayland.enable = true;
-      wayland.compositor = "kwin";
-    };
-  };
-
-  # Networkmanager is needed for integration with Gnome
-  networking.networkmanager.enable = true;
 
 }
