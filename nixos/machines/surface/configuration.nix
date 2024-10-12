@@ -32,7 +32,7 @@ in
       ../../modules/intel-gpu-drivers.nix
 
       # Boot inputs (with specific surface linux settings)
-      # ./boot.nix
+      ./boot.nix
 
       # Applications
       ./apps.nix

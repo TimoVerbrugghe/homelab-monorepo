@@ -40,6 +40,11 @@
       fsType = "overlay";
     };
 
+  fileSystems."/boot" =
+    { device = "overlay";
+      fsType = "overlay";
+    };
+
   swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
