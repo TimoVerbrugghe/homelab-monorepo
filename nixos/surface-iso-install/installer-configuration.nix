@@ -17,14 +17,66 @@
 
     ];
 
-  # microsoft-surface.ipts.enable = true;
-  # microsoft-surface.surface-control.enable = true;
+  # Power saving
+  services.thermald.enable = true;
+  services.auto-cpufreq.enable = true;
+  services.auto-cpufreq.settings = {
+    battery = {
+      governor = "powersave";
+      turbo = "never";
+    };
+    charger = {
+      governor = "performance";
+      turbo = "auto";
+    };
+  };
+
+  # Set time correctly when dualbooting with Windows
+  time.hardwareClockInLocalTime = true;
+
+  # Enable opengl and 32 bit driver support
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+    extraPackages = with pkgs; [
+      onevpl-intel-gpu
+      # vpl-gpu-rt after 24.11
+    ];
+  };
+
+  # Set specific options for gnome
+  services.xserver = {
+    displayManager.gdm.enable = true;
+    desktopManager.gnome = {
+      enable = true;
+      # Enable fractional scaling
+      extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
+      extraGSettingsOverrides = ''
+        [org.gnome.mutter]
+        experimental-features=['scale-monitor-framebuffer']
+      '';
+    };
+  };
 
   # Enable git & sgdisk for partitioning and installing from github flakes later
   environment.systemPackages = with pkgs; [
     nano
     git
     gptfdisk
+    gnome.gnome-tweaks
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.window-gestures
+    (google-chrome.override {
+      commandLineArgs = [
+        "--enable-features=VaapiVideoDecodeLinuxGL"
+        "--enable-features=TouchpadOverscrollHistoryNavigation" # Enable touchpad back/forward navigation
+        "--ozone-platform=wayland" # Enable zoom in with 2 fingers touchpad
+      ];
+    })
+    p7zip
+    bitwarden-desktop
+    vscode
   ];
 
   # Making sure DNS works
