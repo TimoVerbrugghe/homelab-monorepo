@@ -73,9 +73,9 @@ in
   };
 
   ## Passthrough hostname for tailscale
-  services.tailscale = {
-    hostname = "${hostname}";
-  };
+  # services.tailscale = {
+  #   hostname = "${hostname}";
+  # };
 
   ## Networking setup
   networking.networkmanager.wifi.powersave = true;
@@ -84,7 +84,7 @@ in
 
   ## Additional packages
   environment.systemPackages = with pkgs; [
-    chromium
+    google-chrome
     p7zip
     bitwarden-desktop
   ];
