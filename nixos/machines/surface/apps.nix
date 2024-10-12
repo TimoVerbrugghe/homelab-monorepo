@@ -20,6 +20,7 @@
     nano
     git
     gptfdisk
+    evtest
   ];
 
 }
