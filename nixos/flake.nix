@@ -108,10 +108,6 @@
           ./surface-iso-install/installer-configuration.nix
 
           nixos-hardware.nixosModules.microsoft-surface-common
-          # {
-          #   microsoft-surface.ipts.enable = true;
-          #   microsoft-surface.surface-control.enable = true;
-          # }
         ];
       };
 
@@ -127,8 +123,6 @@
             home-manager.useUserPackages = true;
             home-manager.users.gamer = import ./machines/gamingserver/home.nix;
 
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
           }
         ];
       };
@@ -144,7 +138,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.gamer = import ./machines/surface/home.nix;
+            home-manager.users.timo = import ./machines/surface/home.nix;
 
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
