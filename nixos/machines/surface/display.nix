@@ -8,7 +8,8 @@
     driSupport = true;
     driSupport32Bit = true;
     extraPackages = with pkgs; [
-      vpl-gpu-rt
+      onevpl-intel-gpu
+      # vpl-gpu-rt after 24.11
     ];
   };
 
