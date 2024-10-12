@@ -40,10 +40,6 @@
       fsType = "overlay";
     };
 
-  fileSystems."/boot" =
-    { device = "overlay";
-      fsType = "overlay";
-    };
 
   swapDevices = [ ];
 

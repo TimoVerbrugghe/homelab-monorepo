@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    # Intel GPU drivers
+    ../../modules/intel-gpu-drivers.nix
+  ];
 
   # Enable opengl and 32 bit driver support
   hardware.opengl = {

@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  # Enable git & sgdisk for partitioning and installing from github flakes later
+  # Enabling unfree packages for google-chrome
+  nixpkgs.config.allowUnfree = true;
+
   ## Additional packages
   environment.systemPackages = with pkgs; [
     (google-chrome.override {
@@ -13,6 +17,9 @@
     p7zip
     bitwarden-desktop
     vscode
+    nano
+    git
+    gptfdisk
   ];
 
 }

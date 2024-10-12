@@ -15,7 +15,7 @@ in
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./temp-hardware-configuration.nix
+      ./hardware-configuration.nix
       ../../modules/common/autoupgrade.nix # Add autoupgrade module
       ../../modules/common/console-options.nix # Add console options
       ../../modules/common/dns.nix # Add my own dns servers
@@ -27,9 +27,6 @@ in
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
       # ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
-    
-      # Intel GPU drivers
-      ../../modules/intel-gpu-drivers.nix
 
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
@@ -40,6 +37,11 @@ in
       # Desktop Environment
       ./display.nix
       ./gnome.nix
+
+      # Hardware additional configs
+      ./networking.nix
+      ./powermanagement.nix
+
     ];
 
   ############################
@@ -87,27 +89,7 @@ in
   #   hostname = "${hostname}";
   # };
 
-  ## Networking setup
-  networking.networkmanager.wifi.powersave = true;
-  networking.networkmanager.enable = true; # Enable NetworkManager for integration with Gnome/KDE/etc...
-  services.avahi.enable = true; # Enable avahi for network discovery
-  services.printing.enable = true; # Enable printing services
-
   # Set time correctly when dualbooting with Windows
   time.hardwareClockInLocalTime = true;
-
-  # Power saving
-  services.thermald.enable = true;
-  services.auto-cpufreq.enable = true;
-  services.auto-cpufreq.settings = {
-    battery = {
-      governor = "powersave";
-      turbo = "never";
-    };
-    charger = {
-      governor = "performance";
-      turbo = "auto";
-    };
-  };
 
 }
