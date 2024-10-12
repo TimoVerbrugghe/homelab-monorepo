@@ -60,6 +60,8 @@
   };
 
   # Enable git & sgdisk for partitioning and installing from github flakes later
+  # Enabling unfree packages for google-chrome
+  nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
     nano
     git
