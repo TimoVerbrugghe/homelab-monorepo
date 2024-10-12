@@ -4,7 +4,15 @@
   # Enable gnome desktop manager
   services.xserver = {
     displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
+    desktopManager.gnome = {
+      enable = true;
+      # Enable fractional scaling
+      extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
+      extraGSettingsOverrides = ''
+        [org.gnome.mutter]
+        experimental-features=['scale-monitor-framebuffer']
+      '';
+    };
   };
 
   services.gnome = {

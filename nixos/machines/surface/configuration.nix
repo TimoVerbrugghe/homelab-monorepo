@@ -26,7 +26,7 @@ in
       ../../modules/common/packages.nix # Add default packages
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
-      ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
+      # ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
     
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
@@ -88,8 +88,24 @@ in
   networking.networkmanager.wifi.powersave = true;
   networking.networkmanager.enable = true; # Enable NetworkManager for integration with Gnome/KDE/etc...
   networking.useDHCP = true;
+  services.avahi.enable = true; # Enable avahi for network discovery
+  services.printing.enable = true; # Enable printing services
 
   # Set time correctly when dualbooting with Windows
   time.hardwareClockInLocalTime = true;
+
+  # Power saving
+  services.thermald.enable = true;
+  services.auto-cpufreq.enable = true;
+  services.auto-cpufreq.settings = {
+    battery = {
+      governor = "powersave";
+      turbo = "never";
+    };
+    charger = {
+      governor = "performance";
+      turbo = "auto";
+    };
+  };
 
 }
