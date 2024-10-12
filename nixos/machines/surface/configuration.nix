@@ -15,7 +15,7 @@ in
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      ./temp-hardware-configuration.nix
       ../../modules/common/autoupgrade.nix # Add autoupgrade module
       ../../modules/common/console-options.nix # Add console options
       ../../modules/common/dns.nix # Add my own dns servers
