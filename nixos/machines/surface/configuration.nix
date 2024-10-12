@@ -53,8 +53,7 @@ in
   hardware.cpu.intel.updateMicrocode = true;
   console.keyMap = "be-latin1";
 
-  # User setup (root user has to be enabled to make it easier for truenas to take ZFS snapshots)
-
+  # User setup
   users.users = {
 
     ${username} = {
