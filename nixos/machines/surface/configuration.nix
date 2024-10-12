@@ -28,6 +28,9 @@ in
       ../../modules/vscode-server.nix # Enable VS Code server
       # ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
     
+      # Intel GPU drivers
+      ../../modules/intel-gpu-drivers.nix
+      
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
 
