@@ -29,7 +29,7 @@
     };
   };
 
-  # Networkmanager is needed for integration with KDE Plasma
+  # Networkmanager is needed for integration with Gnome
   networking.networkmanager.enable = true;
 
 }
