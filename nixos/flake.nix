@@ -20,9 +20,16 @@
       url = "github:NixOS/nixos-hardware/master";
     };
 
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.1";
+
+      # Optional but recommended to limit the size of your system closure.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... } @inputs : {
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, lanzaboote, ... } @inputs : {
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
@@ -143,6 +150,7 @@
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
           }
+          lanzaboote.nixosModules.lanzaboote
         ];
       };
 

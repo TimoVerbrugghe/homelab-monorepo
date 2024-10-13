@@ -41,6 +41,7 @@ in
       # Hardware additional configs
       ./networking.nix
       ./powermanagement.nix
+      ./secureboot.nix
 
     ];
 
