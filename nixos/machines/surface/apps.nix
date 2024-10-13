@@ -28,6 +28,7 @@
     slack
     moonlight-qt
     gparted
+    spotify
   ];
 
   programs.java.enable = true; 
