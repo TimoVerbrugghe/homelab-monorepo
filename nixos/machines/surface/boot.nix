@@ -22,7 +22,7 @@
   boot.tmp.cleanOnBoot = true;
 
   # Enable plymouth for a nice boot screen
-    boot = {
+  boot = {
 
     plymouth = {
       enable = true;
