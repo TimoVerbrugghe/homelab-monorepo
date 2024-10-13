@@ -89,7 +89,7 @@
           natural-scroll = true;
           tap-to-click = true;
           two-finger-scrolling-enabled = true;
-        }
+        };
       };
 
       # Enable fractional scaling on user level on top of system wide (just to be sure)
@@ -216,4 +216,4 @@
       };
     };
   };
-};
+}
