@@ -30,6 +30,7 @@
     gparted
     spotify
     element-desktop
+    thunderbird
   ];
 
   programs.java.enable = true; 
