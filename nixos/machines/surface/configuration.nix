@@ -90,4 +90,6 @@ in
   # Set time correctly when dualbooting with Windows
   time.hardwareClockInLocalTime = true;
 
+  services.rpcbind.enable = true;
+
 }
