@@ -31,6 +31,7 @@
     spotify
     element-desktop
     thunderbird
+    xournalpp
   ];
 
   programs.java.enable = true; 
