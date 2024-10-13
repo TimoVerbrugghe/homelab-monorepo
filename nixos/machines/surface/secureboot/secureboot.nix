@@ -4,6 +4,7 @@
   environment.systemPackages = [
     # For debugging and troubleshooting Secure Boot.
     pkgs.sbctl
+    pkgs.efibootmgr
   ];
 
   # Lanzaboote currently replaces the systemd-boot module.
