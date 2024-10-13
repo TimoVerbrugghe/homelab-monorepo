@@ -17,10 +17,16 @@
     ];
   };
 
-  # Basic config of wayland and desktop manager
+  # Enable belgian keyboard & format options
   services.xserver = {
     enable = true;
     xkb.layout = "be";
   };
 
+  console.keyMap = "be-latin1";
+
+  i18n.supportedLocales = [ 
+    "en_US.UTF-8" 
+    "nl_BE.UTF-8" 
+  ];
 }

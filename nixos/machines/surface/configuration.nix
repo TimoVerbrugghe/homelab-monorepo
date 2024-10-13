@@ -52,7 +52,6 @@ in
   
   networking.hostName = "${hostname}"; # Define your hostname.
   hardware.cpu.intel.updateMicrocode = true;
-  console.keyMap = "be-latin1";
 
   # User setup
   users.users = {
