@@ -127,6 +127,7 @@
       blur = true;
       brightness = 0.59999999999999998;
       sigma = 30;
+      style-dialogs=1;
     };
     "org/gnome/shell/extensions/blur-my-shell/applications" = {
       blur = true;
@@ -148,7 +149,7 @@
     "org/gnome/shell/extensions/blur-my-shell/overview" = {
       blur = true;
       pipeline = "pipeline_default";
-      style-components=0;
+      style-components=3;
     };
     "org/gnome/shell/extensions/blur-my-shell/panel" = {
       brightness=0.59999999999999998;
