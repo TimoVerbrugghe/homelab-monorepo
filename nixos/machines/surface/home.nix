@@ -56,7 +56,7 @@
     };
 
     "org/gnome/shell/extensions/just-perfection" = {
-      clock-menu-position=0;
+      clock-menu-position=1;
       clock-menu-position-offset=0;
       controls-manager-spacing-size=0;
       notification-banner-position=2;
