@@ -22,7 +22,7 @@
         Type=Application
         Name=Copilot
         Comment=Launch Microsoft Copilot
-        Exec="${pkgs.google-chrome}/bin/google-chrome-stable --app="https://copilot.microsoft.com/" %U
+        Exec=${pkgs.google-chrome}/bin/google-chrome-stable --app="https://copilot.microsoft.com/" %U
         Terminal=false
       '';
     };
