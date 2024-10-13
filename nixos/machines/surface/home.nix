@@ -137,14 +137,7 @@
       ];
     };
     "org/gnome/shell/extensions/blur-my-shell/dash-to-dock" = {
-      blur=true;
-      brightness=0.59999999999999998;
-      override-background=true;
-      pipeline="pipeline_default_rounded";
-      sigma=30;
-      static-blur=true;
-      style-dash-to-dock=0;
-      unblur-in-overview=false;
+      blur=false;
     };
     "org/gnome/shell/extensions/blur-my-shell/dash-to-panel" = {
       blur-original-panel = true;
@@ -177,33 +170,37 @@
 
     "org/gnome/shell/extensions/dash-to-dock" = {
       always-center-icons=false;
-      apply-custom-theme=true;
+      apply-custom-theme=false;
       autohide=true;
       autohide-in-fullscreen=true;
       background-color="rgb(255,255,255)";
-      background-opacity=0.80000000000000004;
+      background-opacity=0.20000000000000000;
       click-action="focus-minimize-or-previews";
-      custom-background-color=false;
+      custom-background-color=true;
       custom-theme-shrink=true;
       dash-max-icon-size=48;
       disable-overview-on-startup=true;
       dock-fixed=false;
       dock-position="BOTTOM";
       extend-height=false;
-      height-fraction=0.90000000000000002;
-      icon-size-fixed=true;
+      height-fraction=0.90000000000000000;
+      icon-size-fixed=false;
       intellihide=true;
-      intellihide-mode="MAXIMIZED_WINDOWS";
+      intellihide-mode="ALL_WINDOWS";
+      max-alpha=0.80000000000000000;
       middle-click-action="launch";
-      preferred-monitor=-2;
-      preferred-monitor-by-connector="Virtual-1";
+      multi-monitor=true;
       preview-size-scale=0.29999999999999999;
+      require-pressure-to-show=false;
       running-indicator-style="DOTS";
       shift-click-action="minimize";
       shift-middle-click-action="launch";
       show-apps-at-top=true;
-      show-mounts-network=true;
-      transparency-mode="DYNAMIC";
+      show-dock-urgent-notify=true;
+      show-mounts=true;
+      show-mounts-network=false;
+      show-trash=false;
+      transparency-mode="FIXED";
     };
   };
 }
