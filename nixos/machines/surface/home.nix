@@ -110,13 +110,13 @@
       clock-menu-position-offset=0;
       controls-manager-spacing-size=0;
       notification-banner-position=2;
-      osd-position=8;
+      osd-position=5;
       panel-button-padding-size=11;
       panel-indicator-padding-size=11;
       search=true;
       startup-status=0;
       theme=false;
-      workspaces-in-app-grid=false;
+      workspaces-in-app-grid=true;
     };
 
     "org/gnome/shell/extensions/blur-my-shell" = {
