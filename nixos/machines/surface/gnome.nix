@@ -28,19 +28,16 @@
 
   # Packages from gnome to exclude
   environment.gnome.excludePackages = with pkgs; [
-    baobab      # disk usage analyzer
+    baobab            # disk usage analyzer
     gnome.cheese      # photo booth
-    epiphany    # web browser
+    epiphany          # web browser
     gnome.totem       # video player
     gnome.yelp        # help viewer
-    evince      # document viewer
-    gnome.file-roller # archive manager
+    evince            # document viewer
     gnome.geary       # email client
     gnome.seahorse    # password manager
 
-    # these should be self explanatory
-    gnome.gnome-calculator 
-    gnome.gnome-calendar 
+    # these should be self explanatory 
     gnome.gnome-contacts
     gnome.gnome-maps 
     gnome.gnome-music 
