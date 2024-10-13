@@ -27,6 +27,7 @@
     plex-media-player
     slack
     moonlight-qt
+    gparted
   ];
 
   programs.java.enable = true; 
