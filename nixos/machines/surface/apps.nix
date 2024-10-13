@@ -30,7 +30,6 @@
     gparted
     spotify
     element-desktop
-    thunderbird
     xournalpp
   ];
 
