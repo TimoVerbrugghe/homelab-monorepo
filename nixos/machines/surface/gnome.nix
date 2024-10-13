@@ -46,6 +46,7 @@
     gnome.gnome-music 
     gnome-photos
     gnome.gnome-weather
+    gnome-tour
     
   ];
 }

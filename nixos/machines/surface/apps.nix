@@ -21,6 +21,18 @@
     git
     gptfdisk
     evtest
+    lm_sensors
+    vlc
+    plexamp
+    plex-media-player
+    slack
+    moonlight-qt
   ];
+
+  programs.java.enable = true; 
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+  };
 
 }
