@@ -19,11 +19,11 @@
   # };
 
   environment.etc."secureboot" = {
-    "PreLoader.efi" = {
+    PreLoader.efi = {
       source = ./PreLoader.efi;
       mode = "0644";
     };
-    "HashTool.efi" = {
+    HashTool.efi = {
       source = ./HashTool.efi;
       mode = "0644";
     };
