@@ -4,7 +4,7 @@ let
 
   preLoaderPath = "/etc/secureboot/PreLoader.efi";
   hashToolPath = "/etc/secureboot/HashTool.efi";
-  secureBootDir = "/boot/EFI/secureboot";
+  systemdDir = "/boot/EFI/systemd";
   systemdBootPath = "/boot/EFI/systemd/systemd-bootx64.efi";
   loaderPath = "/boot/EFI/systemd/loader.efi";
   disk = "/dev/nvme0n1";  # Set your disk path here
@@ -46,38 +46,57 @@ in
   system.activationScripts.securebootEnable.text = ''
     #!/bin/sh
 
-    # Create /boot/secureboot directory if it doesn't exist
-    if [ ! -d "${secureBootDir}" ]; then
-      mkdir -p ${secureBootDir}
+    echo "Creating systemd directory if it doesn't exist"
+    if [ ! -d "${systemdDir}" ]; then
+      mkdir -p ${systemdDir}
     fi
 
-    # Copy PreLoader.efi if it doesn't exist
-    if [ ! -f "${secureBootDir}/PreLoader.efi" ]; then
-      cp ${preLoaderPath} ${secureBootDir}/PreLoader.efi
+    echo "Copying PreLoader.efi if it doesn't exist"
+    if [ ! -f "${systemdDir}/PreLoader.efi" ]; then
+      cp ${preLoaderPath} ${systemdDir}/PreLoader.efi
     fi
 
-    # Copy HashTool.efi if it doesn't exist
-    if [ ! -f "${secureBootDir}/HashTool.efi" ]; then
-      cp ${hashToolPath} ${secureBootDir}/HashTool.efi
+    echo "Copying HashTool.efi if it doesn't exist"
+    if [ ! -f "${systemdDir}/HashTool.efi" ]; then
+      cp ${hashToolPath} ${systemdDir}/HashTool.efi
     fi
 
     # Copy systemd-bootx64.efi to loader.efi if newer
     if [ ${systemdBootPath} -nt ${loaderPath} ]; then
       cp ${systemdBootPath} ${loaderPath}
+      echo "systemd-bootx64.efi is newer than loader.efi. Please readd it using HashTool on the next boot."
     fi
 
-    # Create NVRAM entry if it doesn't exist
-    if ! ${pkgs.efibootmgr}/bin/efibootmgr | grep -q "PreLoader"; then
-      ${pkgs.efibootmgr}/bin/efibootmgr --unicode --disk ${disk} --part ${part} --create --label "PreLoader" --loader /EFI/secureboot/PreLoader.efi
+    echo "Creating NVRAM entry if it doesn't exist"
+    if ! efibootmgr | grep -q "PreLoader"; then
+      efibootmgr --unicode --disk ${disk} --part ${part} --create --label "PreLoader" --loader /EFI/systemd/PreLoader.efi
     fi
 
-    # Make PreLoader the default boot option
-    bootnum=$(${pkgs.efibootmgr}/bin/efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\K\d+')
-    if [ -n "$bootnum" ]; then
-      ${pkgs.efibootmgr}/bin/efibootmgr -o $bootnum
+    echo "Making PreLoader the default boot option, and adding Linux/Windows Boot Managers if they exist"
+    bootnum=$(efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\K\d+')
+    linux_boot=$(efibootmgr | grep -i "Linux Boot Manager" | grep -oP 'Boot\K\d+')
+    windows_boot=$(efibootmgr | grep -i "Windows Boot Manager" | grep -oP 'Boot\K\d+')
+
+    boot_order="''${bootnum}"
+    if [ -n "$linux_boot" ]; then
+      boot_order="''${boot_order},''${linux_boot}"
+    fi
+    if [ -n "$windows_boot" ]; then
+      boot_order="''${boot_order},''${windows_boot}"
+    fi
+
+    efibootmgr -o ''${boot_order}
+
+    echo "Comparing current and built initrd"
+    booted=$(readlink /run/booted-system/initrd)
+    built=$(readlink /nix/var/nix/profiles/system/initrd)
+
+    if [ "''${built}" -nt "''${booted}" ]; then
+      echo "A newer initrd is built. Please readd initrd using HashTool on the next boot."
     fi
   '';
 
-  # The firmware will then start Windows Boot Manager directly, leaving the TPM PCRs in expected states so that Windows can unseal the encryption key.
+  # The firmware will start Windows Boot Manager directly when selecting Windows 11, leaving the TPM PCRs in expected states so that Windows can unseal the encryption key.
   boot.loader.systemd-boot.rebootForBitlocker = true;
+  
 }
