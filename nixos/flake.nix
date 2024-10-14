@@ -20,12 +20,12 @@
       url = "github:NixOS/nixos-hardware/master";
     };
 
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.1";
+    # lanzaboote = {
+    #   url = "github:nix-community/lanzaboote/v0.4.1";
 
-      # Optional but recommended to limit the size of your system closure.
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #   # Optional but recommended to limit the size of your system closure.
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
   };
 
