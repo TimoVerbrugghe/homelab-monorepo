@@ -68,14 +68,14 @@ in
     fi
 
     echo "Creating NVRAM entry if it doesn't exist"
-    if ! efibootmgr | grep -q "PreLoader"; then
-      efibootmgr --unicode --disk ${disk} --part ${part} --create --label "PreLoader" --loader /EFI/systemd/PreLoader.efi
+    if ! ${pkgs.efibootmgr}/bin/efibootmgr | grep -q "PreLoader"; then
+      ${pkgs.efibootmgr}/bin/efibootmgr --unicode --disk ${disk} --part ${part} --create --label "PreLoader" --loader /EFI/systemd/PreLoader.efi
     fi
 
     echo "Making PreLoader the default boot option, and adding Linux/Windows Boot Managers if they exist"
-    bootnum=$(efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\K\d+')
-    linux_boot=$(efibootmgr | grep -i "Linux Boot Manager" | grep -oP 'Boot\K\d+')
-    windows_boot=$(efibootmgr | grep -i "Windows Boot Manager" | grep -oP 'Boot\K\d+')
+    bootnum=$(${pkgs.efibootmgr}/bin/efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\K\d+')
+    linux_boot=$(${pkgs.efibootmgr}/bin/efibootmgr | grep -i "Linux Boot Manager" | grep -oP 'Boot\K\d+')
+    windows_boot=$(${pkgs.efibootmgr}/bin/efibootmgr | grep -i "Windows Boot Manager" | grep -oP 'Boot\K\d+')
 
     boot_order="''${bootnum}"
     if [ -n "$linux_boot" ]; then
@@ -85,7 +85,7 @@ in
       boot_order="''${boot_order},''${windows_boot}"
     fi
 
-    efibootmgr -o ''${boot_order}
+    ${pkgs.efibootmgr}/bin/efibootmgr -o ''${boot_order}
 
     echo "Comparing current and built initrd"
     booted=$(readlink /run/booted-system/initrd)
