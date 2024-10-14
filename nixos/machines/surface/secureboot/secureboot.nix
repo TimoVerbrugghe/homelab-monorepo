@@ -46,17 +46,19 @@ in
   system.activationScripts.securebootEnable.text = ''
     #!/bin/sh
 
-    echo "Creating systemd directory if it doesn't exist"
+    echo "Setting up Secure Boot"
+
+    # Creating systemd directory if it doesn't exist
     if [ ! -d "${systemdDir}" ]; then
       mkdir -p ${systemdDir}
     fi
 
-    echo "Copying PreLoader.efi if it doesn't exist"
+    # Copying PreLoader.efi if it doesn't exist
     if [ ! -f "${systemdDir}/PreLoader.efi" ]; then
       cp ${preLoaderPath} ${systemdDir}/PreLoader.efi
     fi
 
-    echo "Copying HashTool.efi if it doesn't exist"
+    # Copying HashTool.efi if it doesn't exist
     if [ ! -f "${systemdDir}/HashTool.efi" ]; then
       cp ${hashToolPath} ${systemdDir}/HashTool.efi
     fi
@@ -64,15 +66,15 @@ in
     # Copy systemd-bootx64.efi to loader.efi if newer
     if [ ${systemdBootPath} -nt ${loaderPath} ]; then
       cp ${systemdBootPath} ${loaderPath}
-      echo "systemd-bootx64.efi is newer than loader.efi. Please readd it using HashTool on the next boot."
+      echo " ***WARNING*** systemd-bootx64.efi is newer than loader.efi. Please readd it using HashTool on the next boot."
     fi
 
-    echo "Creating NVRAM entry if it doesn't exist"
+    # Creating NVRAM entry if it doesn't exist
     if ! ${pkgs.efibootmgr}/bin/efibootmgr | grep -q "PreLoader"; then
-      ${pkgs.efibootmgr}/bin/efibootmgr --unicode --disk ${disk} --part ${part} --create --label "PreLoader" --loader /EFI/systemd/PreLoader.efi
+      ${pkgs.efibootmgr}/bin/efibootmgr --unicode --disk ${disk} --part ${part} --create --label "PreLoader" --loader /EFI/systemd/PreLoader.efi >/dev/null 2>&1
     fi
 
-    echo "Making PreLoader the default boot option, and adding Linux/Windows Boot Managers if they exist"
+    # Making PreLoader the default boot option, and adding Linux/Windows Boot Managers if they exist
     bootnum=$(${pkgs.efibootmgr}/bin/efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\K\d+')
     linux_boot=$(${pkgs.efibootmgr}/bin/efibootmgr | grep -i "Linux Boot Manager" | grep -oP 'Boot\K\d+')
     windows_boot=$(${pkgs.efibootmgr}/bin/efibootmgr | grep -i "Windows Boot Manager" | grep -oP 'Boot\K\d+')
@@ -85,14 +87,14 @@ in
       boot_order="''${boot_order},''${windows_boot}"
     fi
 
-    ${pkgs.efibootmgr}/bin/efibootmgr -o ''${boot_order}
+    ${pkgs.efibootmgr}/bin/efibootmgr -o ''${boot_order} >/dev/null 2>&1
 
-    echo "Comparing current and built initrd"
+    # Comparing current and built initrd
     booted=$(readlink /run/booted-system/initrd)
     built=$(readlink /nix/var/nix/profiles/system/initrd)
 
     if [ "''${built}" -nt "''${booted}" ]; then
-      echo "A newer initrd is built. Please readd initrd using HashTool on the next boot."
+      echo "***WARNING*** A newer initrd is built. Please readd initrd using HashTool on the next boot."
     fi
   '';
 
