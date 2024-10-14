@@ -140,6 +140,14 @@
         specialArgs = inputs;
         modules = [
           ./machines/surface/configuration.nix
+          nixos-hardware.nixosModules.microsoft-surface-common
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.timo = import ./machines/surface/home.nix;
+
+          }
         ];
       };
 
