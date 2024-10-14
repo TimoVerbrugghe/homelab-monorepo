@@ -27,5 +27,5 @@
       source = ./HashTool.efi;
       mode = "0644";
     };
-  }
+  };
 }
