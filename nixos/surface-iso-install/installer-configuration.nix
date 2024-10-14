@@ -15,17 +15,17 @@
       # doesn't need to run "nix-channel --update" first.
       (nixpkgs + /nixos/modules/installer/cd-dvd/channel.nix)
 
+      # Trying to mimic as much as possible the final installation
+      ../machines/surface/apps.nix
+      ../machines/surface/display.nix
+      ../machines/surface/gnome.nix
+      ../machines/surface/powermanagement.nix
+      ../machines/surface/networking.nix
+
     ];
 
-  # microsoft-surface.ipts.enable = true;
-  # microsoft-surface.surface-control.enable = true;
-
-  # Enable git & sgdisk for partitioning and installing from github flakes later
-  environment.systemPackages = with pkgs; [
-    nano
-    git
-    gptfdisk
-  ];
+  # Set time correctly when dualbooting with Windows
+  time.hardwareClockInLocalTime = true;
 
   # Making sure DNS works
   networking.nameservers = [

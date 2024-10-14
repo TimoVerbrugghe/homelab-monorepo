@@ -26,10 +26,22 @@ in
       ../../modules/common/packages.nix # Add default packages
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
-      ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
-    
+
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
+
+      # Applications
+      ./apps.nix
+
+      # Desktop Environment
+      ./display.nix
+      ./gnome.nix
+
+      # Hardware additional configs
+      ./networking.nix
+      ./powermanagement.nix
+      ./secureboot/secureboot.nix
+
     ];
 
   ############################
@@ -39,10 +51,8 @@ in
   
   networking.hostName = "${hostname}"; # Define your hostname.
   hardware.cpu.intel.updateMicrocode = true;
-  console.keyMap = "be-latin1";
 
-  # User setup (root user has to be enabled to make it easier for truenas to take ZFS snapshots)
-
+  # User setup
   users.users = {
 
     ${username} = {
@@ -73,20 +83,11 @@ in
   };
 
   ## Passthrough hostname for tailscale
-  services.tailscale = {
-    hostname = "${hostname}";
-  };
+  # services.tailscale = {
+  #   hostname = "${hostname}";
+  # };
 
-  ## Networking setup
-  networking.networkmanager.enable = true;
-  networking.networkmanager.wifi.powersave = true;
-  networking.useDHCP = true;
+  # Set time correctly when dualbooting with Windows
+  time.hardwareClockInLocalTime = true;
 
-  ## Additional packages
-  environment.systemPackages = with pkgs; [
-    chromium
-    p7zip
-    bitwarden-desktop
-    gparted
-  ];
 }

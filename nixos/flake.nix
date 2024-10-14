@@ -20,9 +20,16 @@
       url = "github:NixOS/nixos-hardware/master";
     };
 
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.1";
+
+      # Optional but recommended to limit the size of your system closure.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... } @inputs : {
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, lanzaboote, ... } @inputs : {
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
@@ -108,10 +115,6 @@
           ./surface-iso-install/installer-configuration.nix
 
           nixos-hardware.nixosModules.microsoft-surface-common
-          # {
-          #   microsoft-surface.ipts.enable = true;
-          #   microsoft-surface.surface-control.enable = true;
-          # }
         ];
       };
 
@@ -127,8 +130,6 @@
             home-manager.useUserPackages = true;
             home-manager.users.gamer = import ./machines/gamingserver/home.nix;
 
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
           }
         ];
       };
@@ -139,7 +140,6 @@
         specialArgs = inputs;
         modules = [
           ./machines/surface/configuration.nix
-          nixos-hardware.nixosModules.microsoft-surface-common
         ];
       };
 

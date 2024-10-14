@@ -15,6 +15,7 @@
 
   # Add ability to mount nfs shares
   environment.systemPackages = with pkgs; [ nfs-utils ];
+  boot.supportedFilesystems = [ "nfs" ];
   boot.initrd = {
     supportedFilesystems = [ "nfs" ];
     kernelModules = [ "nfs" ];

@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    # Intel GPU drivers
+    ../../modules/intel-gpu-drivers.nix
+  ];
 
   # Enable opengl and 32 bit driver support
   hardware.opengl = {
@@ -8,35 +12,21 @@
     driSupport = true;
     driSupport32Bit = true;
     extraPackages = with pkgs; [
-      vpl-gpu-rt
+      onevpl-intel-gpu
+      # vpl-gpu-rt after 24.11
     ];
   };
 
-  # Basic config of wayland and desktop manager
+  # Enable belgian keyboard & format options
   services.xserver = {
     enable = true;
     xkb.layout = "be";
-    displayManager.gdm.enable = true;
-    desktopManager.gdm.enable = true;
   };
 
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-photos
-    gnome-tour
-    ]) ++ (with pkgs.gnome; [
-    cheese # webcam tool
-    gnome-music
-    gnome-terminal
-    gedit # text editor
-    epiphany # web browser
-    geary # email reader
-    evince # document viewer
-    gnome-characters
-    totem # video player
-    tali # poker game
-    iagno # go game
-    hitori # sudoku game
-    atomix # puzzle game
-  ]);
+  console.keyMap = "be-latin1";
 
+  i18n.supportedLocales = [ 
+    "en_US.UTF-8/UTF-8" 
+    "nl_BE.UTF-8/UTF-8" 
+  ];
 }
