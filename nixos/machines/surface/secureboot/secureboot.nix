@@ -67,14 +67,14 @@ in
     fi
 
     # Create NVRAM entry if it doesn't exist
-    if ! efibootmgr | grep -q "PreLoader"; then
-      efibootmgr --unicode --disk ${disk} --part ${part} --create --label "PreLoader" --loader /EFI/secureboot/PreLoader.efi
+    if ! ${pkgs.efibootmgr}/bin/efibootmgr | grep -q "PreLoader"; then
+      ${pkgs.efibootmgr}/bin/efibootmgr --unicode --disk ${disk} --part ${part} --create --label "PreLoader" --loader /EFI/secureboot/PreLoader.efi
     fi
 
     # Make PreLoader the default boot option
-    bootnum=$(efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\K\d+')
+    bootnum=$(${pkgs.efibootmgr}/bin/efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\K\d+')
     if [ -n "$bootnum" ]; then
-      efibootmgr -o $bootnum
+      ${pkgs.efibootmgr}/bin/efibootmgr -o $bootnum
     fi
   '';
 
