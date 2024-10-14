@@ -43,7 +43,6 @@ in
     };
   };
 
-  {
   system.activationScripts.securebootEnable.text = ''
     #!/bin/sh
 
