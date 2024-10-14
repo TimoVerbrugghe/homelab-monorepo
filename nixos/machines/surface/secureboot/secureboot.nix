@@ -17,4 +17,15 @@
   #  enable = true;
   #  pkiBundle = "/etc/secureboot";
   # };
+
+  environment.etc."secureboot" = {
+    "PreLoader.efi" = {
+      source = ./PreLoader.efi;
+      mode = "0644";
+    };
+    "HashTool.efi" = {
+      source = ./HashTool.efi;
+      mode = "0644";
+    };
+  }
 }
