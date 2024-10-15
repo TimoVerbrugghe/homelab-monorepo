@@ -48,15 +48,10 @@ foreach ($entry in $entries) {
 if ($preloaderGuid -and $linuxBootManagerGuid) {
     # Set the Preloader as the first boot option
     bcdedit /set "{fwbootmgr}" displayorder "$preloaderGuid" "{bootmgr}" "$linuxBootManagerGuid"
-
-    # Confirm the change
-    Write-Host "Linux boot order set as the first boot option."
 } else {
     Write-Host "WARNING - Unable to find the correct Linux Boot Order entries, please check your setup. Not rebooting to NixOS."
     exit 1
 }
-
-Read-Host "Press Enter to exit..."
 
 # Reboot the system
 Restart-Computer
