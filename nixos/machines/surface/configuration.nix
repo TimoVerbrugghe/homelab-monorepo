@@ -86,6 +86,8 @@ in
   # Passthrough hostname for tailscale
   services.tailscale = {
     hostname = "${hostname}";
+
+    # Needed for trayscale to work
     extraUpFlags = [
       "--operator ${username}"
     ];
