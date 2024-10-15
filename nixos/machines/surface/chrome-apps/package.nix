@@ -5,7 +5,6 @@ stdenv.mkDerivation {
   version = "1.0.0";
 
   dontConfigure = true;
-  dontBuild = true;
   dontUnpack = true;
 
   nativeBuildInputs = [ copyDesktopItems ];
@@ -31,6 +30,10 @@ stdenv.mkDerivation {
       icon = ./outlook.svg;
     })
   ];
+
+  buildPhase = ''
+    echo "Building chrome apps"
+  '';
 
   installPhase = ''
     runHook PreInstall
