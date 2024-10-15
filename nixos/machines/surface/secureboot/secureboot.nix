@@ -13,10 +13,13 @@ let
 in
 
 {
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
     # For debugging and troubleshooting Secure Boot.
-    pkgs.sbctl
-    pkgs.efibootmgr
+    sbctl
+    efibootmgr
+
+    # Add the Reboot to Windows program to easily switch surface UEFI to Windows Boot Manager and reboot (Windows has issues booting from the systemd-boot menu)
+    (pkgs.callPackage ../reboot-to-windows/package.nix {});
   ];
 
   ########### Lanzaboote not yet supported on Surface devices ###########
