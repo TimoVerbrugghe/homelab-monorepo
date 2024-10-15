@@ -86,6 +86,9 @@ in
   # Passthrough hostname for tailscale
   services.tailscale = {
     hostname = "${hostname}";
+    extraUpFlags = [
+      "--operator ${username}"
+    ];
   };
 
   # Set time correctly when dualbooting with Windows
