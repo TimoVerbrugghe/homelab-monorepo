@@ -30,11 +30,6 @@ stdenv.mkDerivation {
   pname = "reboot-to-windows";
   version = "1.0.0";
 
-  src = fs.toSource {
-    root = ./.;
-    fileset = sourceFiles;
-  };
-
   buildInputs = [ pkgs.efibootmgr ];
 
   desktopItem = makeDesktopItem {
