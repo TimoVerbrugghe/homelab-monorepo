@@ -30,7 +30,8 @@
     gparted
     spotify
     element-desktop
-    # xournalpp
+    xournalpp
+    trayscale
   ];
 
   programs.java.enable = true; 

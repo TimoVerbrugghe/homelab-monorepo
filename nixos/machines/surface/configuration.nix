@@ -82,10 +82,10 @@ in
     hostname = "surface";
   };
 
-  ## Passthrough hostname for tailscale
-  # services.tailscale = {
-  #   hostname = "${hostname}";
-  # };
+  # Passthrough hostname for tailscale
+  services.tailscale = {
+    hostname = "${hostname}";
+  };
 
   # Set time correctly when dualbooting with Windows
   time.hardwareClockInLocalTime = true;
