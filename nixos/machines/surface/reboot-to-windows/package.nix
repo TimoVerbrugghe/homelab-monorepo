@@ -2,7 +2,28 @@
 
 let
 
-  source = writeShellApplication {
+  desktopItem = makeDesktopItem {
+    name = "Reboot to Windows";
+    desktopName = "Reboot to Windows";
+    exec = "/run/current-system/sw/bin/reboot-to-windows";
+    comment = "Reboot to Windows";
+    genericName = "Desktop application to quickly reboot to Windows";
+    categories = ["Utility"];
+    icon = ./microsoft_logo.svg;
+  };
+
+in
+
+stdenv.mkDerivation {
+  pname = "reboot-to-windows";
+  version = "1.0.0";
+
+  buildInputs = [ efibootmgr ];
+
+  dontBuild = true;
+  dontConfigure = true;
+
+  src = writeShellApplication {
     name = "reboot-to-windows";
     runtimeInputs = [ efibootmgr ];
     text = ''
@@ -25,31 +46,6 @@ let
       systemctl reboot
     '';
   };
-
-  name = "reboot-to-windows";
-
-  desktopItem = makeDesktopItem {
-    name = "Reboot to Windows";
-    desktopName = "Reboot to Windows";
-    exec = "${source}/bin/${name}";
-    comment = "Reboot to Windows";
-    genericName = "Desktop application to quickly reboot to Windows";
-    categories = ["Utility"];
-    icon = ./microsoft_logo.svg;
-  };
-
-in
-
-stdenv.mkDerivation {
-  pname = name;
-  version = "1.0.0";
-
-  buildInputs = [ efibootmgr ];
-
-  dontBuild = true;
-  dontConfigure = true;
-
-  src = source;
 
   installPhase = ''
     runHook PreInstall
