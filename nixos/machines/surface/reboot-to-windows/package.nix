@@ -39,7 +39,7 @@ stdenv.mkDerivation {
         boot_order="''${boot_order},''${linux_boot}"
       fi
 
-      efibootmgr -o "''${boot_order}"
+      sudo efibootmgr -o "''${boot_order}"
 
       # echo "Rebooting the system"
       # systemctl reboot

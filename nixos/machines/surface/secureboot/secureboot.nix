@@ -30,7 +30,7 @@ in
       { users = [ "timo" ];
         commands = [ { 
           command = "${rebootToWindows}/bin/reboot-to-windows"; 
-          options = [ "SETENV" "NOPASSWD" ]; 
+          options = [ "NOPASSWD" ]; 
         } ]; 
       }
     ];
