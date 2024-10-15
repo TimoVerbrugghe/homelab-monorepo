@@ -28,7 +28,7 @@ in
     extraRules = [
       { users = [ "timo" ];
         commands = [ { 
-          command = "reboot-to-windows"; 
+          command = "${pkgs.reboot-to-windows}/bin/reboot-to-windows"; 
           options = [ "SETENV" "NOPASSWD" ]; 
         } ]; 
       }
