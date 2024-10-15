@@ -22,6 +22,19 @@ in
     (pkgs.callPackage ../reboot-to-windows/package.nix {})
   ];
 
+  # Disable needing root password for the reboot-to-windows command
+  security.sudo = {
+    enable = true;
+    extraRules = [
+      {
+        commands = [ "reboot-to-windows" ];
+        users = [ "timo" ]; # Replace with your actual username
+        options = [ "NOPASSWD" ];
+      }
+    ];
+  };
+  
+
   ########### Lanzaboote not yet supported on Surface devices ###########
   # Lanzaboote currently replaces the systemd-boot module.
   # This setting is usually set to true in configuration.nix
