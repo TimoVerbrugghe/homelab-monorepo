@@ -1,13 +1,12 @@
-{ stdenv, lib, makeDesktopItem, copyDesktopItems, ...}:
+{ stdenv, lib, makeDesktopItem, ...}:
 
 stdenv.mkDerivation {
   pname = "chrome-apps";
   version = "1.0.0";
 
-  dontConfigure = true;
   dontUnpack = true;
-
-  nativeBuildInputs = [ copyDesktopItems ];
+  dontBuild = true;
+  dontConfigure = true;
 
   desktopItems = [
     (makeDesktopItem {
@@ -31,13 +30,27 @@ stdenv.mkDerivation {
     })
   ];
 
-  buildPhase = ''
-    echo "Building chrome apps"
-  '';
-
   installPhase = ''
     runHook PreInstall
+
+    if [ -z "$desktopItems" ]; then
+        return
+    fi
+
     mkdir -p $out/share/applications
+
+    applications="$out/share/applications"
+    for desktopItem in $desktopItems; do
+        if [[ -f "$desktopItem" ]]; then
+            echo "Copying '$desktopItem' into ''${applications}"
+            install -D -m 444 -t ''${applications} "$desktopItem"
+        else
+            for f in "$desktopItem"/share/applications/*.desktop; do
+                echo "Copying '$f' into ''${applications}"
+                install -D -m 444 -t ''${applications} "$f"
+            done
+        fi
+    done
     runHook PostInstall  
   '';
 
