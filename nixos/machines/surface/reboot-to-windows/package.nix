@@ -26,9 +26,6 @@ stdenv.mkDerivation {
     name = "reboot-to-windows";
     runtimeInputs = [ efibootmgr ];
     text = ''
-      #!/bin/sh
-      set -e
-
       echo "Changing boot order to: Windows Boot Manager, PreLoader, Linux Boot Manager"
       windows_boot=$(efibootmgr | grep -i "Windows Boot Manager" | grep -oP 'Boot\K\d+')
       preloader_boot=$(efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\K\d+')
@@ -42,7 +39,7 @@ stdenv.mkDerivation {
         boot_order="''${boot_order},''${linux_boot}"
       fi
 
-      efibootmgr -o "''${boot_order}" >/dev/null 2>&1
+      efibootmgr -o "''${boot_order}"
 
       # echo "Rebooting the system"
       # systemctl reboot
