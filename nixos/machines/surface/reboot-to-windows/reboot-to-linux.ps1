@@ -75,5 +75,5 @@ if ($preloaderGuid -and $linuxBootManagerGuid) {
 
 Read-Host "Press Enter to exit..."
 
-# # Reboot the system
-# Restart-Computer
+# Reboot the system
+Restart-Computer
