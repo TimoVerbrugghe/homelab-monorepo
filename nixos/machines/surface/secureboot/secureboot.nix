@@ -19,7 +19,7 @@ in
     efibootmgr
 
     # Add the Reboot to Windows program to easily switch surface UEFI to Windows Boot Manager and reboot (Windows has issues booting from the systemd-boot menu)
-    (pkgs.callPackage ./ppsspp-standard-ffmpeg/package.nix {})
+    (pkgs.callPackage ./reboot-to-windows/package.nix {})
   ];
 
   # Disable needing root password for the reboot-to-windows command
