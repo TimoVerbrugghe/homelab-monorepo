@@ -1,4 +1,4 @@
-{ pkgs, stdenv, efibootmgr, lib, makeDesktopItem, ...}:
+{ stdenv, efibootmgr, lib, makeDesktopItem, writeShellApplication, ...}:
 
 let
 
@@ -17,11 +17,14 @@ stdenv.mkDerivation {
   pname = "reboot-to-windows";
   version = "1.0.0";
 
-  buildInputs = [ pkgs.efibootmgr ];
+  buildInputs = [ efibootmgr ];
 
-  src = pkgs.writeShellApplication {
+  dontBuild = true;
+  dontConfigure = true;
+
+  src = writeShellApplication {
     name = "reboot-to-windows";
-    runtimeInputs = [ pkgs.efibootmgr ];
+    runtimeInputs = [ efibootmgr ];
     text = ''
       #!/bin/sh
       set -e
@@ -55,10 +58,10 @@ stdenv.mkDerivation {
 
     # Create Desktop Item
     mkdir -p "$out/share/applications"
-    cp -a ${desktopItem} $out/share/applications/
+    cp -a ${desktopItem}/share/applications/* $out/share/applications/
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     description = "A tool to change the EFI boot order and reboot the system";
     license = licenses.mit;
     maintainers = with maintainers; [ timoverbrugghe ];
