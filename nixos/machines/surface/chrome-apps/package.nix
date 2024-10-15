@@ -12,7 +12,7 @@ stdenv.mkDerivation {
     (makeDesktopItem {
       name = "Copilot";
       desktopName = "Copilot";
-      exec = "/run/current-system/sw/bin/google-chrome-stable --profile-directory=Default --app=\"https://copilot.microsoft.com/\" %U";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://copilot.microsoft.com/\" %U";
       comment = "Launch Microsoft Copilot";
       genericName = "Launch Microsoft Copilot";
       categories = ["Utility"];
@@ -22,7 +22,7 @@ stdenv.mkDerivation {
     (makeDesktopItem {
       name = "Outlook";
       desktopName = "Outlook";
-      exec = "/run/current-system/sw/bin/google-chrome-stable --profile-directory=Default --app=\"https://outlook.com/\" %U";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://outlook.com/\" %U";
       comment = "Launch Microsoft Outlook";
       genericName = "Launch Microsoft Outlook";
       categories = ["Utility"];
