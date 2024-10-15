@@ -33,6 +33,7 @@
     xournalpp
     trayscale
     (pkgs.callPackage ./chrome-apps/package.nix {})
+    localsend
   ];
 
   programs.java.enable = true; 
