@@ -30,9 +30,9 @@ stdenv.mkDerivation {
       set -e
 
       echo "Changing boot order to: Windows Boot Manager, PreLoader, Linux Boot Manager"
-      windows_boot=$(efibootmgr | grep -i "Windows Boot Manager" | grep -oP 'Boot\\K\\d+')
-      preloader_boot=$(efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\\K\\d+')
-      linux_boot=$(efibootmgr | grep -i "Linux Boot Manager" | grep -oP 'Boot\\K\\d+')
+      windows_boot=$(efibootmgr | grep -i "Windows Boot Manager" | grep -oP 'Boot\K\d+')
+      preloader_boot=$(efibootmgr | grep -i "PreLoader" | grep -oP 'Boot\K\d+')
+      linux_boot=$(efibootmgr | grep -i "Linux Boot Manager" | grep -oP 'Boot\K\d+')
 
       boot_order="''${windows_boot}"
       if [ -n "$preloader_boot" ]; then
