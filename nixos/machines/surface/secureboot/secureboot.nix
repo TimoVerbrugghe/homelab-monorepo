@@ -9,6 +9,7 @@ let
   loaderPath = "/boot/EFI/systemd/loader.efi";
   disk = "/dev/nvme0n1";  # Set your disk path here
   part = "1"; # Set your EFI partition number here
+  rebootToWindows = pkgs.callPackage ../reboot-to-windows/package.nix {};
 
 in
 
@@ -19,7 +20,7 @@ in
     efibootmgr
 
     # Add the Reboot to Windows program to easily switch surface UEFI to Windows Boot Manager and reboot (Windows has issues booting from the systemd-boot menu)
-    (pkgs.callPackage ../reboot-to-windows/package.nix {})
+    rebootToWindows
   ];
 
   # Disable needing root password for the reboot-to-windows command
@@ -28,7 +29,7 @@ in
     extraRules = [
       { users = [ "timo" ];
         commands = [ { 
-          command = "${pkgs.reboot-to-windows}/bin/reboot-to-windows"; 
+          command = "${rebootToWindows}/bin/reboot-to-windows"; 
           options = [ "SETENV" "NOPASSWD" ]; 
         } ]; 
       }
