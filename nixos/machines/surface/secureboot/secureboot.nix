@@ -26,10 +26,11 @@ in
   security.sudo = {
     enable = true;
     extraRules = [
-      {
-        commands = [ "reboot-to-windows" ];
-        users = [ "timo" ]; # Replace with your actual username
-        options = [ "NOPASSWD" ];
+      { users = [ "timo" ];
+        commands = [ { 
+          command = "reboot-to-windows"; 
+          options = [ "SETENV" "NOPASSWD" ]; 
+        } ]; 
       }
     ];
   };
