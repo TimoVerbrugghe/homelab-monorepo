@@ -17,6 +17,7 @@ stdenv.mkDerivation {
       genericName = "Launch Microsoft Copilot";
       categories = ["Utility"];
       icon = ./copilot.svg;
+      startupWMClass = "copilot";
     })
 
     (makeDesktopItem {
@@ -27,6 +28,7 @@ stdenv.mkDerivation {
       genericName = "Launch Microsoft Outlook";
       categories = ["Utility"];
       icon = ./outlook.svg;
+      startupWMClass = "outlook";
     })
   ];
 
