@@ -5,7 +5,7 @@ let
   desktopItem = makeDesktopItem {
     name = "Reboot to Windows";
     desktopName = "Reboot to Windows";
-    exec = "/run/current-system/sw/bin/reboot-to-windows";
+    exec = "pkexec reboot-to-windows";
     comment = "Reboot to Windows";
     genericName = "Desktop application to quickly reboot to Windows";
     categories = ["Utility"];

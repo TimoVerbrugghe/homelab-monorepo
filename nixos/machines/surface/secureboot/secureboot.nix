@@ -22,19 +22,6 @@ in
     (pkgs.callPackage ../reboot-to-windows/package.nix {})
   ];
 
-  # Disable needing root password for the reboot-to-windows command
-  security.sudo = {
-    enable = true;
-    extraRules = [
-      { users = [ "timo" ];
-        commands = [ { 
-          command = "/run/current-system/sw/bin/reboot-to-windows"; 
-          options = [ "NOPASSWD" ]; 
-        } ]; 
-      }
-    ];
-  };
-
   # Placing PreLoader.efi and HashTool.efi in /etc/secureboot
   environment.etc = {
     "secureboot/PreLoader.efi" = {
