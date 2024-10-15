@@ -1,9 +1,9 @@
 # Check if the script is running with administrative privileges
-if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltinRole] "Administrator")) {
-    $arguments = "& '" + $myinvocation.mycommand.definition + "'"
-    Start-Process powershell -Verb runAs -ArgumentList $arguments
-    exit
-}
+# if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltinRole] "Administrator")) {
+#     $arguments = "& '" + $myinvocation.mycommand.definition + "'"
+#     Start-Process powershell -Verb runAs -ArgumentList $arguments
+#     exit
+# }
 
 # Run the bcdedit command to get all boot entries and capture the output
 $bcdeditOutput = bcdedit /enum FIRMWARE | Out-String
