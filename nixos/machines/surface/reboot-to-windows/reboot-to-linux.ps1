@@ -1,12 +1,7 @@
 # Check if the script is running with administrative privileges
-function Test-Admin {
-    $currentUser = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
-    return $currentUser.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-}
-
-# Relaunch the script with administrative privileges if not already elevated
-if (-not (Test-Admin)) {
-    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltinRole] "Administrator")) {
+    $arguments = "& '" + $myinvocation.mycommand.definition + "'"
+    Start-Process powershell -Verb runAs -ArgumentList $arguments
     exit
 }
 
@@ -32,13 +27,6 @@ foreach ($entry in $entries) {
     }
 }
 
-# Output the found GUID
-if ($preloaderGuid) {
-    Write-Output "The GUID of the firmware application with description 'PreLoader' is: $preloaderGuid"
-} else {
-    Write-Output "No firmware application with description 'PreLoader' found."
-}
-
 ### GETTING Linux Boot Manager GUID ###
 # Initialize variable
 $linuxBootManagerGuid = $null
@@ -55,25 +43,15 @@ foreach ($entry in $entries) {
     }
 }
 
-# Output the found GUID
-if ($linuxBootManagerGuid) {
-    Write-Output "The GUID of the firmware application with description 'Linux Boot Manager' is: $linuxBootManagerGuid"
-} else {
-    Write-Output "No firmware application with description 'Linux Boot Manager' found."
-}
 
 # If Preloader & Linux Boot Manager is found, set boot loader order accordingly
 if ($preloaderGuid -and $linuxBootManagerGuid) {
     # Set the Preloader as the first boot option
     bcdedit /set "{fwbootmgr}" displayorder "$preloaderGuid" "{bootmgr}" "$linuxBootManagerGuid"
-
-    # Confirm the change
-    Write-Host "Linux boot order set as the first boot option."
 } else {
-    Write-Host "WARNING - Unable to find the correct Linux Boot Order entries, please check"
+    Write-Host "WARNING - Unable to find the correct Linux Boot Order entries, please check your setup. Not rebooting to NixOS."
+    exit 1
 }
-
-Read-Host "Press Enter to exit..."
 
 # Reboot the system
 Restart-Computer
