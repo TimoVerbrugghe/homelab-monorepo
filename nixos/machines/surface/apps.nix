@@ -30,7 +30,9 @@
     gparted
     spotify
     element-desktop
-    # xournalpp
+    xournalpp
+    trayscale
+    (pkgs.callPackage ./chrome-apps/package.nix {})
   ];
 
   programs.java.enable = true; 

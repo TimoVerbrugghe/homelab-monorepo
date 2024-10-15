@@ -13,23 +13,27 @@ let
 in
 
 {
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
     # For debugging and troubleshooting Secure Boot.
-    pkgs.sbctl
-    pkgs.efibootmgr
+    sbctl
+    efibootmgr
+
+    # Add the Reboot to Windows program to easily switch surface UEFI to Windows Boot Manager and reboot (Windows has issues booting from the systemd-boot menu)
+    (pkgs.callPackage ../reboot-to-windows/package.nix {})
   ];
 
-  ########### Lanzaboote not yet supported on Surface devices ###########
-  # Lanzaboote currently replaces the systemd-boot module.
-  # This setting is usually set to true in configuration.nix
-  # generated at installation time. So we force it to false
-  # for now.
-  # boot.loader.systemd-boot.enable = lib.mkForce false;
-
-  # boot.lanzaboote = {
-  #  enable = true;
-  #  pkiBundle = "/etc/secureboot";
-  # };
+  # Disable needing root password for the reboot-to-windows command
+  security.sudo = {
+    enable = true;
+    extraRules = [
+      { users = [ "timo" ];
+        commands = [ { 
+          command = "/run/current-system/sw/bin/reboot-to-windows"; 
+          options = [ "NOPASSWD" ]; 
+        } ]; 
+      }
+    ];
+  };
 
   # Placing PreLoader.efi and HashTool.efi in /etc/secureboot
   environment.etc = {

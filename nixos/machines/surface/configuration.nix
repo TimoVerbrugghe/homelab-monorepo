@@ -26,6 +26,7 @@ in
       ../../modules/common/packages.nix # Add default packages
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
+      ../../modules/tailscale.nix # Enable Tailscale
 
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
@@ -82,10 +83,15 @@ in
     hostname = "surface";
   };
 
-  ## Passthrough hostname for tailscale
-  # services.tailscale = {
-  #   hostname = "${hostname}";
-  # };
+  # Passthrough hostname for tailscale
+  services.tailscale = {
+    hostname = "${hostname}";
+
+    # Needed for trayscale to work
+    extraUpFlags = [
+      "--operator ${username}"
+    ];
+  };
 
   # Set time correctly when dualbooting with Windows
   time.hardwareClockInLocalTime = true;
