@@ -42,4 +42,13 @@
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
   };
 
+  networking.firewall.allowedTCPPorts = [
+    # localsend
+    53317 
+  ];
+  networking.firewall.allowedUDPPorts = [
+    # localsend
+    53317 
+  ];
+
 }
