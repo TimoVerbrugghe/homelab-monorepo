@@ -9,6 +9,7 @@ let
     comment = "Reboot to Windows";
     genericName = "Desktop application to quickly reboot to Windows";
     categories = ["Utility"];
+    icon = ./microsoft_logo.svg;
   };
 
 in
