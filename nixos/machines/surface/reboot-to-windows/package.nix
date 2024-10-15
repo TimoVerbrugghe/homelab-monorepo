@@ -43,7 +43,7 @@ stdenv.mkDerivation {
       sudo efibootmgr -o "''${boot_order}"
 
       # echo "Rebooting the system"
-      systemctl reboot
+      # systemctl reboot
     '';
   };
 
