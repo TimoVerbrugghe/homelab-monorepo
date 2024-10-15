@@ -26,6 +26,7 @@ in
       ../../modules/common/packages.nix # Add default packages
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
+      ../../modules/tailscale.nix # Enable Tailscale
 
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
