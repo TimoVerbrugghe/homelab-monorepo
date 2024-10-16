@@ -30,6 +30,84 @@ stdenv.mkDerivation {
       icon = ./outlook.svg;
       startupWMClass = "chrome-outlook.com__-Default";
     })
+
+    (makeDesktopItem {
+      name = "Sonarr";
+      desktopName = "Sonarr";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://sonarr.pony-godzilla.ts.net/\" %U";
+      comment = "Launch Sonarr";
+      genericName = "Launch Sonarr";
+      categories = ["Utility"];
+      icon = ./sonarr.svg;
+      startupWMClass = "chrome-sonarr.pony-godzilla.ts.net__-Default";
+    })
+
+    (makeDesktopItem {
+      name = "Radarr";
+      desktopName = "Radarr";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://radarr.pony-godzilla.ts.net/\" %U";
+      comment = "Launch Radarr";
+      genericName = "Launch Radarr";
+      categories = ["Utility"];
+      icon = ./radarr.svg;
+      startupWMClass = "chrome-radarr.pony-godzilla.ts.net__-Default";
+    })
+    
+    (makeDesktopItem {
+      name = "Overseerr";
+      desktopName = "Overseerr";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://request.pony-godzilla.ts.net/\" %U";
+      comment = "Launch Overseerr";
+      genericName = "Launch Overseerr";
+      categories = ["Utility"];
+      icon = ./overseerr.svg;
+      startupWMClass = "chrome-request.pony-godzilla.ts.net__-Default";
+    })
+
+    (makeDesktopItem {
+      name = "Portainer";
+      desktopName = "Portainer";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://portainer.timo.be/\" %U";
+      comment = "Launch Portainer";
+      genericName = "Launch Portainer";
+      categories = ["Utility"];
+      icon = ./portainer.svg;
+      startupWMClass = "chrome-portainer.timo.be__-Default";
+    })
+    
+    (makeDesktopItem {
+      name = "WhatsApp";
+      desktopName = "WhatsApp";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://web.whatsapp.com/\" %U";
+      comment = "Launch WhatsApp";
+      genericName = "Launch WhatsApp";
+      categories = ["Utility"];
+      icon = ./whatsapp.svg;
+      startupWMClass = "chrome-web.whatsapp.com__-Default";
+    })
+
+    (makeDesktopItem {
+      name = "Bring";
+      desktopName = "Bring";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://web.getbring.com/\" %U";
+      comment = "Launch Bring";
+      genericName = "Launch Bring";
+      categories = ["Utility"];
+      icon = ./bring.svg;
+      startupWMClass = "chrome-web.getbring.com__-Default";
+    })
+
+    (makeDesktopItem {
+      name = "YouTube";
+      desktopName = "YouTube";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://www.youtube.com/\" %U";
+      comment = "Launch YouTube";
+      genericName = "Launch YouTube";
+      categories = ["Utility"];
+      icon = ./youtube.svg;
+      startupWMClass = "chrome-www.youtube.com__-Default";
+    })
+
   ];
 
   installPhase = ''
