@@ -34,6 +34,7 @@
     trayscale
     (pkgs.callPackage ./chrome-apps/package.nix {})
     localsend
+    gimp
   ];
 
   programs.java.enable = true; 
