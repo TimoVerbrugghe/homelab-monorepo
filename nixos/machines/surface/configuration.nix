@@ -99,22 +99,8 @@ in
   # Enable Thunderbolt support
   services.hardware.bolt.enable = true;
 
-  # Making sure that USB devices (aka the keyboard) can wake up devices from sleep
-  services.udev.extraRules = ''
-    # Enable wakeup for USB devices
-    ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usb", ATTR{power/wakeup}="enabled"
+  # Trying to not have gnome crash on login (sometimes)
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false; 
 
-    # Enable wakeup for specific input devices
-    ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="Microsoft Surface 045E:09AE Keyboard", ATTR{power/wakeup}="enabled"
-  '';
-
-  systemd.services.enableWakeupDevices = {
-    description = "Enable wake-up for USB and input devices";
-    enable = true;
-    serviceConfig = {
-      ExecStart = "${pkgs.bash}/bin/bash -c 'for device in /sys/class/input/*/device/power/wakeup; do echo enabled > $device; done; for device in /sys/bus/usb/devices/*/power/wakeup; do echo enabled > $device; done'";
-      Type = "simple";
-    };
-    wantedBy = [ "multi-user.target" ];
-  };
 }
