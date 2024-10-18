@@ -98,4 +98,9 @@ in
 
   # Enable Thunderbolt support
   services.hardware.bolt.enable = true;
+
+  # Making sure that USB devices (aka the keyboard) can wake up devices from sleep
+  powerManagement.powerUpCommands = "echo XHC > /proc/acpi/wakeup";
+  powerManagement.powerDownCommands = "echo XHC > /proc/acpi/wakeup";
+
 }
