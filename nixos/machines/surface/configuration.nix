@@ -106,6 +106,14 @@ in
 
     # Enable wakeup for input devices
     ACTION=="add", SUBSYSTEM=="input", ATTR{power/wakeup}="enabled"
+
+    ACTION=="add", SUBSYSTEM=="platform", ATTR{power/wakeup}="enabled"
+    
+    # Enable wakeup for platform devices
+    ACTION=="add", SUBSYSTEM=="platform", ATTR{power/wakeup}="enabled"
+    
+    # Enable wakeup for surface_aggregator devices
+    ACTION=="add", SUBSYSTEM=="surface_aggregator", ATTR{power/wakeup}="enabled"
   '';
 
   systemd.services.enableWakeupDevices = {
