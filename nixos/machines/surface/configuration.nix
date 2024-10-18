@@ -104,16 +104,8 @@ in
     # Enable wakeup for USB devices
     ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usb", ATTR{power/wakeup}="enabled"
 
-    # Enable wakeup for input devices
-    ACTION=="add", SUBSYSTEM=="input", ATTR{power/wakeup}="enabled"
-
-    ACTION=="add", SUBSYSTEM=="platform", ATTR{power/wakeup}="enabled"
-    
-    # Enable wakeup for platform devices
-    ACTION=="add", SUBSYSTEM=="platform", ATTR{power/wakeup}="enabled"
-    
-    # Enable wakeup for surface_aggregator devices
-    ACTION=="add", SUBSYSTEM=="surface_aggregator", ATTR{power/wakeup}="enabled"
+    # Enable wakeup for specific input devices
+    ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="Microsoft Surface 045E:09AE Keyboard", ATTR{power/wakeup}="enabled"
   '';
 
   systemd.services.enableWakeupDevices = {
