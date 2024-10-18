@@ -96,4 +96,7 @@ in
   # Set time correctly when dualbooting with Windows
   time.hardwareClockInLocalTime = true;
 
+  # Enable Thunderbolt support
+  services.hardware.bolt.enable = true;
+
 }
