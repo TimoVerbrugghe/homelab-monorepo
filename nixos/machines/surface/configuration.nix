@@ -107,4 +107,14 @@ in
     # Enable wakeup for input devices
     ACTION=="add", SUBSYSTEM=="input", ATTR{power/wakeup}="enabled"
   '';
+
+  systemd.services.enableWakeupDevices = {
+    description = "Enable wake-up for USB and input devices";
+    enable = true;
+    serviceConfig = {
+      ExecStart = "${pkgs.bash}/bin/bash -c 'for device in /sys/class/input/*/device/power/wakeup; do echo enabled > $device; done; for device in /sys/bus/usb/devices/*/power/wakeup; do echo enabled > $device; done'";
+      Type = "simple";
+    };
+    wantedBy = [ "multi-user.target" ];
+  };
 }
