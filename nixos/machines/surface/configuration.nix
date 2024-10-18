@@ -101,7 +101,10 @@ in
 
   # Making sure that USB devices (aka the keyboard) can wake up devices from sleep
   services.udev.extraRules = ''
+    # Enable wakeup for USB devices
     ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usb", ATTR{power/wakeup}="enabled"
+
+    # Enable wakeup for input devices
     ACTION=="add", SUBSYSTEM=="input", ATTR{power/wakeup}="enabled"
   '';
 }
