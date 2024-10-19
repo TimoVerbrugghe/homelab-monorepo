@@ -35,6 +35,7 @@
     (pkgs.callPackage ./chrome-apps/package.nix {})
     localsend
     gimp
+    qemu
   ];
 
   programs.virt-manager.enable = true;
