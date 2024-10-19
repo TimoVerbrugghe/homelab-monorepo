@@ -24,6 +24,7 @@
     gnome.gnome-tweaks
     gnomeExtensions.dash-to-dock
     gnomeExtensions.window-gestures
+    gnome.gnome-power-manager # Get battery graphs
   ];
 
   # Packages from gnome to exclude

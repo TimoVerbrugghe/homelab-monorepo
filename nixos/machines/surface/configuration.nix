@@ -18,7 +18,6 @@ in
       ./hardware-configuration.nix
       ../../modules/common/autoupgrade.nix # Add autoupgrade module
       ../../modules/common/console-options.nix # Add console options
-      # ../../modules/common/dns.nix # Add my own dns servers
       ../../modules/common/firmware.nix # Enable firmware updates
       ../../modules/common/flakes.nix # Enable flakes
       ../../modules/common/git.nix # Add git configuration
@@ -99,7 +98,7 @@ in
   # Enable Thunderbolt support
   services.hardware.bolt.enable = true;
 
-  # Trying to not have gnome crash on login (sometimes)
+  # Trying to not have gnome crash on login (sometimes) - related to https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false; 
 
