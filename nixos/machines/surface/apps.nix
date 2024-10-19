@@ -37,6 +37,8 @@
     gimp
   ];
 
+  programs.virt-manager.enable = true;
+
   programs.java.enable = true; 
   programs.steam = {
     enable = true;
