@@ -38,7 +38,13 @@
     qemu
   ];
 
-  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+
+    # Needed for shared folders between host & VMs
+    qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+  };
+
   programs.virt-manager.enable = true;
 
   programs.java.enable = true; 
