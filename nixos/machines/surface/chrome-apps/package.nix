@@ -108,6 +108,17 @@ stdenv.mkDerivation {
       startupWMClass = "chrome-www.youtube.com__-Default";
     })
 
+    (makeDesktopItem {
+      name = "Home Assistant";
+      desktopName = "Home Assistant";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://hass.timo.be/\" %U";
+      comment = "Launch Home Assistant";
+      genericName = "Launch Home Assistant";
+      categories = ["Utility"];
+      icon = ./hass.svg;
+      startupWMClass = "chrome-hass.timo.be__-Default";
+    })
+
   ];
 
   installPhase = ''

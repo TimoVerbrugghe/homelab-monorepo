@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg width="519.36px" height="519.36px" enable-background="new 0 0 519.36 519.36" version="1.1" viewBox="0 0 519.36 519.36" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><filter id="filter2160" x="-.019466" y="-.022154" width="1.0552" height="1.0628" color-interpolation-filters="sRGB"><feFlood flood-color="rgb(0,0,0)" flood-opacity=".49804" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="3"/><feOffset dx="6" dy="6" result="offset"/><feComposite in="SourceGraphic" in2="offset" result="composite2"/></filter></defs>
+<g id="bg_1_">
+	<g id="Shaded_edge">
+		<g>
+			<path d="m452.16 35.16h-385c-19.33 0-35 15.67-35 35v383c0 19.329 15.67 35 35 35h385c19.33 0 35-15.671 35-35v-383c1e-3 -19.33-15.669-35-34.999-35z" clip-rule="evenodd" fill="#33a9de" fill-rule="evenodd"/>
+		</g>
+	</g>
+	<g id="Tinted_edge">
+		<g>
+			<path d="m452.16 32.16h-385c-19.33 0-35 15.67-35 35v383c0 19.329 15.67 35 35 35h385c19.33 0 35-15.671 35-35v-383c1e-3 -19.33-15.669-35-34.999-35z" clip-rule="evenodd" fill="#76d4ff" fill-rule="evenodd"/>
+		</g>
+	</g>
+	<g id="Flooding_xA0_Bild_1_">
+		
+			
+	<path d="m455 37.25c24 4 30 20 31 32v384c1.3069 15.701-9.2524 26.66-32 32.75l-390.5 0.25c-17.413-2.993-28.699-12.728-32-31.25l-0.5-385.75c4.2867-22.602 16.761-30.276 32.5-32.5z" fill="#3eb7ed"/></g>
+</g>
+<g id="noun_x5F_11757_xA0_Bild_1_" transform="translate(6.6186 3.1171)" stroke="#ed7e3e">
+	
+		
+<path transform="translate(-6.6186 -3.1171)" d="m263 93c3.4357-2.7981 6.7593-2.5325 10 0l91 90 0.25-17.25c1.0811-2.4017 2.9832-3.9993 5.75-4.75h32c2.3228 0.75678 4.022 2.4135 5.25 4.75l-0.25 61.25 42 41.5c7.5024 7.8192 2.84 10.395-1 13.5h-40v126c0.67092 2.1706-1.344 6.502-6 8h-268c-5.319-1.088-6.3833-6.3135-6.25-9.5l0.25-124.5h-39c-7.4847-0.75528-6.1073-6.2061-5-11 59.677-59.99 119.34-118 179-178z" fill="#fff" filter="url(#filter2160)" stroke="none"/></g>
+<g id="node-tree_xA0_Bild_1_">
+	
+		
+<ellipse id="path411" transform="scale(-1)" cx="-327" cy="-215.04" rx="8.9864" ry="8.9604" fill="none" stroke="#3eb7ed" stroke-linecap="square" stroke-width="7.879"/><use transform="translate(28 35)" xlink:href="#path411"/><use transform="translate(-29 35)" xlink:href="#path411"/><use transform="translate(-34.014 80.96)" xlink:href="#path411"/><use transform="translate(27.986 120.96)" xlink:href="#path411"/><use transform="translate(5 168)" xlink:href="#path411"/><use transform="translate(-95 126)" xlink:href="#path411"/><use transform="translate(-143 120)" xlink:href="#path411"/><use transform="translate(-135 165.92)" xlink:href="#path411"/><use transform="translate(-148.01 72.96)" xlink:href="#path411"/><use transform="translate(-108.01 32.96)" xlink:href="#path411"/><use transform="translate(-143 -2)" xlink:href="#path411"/><use transform="translate(-94.014 -21.04)" xlink:href="#path411"/><use transform="translate(-36.014 -21.04)" xlink:href="#path411"/><path d="m220 259v29.5l-29.5 0.5m69.5 39-75-73-1-31m122 34 20.5 20 21.5-20m-3 79h-50m-2-32 1 30h-1v0l3-1m-32 32 63-62-1-78m-94 126v26m-40-36 38 38m-26 2h28l25 24m9.5 0.5 25.5-24.5h30m-60-161v187m-21-207c22 21 21 22 21 22l21.5-22" fill="none" stroke="#3eb7ed" stroke-linecap="square" stroke-width="9.196"/></g>
+</svg>
