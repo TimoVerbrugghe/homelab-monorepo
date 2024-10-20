@@ -42,6 +42,9 @@ in
       ./powermanagement.nix
       ./secureboot/secureboot.nix
 
+      # Custom surface_gpe kernel module for Lid switch
+      ./surface-gpe/surface_gpe.nix
+
     ];
 
   ############################
@@ -101,5 +104,7 @@ in
   # Trying to not have gnome crash on login (sometimes) - related to https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false; 
+
+
 
 }
