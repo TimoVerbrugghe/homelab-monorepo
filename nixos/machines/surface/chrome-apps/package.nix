@@ -126,7 +126,7 @@ stdenv.mkDerivation {
       comment = "Launch iCloud Reminders";
       genericName = "Launch iCloud Reminders";
       categories = ["Utility"];
-      icon = ./reminders.png;
+      icon = ./reminders.svg;
       startupWMClass = "chrome-wwww.icloud.com__reminders_-Default";
     })
 
