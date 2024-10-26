@@ -3,8 +3,8 @@
 {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
-  home.username = "timo";
-  home.homeDirectory = "/home/timo";
+  home.username = "Timo";
+  home.homeDirectory = "/home/Timo";
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -47,7 +47,7 @@
     };
 
     "org/gnome/desktop/background" = {
-      picture-uri = "file:///home/timo/.wallpaper";
+      picture-uri = "file:///etc/.wallpaper.png";
     };
 
     "org/gnome/shell/desktop/datetime" = {

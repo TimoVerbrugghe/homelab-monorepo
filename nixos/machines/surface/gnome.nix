@@ -54,6 +54,10 @@
       source = ./wallpapers/msft-dev-home-wave-lockscreen.png;
       mode = "0644";
     };
+    ".wallpaper.png" = {
+      source = ./wallpapers/msft-dev-home-wave.png;
+      mode = "0644";
+    };
   };
   
   nixpkgs = {

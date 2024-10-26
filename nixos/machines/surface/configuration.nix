@@ -7,7 +7,7 @@
 let 
 
   hostname = "timo-surface-nixos";
-  username = "timo";
+  username = "Timo";
   hashedPassword = "$2b$05$m.dX/051IxdlhA2wwOvVduJqbNWC5HCYfDgvI1uuQopPVt/bASpPy";
 
 in 
