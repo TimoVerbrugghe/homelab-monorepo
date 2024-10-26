@@ -49,7 +49,12 @@
   ];
 
   # Set a wallpaper on the gnome login screen (gdm), which is a custom patch you need to apply in gnome
-  environment.etc.".lockscreen".source = ./wallpapers/msft-dev-home-wave-lockscreen.png;
+  environment.etc = {
+    ".lockscreen" = {
+      source = ./wallpapers/msft-dev-home-wave-lockscreen.png;
+      mode = "0644";
+    };
+  };
   
   nixpkgs = {
     overlays = [
@@ -64,7 +69,7 @@
                  /* Login Dialog */
                  .login-dialog {
                    background-color: $_gdm_bg;
-                +  background-image: url('file:///etc/static/.lockscreen.png');
+                +  background-image: url('file:///etc/.lockscreen.png');
                 +  background-size: cover;
                 +  background-position: center;
                 +  background-repeat: no-repeat;
