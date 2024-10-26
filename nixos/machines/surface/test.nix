@@ -20,6 +20,9 @@
                  .login-dialog {
                    background-color: $_gdm_bg;
                 +  background-image: url('file:///etc/nixos/lockscreen.png');
+                +  background-size: cover;
+                +  background-repeat: no-repeat;
+                +  background-position: center;
                  }
               '')
             ];
