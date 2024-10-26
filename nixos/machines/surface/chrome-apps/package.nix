@@ -119,6 +119,28 @@ stdenv.mkDerivation {
       startupWMClass = "chrome-hass.timo.be__-Default";
     })
 
+    (makeDesktopItem {
+      name = "iCloud Reminders";
+      desktopName = "iCloud Reminders";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://www.icloud.com/reminders/\" %U";
+      comment = "Launch iCloud Reminders";
+      genericName = "Launch iCloud Reminders";
+      categories = ["Utility"];
+      icon = ./reminders.png;
+      startupWMClass = "chrome-icloud.com__-Default";
+    })
+
+    (makeDesktopItem {
+      name = "iCloud Photos";
+      desktopName = "iCloud Photos";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://www.icloud.com/photos/\" %U";
+      comment = "Launch iCloud Photos";
+      genericName = "Launch iCloud Photos";
+      categories = ["Utility"];
+      icon = ./photos.svg;
+      startupWMClass = "chrome-icloud.com__-Default";
+    })
+
   ];
 
   installPhase = ''
