@@ -2,7 +2,7 @@
 
 let
 
-  pkgsUnstable = import inputs.nixpkgs-unstable { 
+  pkgsUnstable = import nixpkgs-unstable { 
     inherit (pkgs.stdenv.hostPlatform) system;
     inherit (config.nixpkgs) config;
   };
