@@ -14,7 +14,7 @@
 
   home.file = {
     ".wallpaper" = {
-      source = "./wallpapers/msft-dev-home-wave.png";
+      source = ./wallpapers/msft-dev-home-wave.png;
     };
     ## Check: https://discourse.nixos.org/t/module-to-manage-desktop-shortcuts-in-chromium-or-brave/47162
   };
