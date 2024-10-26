@@ -13,7 +13,7 @@
   home.stateVersion = "24.05";
 
   home.file = {
-    ".wallpaper" = {
+    ".wallpaper.png" = {
       source = ./wallpapers/msft-dev-home-wave.png;
     };
     ## Check: https://discourse.nixos.org/t/module-to-manage-desktop-shortcuts-in-chromium-or-brave/47162

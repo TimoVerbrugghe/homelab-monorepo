@@ -58,6 +58,19 @@
       source = ./wallpapers/msft-dev-home-wave.png;
       mode = "0644";
     };
+    ".avatar.png" = {
+      source = ./wallpapers/avatar.png;
+      mode = "0644";
+    };
+    ".Timo" = {
+      text = ''
+        [User]
+        Session=
+        Icon=/var/lib/AccountsService/icons/Timo
+        SystemAccount=false
+      '';
+      mode = "0644";
+    };
   };
   
   nixpkgs = {
@@ -85,5 +98,11 @@
       })
     ];
   };
+
+  # Set an user avatar for the login screen by copying avatar image & user file to the right location
+  config.system.activationScripts.gnomeAvater = lib.stringAfter [ "var" ] ''
+    cp /etc/.avatar.png /var/lib/AccountsService/icons/Timo
+    cp /etc/.Timo /var/lib/AccountsService/users/Timo
+  '';
 
 }
