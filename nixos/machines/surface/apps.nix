@@ -1,4 +1,13 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, pkgsUnstable, ... }:
+
+let
+
+  pkgsUnstable = import inputs.nixpkgs-unstable { 
+    inherit (pkgs.stdenv.hostPlatform) system;
+    inherit (config.nixpkgs) config;
+  };
+
+in
 
 {
   # Enable git & sgdisk for partitioning and installing from github flakes later

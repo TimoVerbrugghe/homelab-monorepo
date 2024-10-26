@@ -2,17 +2,13 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, inputs, lib, pkgs, pkgsUnstable, ssh-keys, ... }:
+{ config, inputs, lib, pkgs, ssh-keys, ... }:
 
 let 
 
   hostname = "timo-surface-nixos";
   username = "timo";
   hashedPassword = "$2b$05$m.dX/051IxdlhA2wwOvVduJqbNWC5HCYfDgvI1uuQopPVt/bASpPy";
-  pkgsUnstable = import inputs.nixpkgs-unstable { 
-    inherit (pkgs.stdenv.hostPlatform) system;
-    inherit (config.nixpkgs) config;
-  };
 
 in 
 
