@@ -62,18 +62,18 @@
   ];
 
   # Set a wallpaper on the gnome login screen (gdm), which is a custom patch you need to apply in gnome
-    nixpkgs = {
-      overlays = [
-        (self: super: {
-          gnome = super.gnome.overrideScope (selfg: superg: {
-            gnome-shell = superg.gnome-shell.overrideAttrs (old: {
-              patches = (old.patches or []) ++ [ 
-                /home/timo/bg.patch
-               ];
-            });
-          });
-        })
-      ];
-    };
+    # nixpkgs = {
+    #   overlays = [
+    #     (self: super: {
+    #       gnome = super.gnome.overrideScope (selfg: superg: {
+    #         gnome-shell = superg.gnome-shell.overrideAttrs (old: {
+    #           patches = (old.patches or []) ++ [ 
+    #             /home/timo/bg.patch
+    #            ];
+    #         });
+    #       });
+    #     })
+    #   ];
+    # };
 
 }

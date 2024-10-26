@@ -6,6 +6,10 @@
       url = "github:NixOS/nixpkgs/nixos-24.05";
     };
 
+    nixpkgs-unstable = {
+      url = "github:NixOS/nixpkgs/nixos-unstable";
+    };
+
     ssh-keys = {
       url = "https://github.com/TimoVerbrugghe.keys";
       flake = false;
@@ -20,16 +24,9 @@
       url = "github:NixOS/nixos-hardware/master";
     };
 
-    # lanzaboote = {
-    #   url = "github:nix-community/lanzaboote/v0.4.1";
-
-    #   # Optional but recommended to limit the size of your system closure.
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... } @inputs : {
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, ... } @inputs : {
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file

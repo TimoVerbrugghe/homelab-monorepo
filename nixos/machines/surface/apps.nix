@@ -36,6 +36,7 @@
     localsend
     gimp
     qemu
+    unstable.gdm-settings
   ];
 
   virtualisation.libvirtd = {
