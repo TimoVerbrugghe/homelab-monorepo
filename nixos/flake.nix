@@ -138,7 +138,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.timo = import ./machines/surface/home.nix;
+            home-manager.users.Timo = import ./machines/surface/home.nix;
 
           }
         ];
