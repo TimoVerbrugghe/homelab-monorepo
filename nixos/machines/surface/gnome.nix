@@ -1,17 +1,17 @@
 { config, pkgs, ... }:
 
 
-let
-  bgPatch = pkgs.writeText "bg.patch" ''
-    --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
-    +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
-    @@ -15,4 +15,5 @@
-    .login-dialog {
-      background-color: $_gdm_bg;
-    +  background-image: url('file:///home/timo/.wallpaper');
-    }
-  '';
-in
+# let
+#   bgPatch = pkgs.writeText "bg.patch" ''
+#     --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+#     +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+#     @@ -15,4 +15,5 @@
+#     .login-dialog {
+#       background-color: $_gdm_bg;
+#     +  background-image: url('file:///home/timo/.wallpaper');
+#     }
+#   '';
+# in
 
 {
   # Enable gnome desktop manager
@@ -67,7 +67,9 @@ in
         (self: super: {
           gnome = super.gnome.overrideScope (selfg: superg: {
             gnome-shell = superg.gnome-shell.overrideAttrs (old: {
-              patches = (old.patches or []) ++ [ bgPatch ];
+              patches = (old.patches or []) ++ [ 
+                /home/timo/bg.patch
+               ];
             });
           });
         })
