@@ -9,7 +9,7 @@ services:
     volumes:
       - adguardhome-work:/opt/adguardhome/work
       - adguardhome-conf:/opt/adguardhome/conf
-      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/acme/timo.be:/etc/letsencrypt/live/timo.be
     labels:
       traefik.enable: false
 
