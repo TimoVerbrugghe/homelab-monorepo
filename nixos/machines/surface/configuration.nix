@@ -7,7 +7,7 @@
 let 
 
   hostname = "timo-surface-nixos";
-  username = "timo";
+  username = "Timo";
   hashedPassword = "$2b$05$m.dX/051IxdlhA2wwOvVduJqbNWC5HCYfDgvI1uuQopPVt/bASpPy";
 
 in 
@@ -59,14 +59,6 @@ in
   users = {
     users = {
       ${username} = {
-        extraGroups = [ "wheel" "render" "video" "input" "networkmanager" ];
-        isNormalUser = true;
-        createHome = true;
-        initialHashedPassword = "${hashedPassword}";
-        openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
-      };
-
-      "Timo" = {
         extraGroups = [ "wheel" "render" "video" "input" "networkmanager" ];
         isNormalUser = true;
         createHome = true;
