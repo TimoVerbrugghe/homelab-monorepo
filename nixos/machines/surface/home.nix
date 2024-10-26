@@ -50,6 +50,7 @@
       color-shading-type = "solid";
       picture-options = "zoom";
       picture-uri = "file://" + ./wallpapers/msft-dev-home-wave.png;
+      picture-uri-dark = "file://" + ./wallpapers/msft-dev-home-wave.png;
     };
 
     "org/gnome/shell/desktop/datetime" = {
