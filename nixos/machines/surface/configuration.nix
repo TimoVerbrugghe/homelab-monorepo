@@ -56,14 +56,20 @@ in
   hardware.cpu.intel.updateMicrocode = true;
 
   # User setup
-  users.users = {
+  users = {
+    users = {
+      ${username} = {
+        group = "Timo";
+        extraGroups = [ "wheel" "render" "video" "input" "networkmanager" ];
+        isNormalUser = true;
+        createHome = true;
+        initialHashedPassword = "${hashedPassword}";
+        openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
+      };
+    };
 
-    ${username} = {
-      extraGroups = [ "wheel" "render" "video" "input" "networkmanager" ];
-      isNormalUser = true;
-      createHome = true;
-      initialHashedPassword = "${hashedPassword}";
-      openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
+    groups = {
+      ${username} = {};
     };
   };
 
