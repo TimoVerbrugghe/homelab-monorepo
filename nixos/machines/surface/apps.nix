@@ -6,7 +6,10 @@
   nixpkgs.config.allowUnfree = true;
 
   ## Additional packages
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = 
+
+  # Stable packages
+  (with pkgs; [
     (google-chrome.override {
       commandLineArgs = [
         "--enable-features=VaapiVideoDecodeLinuxGL"
@@ -36,8 +39,13 @@
     localsend
     gimp
     qemu
-    pkgsUnstable.gdm-settings
-  ];
+  ])
+
+  # Unstable packages
+  
+  (with pkgsUnstable; [
+    gdm-settings
+  ]);
 
   virtualisation.libvirtd = {
     enable = true;
