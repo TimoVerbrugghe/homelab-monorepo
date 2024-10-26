@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, pkgsUnstable, ... }:
+{ config, pkgs, nixpkgs-unstable, ... }:
 
 let
 
