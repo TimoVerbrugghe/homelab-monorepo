@@ -127,7 +127,7 @@ stdenv.mkDerivation {
       genericName = "Launch iCloud Reminders";
       categories = ["Utility"];
       icon = ./reminders.png;
-      startupWMClass = "chrome-wwww.icloud.com__reminders__-Default";
+      startupWMClass = "chrome-wwww.icloud.com__reminders_-Default";
     })
 
     (makeDesktopItem {
@@ -138,7 +138,7 @@ stdenv.mkDerivation {
       genericName = "Launch iCloud Photos";
       categories = ["Utility"];
       icon = ./photos.svg;
-      startupWMClass = "chrome-www.icloud.com__photos__-Default";
+      startupWMClass = "chrome-www.icloud.com__photos_-Default";
     })
 
   ];
