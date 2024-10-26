@@ -13,6 +13,9 @@
   home.stateVersion = "24.05";
 
   home.file = {
+    ".wallpaper" = {
+      source = "./wallpapers/msft-dev-home-wave.png";
+    };
     ## Check: https://discourse.nixos.org/t/module-to-manage-desktop-shortcuts-in-chromium-or-brave/47162
   };
 
@@ -41,6 +44,10 @@
         "org.gnome.Console.desktop"
         "org.gnome.Settings.desktop"
       ];
+    };
+
+    "org/gnome/desktop/background" = {
+      picture-uri = "file:///home/timo/.wallpaper";
     };
 
     "org/gnome/shell/desktop/datetime" = {
