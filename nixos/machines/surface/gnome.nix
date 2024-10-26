@@ -1,11 +1,5 @@
 { config, pkgs, ... }:
 
-let
-
-loginWallpaper = ./wallpapers/msft-dev-home-wave.png;
-
-in
-
 {
   # Enable gnome desktop manager
   services.xserver = {
@@ -69,7 +63,7 @@ in
                   /* Login Dialog */
                   .login-dialog {
                     background-color: $_gdm_bg;
-                  +  background-image: url('file://${loginWallpaper}');
+                  +  background-image: url('file:///home/timo/.wallpaper');
                   }
                 ''
               )
