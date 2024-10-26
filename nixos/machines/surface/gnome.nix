@@ -6,7 +6,6 @@ let
     --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
     +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
     @@ -15,4 +15,5 @@
-    /* Login Dialog */
     .login-dialog {
       background-color: $_gdm_bg;
     +  background-image: url('file:///home/timo/.wallpaper');
