@@ -1,21 +1,12 @@
 { config, pkgs, nixpkgs-unstable, ... }:
 
-let
-
-  pkgsUnstable = import nixpkgs-unstable { 
-    inherit (pkgs.stdenv.hostPlatform) system;
-    inherit (config.nixpkgs) config;
-  };
-
-in
-
 {
   # Enable git & sgdisk for partitioning and installing from github flakes later
   # Enabling unfree packages for google-chrome
   nixpkgs.config.allowUnfree = true;
 
   ## Additional packages
-  environment.systemPackages = with pkgs; with pkgsUnstable; [
+  environment.systemPackages = with pkgs; [
     (google-chrome.override {
       commandLineArgs = [
         "--enable-features=VaapiVideoDecodeLinuxGL"
@@ -45,7 +36,6 @@ in
     localsend
     gimp
     qemu
-    pkgsUnstable.gdm-settings
   ];
 
   virtualisation.libvirtd = {
