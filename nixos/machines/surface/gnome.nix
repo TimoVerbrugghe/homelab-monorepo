@@ -1,18 +1,5 @@
 { config, pkgs, ... }:
 
-
-# let
-#   bgPatch = pkgs.writeText "bg.patch" ''
-#     --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
-#     +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
-#     @@ -15,4 +15,5 @@
-#     .login-dialog {
-#       background-color: $_gdm_bg;
-#     +  background-image: url('file:///home/timo/.wallpaper');
-#     }
-#   '';
-# in
-
 {
   # Enable gnome desktop manager
   services.xserver = {
@@ -62,18 +49,32 @@
   ];
 
   # Set a wallpaper on the gnome login screen (gdm), which is a custom patch you need to apply in gnome
-    # nixpkgs = {
-    #   overlays = [
-    #     (self: super: {
-    #       gnome = super.gnome.overrideScope (selfg: superg: {
-    #         gnome-shell = superg.gnome-shell.overrideAttrs (old: {
-    #           patches = (old.patches or []) ++ [ 
-    #             /home/timo/bg.patch
-    #            ];
-    #         });
-    #       });
-    #     })
-    #   ];
-    # };
+  environment.etc.".lockscreen".source = ./wallpapers/msft-dev-home-wave-lockscreen.png;
+  
+  nixpkgs = {
+    overlays = [
+      (self: super: {
+        gnome = super.gnome.overrideScope (selfg: superg: {
+          gnome-shell = superg.gnome-shell.overrideAttrs (old: {
+            patches = (old.patches or []) ++ [
+              (pkgs.writeText "bg.patch" ''
+                --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+                +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+                @@ -15,4 +15,8 @@ $_gdm_dialog_width: 23em;
+                 /* Login Dialog */
+                 .login-dialog {
+                   background-color: $_gdm_bg;
+                +  background-image: url('file:///etc/.lockscreen.png');
+                +  background-size: cover;
+                +  background-position: center;
+                +  background-repeat: no-repeat;
+                 }
+              '')
+            ];
+          });
+        });
+      })
+    ];
+  };
 
 }
