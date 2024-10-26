@@ -64,7 +64,7 @@
                  /* Login Dialog */
                  .login-dialog {
                    background-color: $_gdm_bg;
-                +  background-image: url('file:///etc/.lockscreen.png');
+                +  background-image: url('file:///etc/static/.lockscreen.png');
                 +  background-size: cover;
                 +  background-position: center;
                 +  background-repeat: no-repeat;
