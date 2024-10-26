@@ -47,7 +47,9 @@
     };
 
     "org/gnome/desktop/background" = {
-      picture-uri = "file:///home/Timo/.wallpaper.png";
+      color-shading-type = "solid";
+      picture-options = "zoom";
+      picture-uri = "file://" + ./wallpapers/msft-dev-home-wave.png;
     };
 
     "org/gnome/shell/desktop/datetime" = {
