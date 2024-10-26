@@ -50,7 +50,7 @@
 
   # Set a wallpaper on the gnome login screen (gdm), which is a custom patch you need to apply in gnome
   environment.etc = {
-    ".lockscreen" = {
+    ".lockscreen.png" = {
       source = ./wallpapers/msft-dev-home-wave-lockscreen.png;
       mode = "0644";
     };
