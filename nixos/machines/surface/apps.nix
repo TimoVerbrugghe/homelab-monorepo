@@ -15,7 +15,7 @@ in
   nixpkgs.config.allowUnfree = true;
 
   ## Additional packages
-  environment.systemPackages = with pkgs; with unstable; [
+  environment.systemPackages = with pkgs; with pkgsUnstable; [
     (google-chrome.override {
       commandLineArgs = [
         "--enable-features=VaapiVideoDecodeLinuxGL"
