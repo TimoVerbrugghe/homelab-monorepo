@@ -8,6 +8,6 @@
   services.printing.enable = true; # Enable printing services
   services.tailscale.enable = true; # Enable tailscale for VPN
 
-  users.users.timo.extraGroups = [ "networkmanager" ];
+  users.users.Timo.extraGroups = [ "networkmanager" ];
 
 }
