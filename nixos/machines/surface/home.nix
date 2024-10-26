@@ -47,7 +47,7 @@
     };
 
     "org/gnome/desktop/background" = {
-      picture-uri = "file:///etc/.wallpaper.png";
+      picture-uri = "file:///home/Timo/.wallpaper.png";
     };
 
     "org/gnome/shell/desktop/datetime" = {
