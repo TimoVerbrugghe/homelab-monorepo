@@ -106,6 +106,9 @@ in
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false; 
 
-
+  # Lower timeout on systemd service stop/restart (allows for fast shutdown/reboot)
+  systemd.extraConfig = ''
+    DefaultTimeoutStopSec=10s
+  '';
 
 }
