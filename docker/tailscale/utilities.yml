@@ -105,6 +105,23 @@ services:
       tailscale-scanservjs:
         condition: service_healthy
 
+  tinshop:
+    container_name: tinshop
+    image: ghcr.io/ajmandourah/tinshop-ng:latest
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      - TINSHOP_SOURCES_DIRECTORIES=/games
+      - TINSHOP_WELCOMEMESSAGE=Welcome to Timo Tinshop!
+      - TINSHOP_HOST=aelita.local.timo.be
+      - TINSHOP_PORT=3000
+      - TINSHOP_REVERSE_PROXY=false
+    volumes:
+      - nsp:/games
+      - tinshop:/data 
+      - switchkeys:/switchkeys
+
 volumes:
   scanservjs-scans:
     driver: local
@@ -156,6 +173,19 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/downloads"
+  tinshop:
+  nsp:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/ROMs"
+  switchkeys:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/switchkeys"
 
 networks:
   dockervlan:
