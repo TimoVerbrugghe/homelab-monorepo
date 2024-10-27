@@ -40,6 +40,7 @@
     # Let's see if I can get this device enrolled...
     intune-portal
     microsoft-edge
+    kodi-wayland
   ];
 
   virtualisation.libvirtd = {
