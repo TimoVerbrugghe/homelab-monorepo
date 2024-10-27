@@ -36,6 +36,10 @@
     localsend
     gimp
     qemu
+    
+    # Let's see if I can get this device enrolled...
+    intune-portal
+    microsoft-edge
   ];
 
   virtualisation.libvirtd = {
