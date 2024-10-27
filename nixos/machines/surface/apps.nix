@@ -40,7 +40,10 @@
     # Let's see if I can get this device enrolled...
     intune-portal
     microsoft-edge
+    
+    # RPCBind necessary for NFS
     kodi-wayland
+    rpcbind
   ];
 
   virtualisation.libvirtd = {
