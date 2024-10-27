@@ -58,6 +58,8 @@ in
       /etc/nixos/tailscale-authkey.nix
     ];
 
+  system.stateVersion = "23.11";
+
   ## Hardware & Firmware settings
   hardware.cpu.intel.updateMicrocode = true;
 	hardware.enableRedistributableFirmware = true;
