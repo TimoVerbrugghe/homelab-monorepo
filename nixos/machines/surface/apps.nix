@@ -44,6 +44,8 @@
     # RPCBind necessary for NFS
     kodi-wayland
     rpcbind
+
+    libreoffice
   ];
 
   virtualisation.libvirtd = {
