@@ -37,8 +37,7 @@
     gimp
     qemu
     
-    # Let's see if I can get this device enrolled...
-    intune-portal
+    # Microsoft Edge is necessary for intune
     microsoft-edge
     
     # RPCBind necessary for NFS
@@ -49,6 +48,8 @@
     # direnv is needed for VSCode nixos extension
     direnv
   ];
+
+  services.intune.enable = true;
 
   virtualisation.libvirtd = {
     enable = true;
