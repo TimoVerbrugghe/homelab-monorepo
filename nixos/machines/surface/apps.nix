@@ -44,8 +44,10 @@
     # RPCBind necessary for NFS
     kodi-wayland
     rpcbind
-
     libreoffice
+
+    # direnv is needed for VSCode nixos extension
+    direnv
   ];
 
   virtualisation.libvirtd = {
