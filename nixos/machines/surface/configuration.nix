@@ -59,7 +59,7 @@ in
   users = {
     users = {
       ${username} = {
-        extraGroups = [ "wheel" "render" "video" "input" "networkmanager" ];
+        extraGroups = [ "wheel" "render" "video" "input" "networkmanager" "surface-control" ];
         isNormalUser = true;
         createHome = true;
         initialHashedPassword = "${hashedPassword}";
@@ -110,5 +110,4 @@ in
   systemd.extraConfig = ''
     DefaultTimeoutStopSec=10s
   '';
-
 }
