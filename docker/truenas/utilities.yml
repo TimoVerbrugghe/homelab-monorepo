@@ -188,7 +188,7 @@ volumes:
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/FranzHopper/tinshop"
+      device: "/mnt/FranzHopper/appdata/tinshop"
   nsp:
     driver: local
     driver_opts:
