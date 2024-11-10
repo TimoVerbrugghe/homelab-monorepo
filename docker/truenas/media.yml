@@ -137,7 +137,7 @@ services:
       radarr:
         condition: service_started
     healthcheck:
-      test: ["CMD-SHELL", "wget http://localhost:6767/api/v1/status -qO /dev/null || exit 1"]
+      test: ["CMD-SHELL", "curl http://localhost:6767/api/v1/status || exit 1"]
       interval: 1s
       timeout: 5s
       retries: 60
