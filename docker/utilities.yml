@@ -108,6 +108,21 @@ services:
       traefik.http.services.ns-usbloader.loadbalancer.server.port: 8080
       traefik.http.routers.ns-usbloader.middlewares: keycloak-auth@file
 
+  iventoy:
+    image: thedrobe/iventoy-docker
+    container_name: iventoy
+    restart: always
+    privileged: true
+    networks:
+      dockervlan:
+        ipv4_address: ${IVENTOY_IP_ADDRESS}
+    volumes:
+      - iventoy-config:/app/data
+      - iventoy-log:/app/log
+      - isos:/app/iso
+    environment:
+      - AUTO_START_PXE=true
+
 volumes:
   bitwarden:
   bitwarden-export:
