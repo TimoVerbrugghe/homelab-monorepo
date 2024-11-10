@@ -16,7 +16,7 @@ services:
       - TS_AUTH_KEY=${TS_AUTH_KEY_TRAEFIK}
       - TS_STATE_DIR=/var/lib/tailscale/state
     ports:
-      - 443:443/tcp
+      - 9000:443/tcp
     healthcheck:
       test: ["CMD-SHELL", "tailscale status"]
       interval: 1s
