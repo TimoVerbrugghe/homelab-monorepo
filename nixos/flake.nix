@@ -139,8 +139,6 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.Timo = import ./machines/surface/home.nix;
-            # microsoft-surface.ipts.enable = true;
-            microsoft-surface.surface-control.enable = true;
           }
         ];
       };

@@ -110,4 +110,8 @@ in
   systemd.extraConfig = ''
     DefaultTimeoutStopSec=10s
   '';
+
+  # Specific surface stuff that's needed
+  services.iptsd.enable = lib.mkDefault true;
+  environment.systemPackages = [ pkgs.surface-control ];
 }
