@@ -1,0 +1,548 @@
+services:
+
+  tailscale-sonarr:
+    image: tailscale/tailscale
+    container_name: tailscale-sonarr
+    hostname: sonarr
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-sonarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_SONARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  sonarr:
+    container_name: sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    restart: always
+    network_mode: service:tailscale-sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - sonarr:/config
+      - tvshows:/tv
+      - downloads:/downloads
+    depends_on:
+      tailscale-sonarr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8989/ping || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+    labels:
+      traefik.http.routers.sonarr.entrypoints: https
+      traefik.http.services.sonarr.loadbalancer.server.port: 8989
+
+  tailscale-radarr:
+    image: tailscale/tailscale
+    container_name: tailscale-radarr
+    hostname: radarr
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-radarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_RADARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  radarr:
+    container_name: radarr
+    image: lscr.io/linuxserver/radarr:latest
+    restart: always
+    network_mode: service:tailscale-radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - radarr:/config
+      - movies:/movies
+      - downloads:/downloads
+    depends_on:
+      tailscale-radarr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:7878/ping || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+    labels:
+      traefik.http.routers.radarr.entrypoints: https
+      traefik.http.services.radarr.loadbalancer.server.port: 7878
+
+  tailscale-bazarr:
+    image: tailscale/tailscale
+    container_name: tailscale-bazarr
+    hostname: bazarr
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-bazarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_BAZARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  bazarr:
+    container_name: bazarr
+    image: lscr.io/linuxserver/bazarr:latest
+    restart: always
+    network_mode: service:tailscale-bazarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - bazarr:/config
+      - movies:/movies
+      - tvshows:/tv
+    depends_on:
+      tailscale-bazarr:
+        condition: service_healthy
+      sonarr:
+        condition: service_started
+      radarr:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget http://localhost:6767/api/v1/status -qO /dev/null || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+    labels:
+      traefik.http.routers.bazarr.entrypoints: https
+      traefik.http.services.bazarr.loadbalancer.server.port: 6767
+
+  tailscale-overseerr:
+    image: tailscale/tailscale
+    container_name: tailscale-overseerr
+    hostname: request
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-overseerr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_OVERSEERR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  overseerr:
+    container_name: overseerr
+    image: sctx/overseerr:latest
+    restart: always
+    network_mode: service:tailscale-overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Brussels
+    volumes:
+      - overseerr:/app/config
+    depends_on:
+      tailscale-overseerr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget http://localhost:5055/api/v1/status -qO /dev/null || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+    labels:
+      traefik.http.routers.overseerr.rule: Host(`request.thefactory.timo.be`) || Host(`request.timo.be`)
+      traefik.http.routers.overseerr.entrypoints: https
+      traefik.http.services.overseerr.loadbalancer.server.port: 5055
+
+  tailscale-prowlarr:
+    image: tailscale/tailscale
+    container_name: tailscale-prowlarr
+    hostname: prowlarr
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-prowlarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_PROWLARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  prowlarr:
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:latest
+    restart: always
+    network_mode: service:tailscale-prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - prowlarr:/config
+    depends_on:
+      tailscale-prowlarr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:9696/ping || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+    labels:
+      traefik.http.routers.prowlarr.entrypoints: https
+      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
+  
+  tailscale-emulatorjs:
+    image: tailscale/tailscale
+    container_name: tailscale-emulatorjs
+    hostname: games
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-emulatorjs:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_EMULATORJS}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  emulatorjs:
+    image: lscr.io/linuxserver/emulatorjs:latest
+    container_name: emulatorjs
+    restart: always
+    network_mode: service:tailscale-emulatorjs
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - emulatorjs:/config
+      - emulatorjs-data:/data
+      - dsgames:/data/nds/roms:rw
+      - gbagames:/data/gba/roms:rw
+      - gbcgames:/data/gbc/roms:rw
+      - ps1games:/data/psx/roms:rw
+      - snesgames:/data/snes/roms:rw
+    depends_on:
+      tailscale-emulatorjs:
+        condition: service_healthy
+    labels:
+      traefik.http.routers.emulatorjs.rule: Host(`games.thefactory.timo.be`) || Host(`games.timo.be`)
+      traefik.http.routers.emulatorjs.entrypoints: https
+      traefik.http.services.emulatorjs.loadbalancer.server.port: 80
+      traefik.http.routers.emulatorjs.service: emulatorjs
+      traefik.http.routers.emulatorjs-config.service: emulatorjs-config
+      traefik.http.routers.emulatorjs-config.rule: Host(`gamesconfig.thefactory.timo.be`) || Host(`gamesconfig.timo.be`)
+      traefik.http.routers.emulatorjs-config.entrypoints: https
+      traefik.http.services.emulatorjs-config.loadbalancer.server.port: 3000
+
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    user: ${PUID}:${PGID}
+    networks:
+      - dockerproxy
+    volumes:
+      - recyclarr:/config
+    environment:
+      - TZ=Europe/Brussels
+      - CRON_SCHEDULE=@daily
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/Brussels
+
+  tailscale-lidarr:
+    image: tailscale/tailscale
+    container_name: tailscale-lidarr
+    hostname: lidarr
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-lidarr:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_LIDARR}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  lidarr:
+    container_name: lidarr
+    image: lscr.io/linuxserver/lidarr:latest
+    restart: always
+    network_mode: service:tailscale-lidarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+    volumes:
+      - lidarr:/config
+      - music:/music
+      - downloads:/downloads
+    depends_on:
+      tailscale-lidarr:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8686/ping || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+    labels:
+      traefik.http.routers.lidarr.entrypoints: https
+      traefik.http.services.lidarr.loadbalancer.server.port: 8686
+
+  swaparr-radarr:
+    image: ghcr.io/thijmengthn/swaparr:latest
+    container_name: swaparr-radarr
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - BASEURL=http://radarr:7878    # IP or FQDN           (Required)
+      - APIKEY=${RADARR_API_KEY}      # Radarr API Key       (Required)                
+      - PLATFORM=radarr               # "radarr", "sonarr".. (Optional) default: radarr
+      - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
+      - SIZE_THRESHOLD=100GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
+      - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
+      - AGGRESSIVE_STRIKES=true      # Boolean              (Optional) default: false 
+
+  swaparr-sonarr: 
+    image: ghcr.io/thijmengthn/swaparr:latest
+    container_name: swaparr-sonarr
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - BASEURL=http://sonarr:8989    # IP or FQDN           (Required)
+      - APIKEY=${SONARR_API_KEY}      # Radarr API Key       (Required)                
+      - PLATFORM=radarr               # "radarr", "sonarr".. (Optional) default: radarr
+      - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
+      - SIZE_THRESHOLD=100GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
+      - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
+      - AGGRESSIVE_STRIKES=true      # Boolean              (Optional) default: false
+
+networks:
+  dockerproxy:
+    external: true
+
+volumes:
+  tailscale-sonarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-sonarr"
+  sonarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/sonarr"
+  tailscale-bazarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-bazarr"
+  bazarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/bazarr"
+  tailscale-radarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-radarr"
+  radarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/radarr"
+  tailscale-overseerr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-overseerr"
+  overseerr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/overseerr"
+  tailscale-prowlarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-prowlarr"
+  prowlarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/prowlarr"
+  recyclarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/recyclarr"
+  tailscale-emulatorjs:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-emulatorjs"
+  emulatorjs:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/emulatorjs"
+  emulatorjs-data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/emulatorjs-data"
+  tailscale-lidarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-lidarr"
+  lidarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/lidarr"
+
+  movies:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/movies"
+  tvshows:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/tvshows"
+  downloads:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/downloads"
+  music:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/music"
+  dsgames:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/games/ROMs/nds"
+  gbagames:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/games/ROMs/gba"
+  ps1games:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/games/ROMs/psx"
+  snesgames:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/games/ROMs/snes"
+  gbcgames:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/games/ROMs/gbc"

@@ -1,0 +1,251 @@
+services:
+  tailscale-qbittorrent:
+    image: tailscale/tailscale
+    container_name: tailscale-qbittorrent
+    hostname: qbittorrent
+    restart: always
+    networks: 
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-qbittorrent:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_QBITTORRENT}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  qbittorrent: 
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: always
+    network_mode: service:tailscale-qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Brussels
+      - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
+    volumes:
+      - qbittorrent:/config
+      - downloads:/downloads
+    depends_on:
+      tailscale-qbittorrent:
+        condition: service_healthy
+    labels:
+      traefik.http.routers.qbittorrent.entrypoints: https
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+
+  tailscale-jdownloader2:
+    image: tailscale/tailscale
+    container_name: tailscale-jdownloader2
+    hostname: jdownloader2
+    restart: always
+    networks: 
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-jdownloader2:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_JDOWNLOADER2}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  jdownloader2:
+    image: jlesage/jdownloader-2
+    container_name: jdownloader2
+    restart: always
+    network_mode: service:tailscale-jdownloader2
+    volumes:
+      - jdownloader2:/config
+      - downloads:/output
+    depends_on:
+      tailscale-jdownloader2:
+        condition: service_healthy
+    labels:
+      traefik.http.routers.qbittorrent.entrypoints: https
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 5800
+
+  tailscale-metube:
+    image: tailscale/tailscale
+    container_name: tailscale-metube
+    hostname: metube
+    restart: always
+    networks: 
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-metube:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_METUBE}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  metube:
+    image: ghcr.io/alexta69/metube
+    container_name: metube
+    restart: always
+    network_mode: service:tailscale-metube
+    environment:
+      - TEMP_DIR=/tmp
+      - DARK_MODE=true
+      - DOWNLOAD_DIR=/downloads/metube
+      - YTDL_OPTIONS={"writesubtitles":true,"writeautomaticsub":true,"subtitleslangs":["en","en-US","en-GB","en-orig","nl","nl-BE","nl-NL","-live_chat"],"updatetime":false,"postprocessors":[{"key":"FFmpegEmbedSubtitle","already_have_subtitle":false},{"key":"FFmpegMetadata","add_chapters":true}]}
+    volumes:
+      - downloads:/downloads
+      - /dev/shm:/tmp
+    depends_on:
+      tailscale-metube:
+        condition: service_healthy
+    labels:
+      traefik.http.routers.qbittorrent.entrypoints: https
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8081
+
+  tailscale-ariang:
+    image: tailscale/tailscale
+    container_name: tailscale-ariang
+    hostname: ariang
+    restart: always
+    networks: 
+      - dockerproxy
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale-ariang:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - sys_module
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY_ARIANG}
+      - TS_STATE_DIR=/var/lib/tailscale/state
+    healthcheck:
+      test: ["CMD-SHELL", "tailscale status"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
+  ariang:
+    image: hurlenko/aria2-ariang
+    container_name: ariang
+    restart: always
+    network_mode: service:tailscale-ariang
+    volumes:
+      - downloads:/aria2/data
+      - aria2-conf:/aria2/conf
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - RPC_SECRET=secret
+      - ARIA2RPCPORT=443
+    depends_on:
+      tailscale-ariang:
+        condition: service_healthy
+    labels:
+      traefik.http.routers.ariang.entrypoints: https
+      traefik.http.services.ariang.loadbalancer.server.port: 8080
+      traefik.http.routers.ariangrpc.service: ariarpc
+      traefik.http.routers.ariangrpc.rule: Host(`ariang.timo.be`) && PathPrefix(`/jsonrpc`)
+      traefik.http.routers.ariangrpc.entrypoints: https
+      traefik.http.services.ariangrpc.loadbalancer.server.port: 6800
+
+volumes:
+  tailscale-qbittorrent:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-qbittorrent"
+  tailscale-jdownloader2:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-jdownloader2"
+  tailscale-metube:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-metube"
+  qbittorrent:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/qbittorrent"
+  jdownloader2:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/jdownloader2"
+  downloads:
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/downloads"
+  aria2-conf:
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/aria2-conf"
+  tailscale-ariang:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tailscale-ariang"
+      
+networks:
+  dockerproxy:
+    external: true
+
+# icloudpd-timo:
+#   image: boredazfcuk/icloudpd
+#   container_name: icloudpd-timo
+#   restart: always
+#   networks: 
+#     - dockerproxy
+#   environment:
+#     - apple_id={$ICLOUDPD_APPLE_ID}
+#     - authentication_type=MFA
+
+#     - synchronisation_interval=86400
+#     - TZ=Europe/London
+#     - download_path=/home/user/iCloud
+#     - skip_check=true
+#     - auto_delete=true
+#     - UMASK=000
+#     - PUID=${PUID}
+#     - PGID=${PGID}
+#     - notification_type=Webhook
+#     - notification_title=iCloudPD
+#     - webhook_server=hooks.slack.com
+#     - webhook_port=443
+#     - webhook_path=/services/
+#     - webhook_id={$ICLOUDPD_WEBHOOK_ID}
+#     - webhook_body=text
+#     - webhook_https=true
+#   volumes:
+#       - icloudpd-timo:/config
+#       - icloudpd-data:/home/user/iCloud
+#   labels:
+#     traefik.enable: false

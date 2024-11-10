@@ -1,0 +1,20 @@
+name: portainer-agent
+
+services:
+  portainer-agent:
+    container_name: portainer-agent
+    image: portainer/agent:sts
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /mnt/.ix-apps/docker/volumes:/var/lib/docker/volumes
+    ports:
+      - "9001:9001"
+  
+networks:
+  dockerproxy:
+    name: dockerproxy
+    external: false
+    driver: bridge
