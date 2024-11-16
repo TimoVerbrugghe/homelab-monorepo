@@ -106,11 +106,20 @@
   '';
 
   # Making NFS shares in nautilus files application work
-  security.wrappers."mount.nfs" = {
-    setuid = true;
-    owner = "root";
-    group = "root";
-    source = "${pkgs.nfs-utils.out}/bin/mount.nfs";
+  security.wrappers.gvfsd-nfs = {
+    source  = "${pkgs}.gnome.gvfs/libexec/gvfsd-nfs";
+    owner   = "nobody";
+    group   = "nogroup";
+    capabilities = "cap_net_bind_service+ep";
+  };
+
+  services.gvfs = {
+    enable = true;
+    package = lib.mkForce (package.overrideAttrs (oldAttrs: {
+      postInstall = ''
+        ln -sf /run/wrappers/bin/gvfsd-nfs $out/libexec/gvfsd-nfs
+      '';
+    }));
   };
 
 }
