@@ -105,4 +105,12 @@
     cp /etc/.Timo /var/lib/AccountsService/users/Timo
   '';
 
+  # Making NFS shares in nautilus files application work
+  security.wrappers."mount.nfs" = {
+    setuid = true;
+    owner = "root";
+    group = "root";
+    source = "${pkgs.nfs-utils.out}/bin/mount.nfs";
+  };
+
 }
