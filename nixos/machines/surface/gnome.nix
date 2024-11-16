@@ -115,7 +115,7 @@
 
   services.gvfs = {
     enable = true;
-    package = lib.mkForce (package.overrideAttrs (oldAttrs: {
+    package = lib.mkForce (pkgs.gnome.gvfs.overrideAttrs (oldAttrs: {
       postInstall = ''
         ln -sf /run/wrappers/bin/gvfsd-nfs $out/libexec/gvfsd-nfs
       '';
