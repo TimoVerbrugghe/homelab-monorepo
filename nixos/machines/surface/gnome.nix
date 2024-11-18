@@ -105,21 +105,6 @@
     cp /etc/.Timo /var/lib/AccountsService/users/Timo
   '';
 
-  # Making NFS shares in nautilus files application work
-  security.wrappers.gvfsd-nfs = {
-    source  = "${pkgs}.gnome.gvfs/libexec/gvfsd-nfs";
-    owner   = "nobody";
-    group   = "nogroup";
-    capabilities = "cap_net_bind_service+ep";
-  };
-
-  services.gvfs = {
-    enable = true;
-    package = lib.mkForce (pkgs.gnome.gvfs.overrideAttrs (oldAttrs: {
-      postInstall = ''
-        ln -sf /run/wrappers/bin/gvfsd-nfs $out/libexec/gvfsd-nfs
-      '';
-    }));
-  };
+  services.gvfs.enable = true; # Enable gvfs for gnome
 
 }
