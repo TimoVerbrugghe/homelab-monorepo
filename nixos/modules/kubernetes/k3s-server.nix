@@ -50,8 +50,5 @@ in
         target = "kube-vip.yaml";
       }
     ];
-
-    }
   };
-
 }

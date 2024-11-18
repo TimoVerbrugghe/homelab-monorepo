@@ -1,5 +1,5 @@
 # Generated using the kube-vip container, see https://kube-vip.io/docs/installation/daemonset/#kube-vip-as-ha-load-balancer-or-both
-# Command used: docker run --rm --net=host ghcr.io/kube-vip/kube-vip:v0.8.3 manifest daemonset --arp --interface eth0 --address 10.10.10.30 --inCluster --taint --controlplane --services --leaderElection | tee /home/ulrich/kube-vip.yaml
+# Command used: docker run --rm --net=host ghcr.io/kube-vip/kube-vip:v0.8.3 manifest daemonset --arp --interface eth0 --address 10.10.10.30 --inCluster --taint --controlplane --services --leaderElection | tee ./kube-vip.yaml
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
