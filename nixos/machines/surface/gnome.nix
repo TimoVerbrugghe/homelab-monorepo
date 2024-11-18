@@ -110,6 +110,4 @@
     cp /etc/.Timo /var/lib/AccountsService/users/Timo
   '';
 
-  # services.gvfs.enable = true; # Enable gvfs for gnome
-
 }
