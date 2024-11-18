@@ -2,9 +2,9 @@
 
 {
 
-  imports = [
-    ./gvfs.nix
-  ];
+  # imports = [
+  #   ./gvfs.nix
+  # ];
   
   # Enable gnome desktop manager
   services.xserver = {
@@ -110,6 +110,6 @@
     cp /etc/.Timo /var/lib/AccountsService/users/Timo
   '';
 
-  services.gvfs.enable = true; # Enable gvfs for gnome
+  # services.gvfs.enable = true; # Enable gvfs for gnome
 
 }
