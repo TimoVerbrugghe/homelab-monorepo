@@ -1,6 +1,11 @@
 { config, pkgs, lib, ... }:
 
 {
+
+  imports = [
+    ./gvfs.nix
+  ];
+  
   # Enable gnome desktop manager
   services.xserver = {
     displayManager.gdm.enable = true;
