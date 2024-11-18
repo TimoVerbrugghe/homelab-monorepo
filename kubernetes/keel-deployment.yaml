@@ -17,7 +17,7 @@ spec:
       user: "admin"
       password: "admin" 
 ---
-# Allowing traefik to route to portainer
+# Allowing traefik to route to keel
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
