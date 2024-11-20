@@ -23,7 +23,7 @@ in
 
   imports =[ 
     # Include k3s token key file, you need to put this manually in your nixos install
-    /etc/nixos/k3stoken.nix
+    /etc/nixos/k3s-token.nix
   ];
 
   # k3s configuration
@@ -50,8 +50,5 @@ in
         target = "kube-vip.yaml";
       }
     ];
-
-    }
   };
-
 }
