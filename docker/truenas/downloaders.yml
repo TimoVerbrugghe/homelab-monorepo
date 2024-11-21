@@ -68,9 +68,10 @@ services:
     container_name: jdownloader2
     restart: always
     network_mode: service:tailscale-jdownloader2
-    volumes:
+    environment:
       - PUID=${PUID}
       - PGID=${PGID}
+    volumes:
       - jdownloader2:/config
       - downloads:/output
     depends_on:
