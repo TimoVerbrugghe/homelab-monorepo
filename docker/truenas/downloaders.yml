@@ -69,6 +69,8 @@ services:
     restart: always
     network_mode: service:tailscale-jdownloader2
     volumes:
+      - PUID=${PUID}
+      - PGID=${PGID}
       - jdownloader2:/config
       - downloads:/output
     depends_on:
