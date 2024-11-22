@@ -177,6 +177,7 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/games/ROMs"
   ns-usbloader-config:
+  mealie:
 
 networks:
   dockerproxy:
