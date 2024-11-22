@@ -131,6 +131,8 @@ services:
     restart: always
     volumes:
       - mealie:/app/data/
+    ports:
+      - 9300:9000
     environment:
       ALLOW_SIGNUP: false
       PUID: ${PUID}
