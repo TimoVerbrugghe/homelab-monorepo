@@ -123,6 +123,27 @@ services:
     environment:
       - AUTO_START_PXE=true
 
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie
+    container_name: mealie
+    restart: always
+    volumes:
+      - mealie:/app/data/
+    environment:
+      ALLOW_SIGNUP: false
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: Europe/Brussels
+      OPENAI_API_KEY: ${MEALIE_OPENAI_API_KEY}
+      OPENAI_MODEL: gpt-4o
+      OPENAI_BASE_URL: https://${MEALIE_OPENAI_ENDPOINT}.openai.azure.com/openai/deployments/gpt-4o
+      OPENAI_CUSTOM_PARAMS: '{"api-version":"2024-08-01-preview"}'
+      OPENAI_CUSTOM_HEADERS: '{"api-key":"${MEALIE_OPENAI_API_KEY}"}'    
+    labels:
+      traefik.http.routers.mealie.entrypoints: https
+      traefik.http.services.mealie.loadbalancer.server.port: 9000
+    
+
 volumes:
   bitwarden:
   bitwarden-export:
