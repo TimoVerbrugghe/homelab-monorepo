@@ -122,6 +122,8 @@ services:
       - isos:/app/iso
     environment:
       - AUTO_START_PXE=true
+    labels:
+      traefik.enable: false
 
   mealie:
     image: ghcr.io/mealie-recipes/mealie

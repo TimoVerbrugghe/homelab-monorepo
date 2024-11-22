@@ -21,7 +21,11 @@ let
           - "8000:8000"
           - "9443:9443"
         labels:
-          traefik.enable: false
+          traefik.http.routers.portainer.entrypoints: https
+          traefik.http.services.portainer.loadbalancer.server.port: 9443
+          traefik.http.services.portainer.loadbalancer.server.scheme: https
+          traefik.http.routers.portainer.rule: Host(`portainer.home.timo.be`) || Host(`portainer.timo.be`)
+
     
     volumes:
       portainer:
