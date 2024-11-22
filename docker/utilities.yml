@@ -143,7 +143,7 @@ services:
     labels:
       traefik.http.routers.mealie.entrypoints: https2
       traefik.http.services.mealie.loadbalancer.server.port: 9000
-      traefik.http.services.mealie.loadbalancer.serversTransport.mytransport.disableHTTP2: true    
+      traefik.http.services.mealie.loadbalancer.serversTransport: http1transport
 
 volumes:
   bitwarden:
