@@ -68,6 +68,9 @@ services:
     container_name: jdownloader2
     restart: always
     network_mode: service:tailscale-jdownloader2
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
     volumes:
       - jdownloader2:/config
       - downloads:/output
@@ -106,6 +109,8 @@ services:
     restart: always
     network_mode: service:tailscale-metube
     environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TEMP_DIR=/tmp
       - DARK_MODE=true
       - DOWNLOAD_DIR=/downloads/metube
