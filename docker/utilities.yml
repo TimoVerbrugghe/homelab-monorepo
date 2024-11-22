@@ -90,24 +90,6 @@ services:
     labels:
       traefik.enable: false
 
-  ns-usbloader:
-    image: ghcr.io/timoverbrugghe/ns-usbloader
-    container_name: ns-usbloader
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    volumes:
-      - downloads:/downloads
-      - games:/nsp
-      - ns-usbloader-config:/root/.java/.userPrefs/NS-USBloader
-    ports:
-      - 8080:8080
-      - 6042:6042
-    labels:
-      traefik.http.routers.ns-usbloader.entrypoints: https
-      traefik.http.services.ns-usbloader.loadbalancer.server.port: 8080
-      traefik.http.routers.ns-usbloader.middlewares: keycloak-auth@file
-
   iventoy:
     image: thedrobe/iventoy-docker
     container_name: iventoy
@@ -182,7 +164,6 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/games/ROMs"
-  ns-usbloader-config:
   mealie:
 
 networks:
