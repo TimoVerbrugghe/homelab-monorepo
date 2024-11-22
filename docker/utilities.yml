@@ -129,6 +129,8 @@ services:
     image: ghcr.io/mealie-recipes/mealie
     container_name: mealie
     restart: always
+    networks:
+      - dockerproxy
     volumes:
       - mealie:/app/data/
     ports:
