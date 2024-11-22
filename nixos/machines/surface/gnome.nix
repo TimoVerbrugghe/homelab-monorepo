@@ -1,10 +1,6 @@
 { config, pkgs, lib, ... }:
 
 {
-
-  # imports = [
-  #   ./gvfs.nix
-  # ];
   
   # Enable gnome desktop manager
   services.xserver = {

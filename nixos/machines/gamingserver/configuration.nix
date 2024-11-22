@@ -47,7 +47,7 @@ in
       ./gamelaunchers.nix
       ./emulators.nix
       ./gaming-optimizations.nix
-      ./backup-config.nix
+      ./rom-sync.nix
       ./zfs.nix
       ./controllers.nix
     ];

@@ -23,27 +23,30 @@
     # Gnome settings
     "org/gnome/shell" = {
       disable-user-extensions = false;
-      disabled-extensions = [
-      ];
-      enabled-extensions = [
-        "dash-to-dock@micxgx.gmail.com"
-        "windowgestures@extension.amarullz.com" 
-        "custom-window-controls@icedman.github.com"
-        "blur-my-shell@aunetx" 
-        "just-perfection-desktop@just-perfection"
-        "caffeine@patapon.info"
-      ];
+      
+      # Will not statically decide which extensions to enable
+      # disabled-extensions = [
+      # ];
+      # enabled-extensions = [
+      #   "dash-to-dock@micxgx.gmail.com"
+      #   "windowgestures@extension.amarullz.com" 
+      #   "custom-window-controls@icedman.github.com"
+      #   "blur-my-shell@aunetx" 
+      #   "just-perfection-desktop@just-perfection"
+      #   "caffeine@patapon.info"
+      # ];
 
+      # Will not statically decide which apps to have in the dock
       # Apps to show in the dock
-      favorite-apps = [
-        "org.gnome.Nautilus.desktop"
-        "google-chrome.desktop"
-        "code.desktop"
-        "spotify.desktop"
-        "bitwarden.desktop"
-        "org.gnome.Console.desktop"
-        "org.gnome.Settings.desktop"
-      ];
+      # favorite-apps = [
+      #   "org.gnome.Nautilus.desktop"
+      #   "google-chrome.desktop"
+      #   "code.desktop"
+      #   "spotify.desktop"
+      #   "bitwarden.desktop"
+      #   "org.gnome.Console.desktop"
+      #   "org.gnome.Settings.desktop"
+      # ];
     };
 
     "org/gnome/desktop/background" = {

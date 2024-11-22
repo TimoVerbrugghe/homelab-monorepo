@@ -28,22 +28,44 @@
       fsType = "zfs";
     };
 
-  services.sanoid = {
-    enable = true;
-    templates.backup = {
-      hourly = 24;
-      daily = 14;
-      monthly = 3;
-      autoprune = true;
-      autosnap = true;
+  services = {
+    # Enable ZFS auto snapshotting locally
+    sanoid = {
+      enable = true;
+      templates.backup = {
+        hourly = 24;
+        daily = 14;
+        monthly = 3;
+        autoprune = true;
+        autosnap = true;
+      };
+
+      datasets."gamingpool/home" = {
+        useTemplate = [ "backup" ];
+      };
+
+      datasets."gamingpool/root" = {
+        useTemplate = [ "backup" ];
+      };
     };
 
-    datasets."gamingpool/home" = {
-      useTemplate = [ "backup" ];
-    };
-
-    datasets."gamingpool/root" = {
-      useTemplate = [ "backup" ];
+    # Send ZFS snapshots automatically to TrueNAS
+    syncoid = {
+      enable = true;
+      commonArgs = [
+        "--no-sync-snap"
+      ];
+      sshKey = "/home/gamer/truenas-ssh-key";
+      commands = {
+        "gamingpool/home" = {
+          source = "gamingpool/home";
+          target = "root@truenas.local.timo.be:X.A.N.A./gamingserver-backup/home";
+        };
+        "gamingpool/root" = {
+          source = "gamingpool/home";
+          target = "root@truenas.local.timo.be:X.A.N.A./gamingserver-backup/root";
+        };
+      };
     };
   };
 }
