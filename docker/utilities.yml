@@ -141,7 +141,7 @@ services:
       OPENAI_CUSTOM_HEADERS: '{"api-key":"${MEALIE_OPENAI_API_KEY}"}'   
       BASE_URL : https://mealie.home.timo.be 
     labels:
-      traefik.http.routers.mealie.entrypoints: https2
+      traefik.http.routers.mealie.entrypoints: https
       traefik.http.services.mealie.loadbalancer.server.port: 9000
       traefik.http.services.mealie.loadbalancer.serversTransport: http1transport
 
