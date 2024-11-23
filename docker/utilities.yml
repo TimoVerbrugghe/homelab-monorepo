@@ -129,7 +129,7 @@ services:
       OPENAI_CUSTOM_HEADERS: '{"api-key":"${MEALIE_OPENAI_API_KEY}"}'   
       BASE_URL : https://mealie.home.timo.be 
       THEME_DARK_PRIMARY: "#0A2472"
-      THEME_LIGHT_PRIMARY: "#OA2472"
+      THEME_LIGHT_PRIMARY: "#0A2472"
     labels:
       traefik.http.routers.mealie.entrypoints: https
       traefik.http.services.mealie.loadbalancer.server.port: 9000
