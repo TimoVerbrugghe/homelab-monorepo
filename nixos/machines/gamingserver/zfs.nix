@@ -55,7 +55,7 @@
       commonArgs = [
         "--no-sync-snap"
       ];
-      sshKey = "/var/lib/syncoid/truenas-ssh-key";
+      sshKey = "/home/gamer/truenas-ssh-key";
       commands = {
         "gamingpool/home" = {
           source = "gamingpool/home";
