@@ -55,6 +55,8 @@
       commonArgs = [
         "--no-sync-snap"
       ];
+
+      # Need to make sure that you run a manual syncoid command first AS USER SYNCOID because then it will place a .ssh folder in /var/lib/syncoid with known hosts, otherwise the systemd service will always fail
       sshKey = "/var/lib/syncoid/truenas-ssh-key";
       commands = {
         "gamingpool/home" = {
