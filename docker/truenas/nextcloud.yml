@@ -38,6 +38,7 @@ services:
     image: nextcloud
     network_mode: service:tailscale-nextcloud
     restart: always
+    user: ${PUID}:${PGID}
     depends_on:
       nextcloud-redis:
         condition: service_started
