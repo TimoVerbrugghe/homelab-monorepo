@@ -119,21 +119,20 @@ volumes:
   media:
     driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media"
   isos:
     driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/isos"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/isos"
   downloads:
-    driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/downloads"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/downloads"
 
 networks:
   dockerproxy:
