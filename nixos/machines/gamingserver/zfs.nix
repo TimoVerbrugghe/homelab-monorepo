@@ -55,14 +55,14 @@
       commonArgs = [
         "--no-sync-snap"
       ];
-      sshKey = "/home/gamer/truenas-ssh-key";
+      sshKey = "/var/lib/syncoid/truenas-ssh-key";
       commands = {
         "gamingpool/home" = {
           source = "gamingpool/home";
           target = "root@truenas.local.timo.be:X.A.N.A./gamingserver-backup/home";
         };
         "gamingpool/root" = {
-          source = "gamingpool/home";
+          source = "gamingpool/root";
           target = "root@truenas.local.timo.be:X.A.N.A./gamingserver-backup/root";
         };
       };
