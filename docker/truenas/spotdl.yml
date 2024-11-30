@@ -1,0 +1,33 @@
+## Also running the following cronjobs on my Truenas system based on this docker to sync liked songs & saved albums
+# docker run --rm -v /mnt/FranzHopper/appdata/spotdl:/root/.spotdl -v /mnt/X.A.N.A/media/spotdl:/music spotdl/spotify-downloader download saved --config --user-auth --output "{list-name}/{artists} - {title}.{output-ext}"
+# docker run --rm -v /mnt/FranzHopper/appdata/spotdl:/root/.spotdl -v /mnt/X.A.N.A/media/spotdl:/music spotdl/spotify-downloader download all-user-saved-albums --config --user-auth --output "{album}/{artists} - {title}.{output-ext}"
+
+services:
+  spotdl:
+    container_name: spotdl
+    image: spotdl/spotify-downloader
+    command: web --host 0.0.0.0 --web-use-output-dir --keep-alive
+    environment:
+      - PUID=3000 #CHANGE_TO_YOUR_UID
+      - PGID=3000 #CHANGE_TO_YOUR_GID
+      - TZ=Europe/Brussels #CHANGE_TO_YOUR_TZ
+    ports:
+      - 8800:8800
+    volumes:
+      - music:/music #must use the :/music for config to work.
+      - spotdl:/root/.spotdl #needed to store spotify access & refresh tokens
+    restart: unless-stopped
+
+volumes:
+  music:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/spotdl"
+  spotdl:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/spotdl"
