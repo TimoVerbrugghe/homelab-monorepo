@@ -7,11 +7,10 @@
   ];
 
   # Enable opengl support
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      onevpl-intel-gpu
-      # vpl-gpu-rt after 24.11
+      vpl-gpu-rt
     ];
   };
 
