@@ -74,29 +74,29 @@
     };
   };
   
-  nixpkgs = {
-    overlays = [
-      (self: super: {
-        gnome-shell = super.gnome-shell.overrideAttrs (old: {
-          patches = (old.patches or []) ++ [
-            (pkgs.writeText "bg.patch" ''
-              --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
-              +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
-              @@ -15,4 +15,8 @@ $_gdm_dialog_width: 23em;
-              /* Login Dialog */
-              .login-dialog {
-                background-color: $_gdm_bg;
-              +  background-image: url('file:///etc/.lockscreen.png');
-              +  background-size: cover;
-              +  background-position: center;
-              +  background-repeat: no-repeat;
-              }
-            '')
-          ];
-        });
-      })
-    ];
-  };
+  # nixpkgs = {
+  #   overlays = [
+  #     (self: super: {
+  #       gnome-shell = super.gnome-shell.overrideAttrs (old: {
+  #         patches = (old.patches or []) ++ [
+  #           (pkgs.writeText "bg.patch" ''
+  #             --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+  #             +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+  #             @@ -15,4 +15,8 @@ $_gdm_dialog_width: 23em;
+  #             /* Login Dialog */
+  #             .login-dialog {
+  #               background-color: $_gdm_bg;
+  #             +  background-image: url('file:///etc/.lockscreen.png');
+  #             +  background-size: cover;
+  #             +  background-position: center;
+  #             +  background-repeat: no-repeat;
+  #             }
+  #           '')
+  #         ];
+  #       });
+  #     })
+  #   ];
+  # };
 
 
   # Set an user avatar for the login screen by copying avatar image & user file to the right location
