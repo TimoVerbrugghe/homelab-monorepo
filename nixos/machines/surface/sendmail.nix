@@ -1,3 +1,5 @@
+{ config, pkgs, ... }:
+
 {
   services.postfix = {
     enable = true;
