@@ -1,26 +1,4 @@
 services:
-  tailscale-nextcloud:
-    image: tailscale/tailscale
-    container_name: tailscale-nextcloud
-    hostname: nextcloud
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-nextcloud:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_NEXTCLOUD}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
-
   nextcloud-postgres:
     container_name: nextcloud-postgres
     image: postgres:16
@@ -36,15 +14,14 @@ services:
   nextcloud:
     container_name: nextcloud
     image: nextcloud
-    network_mode: service:tailscale-nextcloud
+    networks:
+      - dockerproxy
     restart: always
     depends_on:
       nextcloud-redis:
         condition: service_started
       nextcloud-postgres:
         condition: service_started
-      tailscale-nextcloud:
-        condition: service_healthy
     volumes:
       - nextcloud:/var/www/html
       - nextcloud-data:/data
@@ -64,6 +41,9 @@ services:
       traefik.http.middlewares.nextcloud_redirectregex.redirectregex.permanent: true
       traefik.http.middlewares.nextcloud_redirectregex.redirectregex.regex: 'https://(.*)/.well-known/(?:card|cal)dav'
       traefik.http.middlewares.nextcloud_redirectregex.redirectregex.replacement: 'https://$${1}/remote.php/dav'
+      tsdproxy.enable: true
+      tsdproxy.name: "nextcloud"
+      tsdproxy.container_port: 80
     
   nextcloud-cron:
     container_name: nextcloud-cron
@@ -92,12 +72,6 @@ services:
       retries: 5
 
 volumes:
-  tailscale-nextcloud:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tailscale-nextcloud"
   nextcloud:
     driver: local
     driver_opts:

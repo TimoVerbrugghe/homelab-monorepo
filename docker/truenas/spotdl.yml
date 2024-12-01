@@ -15,8 +15,17 @@ services:
       - 8800:8800
     volumes:
       - music:/music #must use the :/music for config to work.
-      - spotdl:/root/.spotdl #needed to store spotify access & refresh tokens
+      - spotdl:/root/.spotdl
     restart: unless-stopped
+    networks:
+      - dockerproxy
+    labels:
+      traefik.enable: true
+      traefik.http.routers.spotdl.entrypoints: https
+      traefik.http.services.spotdl.loadbalancer.server.port: 8800
+      tsdproxy.enable: true
+      tsdproxy.name: "spotdl"
+      tsdproxy.container_port: 8800
 
 volumes:
   music:
@@ -31,3 +40,7 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/spotdl"
+
+networks:
+  dockerproxy:
+    external: true

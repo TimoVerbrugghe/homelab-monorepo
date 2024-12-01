@@ -1,36 +1,13 @@
 services:
-  tailscale-paperless:
-    image: tailscale/tailscale
-    container_name: tailscale-paperless
-    hostname: paperless
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-paperless:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_PAPERLESS}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
-
   paperless-ngx:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless-ngx
     restart: unless-stopped
-    network_mode: service:tailscale-paperless
+    networks:
+      - dockerproxy
     depends_on:
       paperless-broker:
         condition: service_started
-      tailscale-paperless:
-        condition: service_healthy
     volumes:
       - paperless-data:/usr/src/paperless/data
       - paperless-media:/usr/src/paperless/media
@@ -54,6 +31,10 @@ services:
       PAPERLESS_URL: https://paperless.pony-godzilla.ts.net
       PAPERLESS_OUTLOOK_OAUTH_CLIENT_ID: ${PAPERLESS_OUTLOOK_OAUTH_CLIENT_ID}
       PAPERLESS_OUTLOOK_OAUTH_CLIENT_SECRET: ${PAPERLESS_OUTLOOK_OAUTH_CLIENT_SECRET}
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.name: "paperless"
+      tsdproxy.container_port: 8000
 
   paperless-broker:
     image: docker.io/library/redis:7
@@ -83,12 +64,6 @@ services:
       - dockerproxy
 
 volumes:
-  tailscale-paperless:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tailscale-paperless"
   paperless-data:
     driver: local
     driver_opts:
