@@ -4,7 +4,7 @@
   services.postfix = {
     enable = true;
     rootAlias = "root";
-    mapFiles."sasl_passwd" = builtins.readFile /etc/nixos/gmailpassword;
+    mapFiles."sasl_passwd" = "/etc/nixos/gmailpassword";
     config = {
       relayhost = "[smtp.gmail.com]:587";
       smtp_use_tls = "yes";
