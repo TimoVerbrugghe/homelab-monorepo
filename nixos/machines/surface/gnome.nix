@@ -98,7 +98,6 @@
   #   ];
   # };
 
-
   # Set an user avatar for the login screen by copying avatar image & user file to the right location
   system.activationScripts.gnomeAvater = lib.stringAfter [ "var" ] ''
     cp /etc/.avatar.png /var/lib/AccountsService/icons/Timo

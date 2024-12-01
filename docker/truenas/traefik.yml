@@ -40,6 +40,18 @@ services:
     labels:
       traefik.enable: false
 
+  tsdproxy:
+    container_name: tsdproxy
+    hostname: tsdproxy
+    restart: always
+    networks:
+      - dockerproxy
+    image: almeidapaulopt/tsdproxy:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - tsdproxy-data:/data
+      - tsdproxy-config:/config
+
 volumes:
   tailscale-traefik:
     driver: local
@@ -53,6 +65,18 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/traefik"
+  tsdproxy-data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tsdproxy/data"
+  tsdproxy-config:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tsdproxy/config"
 
 networks:    
   dockerproxy:
