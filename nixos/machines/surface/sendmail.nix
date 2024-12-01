@@ -43,6 +43,10 @@ in
   # Create the check_disk_usage.sh script
   systemd.services.check_disk_usage = {
     description = "Check Disk Usage and Send Alert Email";
+    path = [
+      pkgs.busybox
+      pkgs.mailutils
+    ];
     script = ''
       DISK_USAGE=$(df /boot | tail -1 | awk '{print $5}' | sed 's/%//')
       if [ "$DISK_USAGE" -gt 10 ]; then
