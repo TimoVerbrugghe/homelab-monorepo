@@ -10,7 +10,12 @@ let
     Hi David,
 
     The disk of your Plex server is almost full (over 95%!). You'll need to start deleting some older TV shows & movies if you want to download new ones. 
-    You can do that through Sonarr (https://sonarr.mermaid-alpha.ts.net) for TV shows or Radarr (https://radarr.mermaid-alpha.ts.net).
+    
+    You can do that through:
+    
+    - Sonarr (https://sonarr.mermaid-alpha.ts.net) for TV shows
+    
+    - Radarr (https://radarr.mermaid-alpha.ts.net) for Movies.
 
     Best,
     Your Plex Server
@@ -50,8 +55,9 @@ in
     script = ''
       DISK_USAGE=$(df /boot | tail -1 | awk '{print $5}' | sed 's/%//')
       if [ "$DISK_USAGE" -gt 10 ]; then
+        echo "Disk Usage too high, sending email"
         SUBJECT="Your Plex Server disk is almost full"
-        EMAIL=$(cat /etc/nixos/email)
+        EMAIL=$(cat /etc/nixos/mail)
         MESSAGE=$(cat ${emailMessage})
         echo "$MESSAGE" | mail -s "$SUBJECT" "$EMAIL"
       fi
