@@ -15,4 +15,8 @@
       smtp_tls_note_starttls_offer = "yes";
     };
   };
+
+  environment.systempackages = with pkgs [
+    mailutils
+  ];
 }
