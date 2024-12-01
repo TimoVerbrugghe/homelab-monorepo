@@ -39,6 +39,12 @@ let
         ports:
           - "8000:8000"
           - "9443:9443"
+        networks:
+          - dockerproxy
+        labels:
+          tsdproxy.enable: true
+          tsdproxy.container_port: "9443"
+          tsdproxy.name: "portainer"
     
     volumes:
       portainer:

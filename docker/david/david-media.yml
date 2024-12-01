@@ -1,49 +1,19 @@
 ### ADD FOLLOWING FILE TO PORTAINER WITH THESE ENVIRONMENT VARIABLES
 # PUID=1000
 # PGID=1000
-# TS_AUTH_KEY_QBITTORRENT=
-# TS_AUTH_KEY_PROWLARR=
-# TS_AUTH_KEY_OVERSEERR=
-# TS_AUTH_KEY_BAZARR=
-# TS_AUTH_KEY_RADARR=
-# TS_AUTH_KEY_SONARR=
 # PLEX_TOKEN=
 # PLEX_CLAIM_TOKEN=
-# TS_AUTH_KEY_PLEX=
-# TS_AUTH_KEY_READARR=
-# TS_AUTH_KEY_JELLYFIN=
 
 services:
 
   ### MEDIA PLAYBACK ###
   ### PLEX - PLAYING MEDIA
-  tailscale-plex:
-    image: tailscale/tailscale
-    container_name: tailscale-plex
-    hostname: plex
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-plex:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_PLEX}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 32400:32400/tcp
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   plex:
     container_name: plex
     image: plexinc/pms-docker
     restart: always
-    network_mode: service:tailscale-plex
+    networks:
+      - dockerproxy
     environment:
       PLEX_UID: ${PUID}
       PLEX_GID: ${PGID}
@@ -56,9 +26,6 @@ services:
       - /dev/shm:/dev/shm
     devices:
       - /dev/dri:/dev/dri
-    depends_on:
-      tailscale-plex:
-        condition: service_healthy
 
   plex-autolanguages:
     container_name: plex-autolanguagues
@@ -70,37 +37,16 @@ services:
       - TZ=Europe/Brussels
     depends_on:
       - plex
+    networks:
+      - dockerproxy
 
   ### Jellyfin - Other way of playing media
-  tailscale-jellyfin:
-    image: tailscale/tailscale
-    container_name: tailscale-jellyfin
-    hostname: jelly
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-jellyfin:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_JELLYFIN}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 8096:8096/tcp # local access
-      - 1901:1900/udp # autodiscovery
-      - 7359:7359/udp # autodiscovery
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-      
   jellyfin:
     container_name: jellyfin
     image: jellyfin/jellyfin
     restart: always
-    network_mode: service:tailscale-jellyfin
+    networks:
+      - dockerproxy
     environment:
       - TZ=Europe/Brussels
     volumes:
@@ -111,39 +57,15 @@ services:
       - /dev/shm:/dev/shm
     devices:
       - /dev/dri:/dev/dri
-    depends_on:
-      tailscale-jellyfin:
-        condition: service_healthy
 
   ### MEDIA MANAGEMENT ###
   ### SONARR - MANAGING TVSHOWS
-  tailscale-sonarr:
-    image: tailscale/tailscale
-    container_name: tailscale-sonarr
-    hostname: sonarr
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-sonarr:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_SONARR}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 8989:8989/tcp # web ui
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   sonarr:
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
     restart: always
-    network_mode: service:tailscale-sonarr
+    networks:
+      - dockerproxy
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -152,9 +74,6 @@ services:
       - sonarr:/config
       - tvshows:/tv
       - downloads:/downloads
-    depends_on:
-      tailscale-sonarr:
-        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8989/ping || exit 1"]
       interval: 5s
@@ -162,33 +81,12 @@ services:
       retries: 60
 
   ### RADARR - MANAGING MOVIES
-  tailscale-radarr:
-    image: tailscale/tailscale
-    container_name: tailscale-radarr
-    hostname: radarr
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-radarr:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_RADARR}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 7878:7878/tcp # web ui
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   radarr:
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
     restart: always
-    network_mode: service:tailscale-radarr
+    networks:
+      - dockerproxy
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -197,38 +95,14 @@ services:
       - radarr:/config
       - movies:/movies
       - downloads:/downloads
-    depends_on:
-      tailscale-radarr:
-        condition: service_healthy
 
   ### BAZARR - MANAGING SUBTITLES
-  tailscale-bazarr:
-    image: tailscale/tailscale
-    container_name: tailscale-bazarr
-    hostname: bazarr
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-bazarr:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_BAZARR}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 6767:6767/tcp # web ui
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   bazarr:
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
     restart: always
-    network_mode: service:tailscale-bazarr
+    networks:
+      - dockerproxy
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -238,8 +112,6 @@ services:
       - movies:/movies
       - tvshows:/tv
     depends_on:
-      tailscale-bazarr:
-        condition: service_healthy
       sonarr:
         condition: service_started
       radarr:
@@ -247,109 +119,40 @@ services:
 
   ### MEDIA REQUEST MANAGEMENT ###
   ### OVERSEERR - MANAGING REQUESTS
-  tailscale-overseerr:
-    image: tailscale/tailscale
-    container_name: tailscale-overseerr
-    hostname: request
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-overseerr:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_OVERSEERR}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 5055:5055/tcp
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   overseerr:
     container_name: overseerr
     image: sctx/overseerr:latest
     restart: always
-    network_mode: service:tailscale-overseerr
+    networks:
+      - dockerproxy
     environment:
       - LOG_LEVEL=debug
       - TZ=Europe/Brussels
     volumes:
       - overseerr:/app/config
-    depends_on:
-      tailscale-overseerr:
-        condition: service_healthy
-      
+
   ### DOWNLOAD MANAGEMENT ###
   ### PROWLARR - MANAGING TORRENT SITES
-  tailscale-prowlarr:
-    image: tailscale/tailscale
-    container_name: tailscale-prowlarr
-    hostname: prowlarr
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-prowlarr:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_PROWLARR}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 9696:9696/tcp
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   prowlarr:
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
     restart: always
-    network_mode: service:tailscale-prowlarr
+    networks:
+      - dockerproxy
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=Europe/Brussels
     volumes:
       - prowlarr:/config
-    depends_on:
-      tailscale-prowlarr:
-        condition: service_healthy
-  
+    
   ### QBITTORRENT - MANAGING DOWNLOADS
-  tailscale-qbittorrent:
-    image: tailscale/tailscale
-    container_name: tailscale-qbittorrent
-    hostname: qbittorrent
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-qbittorrent:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_QBITTORRENT}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports: 
-      - 8080:8080/tcp
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   qbittorrent: 
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     restart: always
-    network_mode: service:tailscale-qbittorrent
+    networks:
+      - dockerproxy
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -357,46 +160,24 @@ services:
     volumes:
       - qbittorrent:/config
       - downloads:/downloads
-    depends_on:
-      tailscale-qbittorrent:
-        condition: service_healthy
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     restart: always
+    networks:
+      - dockerproxy
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOG_HTML=${LOG_HTML:-false}
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
       - TZ=Europe/Brussels
       
-  tailscale-readarr:
-    image: tailscale/tailscale
-    container_name: tailscale-readarr
-    hostname: readarr
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-readarr:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_READARR}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 8787:8787
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   readarr:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr
-    network_mode: service:tailscale-readarr
+    networks:
+      - dockerproxy
     environment:
       - PUID=1000
       - PGID=1000
@@ -406,29 +187,17 @@ services:
       - books:/books #optional
       - downloads:/downloads #optional
     restart: always
-    depends_on:
-      tailscale-readarr:
-        condition: service_healthy
 
 volumes:
-  tailscale-sonarr:
   sonarr:
-  tailscale-plex:
   plex:
-  tailscale-bazarr:
   bazarr:
-  tailscale-radarr:
   radarr:
-  tailscale-overseerr:
   overseerr:
-  tailscale-prowlarr:
   prowlarr:
-  tailscale-qbittorrent:
   qbittorrent:
   readarr:
-  tailscale-readarr:
   jellyfin:
-  tailscale-jellyfin:
 
   movies:
     driver: local
@@ -454,3 +223,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: '/media/books'
+
+networks:
+  dockerproxy:
+    external: true
