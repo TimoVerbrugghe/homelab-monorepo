@@ -113,3 +113,7 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/reactive-resume/postgres"
+
+networks:
+  dockerproxy:
+    external: true
