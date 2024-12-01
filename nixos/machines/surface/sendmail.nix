@@ -44,7 +44,6 @@ in
   systemd.services.check_disk_usage = {
     description = "Check Disk Usage and Send Alert Email";
     script = ''
-      #!/bin/bash
       DISK_USAGE=$(df /boot | tail -1 | awk '{print $5}' | sed 's/%//')
       if [ "$DISK_USAGE" -gt 10 ]; then
         SUBJECT="Your Plex Server disk is almost full"
