@@ -4,6 +4,20 @@
 
 { config, pkgs, ... }:
 
+let
+
+  emailMessage = pkgs.writeText "emailMessage" ''
+    Hi David,
+
+    The disk of your Plex server is almost full (over 95%!). You'll need to start deleting some older TV shows & movies if you want to download new ones. 
+    You can do that through Sonarr (https://sonarr.mermaid-alpha.ts.net) for TV shows or Radarr (https://radarr.mermaid-alpha.ts.net).
+
+    Best,
+    Your Plex Server
+  '';
+
+in 
+
 {
   # Setting up postfix for sending mails
   services.postfix = {
@@ -35,16 +49,7 @@
       if [ "$DISK_USAGE" -gt 10 ]; then
         SUBJECT="Your Plex Server disk is almost full"
         EMAIL=$(cat /etc/nixos/email)
-        MESSAGE=$(cat <<EOF
-        Hi David,
-
-        The disk of your Plex server is almost full (over 95%!). You'll need to start deleting some older TV shows & movies if you want to download new ones. 
-        You can do that through Sonarr (https://sonarr.mermaid-alpha.ts.net) for TV shows or Radarr (https://radarr.mermaid-alpha.ts.net).
-
-        Best,
-        Your Server Monitor
-        EOF
-        )
+        MESSAGE=${emailMessage}
         echo "$MESSAGE" | mail -s "$SUBJECT" "$EMAIL"
       fi
     '';
