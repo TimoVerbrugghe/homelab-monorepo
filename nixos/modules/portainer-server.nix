@@ -25,8 +25,10 @@ let
           traefik.http.services.portainer.loadbalancer.server.port: 9443
           traefik.http.services.portainer.loadbalancer.server.scheme: https
           traefik.http.routers.portainer.rule: Host(`portainer.home.timo.be`) || Host(`portainer.timo.be`)
+          tsdproxy.enable: true
+          tsdproxy.container_port: 9443
+          tsdproxy.name: "portainer"
 
-    
     volumes:
       portainer:
 
