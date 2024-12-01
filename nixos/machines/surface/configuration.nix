@@ -45,6 +45,8 @@ in
       # Custom surface_gpe kernel module for Lid switch
       ./surface-gpe/surface_gpe.nix
 
+      ./sendmail.nix
+
     ];
 
   ############################
