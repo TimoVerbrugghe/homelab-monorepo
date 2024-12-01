@@ -134,7 +134,8 @@ services:
     image: lscr.io/linuxserver/emulatorjs:latest
     container_name: emulatorjs
     restart: always
-    network_mode: service:tailscale-emulatorjs
+    networks:
+      - dockerproxy
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -147,9 +148,6 @@ services:
       - gbcgames:/data/gbc/roms:rw
       - ps1games:/data/psx/roms:rw
       - snesgames:/data/snes/roms:rw
-    depends_on:
-      tailscale-emulatorjs:
-        condition: service_healthy
     labels:
       traefik.http.routers.emulatorjs.rule: Host(`games.thefactory.timo.be`) || Host(`games.timo.be`)
       traefik.http.routers.emulatorjs.entrypoints: https
