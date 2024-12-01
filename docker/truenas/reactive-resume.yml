@@ -101,13 +101,13 @@ services:
       traefik.http.services.resume.loadbalancer.server.port: 3000
 
 volumes:
-  minio_data:
+  resume-minio:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/reactive-resume/minio"
-  postgres_data:
+  resume-postgres:
     driver: local
     driver_opts:
       type: "none"
