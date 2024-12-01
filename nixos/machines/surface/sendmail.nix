@@ -19,10 +19,4 @@
     text = "[smtp.gmail.com]:587 your_email@gmail.com:$(cat /etc/nixos/gmailpassword)";
     mode = "0600";
   };
-
-  # Add the necessary packages
-  environment.systemPackages = with pkgs; [
-    postfix
-    bsd-mailx  # For sending emails
-  ];
 }
