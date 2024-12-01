@@ -3,6 +3,7 @@ services:
   resume-postgres:
     image: postgres:16-alpine
     restart: unless-stopped
+    container_name: resume-postgres
     networks:
       - dockerproxy
     volumes:
@@ -21,6 +22,7 @@ services:
   resume-minio:
     image: minio/minio
     restart: unless-stopped
+    container_name: resume-minio
     networks:
       - dockerproxy
     command: server /data
@@ -34,6 +36,7 @@ services:
   resume-chrome:
     image: ghcr.io/browserless/chromium:latest
     restart: unless-stopped
+    container_name: resume-chrome
     networks:
       - dockerproxy
     environment:
@@ -46,6 +49,7 @@ services:
   reactive-resume:
     image: amruthpillai/reactive-resume:latest
     restart: unless-stopped
+    container_name: reactive-resume
     networks:
       - dockerproxy
     depends_on:
