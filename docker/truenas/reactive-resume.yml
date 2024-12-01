@@ -75,11 +75,11 @@ services:
       MAIL_FROM: noreply@localhost
       # SMTP_URL: smtp://user:pass@smtp:587 # Optional
       # -- Storage (Minio) --
-      STORAGE_ENDPOINT: minio
+      STORAGE_ENDPOINT: resume-minio
       STORAGE_PORT: 9000
       STORAGE_BUCKET: default
-      STORAGE_ACCESS_KEY: minioadmin
-      STORAGE_SECRET_KEY: minioadmin
+      STORAGE_ACCESS_KEY: ${RESUME_MINIO_ROOT_USER}
+      STORAGE_SECRET_KEY: ${RESUME_MINIO_ROOT_PASSWORD}
       STORAGE_USE_SSL: false
       STORAGE_SKIP_BUCKET_CHECK: false
       # -- Crowdin (Optional) --
