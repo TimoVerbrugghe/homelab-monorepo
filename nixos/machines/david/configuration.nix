@@ -119,15 +119,20 @@ in
   ## Install Intel GPU drivers
   nixpkgs.config.allowUnfree = true;
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
+      # Quick Sync Video
+      vpl-gpu-rt
+
+      # General Intel GPU iHD driver
       intel-media-driver
+
+      # OpenCL runtime
       intel-compute-runtime
-      vaapiVdpau
+
+      # Use VDPAU (normally only supported on NVIDIA/AMD gpus on intel gpus)
       libvdpau-va-gl
-      vaapiIntel
-      intel-ocl
     ];
   };
 
