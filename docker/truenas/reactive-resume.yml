@@ -39,7 +39,7 @@ services:
     environment:
       TIMEOUT: 10000
       CONCURRENT: 10
-      TOKEN: chrome_token
+      TOKEN: ${CHROME_TOKEN}
       EXIT_ON_HEALTH_FAILURE: true
       PRE_REQUEST_HEALTH_CHECK: true
 
@@ -56,26 +56,20 @@ services:
       # -- Environment Variables --
       PORT: 3000
       NODE_ENV: production
-
       # -- URLs --
       PUBLIC_URL: https://resume.pony-godzilla.ts.net
       STORAGE_URL: resume-minio:9000/default
-
       # -- Printer (Chrome) --
       CHROME_TOKEN: chrome_token
-      CHROME_URL: ws://chrome:3000
-
+      CHROME_URL: ws://resume-chrome:3000
       # -- Database (Postgres) --
       DATABASE_URL: postgresql://${RESUME_POSTGRES_USER}:${RESUME_POSTGRES_PASSWORD}@resume-postgres:5432/${RESUME_POSTGRES_DB}
-
       # -- Auth --
       ACCESS_TOKEN_SECRET: access_token_secret
       REFRESH_TOKEN_SECRET: refresh_token_secret
-
       # -- Emails --
       MAIL_FROM: noreply@localhost
       # SMTP_URL: smtp://user:pass@smtp:587 # Optional
-
       # -- Storage (Minio) --
       STORAGE_ENDPOINT: minio
       STORAGE_PORT: 9000
@@ -84,25 +78,38 @@ services:
       STORAGE_SECRET_KEY: minioadmin
       STORAGE_USE_SSL: false
       STORAGE_SKIP_BUCKET_CHECK: false
-
       # -- Crowdin (Optional) --
       # CROWDIN_PROJECT_ID:
       # CROWDIN_PERSONAL_TOKEN:
-
       # -- Email (Optional) --
       # DISABLE_SIGNUPS: false
       # DISABLE_EMAIL_AUTH: false
-
       # -- GitHub (Optional) --
       # GITHUB_CLIENT_ID: github_client_id
       # GITHUB_CLIENT_SECRET: github_client_secret
       # GITHUB_CALLBACK_URL: http://localhost:3000/api/auth/github/callback
-
       # -- Google (Optional) --
       # GOOGLE_CLIENT_ID: google_client_id
       # GOOGLE_CLIENT_SECRET: google_client_secret
       # GOOGLE_CALLBACK_URL: http://localhost:3000/api/auth/google/callback
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.name: "resume"
+      tsdproxy.container_port: 3000
+      traefik.enable: true
+      traefik.http.routers.resume.entrypoints: https
+      traefik.http.services.resume.loadbalancer.server.port: 3000
 
 volumes:
   minio_data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/reactive-resume/minio"
   postgres_data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/reactive-resume/postgres"
