@@ -63,6 +63,9 @@ in
       
       # Include tailscale authkey file, you need to put this manually in your nixos install
       /etc/nixos/tailscale-authkey.nix
+
+      # Add mail disk usage notification
+      ./maildiskusage.nix
     ];
 
   system.stateVersion = "23.11";
