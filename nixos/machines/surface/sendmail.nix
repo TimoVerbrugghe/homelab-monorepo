@@ -52,7 +52,7 @@ in
       if [ "$DISK_USAGE" -gt 10 ]; then
         SUBJECT="Your Plex Server disk is almost full"
         EMAIL=$(cat /etc/nixos/email)
-        MESSAGE=${emailMessage}
+        MESSAGE=$(cat ${emailMessage})
         echo "$MESSAGE" | mail -s "$SUBJECT" "$EMAIL"
       fi
     '';
