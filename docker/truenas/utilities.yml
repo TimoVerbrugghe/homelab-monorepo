@@ -1,29 +1,29 @@
 services:
-  tailscale-webtop:
-    image: tailscale/tailscale
-    container_name: tailscale-webtop
-    hostname: webtop
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-webtop:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_WEBTOP}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    dns:
-      - "8.8.8.8"
-      - "8.8.4.4"
-      - "1.1.1.1"
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
+  # tailscale-webtop:
+  #   image: tailscale/tailscale
+  #   container_name: tailscale-webtop
+  #   hostname: webtop
+  #   restart: always
+  #   networks:
+  #     - dockerproxy
+  #   volumes:
+  #     - /dev/net/tun:/dev/net/tun
+  #     - tailscale-webtop:/var/lib/tailscale
+  #   cap_add:
+  #     - net_admin
+  #     - sys_module
+  #   environment:
+  #     - TS_AUTH_KEY=${TS_AUTH_KEY_WEBTOP}
+  #     - TS_STATE_DIR=/var/lib/tailscale/state
+  #   dns:
+  #     - "8.8.8.8"
+  #     - "8.8.4.4"
+  #     - "1.1.1.1"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "tailscale status"]
+  #     interval: 1s
+  #     timeout: 5s
+  #     retries: 60
 
   webtop:
     image: lscr.io/linuxserver/webtop:ubuntu-xfce
@@ -31,7 +31,8 @@ services:
     restart: unless-stopped
     security_opt:
       - seccomp=unconfined
-    network_mode: service:tailscale-webtop
+    networks:
+      - dockerproxy
     environment:
       - PUID=1000
       - PGID=1000
@@ -45,9 +46,8 @@ services:
     labels:
       traefik.http.routers.webtop.entrypoints: https
       traefik.http.services.webtop.loadbalancer.server.port: 3000
-    depends_on:
-      tailscale-webtop:
-        condition: service_healthy
+      tsdproxy.enable: true
+      tsdproxy.port: 3000
 
   tailscale-scanservjs:
     image: tailscale/tailscale
@@ -131,12 +131,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/webtop"
-  tailscale-webtop:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tailscale-webtop"
+  # tailscale-webtop:
+  #   driver: local
+  #   driver_opts:
+  #     type: "none"
+  #     o: "bind"
+  #     device: "/mnt/FranzHopper/appdata/tailscale-webtop"
   media:
     driver: local
     driver_opts:

@@ -1,28 +1,4 @@
 services: 
-  # tailscale-traefik:
-  #   image: tailscale/tailscale
-  #   container_name: tailscale-traefik
-  #   hostname: traefik-thefactory
-  #   restart: always
-  #   networks:
-  #     - dockerproxy
-  #   volumes:
-  #     - /dev/net/tun:/dev/net/tun
-  #     - tailscale-traefik:/var/lib/tailscale
-  #   cap_add:
-  #     - net_admin
-  #     - sys_module
-  #   environment:
-  #     - TS_AUTH_KEY=${TS_AUTH_KEY_TRAEFIK}
-  #     - TS_STATE_DIR=/var/lib/tailscale/state
-  #   ports:
-  #     - 9000:443/tcp
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "tailscale status"]
-  #     interval: 1s
-  #     timeout: 5s
-  #     retries: 60
-
   traefik:
     image: traefik
     restart: always
@@ -54,12 +30,6 @@ services:
       - tsdproxy-config:/config
 
 volumes:
-  # tailscale-traefik:
-  #   driver: local
-  #   driver_opts:
-  #     type: "none"
-  #     o: "bind"
-  #     device: "/mnt/FranzHopper/appdata/tailscale-traefik"
   traefik:
     driver: local
     driver_opts:
