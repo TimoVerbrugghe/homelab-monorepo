@@ -13,9 +13,6 @@ services:
     volumes:
       - qbittorrent:/config
       - downloads:/downloads
-    depends_on:
-      tailscale-qbittorrent:
-        condition: service_healthy
     labels:
       traefik.http.routers.qbittorrent.entrypoints: https
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
@@ -35,9 +32,6 @@ services:
     volumes:
       - jdownloader2:/config
       - downloads:/output
-    depends_on:
-      tailscale-jdownloader2:
-        condition: service_healthy
     labels:
       traefik.http.routers.qbittorrent.entrypoints: https
       traefik.http.services.qbittorrent.loadbalancer.server.port: 5800
@@ -61,9 +55,6 @@ services:
     volumes:
       - downloads:/downloads
       - /dev/shm:/tmp
-    depends_on:
-      tailscale-metube:
-        condition: service_healthy
     labels:
       traefik.http.routers.qbittorrent.entrypoints: https
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8081
@@ -85,9 +76,6 @@ services:
       - PGID=${PGID}
       - RPC_SECRET=secret
       - ARIA2RPCPORT=443
-    depends_on:
-      tailscale-ariang:
-        condition: service_healthy
     labels:
       traefik.http.routers.ariang.entrypoints: https
       traefik.http.services.ariang.loadbalancer.server.port: 8080

@@ -14,9 +14,6 @@ services:
       - isos:/srv/isos
       - downloads:/srv/downloads
       - filebrowser:/config
-    depends_on:
-      tailscale-filebrowser:
-        condition: service_healthy
     labels:
       traefik.http.routers.filebrowser.entrypoints: https
       traefik.http.services.filebrowser.loadbalancer.server.port: 80
@@ -37,9 +34,6 @@ services:
       - media:/media
       - isos:/isos
       - downloads:/downloads
-    depends_on:
-      tailscale-filezilla:
-        condition: service_healthy
     labels:
       traefik.http.routers.filezilla.entrypoints: https
       traefik.http.services.filezilla.loadbalancer.server.port: 3000
@@ -62,9 +56,6 @@ services:
       - downloads:/downloads
       - isos:/isos
     restart: unless-stopped
-    depends_on:
-      tailscale-doublecommander:
-        condition: service_healthy
     labels:
       traefik.http.routers.doublecommander.entrypoints: https
       traefik.http.services.doublecommander.loadbalancer.server.port: 3000
