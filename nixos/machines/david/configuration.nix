@@ -173,9 +173,6 @@ in
   services.samba = {
     enable = true;
     openFirewall = true;
-
-  services.samba = {
-    enable = true;
     settings = {
       global = {
         workgroup = "WORKGROUP";
@@ -423,5 +420,4 @@ in
     fallbackDns = [ "8.8.8.8" "8.8.4.4" "1.1.1.1" ];
     dnsovertls = "true";
   };
-
-}
+  }
