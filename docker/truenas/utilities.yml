@@ -47,7 +47,7 @@ services:
       traefik.http.routers.webtop.entrypoints: https
       traefik.http.services.webtop.loadbalancer.server.port: 3000
       tsdproxy.enable: true
-      tsdproxy.port: 3000
+      tsdproxy.container_port: 3000
 
   tailscale-scanservjs:
     image: tailscale/tailscale
