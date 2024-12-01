@@ -31,8 +31,8 @@
     description = "Check Disk Usage and Send Alert Email";
     script = ''
       #!/bin/bash
-      DISK_USAGE=$(df /boot | tail -1 | awk '{print $5}' | sed 's/%//')
-      if [ "$DISK_USAGE" -gt 10 ]; then
+      DISK_USAGE=$(df /media | tail -1 | awk '{print $5}' | sed 's/%//')
+      if [ "$DISK_USAGE" -gt 95 ]; then
         SUBJECT="Your Plex Server disk is almost full"
         EMAIL=$(cat /etc/nixos/email)
         MESSAGE=$(cat <<EOF
