@@ -51,6 +51,7 @@ let
 
     networks:
       dockerproxy:
+        name: dockerproxy
   '';
 
 in 
