@@ -28,7 +28,10 @@ services:
       - downloads:/srv/downloads
       - other:/srv/other
       - filebrowser:/config
-
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 80
+      tsdproxy.name: "filebrowser"
 
 volumes:
   filebrowser:

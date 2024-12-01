@@ -26,6 +26,10 @@ services:
       - /dev/shm:/dev/shm
     devices:
       - /dev/dri:/dev/dri
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 32400
+      tsdproxy.name: "plex"
 
   plex-autolanguages:
     container_name: plex-autolanguagues
@@ -39,25 +43,7 @@ services:
       - plex
     networks:
       - dockerproxy
-
-  ### Jellyfin - Other way of playing media
-  jellyfin:
-    container_name: jellyfin
-    image: jellyfin/jellyfin
-    restart: always
-    networks:
-      - dockerproxy
-    environment:
-      - TZ=Europe/Brussels
-    volumes:
-      - jellyfin:/config
-      - /tmp:/cache
-      - movies:/movies
-      - tvshows:/tv
-      - /dev/shm:/dev/shm
-    devices:
-      - /dev/dri:/dev/dri
-
+      
   ### MEDIA MANAGEMENT ###
   ### SONARR - MANAGING TVSHOWS
   sonarr:
@@ -79,6 +65,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 60
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 8989
+      tsdproxy.name: "sonarr"
 
   ### RADARR - MANAGING MOVIES
   radarr:
@@ -95,6 +85,10 @@ services:
       - radarr:/config
       - movies:/movies
       - downloads:/downloads
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 7878
+      tsdproxy.name: "radarr"
 
   ### BAZARR - MANAGING SUBTITLES
   bazarr:
@@ -116,6 +110,10 @@ services:
         condition: service_started
       radarr:
         condition: service_started
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 6767
+      tsdproxy.name: "bazarr"
 
   ### MEDIA REQUEST MANAGEMENT ###
   ### OVERSEERR - MANAGING REQUESTS
@@ -130,6 +128,10 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - overseerr:/app/config
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 5055
+      tsdproxy.name: "overseerr"
 
   ### DOWNLOAD MANAGEMENT ###
   ### PROWLARR - MANAGING TORRENT SITES
@@ -145,6 +147,10 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - prowlarr:/config
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 9696
+      tsdproxy.name: "prowlarr"
     
   ### QBITTORRENT - MANAGING DOWNLOADS
   qbittorrent: 
@@ -160,6 +166,10 @@ services:
     volumes:
       - qbittorrent:/config
       - downloads:/downloads
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 8080
+      tsdproxy.name: "qbittorrent"
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -187,6 +197,10 @@ services:
       - books:/books #optional
       - downloads:/downloads #optional
     restart: always
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 8787
+      tsdproxy.name: "readarr"
 
 volumes:
   sonarr:
