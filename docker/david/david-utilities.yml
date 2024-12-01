@@ -28,6 +28,8 @@ services:
       - downloads:/srv/downloads
       - other:/srv/other
       - filebrowser:/config
+    ports:
+      - 8081:80
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 80

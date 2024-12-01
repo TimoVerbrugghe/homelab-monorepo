@@ -26,6 +26,8 @@ services:
       - /dev/shm:/dev/shm
     devices:
       - /dev/dri:/dev/dri
+    ports:
+      - 32400:32400
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 32400
@@ -65,6 +67,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 60
+    ports:
+      - 8989:8989
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 8989
@@ -85,6 +89,8 @@ services:
       - radarr:/config
       - movies:/movies
       - downloads:/downloads
+    ports:
+      - 7878:7878
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 7878
@@ -110,6 +116,8 @@ services:
         condition: service_started
       radarr:
         condition: service_started
+    ports:
+      - 6767:6767
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 6767
@@ -128,6 +136,8 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - overseerr:/app/config
+    ports:
+      - 5055:5055
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 5055
@@ -147,6 +157,8 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - prowlarr:/config
+    ports:
+      - 9696:9696
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 9696
@@ -166,6 +178,8 @@ services:
     volumes:
       - qbittorrent:/config
       - downloads:/downloads
+    ports: 
+      - 8080:8080
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 8080
@@ -197,6 +211,8 @@ services:
       - books:/books #optional
       - downloads:/downloads #optional
     restart: always
+    ports:
+      - 8787:8787
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 8787

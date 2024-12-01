@@ -11,6 +11,8 @@ services:
     volumes:
       - heimdall:/config
     restart: always
+    ports:
+      - 80:80
     labels:
       tsdproxy.enable: true
       tsdproxy.container_port: 80
