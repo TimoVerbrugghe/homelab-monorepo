@@ -6,4 +6,4 @@
 - name: Configure Proxmox host
   hosts: all
   roles:
-    - role: ../roles/proxmox-host-setup
+    - role: ../roles/proxmox-cloud-init-template.yml
