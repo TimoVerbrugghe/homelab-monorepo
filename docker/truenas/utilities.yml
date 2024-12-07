@@ -115,16 +115,6 @@ volumes:
       o: "bind"
       device: "/mnt/X.A.N.A./media/games/switchkeys"
 
-networks:
-  dockervlan:
-    name: dockervlan
-    driver: macvlan
-    driver_opts:
-      parent: br0
-    ipam:
-      config:
-        - subnet: "10.10.10.0/24"
-          gateway: "10.10.10.1"
-  
+networks:  
   dockerproxy:
     external: true

@@ -77,19 +77,6 @@ services:
       traefik.http.services.uptime-kuma.loadbalancer.server.port: 3001
       traefik.http.routers.uptime-kuma.middlewares: keycloak-auth@file    
     
-  netbootxyz:
-    image: ghcr.io/netbootxyz/netbootxyz
-    container_name: netbootxyz
-    restart: always
-    networks:
-      dockervlan:
-        ipv4_address: ${NETBOOTXYZ_IP_ADDRESS}
-    volumes:
-      - netbootxyz-config:/config
-      - netbootxyz-assets:/assets
-    labels:
-      traefik.enable: false
-
   iventoy:
     image: thedrobe/iventoy-docker
     container_name: iventoy
