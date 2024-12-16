@@ -20,4 +20,8 @@
       trusted-users = [ "remotebuild" ];
     };
   };
+
+  nix.extraOptions = ''
+	  builders-use-substitutes = true
+	'';
 }
