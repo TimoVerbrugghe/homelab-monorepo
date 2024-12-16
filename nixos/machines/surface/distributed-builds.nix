@@ -3,6 +3,8 @@
   nix.distributedBuilds = true;
   nix.settings.builders-use-substitutes = true;
 
+  nix.settings.max-jobs = 0; # Only use remote builders, do not build locally
+
   nix.buildMachines = [
     {
       hostName = "odd.local.timo.be";
