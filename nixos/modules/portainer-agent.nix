@@ -20,7 +20,8 @@ let
           - "9001:9001"
       
     networks:
-      dockerproxy
+      dockerproxy:
+        name: dockerproxy
   '';
 
 in
