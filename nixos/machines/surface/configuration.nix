@@ -47,6 +47,9 @@ in
 
       ./sendmail.nix
 
+      # Enable distributed builds (using local nixos server VMs as remote builders)
+      ./distributed-builds.nix
+
     ];
 
   ############################

@@ -32,6 +32,7 @@ in
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
       ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
       ../../modules/cloudflare.nix # Get certs using nixos's built-in acme function (which uses lego), you need to add a cloudflare api key file to /etc/nixos/cloudflare-apikey.nix
+      ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
     ];
 
   ############################
