@@ -44,9 +44,6 @@
 
     # direnv is needed for VSCode nixos extension
     direnv
-    
-    handbrake
-    firefox
   ];
 
   virtualisation.libvirtd = {
