@@ -44,7 +44,13 @@
 
     # direnv is needed for VSCode nixos extension
     direnv
+
+    # PS Remote Play
+    chiaki-ng
   ];
+
+  # Needed to install packages from flathub, including Greenlight for xbox remote play
+  services.flatpak.enable = true;
 
   virtualisation.libvirtd = {
     enable = true;
