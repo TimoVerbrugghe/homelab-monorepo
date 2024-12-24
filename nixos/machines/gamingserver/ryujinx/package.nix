@@ -8,7 +8,7 @@ let
   version = "1.1.1401";
   pname = "ryujinx";
   name = "${pname}-${version}";
-  source = /etc/nixos/ryujinx.AppImage;
+  src = /etc/nixos/ryujinx.AppImage;
   appimageContents = appimageTools.extractType1 { inherit name src; };
 
 in
