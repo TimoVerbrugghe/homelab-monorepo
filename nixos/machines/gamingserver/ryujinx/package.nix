@@ -17,11 +17,12 @@ appimageTools.wrapType2 {
   inherit pname version src;
 
   # No need to mv $out/bin/${name} $out/bin/${pname} since appimageTools.extractType2 already uses pname for the executable
+  # Not all appimages have icons in /usr/share/icons, so we use cp -r ... || true to ignore errors
   extraInstallCommands = ''
     install -m 444 -D ${appimageContents}/${pname}.desktop -t $out/share/applications
     substituteInPlace $out/share/applications/${pname}.desktop \
       --replace-fail 'Exec=' 'Exec=${pname}'
-    cp -r ${appimageContents}/usr/share/icons $out/share
+    cp -r ${appimageContents}/usr/share/icons $out/share || true
   '';
 
   meta = with lib; {
