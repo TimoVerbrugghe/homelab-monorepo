@@ -128,10 +128,9 @@
           ./machines/gamingserver/configuration.nix
           home-manager-unstable.nixosModules.home-manager
           {
-            home-manager-unstable.useGlobalPkgs = true;
-            home-manager-unstable.useUserPackages = true;
-            home-manager-unstable.users.gamer = import ./machines/gamingserver/home.nix;
-
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.gamer = import ./machines/gamingserver/home.nix;
           }
         ];
       };
