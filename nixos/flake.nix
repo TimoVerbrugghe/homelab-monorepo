@@ -5,6 +5,10 @@
     nixpkgs = {
       url = "github:NixOS/nixpkgs/nixos-24.11";
     };
+    
+    nixpkgs-unstable = { 
+      url = "github:NixOS/nixpkgs/nixos-unstable";
+    };
 
     ssh-keys = {
       url = "https://github.com/TimoVerbrugghe.keys";
@@ -90,7 +94,7 @@
       };
 
       # Build this iso image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#nixosConfigurations.gamingserver-iso-autoinstall.config.system.build.isoImage --no-write-lock-file --refresh
-      gamingserver-iso-autoinstall = nixpkgs.lib.nixosSystem {
+      gamingserver-iso-autoinstall = nixpkgs-unstable.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
@@ -112,7 +116,7 @@
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file
-      gamingserver = nixpkgs.lib.nixosSystem {
+      gamingserver = nixpkgs-unstable.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [

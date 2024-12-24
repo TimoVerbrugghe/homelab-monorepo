@@ -20,7 +20,7 @@
     mgba
     pcsx2
     # ppsspp-sdl-wayland
-    # emulationstation-de
+    emulationstation-de
     xemu
     wineWowPackages.full
     # _86Box-with-roms
@@ -30,8 +30,8 @@
     # Trying to build ppsspp without the system_ffmpeg flag because getting severe graphical glitches
     (pkgs.callPackage ./ppsspp-standard-ffmpeg/package.nix {})
 
-    # Current emulationstation-de is old (2.2.1), so temporarily building the package 3.0.1 myself using the commit https://github.com/NixOS/nixpkgs/pull/299298 until it's pulled
-    (pkgs.callPackage ./emulationstation-de/package.nix {})
+    # # Current emulationstation-de is old (2.2.1), so temporarily building the package 3.0.1 myself using the commit https://github.com/NixOS/nixpkgs/pull/299298 until it's pulled
+    # (pkgs.callPackage ./emulationstation-de/package.nix {})
 
     # Current 86Box is old (4.1) and I need to wrap the 86Box program with env variable QT_QPA_PLATFORM=xcb in order for 86Box mouse capture to work
     (pkgs.callPackage ./86Box-git/package.nix {})
