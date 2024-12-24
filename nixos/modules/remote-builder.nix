@@ -11,6 +11,12 @@
     openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
   };
 
+  services.openssh = {
+    settings = {
+      AllowUsers = ["remotebuild"]; # Allows all users by default. Can be [ "user1" "user2" ]
+    };
+  };
+
   users.groups.remotebuild = {};
 
   nix = {
