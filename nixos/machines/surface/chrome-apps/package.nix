@@ -141,6 +141,17 @@ stdenv.mkDerivation {
       startupWMClass = "chrome-www.icloud.com__photos_-Default";
     })
 
+    (makeDesktopItem {
+      name = "Xbox Cloud Gaming";
+      desktopName = "Xbox Cloud Gaming";
+      exec = "google-chrome-stable --profile-directory=Default --app=\"https://www.xbox.com/en-US/play/\" %U";
+      comment = "Launch Xbox Cloud Gaming";
+      genericName = "Launch Xbox Cloud Gaming";
+      categories = ["Utility"];
+      icon = ./xbox.svg;
+      startupWMClass = "chrome-www.xbox.com__en-US__play_-Default";
+    })
+
   ];
 
   installPhase = ''
