@@ -38,7 +38,6 @@ in
   };
 
   programs.bash = {
-    enable = true;
     promptInit = ''
       fastfetch --config-file ${fastfetchconfig}
     '';
