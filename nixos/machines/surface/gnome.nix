@@ -80,16 +80,17 @@
     overlays = [
       (self: super: {
           gnome-shell = super.gnome-shell.overrideAttrs (oldAttrs: {
-            postPatch = oldAttrs.postPatch + ''
-              echo "
-              .login-dialog { background: transparent; }
+            patches = (old.patches or []);
+            postPatch = oldAttrs.postPatch or "" + ''
+            echo "
+            .login-dialog { background: transparent; }
 
-              #lockDialogGroup {
-                background-image: url('file:///etc/.lockscreen.jpg');
-                background-position: center;
-                background-size: cover;
-                background-repeat: no-repeat;
-              }" >> data/theme/gnome-shell-sass/widgets/_login-lock.scss
+            #lockDialogGroup {
+              background-image: url('file:///etc/.lockscreen.jpg');
+              background-position: center;
+              background-size: cover;
+              background-repeat: no-repeat;
+            }" >> data/theme/gnome-shell-sass/widgets/_login-lock.scss
             '';
           });
         })
