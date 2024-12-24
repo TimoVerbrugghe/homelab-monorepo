@@ -9,7 +9,7 @@
   };
 
   programs.bash = {
-    promptInit = ''
+    loginShellInit = ''
       fastfetch
     '';
   };
