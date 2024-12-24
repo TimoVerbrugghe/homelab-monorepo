@@ -39,7 +39,7 @@ in
 
   programs.bash = {
     promptInit = ''
-      fastfetch --config-file ${fastfetchconfig}
+      fastfetch --config ${fastfetchconfig}
     '';
   };
 
