@@ -51,7 +51,7 @@ services:
     environment:
       - TINSHOP_SOURCES_DIRECTORIES=/games
       - TINSHOP_WELCOMEMESSAGE=Welcome to Timo Tinshop!
-      - TINSHOP_HOST=aelita.local.timo.be
+      - TINSHOP_HOST=truenas.local.timo.be
       - TINSHOP_PORT=3000
       - TINSHOP_REVERSE_PROXY=false
     volumes:
