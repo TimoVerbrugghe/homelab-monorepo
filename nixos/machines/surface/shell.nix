@@ -14,7 +14,7 @@
       if [ -n "$BASH_VERSION" ] && [ -z "$SSH_TTY" ]; then
         fastfetch -c /home/Timo/.config/fastfetch/config.jsonc  
       fi 
-      ''
+    '';
   };
 
 }
