@@ -9,7 +9,7 @@ let
   pname = "citra";
   name = "${pname}-${version}";
   src = /etc/nixos/citra-qt.AppImage;
-  appimageContents = appimageTools.extractType2 { inherit pname version src; };
+  appimageContents = appimageTools.extractType2 { inherit name version src; };
 
 in
 
