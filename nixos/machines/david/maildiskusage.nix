@@ -9,7 +9,7 @@ let
   emailMessage = pkgs.writeText "emailMessage" ''
     Hi David,
 
-    The disk of your Plex server is almost full (over 95%!). You'll need to start deleting some older TV shows & movies if you want to download new ones. 
+    The disk of your Plex server is almost full (over 90%!). You'll need to start deleting some older TV shows & movies if you want to download new ones. 
     
     You can do that through:
     
