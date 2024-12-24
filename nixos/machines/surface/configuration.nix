@@ -51,7 +51,7 @@ in
       ./distributed-builds.nix
 
       # Shellaliases
-      ./shellaliases.nix
+      ./shell.nix
 
     ];
 
