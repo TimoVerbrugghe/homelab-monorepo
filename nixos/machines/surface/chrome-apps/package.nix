@@ -149,7 +149,7 @@ stdenv.mkDerivation {
       genericName = "Launch Xbox Cloud Gaming";
       categories = ["Utility"];
       icon = ./xbox.svg;
-      startupWMClass = "chrome-www.xbox.com__en-US__play_-Default";
+      startupWMClass = "chrome-www.xbox.com__en-US_play_-Default";
     })
 
   ];
