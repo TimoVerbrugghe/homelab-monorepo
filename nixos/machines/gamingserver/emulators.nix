@@ -3,15 +3,7 @@
 {
 
   environment.systemPackages = with pkgs; [
-    (retroarch.override {
-      cores = with libretro; [
-        genesis-plus-gx # Genesis
-        snes9x # SNES
-        flycast # Dreamcast
-        nestopia # NES
-        mupen64plus # N64
-      ];
-    })
+    retroarch-full
     duckstation
     cemu
     dolphin-emu

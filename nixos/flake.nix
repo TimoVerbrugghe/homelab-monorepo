@@ -20,13 +20,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    home-manager-unstable = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
     };
 
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, ... } @inputs : {
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ... } @inputs : {
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
@@ -121,11 +126,11 @@
         specialArgs = inputs;
         modules = [
           ./machines/gamingserver/configuration.nix
-          home-manager.nixosModules.home-manager
+          home-manager-unstable.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.gamer = import ./machines/gamingserver/home.nix;
+            home-manager-unstable.useGlobalPkgs = true;
+            home-manager-unstable.useUserPackages = true;
+            home-manager-unstable.users.gamer = import ./machines/gamingserver/home.nix;
 
           }
         ];
