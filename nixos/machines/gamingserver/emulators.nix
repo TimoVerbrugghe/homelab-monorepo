@@ -28,8 +28,8 @@
     # Installing citra, source (AppImage) has to be provided yourself
     (pkgs.callPackage ./citra/package.nix {})
 
-    # Installing ryujinx, source (AppImage) has to be provided yourself
-    (pkgs.callPackage ./ryujinx/package.nix {})
+    # Installing ryujinx, source (AppImage or source) has to be provided yourself
+    (pkgs.callPackage ./ryujinx/package-source.nix {})
   ];
 
   # Need this for emulationstation-de
