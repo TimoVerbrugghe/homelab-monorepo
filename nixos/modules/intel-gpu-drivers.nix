@@ -13,6 +13,7 @@
   # Install Intel GPU Drivers
   hardware.graphics = {
     enable = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       # Quick Sync Video
       vpl-gpu-rt
