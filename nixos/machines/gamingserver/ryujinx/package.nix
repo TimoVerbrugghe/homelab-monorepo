@@ -16,8 +16,8 @@ in
 appimageTools.wrapType2 {
   inherit pname version src;
 
+  # No need to mv $out/bin/${name} $out/bin/${pname} since appimageTools.extractType2 already uses pname for the executable
   extraInstallCommands = ''
-    mv $out/bin/${pname} $out/bin/${pname}
     install -m 444 -D ${appimageContents}/${pname}.desktop -t $out/share/applications
     substituteInPlace $out/share/applications/${pname}.desktop \
       --replace-fail 'Exec=AppRun' 'Exec=${pname}'
