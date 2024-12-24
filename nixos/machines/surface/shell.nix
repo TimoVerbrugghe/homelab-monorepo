@@ -1,34 +1,5 @@
 { config, pkgs, ... }:
 
-let 
-
-  fastfetchconfig = pkgs.writeText "fastfetch.conf" ''
-    {
-      "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-      "modules": [
-        "title",
-        "separator",
-        "os",
-        "host",
-        "kernel",
-        "uptime",
-        "display",
-        "de",
-        "wm",
-        "wmtheme",
-        "cpu",
-        "gpu",
-        "memory",
-        "disk",
-        "localip",
-        "battery",
-        "poweradapter"
-      ]
-    }
-  '';
-
-in
-
 {
 
   environment.shellAliases = {
@@ -39,7 +10,7 @@ in
 
   programs.bash = {
     promptInit = ''
-      fastfetch --config ${fastfetchconfig}
+      fastfetch
     '';
   };
 
