@@ -1,129 +1,28 @@
-{ lib
-, buildDotnetModule
-, dotnetCorePackages
-, fetchzip
-, libX11
-, libgdiplus
-, ffmpeg
-, openal
-, libsoundio
-, sndio
-, pulseaudio
-, vulkan-loader
-, glew
-, libGL
-, libICE
-, libSM
-, libXcursor
-, libXext
-, libXi
-, libXrandr
-, udev
-, SDL2
-, SDL2_mixer
-, fontconfig
+{
+  lib,
+  appimageTools,
+  fetchurl,
 }:
 
 let
-  source = /etc/nixos/ryujinx-source.tar.xz;
+  version = "1.1.1401";
+  pname = "ryujinx";
+  name = "${pname}-${version}";
+  source = /etc/nixos/ryujinx.AppImage;
+  appimageContents = appimageTools.extractType1 { inherit name src; };
+
 in
 
-buildDotnetModule rec {
-  pname = "ryujinx";
-  version = "1.1.1401"; # Based off of the official github actions builds: https://github.com/Ryujinx/Ryujinx/actions/workflows/release.yml
+appimageTools.wrapType2 {
+  inherit name src;
 
-  # Official GitHub source got deleted, you need to provide the source manually
-  src = source;
-
-  unpackPhase = ''
-    runHook preUnpack
-    tar --extract --file=${source}
-    runHook postUnpack
+  extraInstallCommands = ''
+    mv $out/bin/${name} $out/bin/${pname}
+    install -m 444 -D ${appimageContents}/${pname}.desktop -t $out/share/applications
+    substituteInPlace $out/share/applications/${pname}.desktop \
+      --replace-fail 'Exec=AppRun' 'Exec=${pname}'
+    cp -r ${appimageContents}/usr/share/icons $out/share
   '';
-
-  # src = fetchFromGitHub {
-  #   owner = "Ryujinx";
-  #   repo = "Ryujinx";
-  #   rev = "319507f2a12a6751f3ab833e498a3efd3119f806";
-  #   hash = "sha256-3DM/kahNhl8EhSIRuqH0trYoR51OrGxSE+GuOKxKr2c=";
-  # };
-
-  enableParallelBuilding = false;
-
-  dotnet-sdk = dotnetCorePackages.sdk_8_0;
-  dotnet-runtime = dotnetCorePackages.runtime_8_0;
-
-  nugetDeps = ./deps.nix;
-
-  runtimeDeps = [
-    libX11
-    libgdiplus
-    SDL2_mixer
-    openal
-    libsoundio
-    sndio
-    pulseaudio
-    vulkan-loader
-    ffmpeg
-    udev
-    fontconfig
-
-    # Avalonia UI
-    glew
-    libICE
-    libSM
-    libXcursor
-    libXext
-    libXi
-    libXrandr
-
-    # Headless executable
-    libGL
-    SDL2
-  ];
-
-  projectFile = "Ryujinx.sln";
-  testProjectFile = "src/Ryujinx.Tests/Ryujinx.Tests.csproj";
-  doCheck = true;
-
-  dotnetFlags = [
-    "/p:ExtraDefineConstants=DISABLE_UPDATER%2CFORCE_EXTERNAL_BASE_DIR"
-  ];
-
-  executables = [
-    "Ryujinx.Headless.SDL2"
-    "Ryujinx"
-  ];
-
-  makeWrapperArgs = [
-    # Without this Ryujinx fails to start on wayland. See https://github.com/Ryujinx/Ryujinx/issues/2714
-    "--set SDL_VIDEODRIVER x11"
-  ];
-
-  preInstall = ''
-    # workaround for https://github.com/Ryujinx/Ryujinx/issues/2349
-    mkdir -p $out/lib/sndio-6
-    ln -s ${sndio}/lib/libsndio.so $out/lib/sndio-6/libsndio.so.6
-  '';
-
-  preFixup = ''
-    mkdir -p $out/share/{applications,icons/hicolor/scalable/apps,mime/packages}
-    pushd distribution/linux
-
-    install -D ./Ryujinx.desktop $out/share/applications/Ryujinx.desktop
-    install -D ./Ryujinx.sh $out/bin/Ryujinx.sh
-    install -D ./mime/Ryujinx.xml $out/share/mime/packages/Ryujinx.xml
-    install -D ../misc/Logo.svg $out/share/icons/hicolor/scalable/apps/Ryujinx.svg
-
-    substituteInPlace $out/share/applications/Ryujinx.desktop \
-      --replace "Ryujinx.sh %f" "$out/bin/Ryujinx.sh %f"
-
-    ln -s $out/bin/Ryujinx $out/bin/ryujinx
-
-    popd
-  '';
-
-  passthru.updateScript = ./updater.sh;
 
   meta = with lib; {
     homepage = "https://ryujinx.org/";
