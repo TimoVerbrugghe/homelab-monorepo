@@ -73,6 +73,29 @@
       mode = "0644";
     };
   };
+
+  # Appending additional settings to the lock screen CSS file of Gnome so that the login screen background is changed
+  # Inspiration from GDM settings: https://github.com/gdm-settings/gdm-settings/blob/main/gdms/settings.py
+  nixpkgs = {
+    overlays = [
+      (self: super: {
+          gnome-shell = superg.gnome-shell.overrideAttrs (oldAttrs: {
+            postPatch = oldAttrs.postPatch + ''
+              echo "
+              .login-dialog { background: transparent; }
+
+              #lockDialogGroup {
+                background-image: url('file:///etc/.lockscreen.jpg');
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+              }" >> data/theme/gnome-shell-sass/widgets/_login-lock.scss
+            '';
+          });
+        })
+    ];
+  };
+
   
   # nixpkgs = {
   #   overlays = [
