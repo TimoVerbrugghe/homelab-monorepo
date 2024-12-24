@@ -8,7 +8,6 @@
     isNormalUser = true;
     createHome = false;
     group = "remotebuild";
-
     openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
   };
 
