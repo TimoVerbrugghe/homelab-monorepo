@@ -79,7 +79,7 @@
   nixpkgs = {
     overlays = [
       (self: super: {
-          gnome-shell = superg.gnome-shell.overrideAttrs (oldAttrs: {
+          gnome-shell = super.gnome-shell.overrideAttrs (oldAttrs: {
             postPatch = oldAttrs.postPatch + ''
               echo "
               .login-dialog { background: transparent; }
