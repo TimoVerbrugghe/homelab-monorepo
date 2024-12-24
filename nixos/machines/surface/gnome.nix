@@ -80,7 +80,6 @@
     overlays = [
       (self: super: {
           gnome-shell = super.gnome-shell.overrideAttrs (oldAttrs: {
-            patches = (old.patches or []);
             postPatch = oldAttrs.postPatch or "" + ''
             echo "
             .login-dialog { background: transparent; }
