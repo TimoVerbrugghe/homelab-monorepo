@@ -9,7 +9,7 @@ let
   pname = "citra";
   name = "${pname}-${version}";
   src = /etc/nixos/citra-qt.AppImage;
-  appimageContents = appimageTools.extractType2 { inherit name version src; };
+  appimageContents = appimageTools.extractType2 { inherit pname version src; };
 
 in
 
@@ -17,7 +17,7 @@ appimageTools.wrapType2 {
   inherit pname version src;
 
   extraInstallCommands = ''
-    mv $out/bin/${name} $out/bin/${pname}
+    mv $out/bin/${pname} $out/bin/${pname}
     install -m 444 -D ${appimageContents}/${pname}.desktop -t $out/share/applications
     substituteInPlace $out/share/applications/${pname}.desktop \
       --replace-fail 'Exec=AppRun' 'Exec=${pname}'
