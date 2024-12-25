@@ -51,6 +51,7 @@ services:
       GRAYLOG_MONGODB_URI: mongodb://mongodb:27017/graylog
       GRAYLOG_TIMEZONE: "Europe/Brussels"
       TZ: "Europe/Brussels"
+      GRAYLOG_ROOT_TIMEZONE: "Europe/Brussels"
       GRAYLOG_TRANSPORT_EMAIL_PROTOCOL: "smtp"
       GRAYLOG_TRANSPORT_EMAIL_WEB_INTERFACE_URL: "https://graylog.pony-godzilla.ts.net/"
       GRAYLOG_TRANSPORT_EMAIL_HOSTNAME: "smtp.gmail.com"
