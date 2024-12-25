@@ -1,0 +1,115 @@
+version: '3'
+
+services:
+  # Graylog stores configuration in MongoDB
+  mongo:
+    image: mongo:6.0.5-jammy
+    container_name: mongodb
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - dockerproxy
+    restart: unless-stopped
+
+  # The logs themselves are stored in Opensearch
+  opensearch:
+    image: opensearchproject/opensearch:2
+    container_name: opensearch
+    environment:
+      OPENSEARCH_JAVA_OPTS: -Xms1g -Xmx1g
+      bootstrap.memory_lock: true
+      discovery.type: single-node
+      action.auto_create_index: false
+      plugins.security.ssl.http.enabled: false
+      plugins.security.disabled: true
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
+    volumes:
+      - log-data:/usr/share/opensearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - 9200:9200/tcp
+    networks:
+      - dockerproxy
+    restart: unless-stopped
+
+  graylog:
+    image: graylog/graylog:6.1
+    container_name: graylog
+    environment:
+      # CHANGE ME (must be at least 16 characters)!
+      GRAYLOG_PASSWORD_SECRET: ${GRAYLOG_PASSWORD_SECRET}
+      GRAYLOG_ROOT_PASSWORD_SHA2: ${GRAYLOG_ROOT_PASSWORD_SHA2}
+      GRAYLOG_HTTP_BIND_ADDRESS: 0.0.0.0:9000
+      GRAYLOG_HTTP_EXTERNAL_URI: http://localhost:9000/
+      GRAYLOG_ELASTICSEARCH_HOSTS: http://opensearch:9200
+      GRAYLOG_MONGODB_URI: mongodb://mongodb:27017/graylog
+      GRAYLOG_TIMEZONE: "Europe/Brussels"
+      TZ: "Europe/Brussels"
+      GRAYLOG_TRANSPORT_EMAIL_PROTOCOL: "smtp"
+      GRAYLOG_TRANSPORT_EMAIL_WEB_INTERFACE_URL: "http://192.168.3.233:9000/"
+      GRAYLOG_TRANSPORT_EMAIL_HOSTNAME: "outbound.mailhop.org"
+      GRAYLOG_TRANSPORT_EMAIL_ENABLED: "true"
+      GRAYLOG_TRANSPORT_EMAIL_PORT: "587"
+      GRAYLOG_TRANSPORT_EMAIL_USE_AUTH: "true"
+      GRAYLOG_TRANSPORT_EMAIL_AUTH_USERNAME: "xxxxx"
+      GRAYLOG_TRANSPORT_EMAIL_AUTH_PASSWORD: "xxxxx"
+      GRAYLOG_TRANSPORT_EMAIL_USE_TLS: "true"
+      GRAYLOG_TRANSPORT_EMAIL_USE_SSL: "false"
+      GRAYLOG_TRANSPORT_FROM_EMAIL: "graylog@example.com"
+      GRAYLOG_TRANSPORT_SUBJECT_PREFIX: "[graylog]"
+
+    entrypoint: /usr/bin/tini -- wait-for-it opensearch:9200 -- /docker-entrypoint.sh
+    volumes:
+      - graylog-config:/usr/share/graylog/config
+      - graylog-data:/usr/share/graylog/data
+    networks:
+      - dockerproxy
+    restart: always
+    depends_on:
+      opensearch:
+        condition: "service_started"
+      mongo:
+        condition: "service_started"
+    ports:
+      - 9000:9000/tcp   # Graylog web interface and REST API
+      - 1514:1514/tcp   # Syslog
+      - 1514:1514/udp   # Syslog
+      - 12201:12201/tcp # GELF
+      - 12201:12201/udp # GELF
+
+networks:
+  dockerproxy:
+    external: true
+
+# This is how you persist data between container restarts
+volumes:
+  mongo-data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/graylog/mongo-data"
+  log-data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/graylog/log-data"
+  graylog-data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/graylog-data"
+  graylog-config:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/graylog-config"
