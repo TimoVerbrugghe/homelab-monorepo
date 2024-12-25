@@ -81,6 +81,10 @@ services:
       - 1514:1514/udp   # Syslog
       - 12201:12201/tcp # GELF
       - 12201:12201/udp # GELF
+    labels:
+      tsdproxy.enable: "true"
+      tsdproxy.name: "graylog"
+      tsdproxy.container_port: "9000"
 
 networks:
   dockerproxy:
