@@ -84,6 +84,7 @@ services:
       - 1516:1516/udp   # Truenas
       - 1517:1517/udp   # NixOS
       - 1518:1518/udp   # Proxmox
+      - 1519:1519/udp   # Home Assistant OS
       - 12201:12201/tcp # GELF
       - 12201:12201/udp # GELF
 
