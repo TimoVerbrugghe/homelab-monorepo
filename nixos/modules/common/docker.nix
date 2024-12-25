@@ -2,14 +2,21 @@
 
 {
   # Enable Docker & Install docker compose
-  virtualisation.docker.enable = true;
-  virtualisation.docker.autoPrune.enable = true;
-  virtualisation.docker.autoPrune.dates = "weekly";
-  virtualisation.docker.enableOnBoot = true;
-  virtualisation.docker.liveRestore = false; # will affect running containers when restarting docker daemon, but resolves stuck shutdown/reboot
+	virtualisation.docker = {
+		enable = true;
+		autoPrune.enable = true;
+	  autoPrune.dates = "weekly";
+	  enableOnBoot = true;
+	  liveRestore = false; # will affect running containers when restarting docker daemon, but resolves stuck shutdown/reboot
 
-  # Disable the docker-proxy userland proxy and instead use iptables for all docker routing. Disabled because having issues with docker-proxy holding on to ports across reboots, which causes container startup to fail.
-  virtualisation.docker.extraOptions = "--userland-proxy=false";
+	  # Disable the docker-proxy userland proxy and instead use iptables for all docker routing. Disabled because having issues with docker-proxy holding on to ports across reboots, which causes container startup to fail.
+	  extraOptions = ''
+			--userland-proxy=false
+			--log-opts gelf-address=udp://10.10.10.2:1515
+		'';
+
+		logDriver = "gelf";
+	};
 
   environment.systemPackages = with pkgs; [
     docker-compose
