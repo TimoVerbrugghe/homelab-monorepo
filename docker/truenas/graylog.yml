@@ -84,7 +84,7 @@ services:
     labels:
       tsdproxy.enable: "true"
       tsdproxy.name: "graylog"
-      tsdproxy.container_port: "9000"
+      tsdproxy.container_port: "9000" # Graylog web interface and REST API
 
 networks:
   dockerproxy:
