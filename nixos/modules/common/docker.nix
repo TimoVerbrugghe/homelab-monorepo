@@ -12,7 +12,7 @@
 	  # Disable the docker-proxy userland proxy and instead use iptables for all docker routing. Disabled because having issues with docker-proxy holding on to ports across reboots, which causes container startup to fail.
 	  extraOptions = ''
 			--userland-proxy=false
-			--log-opts gelf-address=udp://10.10.10.2:1515
+			--log-opt gelf-address=udp://10.10.10.2:1515
 		'';
 
 		logDriver = "gelf";
