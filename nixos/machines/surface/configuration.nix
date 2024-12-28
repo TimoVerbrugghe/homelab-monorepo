@@ -45,8 +45,6 @@ in
       # Custom surface_gpe kernel module for Lid switch
       ./surface-gpe/surface_gpe.nix
 
-      ./sendmail.nix
-
       # Enable distributed builds (using local nixos server VMs as remote builders)
       ./distributed-builds.nix
 
