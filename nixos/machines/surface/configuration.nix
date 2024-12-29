@@ -26,6 +26,8 @@ in
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Enable Tailscale
+      ../../modules/common/github-key.nix # Add GitHub PAT key for flake updates
+      ../../modules/common/graylog.nix # Add Graylog logging
 
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
@@ -50,9 +52,6 @@ in
 
       # Shellaliases
       ./shell.nix
-
-      # Add GitHub PAT key for flake updates
-      ../../modules/common/github-key.nix
 
     ];
 
