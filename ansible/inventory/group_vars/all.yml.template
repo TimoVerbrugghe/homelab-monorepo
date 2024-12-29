@@ -56,3 +56,5 @@ traefik_ip: 10.10.10.35
 staging_certificate_name: 
 production_certificate_name: 
 traefik_dashboard_url: traefik.example.com
+
+tailscale_authkey_proxmox:

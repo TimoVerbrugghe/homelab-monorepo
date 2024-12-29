@@ -1,0 +1,31 @@
+- name: Ensure apt cache is updated
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Add Tailscale GPG key
+  ansible.builtin.uri:
+    url: https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg
+    dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+
+- name: Add Tailscale repository
+  ansible.builtin.uri:
+    url: https://pkgs.tailscale.com/stable/debian/bookworm.tailscale-keyring.list
+    dest: /etc/apt/sources.list.d/tailscale.list
+    
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install Tailscale
+  ansible.builtin.apt:
+    name: tailscale
+    state: present
+
+- name: Start Tailscale service
+  ansible.builtin.systemd:
+    name: tailscaled
+    state: started
+    enabled: yes
+
+- name: Authenticate Tailscale with authkey
+  command: tailscale up --authkey {{ tailscale_authkey_proxmox }}

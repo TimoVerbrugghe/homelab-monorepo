@@ -7,6 +7,9 @@
 - name: Set up graylog logging
   ansible.builtin.include_tasks: graylog.yml
 
+- name: Install & Authenticate tailscale
+  ansible.builtin.include_tasks: tailscale.yml
+
 - name: Set limits for zfs ARC (512 mb - which is 512*1024*1024 bytes)
   ansible.builtin.copy:
     dest: /etc/modprobe.d/zfs.conf
