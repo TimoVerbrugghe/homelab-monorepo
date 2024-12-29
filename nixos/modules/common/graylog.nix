@@ -2,7 +2,7 @@
 
 {
   # Enable and configure rsyslog
-  services.rsyslog = {
+  services.rsyslogd = {
     enable = true;
 
     # Configure rsyslog to forward logs to Graylog
@@ -13,10 +13,4 @@
 
   # Ensure the log forwarding rules apply to all logs, including syslog and dmesg
   boot.kernelParams = [ "printk.devkmsg=on" ];
-
-  # Optionally, enable additional logging services
-  services.journald = {
-    enable = true;
-    forwardToSyslog = true;
-  };
 }
