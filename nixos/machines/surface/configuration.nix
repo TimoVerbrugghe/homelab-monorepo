@@ -52,7 +52,7 @@ in
       ./shell.nix
 
       # Add GitHub PAT key for flake updates
-      ../../modules/github-key.nix
+      ../../modules/common/github-key.nix
 
     ];
 
