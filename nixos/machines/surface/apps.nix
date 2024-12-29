@@ -47,6 +47,8 @@
 
     # PS Remote Play
     chiaki-ng
+
+    ansible
   ];
 
   # Needed to install packages from flathub, including Greenlight for xbox remote play

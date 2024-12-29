@@ -1,0 +1,15 @@
+- name: Install rsyslog
+  apt:
+    name: rsyslog
+    state: present
+
+- name: Configure rsyslog to forward logs to Graylog
+  lineinfile:
+    path: /etc/rsyslog.conf
+    line: '*.* @truenas.local.timo.be:1518;RSYSLOG_SyslogProtocol23Format'
+    create: yes
+
+- name: Restart rsyslog service
+  service:
+    name: rsyslog
+    state: restarted

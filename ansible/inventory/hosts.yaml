@@ -37,8 +37,8 @@ proxmox:
       vfio_pci_ids: 8086:46d1
       hostpci_igpu_id: '00:02.0'
       acs_override: false
-      vm_template_storage: local-zfs
-      zfs: true
+      vm_template_storage: local-btrfs
+      zfs: false
     icesector.local.timo.be:
       ansible_user: root
       vm_template_id: 9998
@@ -46,7 +46,7 @@ proxmox:
       vfio_pci_ids: 8086:46d1
       acs_override: false
       vm_template_storage: local-btrfs
-      zfs: true
+      zfs: false
     mountainsector.local.timo.be:
       ansible_user: root
       vm_template_id: 9997
@@ -54,7 +54,7 @@ proxmox:
       vfio_pci_ids: 8086:4e61
       acs_override: false
       vm_template_storage: local-btrfs
-      zfs: true
+      zfs: false
  
 k3scontrolplane:
   hosts:
