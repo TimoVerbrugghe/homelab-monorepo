@@ -36,6 +36,7 @@ in
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
       ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
+      ../../modules/common/graylog.nix # Enable and configure rsyslog for graylog
 
       # Boot inputs (with specific zfs settings)
       ./boot.nix

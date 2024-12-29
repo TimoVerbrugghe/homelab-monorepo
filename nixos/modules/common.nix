@@ -19,6 +19,7 @@
       ./common/networking.nix # Some specific networking settings    
       ./common/check-disk-usage.nix # Check disk usage and send a slack message if it's over a certain threshold
       ./common/github-key.nix # Import github key for flake updates
+      ./common/graylog.nix # Enable and configure rsyslog for graylog
     ];
 
 }
