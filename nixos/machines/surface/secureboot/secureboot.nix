@@ -55,10 +55,13 @@ in
     fi
 
     # Copy systemd-bootx64.efi to loader.efi if newer
-    if [ ${systemdBootPath} -nt ${loaderPath} ]; then
-      cp ${systemdBootPath} ${loaderPath}
-      echo " ***WARNING*** systemd-bootx64.efi is newer than loader.efi. Please readd it using HashTool on the next boot."
-    fi
+    # if [ ${systemdBootPath} -nt ${loaderPath} ]; then
+    #   cp ${systemdBootPath} ${loaderPath}
+    #   echo " ***WARNING*** systemd-bootx64.efi is newer than loader.efi. Please readd it using HashTool on the next boot."
+    # fi
+
+    # Always copy systemd-bootx64.efi to loader.efi (there seems to be a weird thing where systemd-bootx64.efi modification time is reset to 1980 so no way to check if its newer than loader.efi)
+    cp ${systemdBootPath} ${loaderPath}
 
     # Creating NVRAM entry if it doesn't exist
     if ! ${pkgs.efibootmgr}/bin/efibootmgr | grep -q "PreLoader"; then

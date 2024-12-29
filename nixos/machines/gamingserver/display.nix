@@ -8,10 +8,9 @@
   ];
 
   # Enable opengl and 32 bit driver support
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
   };
 
   # Basic config of wayland and desktop manager

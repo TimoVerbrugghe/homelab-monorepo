@@ -1,58 +1,53 @@
 services: 
-  tailscale-traefik:
-    image: tailscale/tailscale
-    container_name: tailscale-traefik
-    hostname: traefik-thefactory
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-traefik:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_TRAEFIK}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 9000:443/tcp
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
-
   traefik:
     image: traefik
     restart: always
     container_name: traefik
-    network_mode: service:tailscale-traefik
+    networks:
+      - dockerproxy
     environment:
       - CF_API_EMAIL=${CF_API_EMAIL}
       - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
     volumes:
       - traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      tailscale-traefik:
-        condition: service_healthy
     labels:
       traefik.enable: false
+      tsdproxy.enable: true
+      tsdproxy.name: "traefik-thefactory"
+      tsdproxy.container_port: 443
+
+  tsdproxy:
+    container_name: tsdproxy
+    hostname: tsdproxy
+    restart: always
+    networks:
+      - dockerproxy
+    image: almeidapaulopt/tsdproxy:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - tsdproxy-data:/data
+      - tsdproxy-config:/config
 
 volumes:
-  tailscale-traefik:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tailscale-traefik"
   traefik:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/traefik"
+  tsdproxy-data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tsdproxy/data"
+  tsdproxy-config:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tsdproxy/config"
 
 networks:    
   dockerproxy:

@@ -1,0 +1,73 @@
+services:
+  netbootxyz:
+    image: ghcr.io/netbootxyz/netbootxyz
+    container_name: netbootxyz
+    restart: always
+    networks:
+      dockervlan:
+        ipv4_address: ${NETBOOTXYZ_IP_ADDRESS}
+    volumes:
+      - netbootxyz-config:/config
+      - netbootxyz-assets:/assets
+    labels:
+      traefik.enable: false
+
+  iventoy:
+    image: ziggyds/iventoy
+    container_name: iventoy
+    restart: always
+    privileged: true
+    networks:
+      dockervlan:
+        ipv4_address: ${IVENTOY_IP_ADDRESS}
+    volumes:
+      - iventoy-config:/app/data
+      - iventoy-log:/app/log
+      - isos:/app/iso
+    environment:
+      - AUTO_START_PXE=true
+    labels:
+      traefik.enable: false
+
+volumes:
+  netbootxyz-config:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/netbootxyz-config"
+  netbootxyz-assets:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/netbootxyz-assets"
+  iventoy-config:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/iventoy-config"
+  iventoy-log:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/iventoy-log"
+  isos:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/isos"
+
+networks:
+  dockervlan:
+    name: dockervlan
+    driver: macvlan
+    driver_opts:
+      parent: br0
+    ipam:
+      config:
+        - subnet: "10.10.10.0/24"
+          gateway: "10.10.10.1"

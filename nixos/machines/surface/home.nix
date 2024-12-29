@@ -17,33 +17,64 @@
       source = ./wallpapers/msft-dev-home-wave.png;
     };
     ## Check: https://discourse.nixos.org/t/module-to-manage-desktop-shortcuts-in-chromium-or-brave/47162
+
+    # Fastfetch config
+    ".config/fastfetch/config.jsonc" = {
+      text = ''
+        {
+          "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+          "modules": [
+            "title",
+            "separator",
+              "os",
+              "host",
+              "kernel",
+              "uptime",
+              "display",
+              "de",
+              "wm",
+              "wmtheme",
+              "cpu",
+              "gpu",
+              "memory",
+              "disk",
+              "localip",
+              "battery",
+              "poweradapter"
+            ]
+          }
+      '';
+    };
   };
 
   dconf.settings = {
     # Gnome settings
     "org/gnome/shell" = {
       disable-user-extensions = false;
-      disabled-extensions = [
-      ];
-      enabled-extensions = [
-        "dash-to-dock@micxgx.gmail.com"
-        "windowgestures@extension.amarullz.com" 
-        "custom-window-controls@icedman.github.com"
-        "blur-my-shell@aunetx" 
-        "just-perfection-desktop@just-perfection"
-        "caffeine@patapon.info"
-      ];
+      
+      # Will not statically decide which extensions to enable
+      # disabled-extensions = [
+      # ];
+      # enabled-extensions = [
+      #   "dash-to-dock@micxgx.gmail.com"
+      #   "windowgestures@extension.amarullz.com" 
+      #   "custom-window-controls@icedman.github.com"
+      #   "blur-my-shell@aunetx" 
+      #   "just-perfection-desktop@just-perfection"
+      #   "caffeine@patapon.info"
+      # ];
 
+      # Will not statically decide which apps to have in the dock
       # Apps to show in the dock
-      favorite-apps = [
-        "org.gnome.Nautilus.desktop"
-        "google-chrome.desktop"
-        "code.desktop"
-        "spotify.desktop"
-        "bitwarden.desktop"
-        "org.gnome.Console.desktop"
-        "org.gnome.Settings.desktop"
-      ];
+      # favorite-apps = [
+      #   "org.gnome.Nautilus.desktop"
+      #   "google-chrome.desktop"
+      #   "code.desktop"
+      #   "spotify.desktop"
+      #   "bitwarden.desktop"
+      #   "org.gnome.Console.desktop"
+      #   "org.gnome.Settings.desktop"
+      # ];
     };
 
     "org/gnome/desktop/background" = {

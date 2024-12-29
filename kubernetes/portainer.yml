@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: portainer
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: portainer
+  namespace: kube-system
+spec:
+  chart: portainer
+  repo: https://portainer.github.io/k8s/
+  targetNamespace: portainer
+  valuesContent: |-
+    replicaCount: 1
+    tls:
+      force: true
+    service:
+      type: ClusterIP
+    ingress:
+      enabled: false
+    persistence:
+      enabled: true
+      storageClass: longhorn
+      size: "1Gi"
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: portainer-serverstransport
+  namespace: portainer
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  insecureSkipVerify: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: portainer-ingress
+  namespace: portainer
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`portainer.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: portainer
+          port: 9443
+          scheme: https
+          serversTransport: portainer-serverstransport

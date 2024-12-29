@@ -10,8 +10,6 @@
   # Set networking.hostId because ZFS needs this to prevent zfs pool from being mounted on the wrong machine. Host id is derived from the systemd machine id (head -c 8 /etc/machine-id)
   networking.hostId = "e6b5d6a5";
 
-  boot.kernelPackages = pkgs.zfs.latestCompatibleLinuxPackages; # Making sure we're running latest linux kernel that is ZFS compatible
-
   # Mount filesystems
   fileSystems."/" =
     { device = "gamingpool/root";
@@ -28,22 +26,46 @@
       fsType = "zfs";
     };
 
-  services.sanoid = {
-    enable = true;
-    templates.backup = {
-      hourly = 24;
-      daily = 14;
-      monthly = 3;
-      autoprune = true;
-      autosnap = true;
+  services = {
+    # Enable ZFS auto snapshotting locally
+    sanoid = {
+      enable = true;
+      templates.backup = {
+        hourly = 24;
+        daily = 14;
+        monthly = 3;
+        autoprune = true;
+        autosnap = true;
+      };
+
+      datasets."gamingpool/home" = {
+        useTemplate = [ "backup" ];
+      };
+
+      datasets."gamingpool/root" = {
+        useTemplate = [ "backup" ];
+      };
     };
 
-    datasets."gamingpool/home" = {
-      useTemplate = [ "backup" ];
-    };
+    # Send ZFS snapshots automatically to TrueNAS
+    syncoid = {
+      enable = true;
+      commonArgs = [
+        "--no-sync-snap"
+      ];
 
-    datasets."gamingpool/root" = {
-      useTemplate = [ "backup" ];
+      # Need to make sure that you run a manual syncoid command first AS USER SYNCOID because then it will place a .ssh folder in /var/lib/syncoid with known hosts, otherwise the systemd service will always fail
+      sshKey = "/var/lib/syncoid/truenas-ssh-key";
+      commands = {
+        "gamingpool/home" = {
+          source = "gamingpool/home";
+          target = "root@truenas.local.timo.be:X.A.N.A./gamingserver-backup/home";
+        };
+        "gamingpool/root" = {
+          source = "gamingpool/root";
+          target = "root@truenas.local.timo.be:X.A.N.A./gamingserver-backup/root";
+        };
+      };
     };
   };
 }

@@ -1,31 +1,9 @@
 services:
-  tailscale-heimdall:
-    image: tailscale/tailscale ## Always use this
-    container_name: tailscale-heimdall ## rename to tailscale-<SERVICE YOU WANT TO DEPLOY>
-    hostname: home ## this will be the first part of the URL in <hostname>.<tailscaledomain>
-    restart: always ## always use this
-    volumes: ## these volumes always have to be defined for tailscale, rename to tailscale-<SERVICE YOU WANT TO DEPLOY>
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-heimdall:/var/lib/tailscale
-    cap_add: ## always add this
-      - net_admin
-      - sys_module
-    environment: ## always use this (rename to TS_AUTH_KEY_<SERVICE YOU WANT TO DEPLOY>)
-      - TS_AUTH_KEY=${TS_AUTH_KEY_HEIMDALL}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports: ## These ports will be dependent on the application you deploy
-      - 80:80/tcp
-      - 443:443/tcp
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   heimdall:
     image: lscr.io/linuxserver/heimdall:latest
     container_name: heimdall
-    network_mode: service:tailscale-heimdall
+    networks:
+      - dockerproxy
     environment:
       - PUID=1000
       - PGID=1000
@@ -33,10 +11,16 @@ services:
     volumes:
       - heimdall:/config
     restart: always
-    depends_on:
-      tailscale-heimdall:
-        condition: service_healthy
+    ports:
+      - 80:80
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 80
+      tsdproxy.name: "heimdall"
 
 volumes:
   heimdall:
-  tailscale-heimdall:
+
+networks:
+  dockerproxy:
+    external: true

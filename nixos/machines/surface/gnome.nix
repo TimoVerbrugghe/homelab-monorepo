@@ -1,10 +1,6 @@
 { config, pkgs, lib, ... }:
 
 {
-
-  # imports = [
-  #   ./gvfs.nix
-  # ];
   
   # Enable gnome desktop manager
   services.xserver = {
@@ -12,7 +8,7 @@
     desktopManager.gnome = {
       enable = true;
       # Enable fractional scaling
-      extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
+      extraGSettingsOverridePackages = [ pkgs.mutter ];
       extraGSettingsOverrides = ''
         [org.gnome.mutter]
         experimental-features=['scale-monitor-framebuffer']
@@ -26,29 +22,29 @@
   
   # Gnome Extensions
   environment.systemPackages = with pkgs; [
-    gnome.gnome-tweaks
+    gnome-tweaks
     gnomeExtensions.dash-to-dock
     gnomeExtensions.window-gestures
-    gnome.gnome-power-manager # Get battery graphs
+    gnome-power-manager # Get battery graphs
   ];
 
   # Packages from gnome to exclude
   environment.gnome.excludePackages = with pkgs; [
     baobab            # disk usage analyzer
-    gnome.cheese      # photo booth
+    cheese      # photo booth
     epiphany          # web browser
-    gnome.totem       # video player
-    gnome.yelp        # help viewer
+    totem       # video player
+    yelp        # help viewer
     evince            # document viewer
-    gnome.geary       # email client
-    gnome.seahorse    # password manager
+    geary       # email client
+    seahorse    # password manager
 
     # these should be self explanatory 
-    gnome.gnome-contacts
-    gnome.gnome-maps 
-    gnome.gnome-music 
+    gnome-contacts
+    gnome-maps 
+    gnome-music 
     gnome-photos
-    gnome.gnome-weather
+    gnome-weather
     gnome-tour
     
   ];
@@ -77,32 +73,55 @@
       mode = "0644";
     };
   };
-  
+
+  # Appending additional settings to the lock screen CSS file of Gnome so that the login screen background is changed
+  # Inspiration from GDM settings: https://github.com/gdm-settings/gdm-settings/blob/main/gdms/settings.py
   nixpkgs = {
     overlays = [
       (self: super: {
-        gnome = super.gnome.overrideScope (selfg: superg: {
-          gnome-shell = superg.gnome-shell.overrideAttrs (old: {
-            patches = (old.patches or []) ++ [
-              (pkgs.writeText "bg.patch" ''
-                --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
-                +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
-                @@ -15,4 +15,8 @@ $_gdm_dialog_width: 23em;
-                 /* Login Dialog */
-                 .login-dialog {
-                   background-color: $_gdm_bg;
-                +  background-image: url('file:///etc/.lockscreen.png');
-                +  background-size: cover;
-                +  background-position: center;
-                +  background-repeat: no-repeat;
-                 }
-              '')
-            ];
+          gnome-shell = super.gnome-shell.overrideAttrs (oldAttrs: {
+            postPatch = oldAttrs.postPatch or "" + ''
+            echo "
+            .login-dialog { background: transparent; }
+
+            #lockDialogGroup {
+              background-image: url('file:///etc/.lockscreen.png');
+              background-position: center;
+              background-size: cover;
+              background-repeat: no-repeat;
+            }" >> data/theme/gnome-shell-sass/widgets/_login-lock.scss
+            '';
           });
-        });
-      })
+        })
     ];
   };
+
+  
+  # nixpkgs = {
+  #   overlays = [
+  #     (self: super: {
+  #       gnome-shell = super.gnome-shell.overrideAttrs (old: {
+  #         patches = (old.patches or []) ++ [
+  #           (pkgs.writeText "bg.patch" ''
+  #             --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+  #             +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+  #             @@ -9999,1 +9999,11 @@
+  #             +.login-dialog { 
+  #             +  background: transparent; 
+  #             +}
+  #             +
+  #             +#lockDialogGroup {
+  #             +  background-image: url('file:///etc/.lockscreen.jpg');
+  #             +  background-position: center;
+  #             +  background-size: cover;
+  #             +  background-repeat: no-repeat;
+  #             +}
+  #           '')
+  #         ];
+  #       });
+  #     })
+  #   ];
+  # };
 
   # Set an user avatar for the login screen by copying avatar image & user file to the right location
   system.activationScripts.gnomeAvater = lib.stringAfter [ "var" ] ''

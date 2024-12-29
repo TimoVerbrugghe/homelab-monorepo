@@ -39,12 +39,19 @@ let
         ports:
           - "8000:8000"
           - "9443:9443"
+        networks:
+          - dockerproxy
+        labels:
+          tsdproxy.enable: true
+          tsdproxy.container_port: 9443
+          tsdproxy.name: "portainer"
     
     volumes:
       portainer:
 
     networks:
       dockerproxy:
+        name: dockerproxy
   '';
 
 in 
@@ -56,6 +63,9 @@ in
       
       # Include tailscale authkey file, you need to put this manually in your nixos install
       /etc/nixos/tailscale-authkey.nix
+
+      # Add mail disk usage notification
+      ./maildiskusage.nix
     ];
 
   system.stateVersion = "23.11";
@@ -82,7 +92,7 @@ in
 
   ## Enable Flakes
   nix = {
-    package = pkgs.nixFlakes;
+    package = pkgs.nixVersions.stable;
     extraOptions = ''
         experimental-features = nix-command flakes
     '';
@@ -119,15 +129,20 @@ in
   ## Install Intel GPU drivers
   nixpkgs.config.allowUnfree = true;
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
+      # Quick Sync Video
+      vpl-gpu-rt
+
+      # General Intel GPU iHD driver
       intel-media-driver
+
+      # OpenCL runtime
       intel-compute-runtime
-      vaapiVdpau
+
+      # Use VDPAU (normally only supported on NVIDIA/AMD gpus on intel gpus)
       libvdpau-va-gl
-      vaapiIntel
-      intel-ocl
     ];
   };
 
@@ -172,20 +187,19 @@ in
   ## SMB shares
   services.samba = {
     enable = true;
-    securityType = "user";
     openFirewall = true;
-    extraConfig = ''
-      workgroup = WORKGROUP
-      server string = smbnix
-      netbios name = smbnix
-      security = user 
-      hosts allow = 192.168.0. 127.0.0.1 localhost
-      hosts deny = 0.0.0.0/0
-      guest account = nobody
-      map to guest = bad user
-      server role = standalone server
-    '';
-    shares = {
+    settings = {
+      global = {
+        workgroup = "WORKGROUP";
+        "server string" = "smbnix";
+        "netbios name" = "smbnix";
+        security = "user";
+        "hosts allow" = "192.168.0. 127.0.0.1 localhost";
+        "hosts deny" = "0.0.0.0/0";
+        "guest account" = "nobody";
+        "map to guest" = "bad user";
+        "server role" = "standalone server";
+      };
       movies = {
         path = "/media/movies";
         browseable = "yes";
@@ -422,4 +436,5 @@ in
     dnsovertls = "true";
   };
 
+  
 }

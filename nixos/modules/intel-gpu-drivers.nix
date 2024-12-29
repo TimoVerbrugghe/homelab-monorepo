@@ -11,12 +11,12 @@
   ];
 
   # Install Intel GPU Drivers
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       # Quick Sync Video
-      onevpl-intel-gpu
-      # vpl-gpu-rt after 24.11
+      vpl-gpu-rt
 
       # General Intel GPU iHD driver
       intel-media-driver

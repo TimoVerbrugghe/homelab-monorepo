@@ -26,6 +26,7 @@ in
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Enable Tailscale
+      ../../modules/common/github-key.nix # Add GitHub PAT key for flake updates
 
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
@@ -44,6 +45,12 @@ in
 
       # Custom surface_gpe kernel module for Lid switch
       ./surface-gpe/surface_gpe.nix
+
+      # Enable distributed builds (using local nixos server VMs as remote builders)
+      ./distributed-builds.nix
+
+      # Shellaliases
+      ./shell.nix
 
     ];
 

@@ -37,9 +37,6 @@
     gimp
     qemu
     
-    # Microsoft Edge is necessary for intune
-    microsoft-edge
-    
     # RPCBind necessary for NFS
     kodi-wayland
     rpcbind
@@ -47,9 +44,15 @@
 
     # direnv is needed for VSCode nixos extension
     direnv
+
+    # PS Remote Play
+    chiaki-ng
+
+    ansible
   ];
 
-  services.intune.enable = true;
+  # Needed to install packages from flathub, including Greenlight for xbox remote play
+  services.flatpak.enable = true;
 
   virtualisation.libvirtd = {
     enable = true;

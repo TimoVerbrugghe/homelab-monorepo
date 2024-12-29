@@ -77,37 +77,6 @@ services:
       traefik.http.services.uptime-kuma.loadbalancer.server.port: 3001
       traefik.http.routers.uptime-kuma.middlewares: keycloak-auth@file    
     
-  netbootxyz:
-    image: ghcr.io/netbootxyz/netbootxyz
-    container_name: netbootxyz
-    restart: always
-    networks:
-      dockervlan:
-        ipv4_address: ${NETBOOTXYZ_IP_ADDRESS}
-    volumes:
-      - netbootxyz-config:/config
-      - netbootxyz-assets:/assets
-    labels:
-      traefik.enable: false
-
-  ns-usbloader:
-    image: ghcr.io/timoverbrugghe/ns-usbloader
-    container_name: ns-usbloader
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    volumes:
-      - downloads:/downloads
-      - games:/nsp
-      - ns-usbloader-config:/root/.java/.userPrefs/NS-USBloader
-    ports:
-      - 8080:8080
-      - 6042:6042
-    labels:
-      traefik.http.routers.ns-usbloader.entrypoints: https
-      traefik.http.services.ns-usbloader.loadbalancer.server.port: 8080
-      traefik.http.routers.ns-usbloader.middlewares: keycloak-auth@file
-
   iventoy:
     image: thedrobe/iventoy-docker
     container_name: iventoy
@@ -122,6 +91,56 @@ services:
       - isos:/app/iso
     environment:
       - AUTO_START_PXE=true
+    labels:
+      traefik.enable: false
+
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie
+    container_name: mealie
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - mealie:/app/data/
+    ports:
+      - 9300:9000
+    environment:
+      ALLOW_SIGNUP: false
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: Europe/Brussels
+      OPENAI_API_KEY: ${MEALIE_OPENAI_API_KEY}
+      OPENAI_MODEL: gpt-4o
+      OPENAI_BASE_URL: https://${MEALIE_OPENAI_ENDPOINT}.openai.azure.com/openai/deployments/gpt-4o
+      OPENAI_CUSTOM_PARAMS: '{"api-version":"2024-08-01-preview"}'
+      OPENAI_CUSTOM_HEADERS: '{"api-key":"${MEALIE_OPENAI_API_KEY}"}'   
+      BASE_URL : https://mealie.home.timo.be 
+      THEME_DARK_PRIMARY: "#0A2472"
+      THEME_LIGHT_PRIMARY: "#0A2472"
+    labels:
+      traefik.http.routers.mealie.entrypoints: https
+      traefik.http.services.mealie.loadbalancer.server.port: 9000
+
+  webtop:
+    image: lscr.io/linuxserver/webtop:ubuntu-xfce
+    container_name: webtop
+    restart: unless-stopped
+    security_opt:
+      - seccomp=unconfined
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - webtop:/config
+    shm_size: "1gb"
+    labels:
+      traefik.http.routers.webtop.entrypoints: https
+      traefik.http.services.webtop.loadbalancer.server.port: 3000
+      tsdproxy.enable: true
+      tsdproxy.container_port: 3000
 
 volumes:
   bitwarden:
@@ -144,18 +163,14 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/FranzHopper/isos"
-  downloads:
-    driver_opts:
-      type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
-      device: ":/mnt/FranzHopper/downloads"
   games:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/games/ROMs"
-  ns-usbloader-config:
+  mealie:
+  webtop:
 
 networks:
   dockerproxy:

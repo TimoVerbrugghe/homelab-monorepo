@@ -1,31 +1,10 @@
 services:
-  tailscale-filebrowser:
-    image: tailscale/tailscale
-    container_name: tailscale-filebrowser
-    hostname: filebrowser
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-filebrowser:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_FILEBROWSER}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
-
   filebrowser:
     container_name: filebrowser
     image: filebrowser/filebrowser
     restart: always
-    network_mode: service:tailscale-filebrowser
+    networks:
+      - dockerproxy
     environment:
       - FB_DATABASE=/config/database.db
       - FB_CONFIG=/config/filebrowser.json
@@ -35,40 +14,19 @@ services:
       - isos:/srv/isos
       - downloads:/srv/downloads
       - filebrowser:/config
-    depends_on:
-      tailscale-filebrowser:
-        condition: service_healthy
     labels:
       traefik.http.routers.filebrowser.entrypoints: https
       traefik.http.services.filebrowser.loadbalancer.server.port: 80
-
-  tailscale-filezilla:
-    image: tailscale/tailscale
-    container_name: tailscale-filezilla
-    hostname: filezilla
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-filezilla:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_FILEZILLA}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
+      tsdproxy.enable: true
+      tsdproxy.name: "filebrowser"
+      tsdproxy.container_port: 80
 
   filezilla:
     image: lscr.io/linuxserver/filezilla:latest
     container_name: filezilla
     restart: always
-    network_mode: service:tailscale-filezilla
+    networks:
+      - dockerproxy
     environment:
       - TZ=Europe/Brussels
     volumes:
@@ -76,39 +34,18 @@ services:
       - media:/media
       - isos:/isos
       - downloads:/downloads
-    depends_on:
-      tailscale-filezilla:
-        condition: service_healthy
     labels:
       traefik.http.routers.filezilla.entrypoints: https
       traefik.http.services.filezilla.loadbalancer.server.port: 3000
-
-  tailscale-doublecommander:
-    image: tailscale/tailscale
-    container_name: tailscale-doublecommander
-    hostname: doublecommander
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-doublecommander:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_DOUBLECOMMANDER}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
+      tsdproxy.enable: true
+      tsdproxy.name: "filezilla"
+      tsdproxy.container_port: 3000
 
   doublecommander:
     image: lscr.io/linuxserver/doublecommander:latest
     container_name: doublecommander
-    network_mode: service:tailscale-doublecommander
+    networks:
+      - dockerproxy
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -119,32 +56,14 @@ services:
       - downloads:/downloads
       - isos:/isos
     restart: unless-stopped
-    depends_on:
-      tailscale-doublecommander:
-        condition: service_healthy
     labels:
       traefik.http.routers.doublecommander.entrypoints: https
       traefik.http.services.doublecommander.loadbalancer.server.port: 3000
+      tsdproxy.enable: true
+      tsdproxy.name: "doublecommander"
+      tsdproxy.container_port: 3000
 
 volumes:
-  tailscale-filebrowser:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tailscale-filebrowser"
-  tailscale-filezilla:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tailscale-filezilla"
-  tailscale-doublecommander:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tailscale-doublecommander"
   filebrowser:
     driver: local
     driver_opts:

@@ -12,28 +12,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-  tailscale-filebrowser:
-    image: tailscale/tailscale
-    container_name: tailscale-filebrowser
-    hostname: files
-    restart: always
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-filebrowser:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_FILEBROWSER}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    ports:
-      - 8082:80/tcp
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
-
   filebrowser:
     container_name: filebrowser
     image: filebrowser/filebrowser
@@ -42,41 +20,23 @@ services:
       - FB_DATABASE=/config/database.db
       - FB_CONFIG=/config/filebrowser.json
       - FB_NOAUTH=true
-    network_mode: service:tailscale-filebrowser
+    networks:
+      - dockerproxy
     volumes:
       - movies:/srv/movies
       - tvshows:/srv/tvshows
       - downloads:/srv/downloads
       - other:/srv/other
       - filebrowser:/config
-    depends_on:
-      tailscale-filebrowser:
-        condition: service_healthy
-
-  tailscale-portainer:
-    image: tailscale/tailscale
-    container_name: tailscale-portainer
-    restart: always
-    network_mode: container:portainer
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-portainer:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_PORTAINER}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 10s
-      timeout: 5s
-      retries: 60
+    ports:
+      - 8081:80
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.container_port: 80
+      tsdproxy.name: "filebrowser"
 
 volumes:
-  tailscale-filebrowser:
   filebrowser:
-  tailscale-portainer:
 
   movies:
     driver: local
@@ -102,3 +62,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: '/media/other'
+
+networks:    
+  dockerproxy:
+    external: true

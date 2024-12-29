@@ -6,14 +6,12 @@
     ../../modules/intel-gpu-drivers.nix
   ];
 
-  # Enable opengl and 32 bit driver support
-  hardware.opengl = {
+  # Enable opengl support
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
-      onevpl-intel-gpu
-      # vpl-gpu-rt after 24.11
+      vpl-gpu-rt
     ];
   };
 

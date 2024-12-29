@@ -1,37 +1,12 @@
 services:
-  tailscale-webtop:
-    image: tailscale/tailscale
-    container_name: tailscale-webtop
-    hostname: webtop
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-webtop:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_WEBTOP}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    dns:
-      - "8.8.8.8"
-      - "8.8.4.4"
-      - "1.1.1.1"
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
-
   webtop:
     image: lscr.io/linuxserver/webtop:ubuntu-xfce
     container_name: webtop
     restart: unless-stopped
     security_opt:
       - seccomp=unconfined
-    network_mode: service:tailscale-webtop
+    networks:
+      - dockerproxy
     environment:
       - PUID=1000
       - PGID=1000
@@ -45,37 +20,15 @@ services:
     labels:
       traefik.http.routers.webtop.entrypoints: https
       traefik.http.services.webtop.loadbalancer.server.port: 3000
-    depends_on:
-      tailscale-webtop:
-        condition: service_healthy
-
-  tailscale-scanservjs:
-    image: tailscale/tailscale
-    container_name: tailscale-scanservjs
-    hostname: scan
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - /dev/net/tun:/dev/net/tun
-      - tailscale-scanservjs:/var/lib/tailscale
-    cap_add:
-      - net_admin
-      - sys_module
-    environment:
-      - TS_AUTH_KEY=${TS_AUTH_KEY_SCANSERVJS}
-      - TS_STATE_DIR=/var/lib/tailscale/state
-    healthcheck:
-      test: ["CMD-SHELL", "tailscale status"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
+      tsdproxy.enable: true
+      tsdproxy.container_port: 3000
 
   scanservjs:
     image: sbs20/scanservjs:latest
     container_name: scanservjs
     restart: unless-stopped
-    network_mode: service:tailscale-scanservjs
+    networks:
+      - dockerproxy
     volumes:
       - scanservjs-scans:/app/data/output
       - scanservjs-config:/app/config
@@ -85,9 +38,9 @@ services:
       traefik.http.routers.scanservjs.entrypoints: https
       traefik.http.services.scanservjs.loadbalancer.server.port: 8080
       traefik.http.routers.scanservjs.rule: Host(`scan.thefactory.timo.be`) || Host(`scan.timo.be`)
-    depends_on:
-      tailscale-scanservjs:
-        condition: service_healthy
+      tsdproxy.enable: true
+      tsdproxy.container_port: 8080
+      tsdproxy.name: "scan"
 
   tinshop:
     container_name: tinshop
@@ -98,7 +51,7 @@ services:
     environment:
       - TINSHOP_SOURCES_DIRECTORIES=/games
       - TINSHOP_WELCOMEMESSAGE=Welcome to Timo Tinshop!
-      - TINSHOP_HOST=aelita.local.timo.be
+      - TINSHOP_HOST=10.10.10.2
       - TINSHOP_PORT=3000
       - TINSHOP_REVERSE_PROXY=false
     volumes:
@@ -119,24 +72,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/scanservjs-config"
-  tailscale-scanservjs:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tailscale-scanservjs"
   webtop:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/webtop"
-  tailscale-webtop:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tailscale-webtop"
   media:
     driver: local
     driver_opts:
@@ -161,29 +102,20 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/tinshop"
+  # Defined as NFS shares because of permission issues when mounting locally. Should still give me local speeds.
   nsp:
     driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/games/ROMs"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/ROMs"
   switchkeys:
     driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/games/switchkeys"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games/switchkeys"
 
-networks:
-  dockervlan:
-    name: dockervlan
-    driver: macvlan
-    driver_opts:
-      parent: br0
-    ipam:
-      config:
-        - subnet: "10.10.10.0/24"
-          gateway: "10.10.10.1"
-  
+networks:  
   dockerproxy:
     external: true
