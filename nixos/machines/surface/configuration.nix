@@ -51,6 +51,9 @@ in
       # Shellaliases
       ./shell.nix
 
+      # Add GitHub PAT key for flake updates
+      ../../modules/github-key.nix
+
     ];
 
   ############################
