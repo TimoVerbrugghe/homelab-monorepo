@@ -10,12 +10,12 @@
 - name: Install & Authenticate tailscale
   ansible.builtin.include_tasks: tailscale.yml
 
-- name: Set limits for zfs ARC (1024 mb - which is 1024*1024*1024 bytes)
+- name: Set limits for zfs ARC (3072 mb - which is 3072*1024*1024 bytes)
   ansible.builtin.copy:
     dest: /etc/modprobe.d/zfs.conf
     content: |
-      options zfs zfs_arc_max=1073741824
-      options zfs zfs_arc_min=1073741824
+      options zfs zfs_arc_max=3221225472
+      options zfs zfs_arc_min=3221225472
   when: zfs
 
 - name: Check if /etc/default/grub contains command line parameters for CPU optimizations and enable if missing
