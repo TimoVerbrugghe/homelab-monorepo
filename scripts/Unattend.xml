@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <!-- Settings to apply during Windows Setup -->
+    <settings pass="windowsPE">
+        <!-- Keyboard & Language settings during windows Setup -->
+        <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <SetupUILanguage>
+                <UILanguage>en-US</UILanguage>
+            </SetupUILanguage>
+            <InputLocale>0813:00000813</InputLocale>
+            <SystemLocale>nl-BE</SystemLocale>
+            <UILanguage>en-US</UILanguage>
+            <UILanguageFallback>en-US</UILanguageFallback>
+            <UserLocale>nl-BE</UserLocale>
+        </component>
+
+        <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <UserData>
+                <ProductKey>
+                    <!-- Using the generic Windows 11 Pro Key -->
+                    <Key>VK7JG-NPHTM-C97JM-9MPGT-3V66T</Key>
+                    <WillShowUI>OnError</WillShowUI>
+                </ProductKey>
+                <AcceptEula>true</AcceptEula>
+                <FullName>Timo-GamingServer</FullName>
+                <Organization>Timo HomeLab Inc.</Organization>
+            </UserData>
+            <EnableNetwork>true</EnableNetwork>
+
+            <RunAsynchronous>
+                <!-- Mount Network Share for Windows Installation -->
+                <RunAsynchronousCommand>
+                    <Order>1</Order>
+                    <Path>\\10.10.10.2\isos\Windows11\Setup.exe</Path>
+                    <Description>DescriptionOfMyApplication</Description>
+                    <Credentials>
+                        <Domain>FabrikamDomain</Domain>
+                        <UserName>MyUserName</UserName>
+                        <Password>MyPassword</Password>
+                    </Credentials>
+                </RunAsynchronousCommand>
+
+                <!-- Run Windows Setup -->
+                <RunAsynchronousCommand>
+                    <Order>2</Order>
+                    <Path>C:\AnotherApplication.exe</Path>
+                    <Description>DescriptionOfMyApplication</Description>
+                </RunAsynchronousCommand>
+            </RunAsynchronous>
+		</component>
+
+        
+    </settings>
+</unattend>
