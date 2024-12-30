@@ -18,6 +18,10 @@
       options zfs zfs_arc_min=3221225472
   when: zfs
 
+- name: Set ZFS sync disabled (for performance, this will amount to loss of data in case of power failure of up to 5 seconds but I can live with that)
+  command: zfs set sync=disabled rpool
+  when: zfs
+
 - name: Check if /etc/default/grub contains command line parameters for CPU optimizations and enable if missing
   ansible.builtin.lineinfile:
     path: /etc/default/grub
