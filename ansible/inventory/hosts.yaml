@@ -30,7 +30,7 @@ vm:
 
 proxmox:
   hosts:
-    10.10.10.4:
+    forestsector.local.timo.be:
       ansible_user: root
       vm_template_id: 9999
       proxmox_node: forestsector
@@ -39,7 +39,7 @@ proxmox:
       acs_override: false
       vm_template_storage: local-zfs
       zfs: true
-    10.10.10.6:
+    icesector.local.timo.be:
       ansible_user: root
       vm_template_id: 9998
       proxmox_node: icesector
@@ -47,7 +47,7 @@ proxmox:
       acs_override: false
       vm_template_storage: local-zfs
       zfs: true
-    10.10.10.5:
+    mountainsector.local.timo.be:
       ansible_user: root
       vm_template_id: 9997
       proxmox_node: mountainsector
