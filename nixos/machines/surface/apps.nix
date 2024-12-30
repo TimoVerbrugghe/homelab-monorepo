@@ -48,7 +48,10 @@
     # PS Remote Play
     chiaki-ng
 
+    # Ansible & dependencies
     ansible
+    sshpass
+    python312Packages.dnspython
   ];
 
   # Needed to install packages from flathub, including Greenlight for xbox remote play
