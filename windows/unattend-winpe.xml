@@ -26,29 +26,6 @@
                 <Organization>Timo HomeLab Inc.</Organization>
             </UserData>
             <EnableNetwork>true</EnableNetwork>
-
-            <RunAsynchronous>
-                <!-- Mount Network Share for Windows Installation -->
-                <RunAsynchronousCommand>
-                    <Order>1</Order>
-                    <Path>\\10.10.10.2\isos\Windows11\Setup.exe</Path>
-                    <Description>DescriptionOfMyApplication</Description>
-                    <Credentials>
-                        <Domain>FabrikamDomain</Domain>
-                        <UserName>MyUserName</UserName>
-                        <Password>MyPassword</Password>
-                    </Credentials>
-                </RunAsynchronousCommand>
-
-                <!-- Run Windows Setup -->
-                <RunAsynchronousCommand>
-                    <Order>2</Order>
-                    <Path>C:\AnotherApplication.exe</Path>
-                    <Description>DescriptionOfMyApplication</Description>
-                </RunAsynchronousCommand>
-            </RunAsynchronous>
 		</component>
-
-        
     </settings>
 </unattend>
