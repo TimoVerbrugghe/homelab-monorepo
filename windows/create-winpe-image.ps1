@@ -139,7 +139,7 @@ $isoMountPath = "$($isoDriveLetter):\"
 Write-Output "Mounting network share..."
 $networkPath = "\\10.10.10.2\windowsinstall\WinPE\"
 $credential = New-Object System.Management.Automation.PSCredential("windowsinstall", (ConvertTo-SecureString "windowsinstall" -AsPlainText -Force))
-New-PSDrive -Name "Z" -PSProvider "FileSystem" -Root $networkPath -Credential $credential -Persist
+New-PSDrive -Name "Z" -PSProvider "FileSystem" -Root $networkPath -Credential $credential -Persist -Scope Global
 
 # Delete everything inside the networkPath folder
 Write-Output "Deleting existing files in the network share..."
@@ -147,6 +147,10 @@ Remove-Item -Path "Z:\*" -Recurse -Force
 
 Write-Output "Transferring files to the network share..."
 Copy-Item -Path "$isoMountPath*" -Destination "Z:\" -Recurse -Force
+
+# Unmount the network share
+Write-Output "Unmounting network share..."
+Remove-PSDrive -Name "Z"
 
 # Dismount the ISO
 Write-Output "Dismounting the ISO file..."

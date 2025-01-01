@@ -104,22 +104,22 @@ volumes:
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/X.A.N.A./media/graylog/mongo-data"
+      device: "/mnt/FranzHopper/appdata/graylog/mongo-data"
   log-data:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/X.A.N.A./media/graylog/log-data"
+      device: "/mnt/FranzHopper/appdata/graylog/log-data"
   graylog-data:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/FranzHopper/appdata/graylog-data"
+      device: "/mnt/FranzHopper/appdata/graylog/graylog-data"
   graylog-config:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/FranzHopper/appdata/graylog-config"
+      device: "/mnt/FranzHopper/appdata/graylog/graylog-config"
