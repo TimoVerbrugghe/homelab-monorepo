@@ -9,7 +9,7 @@
     sane = {
       enable = true;
       brscan4 = {
-        enable = true;
+        # enable = true;
         netDevices = {
           home = { model = "DCP-L2627DWE"; ip = "10.10.10.197"; };
         };
