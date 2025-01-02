@@ -408,7 +408,7 @@
                     <Order>10</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File Z:\configurewinrm.ps1</CommandLine>
+                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy ByPass -File Z:\configurewinrm.ps1</CommandLine>
                     <Description>Configure WinRM so that ansible can connect to it</Description>
                     <Order>11</Order>
                     <RequiresUserInput>false</RequiresUserInput>

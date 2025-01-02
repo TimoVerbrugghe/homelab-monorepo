@@ -52,6 +52,9 @@ in
       # Shellaliases
       ./shell.nix
 
+      # Scanner
+      ./scan.nix
+
     ];
 
   ############################
