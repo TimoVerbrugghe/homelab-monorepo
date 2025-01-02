@@ -12,4 +12,9 @@
       };
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    # Scanner program more advanced than the gnome simple-scan
+    naps2
+  ];
 }
