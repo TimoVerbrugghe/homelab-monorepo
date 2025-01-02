@@ -52,6 +52,11 @@
     ansible
     sshpass
     python312Packages.dnspython
+
+    # Talos & Kubernetes management
+    talosctl
+    crane
+    kubectl
   ];
 
   # Needed to install packages from flathub, including Greenlight for xbox remote play
