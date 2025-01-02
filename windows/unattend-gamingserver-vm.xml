@@ -2,6 +2,121 @@
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <!-- Settings to apply during Windows Setup -->
     <settings pass="windowsPE">
+        <component name="Microsoft-Windows-PnpCustomizationsWinPE" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+            <!--
+            This makes the VirtIO drivers available to Windows, assuming that
+            the VirtIO driver disk at https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
+            was extracted to the windowsinstall smb share.
+            -->
+            <DriverPaths>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="3">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\NetKVM\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <!-- Not installing the balloon driver - known to cause performance issues              
+                <PathAndCredentials wcm:action="add" wcm:keyValue="4">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\Balloon\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials> -->
+                <PathAndCredentials wcm:action="add" wcm:keyValue="5">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\pvpanic\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="6">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\qemufwcfg\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="6">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\qemupciserial\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\smbus\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\sriov\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viofs\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viogpudo\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\vioinput\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viomem\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="9">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viorng\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="10">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\vioscsi\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="11">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\vioserial\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="12">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viostor\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+            </DriverPaths>
+        </component>
         <!-- Keyboard & Language settings during windows Setup -->
         <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SetupUILanguage>
@@ -13,8 +128,79 @@
             <UILanguageFallback>en-US</UILanguageFallback>
             <UserLocale>nl-BE</UserLocale>
         </component>
-        <!-- General PC Settings -->
+        <!-- Disk Setup -->
         <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <!-- Create partition scheme -->
+            <DiskConfiguration>
+                <Disk wcm:action="add">
+                    <CreatePartitions>
+                        <!-- Windows RE Tools partition -->
+                        <CreatePartition wcm:action="add">
+                            <Order>1</Order>
+                            <Size>350</Size>
+                            <Type>Primary</Type>
+                        </CreatePartition>
+                        <!-- System partition (ESP) -->
+                        <CreatePartition wcm:action="add">
+                            <Order>2</Order>
+                            <Size>100</Size>
+                            <Type>EFI</Type>
+                        </CreatePartition>
+                        <!-- Microsoft reserved partition (MSR) -->
+                        <CreatePartition wcm:action="add">
+                            <Order>3</Order>
+                            <Size>128</Size>
+                            <Type>MSR</Type>
+                        </CreatePartition>
+                        <!-- Windows partition -->
+                        <CreatePartition wcm:action="add">
+                            <Order>4</Order>
+                            <Extend>true</Extend>
+                            <Type>Primary</Type>
+                        </CreatePartition>
+                    </CreatePartitions>
+                    <ModifyPartitions>
+                        <!-- Windows RE Tools partition -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>1</Order>
+                            <PartitionID>1</PartitionID>
+                            <Label>WINRE</Label>
+                            <Format>NTFS</Format>
+                            <TypeID>de94bba4-06d1-4d40-a16a-bfd50179d6ac</TypeID>
+                        </ModifyPartition>
+                        <!-- System partition (ESP) -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>2</Order>
+                            <PartitionID>2</PartitionID>
+                            <Label>System</Label>
+                            <Format>FAT32</Format>
+                        </ModifyPartition>
+                        <!-- MSR partition does not need to be modified -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>3</Order>
+                            <PartitionID>3</PartitionID>
+                        </ModifyPartition>
+                        <!-- Windows partition -->
+                        <ModifyPartition wcm:action="add">
+                            <Order>4</Order>
+                            <PartitionID>4</PartitionID>
+                            <Label>Windows</Label>
+                            <Format>NTFS</Format>
+                        </ModifyPartition>
+                    </ModifyPartitions>
+                    <DiskID>0</DiskID>
+                    <WillWipeDisk>true</WillWipeDisk>
+                </Disk>
+                <WillShowUI>OnError</WillShowUI>
+            </DiskConfiguration>
+            <ImageInstall>
+                <OSImage>
+                    <InstallTo>
+                        <DiskID>0</DiskID>
+                        <PartitionID>4</PartitionID>
+                    </InstallTo>
+                </OSImage>
+            </ImageInstall>
             <UserData>
                 <ProductKey>
                     <!-- Using the generic Windows 11 Pro Key -->
@@ -22,7 +208,7 @@
                     <WillShowUI>OnError</WillShowUI>
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
-                <FullName>GamingServer</FullName>
+                <FullName>WindowsVM</FullName>
                 <Organization>Timo Homelab Inc.</Organization>
             </UserData>
         </component>
@@ -107,7 +293,7 @@
                 <ShowMediaCenter>false</ShowMediaCenter>
                 <ShowWindowsMediaPlayer>false</ShowWindowsMediaPlayer>
             </WindowsFeatures>
-            
+
             <!-- Disable Out-of-box-experience settings -->
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
@@ -136,9 +322,9 @@
                             <PlainText>false</PlainText>
                         </Password>
                         <Group>Administrators;Users</Group>
-                        <DisplayName>GamingServer</DisplayName>
-                        <Name>GamingServer</Name>
-                        <Description>GamingServer User</Description>
+                        <DisplayName>GamingVM</DisplayName>
+                        <Name>GamingVM</Name>
+                        <Description>GamingVM User</Description>
                     </LocalAccount>
 
                     <!-- Add ansible user for automation -->
@@ -162,7 +348,7 @@
                     <PlainText>false</PlainText>
                 </Password>
                 <Enabled>true</Enabled>
-                <Username>GamingServer</Username>
+                <Username>GamingVM</Username>
             </AutoLogon>
 
             <!-- Set commands to run configuration powershell script (for WinRM) -->
@@ -224,8 +410,8 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <RequiresUserInput>false</RequiresUserInput>
-                    <CommandLine>cmd /C wmic useraccount where name="GamingServer" set PasswordExpires=false</CommandLine>
-                    <Description>Password Never Expires for gamingserver user</Description>
+                    <CommandLine>cmd /C wmic useraccount where name="GamingVM" set PasswordExpires=false</CommandLine>
+                    <Description>Password Never Expires for gamingvm user</Description>
                     <Order>10</Order>
                 </SynchronousCommand>
                 <SynchronousCommand>

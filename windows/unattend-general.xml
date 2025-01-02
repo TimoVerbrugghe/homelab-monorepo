@@ -5,6 +5,121 @@
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <!-- Settings to apply during Windows Setup -->
     <settings pass="windowsPE">
+        <component name="Microsoft-Windows-PnpCustomizationsWinPE" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+            <!--
+            This makes the VirtIO drivers available to Windows, assuming that
+            the VirtIO driver disk at https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
+            was extracted to the windowsinstall smb share.
+            -->
+            <DriverPaths>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="3">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\NetKVM\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <!-- Not installing the balloon driver - known to cause performance issues              
+                <PathAndCredentials wcm:action="add" wcm:keyValue="4">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\Balloon\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials> -->
+                <PathAndCredentials wcm:action="add" wcm:keyValue="5">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\pvpanic\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="6">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\qemufwcfg\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="6">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\qemupciserial\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\smbus\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\sriov\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viofs\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viogpudo\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\vioinput\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viomem\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="9">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viorng\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="10">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\vioscsi\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="11">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\vioserial\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="12">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viostor\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+            </DriverPaths>
+        </component>
         <!-- Keyboard & Language settings during windows Setup -->
         <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SetupUILanguage>
@@ -97,7 +212,7 @@
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
                 <FullName>Timo-WindowsPC</FullName>
-                <Organization>Timo Software Inc.</Organization>
+                <Organization>Timo Homelab Inc.</Organization>
             </UserData>
         </component>
     </settings>
@@ -159,9 +274,15 @@
 
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <ComputerName>WindowsVM</ComputerName>
+        </component>
+    </settings>
 
+    <!-- Settings to apply during the first-boot experience -->
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <!-- Set Dark Mode, TimeZone -->
             <Themes>
+                <DesktopBackground></DesktopBackground>
                 <UWPAppsUseLightTheme>false</UWPAppsUseLightTheme>
             </Themes>
             <TimeZone>Romance Standard Time</TimeZone>
@@ -175,13 +296,7 @@
                 <ShowMediaCenter>false</ShowMediaCenter>
                 <ShowWindowsMediaPlayer>false</ShowWindowsMediaPlayer>
             </WindowsFeatures>
-
-        </component>
-    </settings>
-
-    <!-- Settings to apply during the first-boot experience -->
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            
             <!-- Disable Out-of-box-experience settings -->
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>

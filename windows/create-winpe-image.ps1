@@ -78,6 +78,12 @@ Add-WindowsPackage -PackagePath "$adk_winpe\WinPE_OCs\WinPE-EnhancedStorage.cab"
 Add-WindowsPackage -PackagePath "$adk_winpe\WinPE_OCs\en-us\WinPE-EnhancedStorage_en-us.cab" -Path $mountfolder -IgnoreCheck
 Add-WindowsPackage -PackagePath "$adk_winpe\WinPE_OCs\WinPE-SecureBootCmdlets.cab" -Path $mountfolder
 
+# Transfer all files to the network share
+Write-Output "Mounting network share for virtio-win & windows files transfer..."
+$networkPath = "\\10.10.10.2\windowsinstall\"
+$credential = New-Object System.Management.Automation.PSCredential("windowsinstall", (ConvertTo-SecureString "windowsinstall" -AsPlainText -Force))
+New-PSDrive -Name "Z" -PSProvider "FileSystem" -Root $networkPath -Credential $credential -Persist -Scope Global
+
 # Download virtio drivers from url and extract iso to temp folder
 Write-Output "Downloading virtio drivers..."
 if (-Not (Test-Path $virtio_iso_path)) {
@@ -91,25 +97,31 @@ if (-Not (Test-Path $virtio_iso_path)) {
 }
 $mountResult = Mount-DiskImage -ImagePath $virtio_iso_path -PassThru
 
-# Get the drive letter of the mounted ISO
+# Get the drive letter of the mounted Virtio-Win ISO
 $driveLetter = ($mountResult | Get-Volume).DriveLetter
 $isoMountPath = "$($driveLetter):\"
 
 # Add Virtio drivers
 Write-Output "Adding virtio drivers to boot image..."
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viostor\w11\amd64" -Recurse
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioscsi\w11\amd64" -Recurse
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viorng\w11\amd64" -Recurse
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioserial\w11\amd64" -Recurse 
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viomem\w11\amd64" -Recurse
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioinput\w11\amd64" -Recurse
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viogpudo\w11\amd64" -Recurse
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viofs\w11\amd64" -Recurse
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\sriov\w11\amd64" -Recurse
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\smbus\w11\amd64" -Recurse
 Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\NetKVM\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\pvpanic\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\qemupciserial\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\qemufwcfg\w11\amd64" -Recurse
+# SMBus driver installation doesn't seem to be working...
+# Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\smbus\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\sriov\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viofs\w11\amd64" -Recurse
 Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viogpudo\w11\amd64" -Recurse
-Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\Balloon\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioinput\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viomem\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viorng\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioscsi\w11\amd64" -Recurse
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioserial\w11\amd64" -Recurse 
+Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viostor\w11\amd64" -Recurse
+
+# Transfer all virtio drivers to the network share
+Write-Output "Copying virtio drivers to the network share virtio folder..."
+Copy-Item -Path "$isoMountPath\*" -Destination "Z:\virtio\" -Recurse -Force
 
 # Dismount the ISO
 Dismount-DiskImage -ImagePath $virtio_iso_path
@@ -135,12 +147,6 @@ $isoMountResult = Mount-DiskImage -ImagePath $isofile -PassThru
 $isoDriveLetter = ($isoMountResult | Get-Volume).DriveLetter
 $isoMountPath = "$($isoDriveLetter):\"
 
-# Transfer all files to the network share
-Write-Output "Mounting network share..."
-$networkPath = "\\10.10.10.2\windowsinstall\"
-$credential = New-Object System.Management.Automation.PSCredential("windowsinstall", (ConvertTo-SecureString "windowsinstall" -AsPlainText -Force))
-New-PSDrive -Name "Z" -PSProvider "FileSystem" -Root $networkPath -Credential $credential -Persist -Scope Global
-
 # Delete everything inside the networkPath folder
 Write-Output "Deleting existing files in the network share WinPE folder..."
 Remove-Item -Path "Z:\WinPE\*" -Recurse -Force
@@ -151,6 +157,11 @@ Copy-Item -Path "$isoMountPath*" -Destination "Z:\WinPE\" -Recurse -Force
 # Copy all XML files from the same folder to the network share
 Write-Output "Copying all XML files to the network share Windows 11 folder..."
 Copy-Item -Path "./*.xml" -Destination "Z:\Windows11\" -Recurse -Force
+
+# Copy Powershell files from the same folder to the network share
+Write-Output "Copying powershell files to the network share Windows 11 folder..."
+Copy-Item -Path "./staticip.ps1" -Destination "Z:\Windows11\" -Recurse -Force
+Copy-Item -Path "./configurewinrm.ps1" -Destination "Z:\Windows11\" -Recurse -Force
 
 # Copy unattend-general.xml to unattend.xml on the network share
 Write-Output "Copying unattend-general.xml to unattend.xml on the network share..."
