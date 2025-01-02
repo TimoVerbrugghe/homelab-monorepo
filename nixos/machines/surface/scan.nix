@@ -17,4 +17,9 @@
     # Scanner program more advanced than the gnome simple-scan
     naps2
   ];
+
+  # Needed for naps2 to work
+  nixpkgs.config.permittedInsecurePackages = [
+    "dotnet-sdk-6.0.428"
+  ];
 }
