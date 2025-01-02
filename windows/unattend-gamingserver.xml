@@ -246,7 +246,7 @@
                     <Order>13</Order>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
-                <SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
                     <RequiresUserInput>false</RequiresUserInput>
                     <CommandLine>cmd /C net use z: /delete</CommandLine>
                     <Description>Unmount windowsinstall folder</Description>

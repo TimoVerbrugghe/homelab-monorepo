@@ -12,7 +12,7 @@
             was extracted to the windowsinstall smb share.
             -->
             <DriverPaths>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="3">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="1">
                     <Path>\\10.10.10.2\windowsinstall\virtio\NetKVM\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
@@ -20,42 +20,42 @@
                     </Credentials>
                 </PathAndCredentials>
                 <!-- Not installing the balloon driver - known to cause performance issues              
-                <PathAndCredentials wcm:action="add" wcm:keyValue="4">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="2">
                     <Path>\\10.10.10.2\windowsinstall\virtio\Balloon\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials> -->
-                <PathAndCredentials wcm:action="add" wcm:keyValue="5">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="3">
                     <Path>\\10.10.10.2\windowsinstall\virtio\pvpanic\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="6">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="4">
                     <Path>\\10.10.10.2\windowsinstall\virtio\qemufwcfg\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="6">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="5">
                     <Path>\\10.10.10.2\windowsinstall\virtio\qemupciserial\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="6">
                     <Path>\\10.10.10.2\windowsinstall\virtio\smbus\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="7">
                     <Path>\\10.10.10.2\windowsinstall\virtio\sriov\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
@@ -69,49 +69,49 @@
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="9">
                     <Path>\\10.10.10.2\windowsinstall\virtio\viogpudo\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="10">
                     <Path>\\10.10.10.2\windowsinstall\virtio\vioinput\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="11">
                     <Path>\\10.10.10.2\windowsinstall\virtio\viomem\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="9">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="12">
                     <Path>\\10.10.10.2\windowsinstall\virtio\viorng\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="10">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="13">
                     <Path>\\10.10.10.2\windowsinstall\virtio\vioscsi\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="11">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="14">
                     <Path>\\10.10.10.2\windowsinstall\virtio\vioserial\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="12">
+                <PathAndCredentials wcm:action="add" wcm:keyValue="15">
                     <Path>\\10.10.10.2\windowsinstall\virtio\viostor\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
@@ -400,6 +400,24 @@
                     <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SubscribedContent-88000326Enabled /t REG_DWORD /d 0 /f</CommandLine>
                     <Order>9</Order>
                     <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand>
+                    <RequiresUserInput>false</RequiresUserInput>
+                    <CommandLine>cmd /C net use z: \\10.10.10.2\windowsinstall\Windows11 /user:windowsinstall windowsinstall</CommandLine>
+                    <Description>Mount windowsinstall folder</Description>
+                    <Order>10</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy RemoteSigned -File Z:\configurewinrm.ps1</CommandLine>
+                    <Description>Configure WinRM so that ansible can connect to it</Description>
+                    <Order>11</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <RequiresUserInput>false</RequiresUserInput>
+                    <CommandLine>cmd /C net use z: /delete</CommandLine>
+                    <Description>Unmount windowsinstall folder</Description>
+                    <Order>13</Order>
                 </SynchronousCommand>
             </FirstLogonCommands>
         </component>
