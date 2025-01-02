@@ -1,13 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  users.users = {
-
-    ${username} = {
-      extraGroups = [ "scanner" "lp" ];
-    };
-  };
-
   imports = [
     <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
   ];

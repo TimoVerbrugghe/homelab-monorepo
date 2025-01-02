@@ -69,7 +69,7 @@ in
   users = {
     users = {
       ${username} = {
-        extraGroups = [ "wheel" "render" "video" "input" "networkmanager" "surface-control" ];
+        extraGroups = [ "wheel" "render" "video" "input" "networkmanager" "surface-control" "scanner" "lp" ];
         isNormalUser = true;
         createHome = true;
         initialHashedPassword = "${hashedPassword}";
