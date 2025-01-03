@@ -32,6 +32,9 @@ machine:
     install:
       disk: /dev/sda
       image: factory.talos.dev/installer/65726e13452bc69aae01ffa4425866eff157a4ceac5bc3dba5117efe1773e333:v1.9.1
+      kernel:
+        extraArgs:
+          - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
 
     nodeLabels:
         intel-gpu: true # Tainting this node because it has an intel N100 gpu
@@ -86,3 +89,6 @@ cluster:
   extraManifests:
     - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/k3s-helm-controller.yaml # Helm Controller from K3S to manage helm charts declaratively. Need to deploy a custom manifest because the official ones give permission issues with service accounts not being created
     - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/reflector.yaml # Trying to see if I can also include helmcharts directly in the bootstrap
+    - https://kube-vip.io/manifests/rbac.yaml # RBAC for kube-vip
+    - https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml # Cloud controller for kube-vip
+    

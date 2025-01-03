@@ -27,6 +27,7 @@ in
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Enable Tailscale
       ../../modules/common/github-key.nix # Add GitHub PAT key for flake updates
+      ../../modules/common/docker.nix # Install docker
 
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
