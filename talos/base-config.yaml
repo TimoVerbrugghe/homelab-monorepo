@@ -85,3 +85,4 @@ cluster:
   # A list of urls that point to additional manifests.
   extraManifests:
     - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/k3s-helm-controller.yaml # Helm Controller from K3S to manage helm charts declaratively. Need to deploy a custom manifest because the official ones give permission issues with service accounts not being created
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/reflector.yaml # Trying to see if I can also include helmcharts directly in the bootstrap
