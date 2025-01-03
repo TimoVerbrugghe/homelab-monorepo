@@ -8,10 +8,24 @@ machine:
         - william.local.timo.be
         - kubernetes.local.timo.be
     kubelet:
-        extraConfig:
-            nodeStatusUpdateFrequency: 4s
-            featureGates:
-                GracefulNodeShutdown: true
+      extraConfig:
+          nodeStatusUpdateFrequency: 4s
+          featureGates:
+              GracefulNodeShutdown: true
+
+    # Prepping node for longhorn, see https://www.talos.dev/v1.9/kubernetes-guides/configuration/replicated-local-storage-with-openebs/
+      extraMounts:
+        - destination: /var/lib/longhorn
+          type: bind
+          source: /var/lib/longhorn
+          options:
+            - rbind
+            - rshared
+            - rw
+    
+    sysctls:
+      vm.nr_hugepages: "1024"
+    
     network:
       nameservers:
         - 10.10.10.20
@@ -36,7 +50,7 @@ machine:
       # Generated using 
       image: factory.talos.dev/installer/d2d23df916e96c3c530467d3ef13b67c23ae72d1bf12523304446b248b415869:v1.9.1
       extraKernelArgs:
-          - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
+        - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
 
     nodeLabels:
         intel-gpu: true # Tainting this node because it has an intel N100 gpu
