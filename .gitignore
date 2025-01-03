@@ -15,3 +15,4 @@ controlplane.yaml
 worker.yaml
 secrets.yaml
 talosconfig
+extension-patch.yml
