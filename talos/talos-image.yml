@@ -1,0 +1,14 @@
+# Generate a talos factory image id with 
+# curl -X POST --data-binary @talos-image.yml https://factory.talos.dev/schematics
+customization:
+  extraKernelArgs:
+    - net.ifnames=0
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/qemu-guest-agent
+      - siderolabs/i915
+      - siderolabs/tailscale
+      - siderolabs/cloudflared
+      - siderolabs/iscsi-tools
+      - siderolabs/util-linux-tools
+      - siderolabs/intel-ucode
