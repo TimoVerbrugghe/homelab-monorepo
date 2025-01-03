@@ -1,0 +1,12 @@
+---
+apiVersion: v1alpha1
+kind: ExtensionServiceConfig
+name: tailscale
+environment:
+  - TS_AUTHKEY=<your_auth_key>
+---
+apiVersion: v1alpha1
+kind: ExtensionServiceConfig
+name: cloudflared
+environment:
+  - TUNNEL_TOKEN=<your_token>

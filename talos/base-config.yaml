@@ -1,10 +1,12 @@
 # Apply this patch with the following command:
 # talosctl gen config --output controlplane.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch '[{"op": "add", "path": "/machine/network/hostname", "value": "william"}]' lyoko https://10.10.10.30:6443
-
+version: v1alpha1
 machine:
     certSANs:
         - 10.10.10.30
+        - 10.10.10.33
         - william.local.timo.be
+        - kubernetes.local.timo.be
     kubelet:
         extraConfig:
             nodeStatusUpdateFrequency: 4s
@@ -24,10 +26,12 @@ machine:
           -   network: 0.0.0.0/0 # The route's network (destination).
               gateway: 10.10.10.1 # The route's gateway (if empty, creates link scope route).
           mtu: 1500 # The interface's MTU.
+          vip:
+              ip: 10.10.10.33 # Specifies the IP address to be used.
 
     install:
       disk: /dev/sda
-      # image: factory.talos.dev/installer/65726e13452bc69aae01ffa4425866eff157a4ceac5bc3dba5117efe1773e333
+      image: factory.talos.dev/installer/65726e13452bc69aae01ffa4425866eff157a4ceac5bc3dba5117efe1773e333:v1.9.1
 
     nodeLabels:
         intel-gpu: true # Tainting this node because it has an intel N100 gpu
@@ -37,16 +41,17 @@ machine:
         destinations:
             - endpoint: udp://10.10.10.2:1520
               format: json_lines # Logs format.
-
 cluster:
   allowSchedulingOnControlPlanes: true
   controlPlane:
-    endpoint: https://10.10.10.30:6443 
+    endpoint: https://10.10.10.33:6443 
 
   apiServer:
     certSANs:
       - 10.10.10.30
+      - 10.10.10.33
       - william.local.timo.be
+      - kubernetes.local.timo.be
     extraArgs:
         default-not-ready-toleration-seconds: 120
         default-unreachable-toleration-seconds: 120 
@@ -57,6 +62,26 @@ cluster:
   #         node-monitor-period-duration: 4s
   #         node-monitor-grace-period-duration: 16s
 
+  # files:
+  #     - content: '
+  #     # Always try to only have 1 of the same pod on one node (aka multipod deployments should spread out as evenly as possible)
+  #       apiVersion: kubescheduler.config.k8s.io/v1
+  #       kind: KubeSchedulerConfiguration
+
+  #       profiles:
+  #         - schedulerName: default-scheduler
+  #           pluginConfig:
+  #             - name: PodTopologySpread
+  #               args:
+  #                 defaultConstraints:
+  #                   - maxSkew: 1
+  #                     topologyKey: topology.kubernetes.io/zone
+  #                     whenUnsatisfiable: ScheduleAnyway
+  #                 defaultingType: List' # The contents of the file.
+  #       permissions: 0666 # The file's permissions in octal.
+  #       path: /etc/kubeschedulerconfig.yaml # The path of the file.
+  #       op: append # The operation to use
+
   # A list of urls that point to additional manifests.
   extraManifests:
-    - 
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/k3s-helm-controller.yaml # Helm Controller from K3S to manage helm charts declaratively. Need to deploy a custom manifest because the official ones give permission issues with service accounts not being created
