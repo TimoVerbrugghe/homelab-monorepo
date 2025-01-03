@@ -1,0 +1,62 @@
+# Apply this patch with the following command:
+# talosctl gen config --output controlplane.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch '[{"op": "add", "path": "/machine/network/hostname", "value": "william"}]' lyoko https://10.10.10.30:6443
+
+machine:
+    certSANs:
+        - 10.10.10.30
+        - william.local.timo.be
+    kubelet:
+        extraConfig:
+            nodeStatusUpdateFrequency: 4s
+            featureGates:
+                GracefulNodeShutdown: true
+    network:
+      nameservers:
+        - 10.10.10.20
+        - 10.10.10.21
+        - 10.10.10.22
+      interfaces:
+      -   deviceSelector:
+              physical: true # should select any hardware network device, if it's just one, that one will be selected
+          addresses: # Assigns static IP addresses to the interface.
+              - 10.10.10.30/24
+          routes:
+          -   network: 0.0.0.0/0 # The route's network (destination).
+              gateway: 10.10.10.1 # The route's gateway (if empty, creates link scope route).
+          mtu: 1500 # The interface's MTU.
+
+    install:
+      disk: /dev/sda
+      # image: factory.talos.dev/installer/65726e13452bc69aae01ffa4425866eff157a4ceac5bc3dba5117efe1773e333
+
+    nodeLabels:
+        intel-gpu: true # Tainting this node because it has an intel N100 gpu
+
+    logging:
+        # Logging destination.
+        destinations:
+            - endpoint: udp://10.10.10.2:1520
+              format: json_lines # Logs format.
+
+cluster:
+  allowSchedulingOnControlPlanes: true
+  controlPlane:
+    endpoint: https://10.10.10.30:6443 
+
+  apiServer:
+    certSANs:
+      - 10.10.10.30
+      - william.local.timo.be
+    extraArgs:
+        default-not-ready-toleration-seconds: 120
+        default-unreachable-toleration-seconds: 120 
+
+  # These flags are wrong, need to check
+  # controllerManager:
+  #     extraArgs:
+  #         node-monitor-period-duration: 4s
+  #         node-monitor-grace-period-duration: 16s
+
+  # A list of urls that point to additional manifests.
+  extraManifests:
+    - 
