@@ -57,6 +57,7 @@
     talosctl
     crane
     kubectl
+    helm
   ];
 
   # Needed to install packages from flathub, including Greenlight for xbox remote play
