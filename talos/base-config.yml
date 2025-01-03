@@ -51,6 +51,7 @@ machine:
       image: factory.talos.dev/installer/d2d23df916e96c3c530467d3ef13b67c23ae72d1bf12523304446b248b415869:v1.9.1
       extraKernelArgs:
         - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
+        - i915.enable_guc=3 # Enable Intel QuickSync (needed for Jellyfin & Plex)
 
     nodeLabels:
         intel-gpu: true # Tainting this node because it has an intel N100 gpu

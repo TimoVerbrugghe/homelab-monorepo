@@ -52,6 +52,8 @@ spec:
           mountPath: /dev/shm
         - name: devdri
           mountPath: /dev/dri
+        securityContext:
+          privileged: true
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -65,12 +67,13 @@ spec:
       - name: tvshows
         persistentVolumeClaim:
           claimName: nfs-tvshows-pvc
-      # - name: devshm
-      #   hostPath:
-      #     path: /dev/shm
-      # - name: devdri
-      #   hostPath:
-      #     path: /dev/dri
+      - name: devshm
+        hostPath:
+          path: /dev/shm
+      - name: devdri
+        hostPath:
+          path: /dev/dri
+
 ---
 # Service to expose local discovery ports and also so that traefik can pick up and expose jellyfin service
 apiVersion: v1

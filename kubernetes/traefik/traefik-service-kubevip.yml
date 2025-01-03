@@ -10,7 +10,7 @@ spec:
     app.kubernetes.io/name: traefik
   loadBalancerClass: kube-vip.io/kube-vip-class
   type: LoadBalancer
-  loadBalancerIP: 10.10.10.35
+  loadBalancerIP: 10.10.10.34
   ports:
   - name: websecure
     protocol: TCP
