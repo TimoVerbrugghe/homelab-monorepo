@@ -1,5 +1,5 @@
 # Apply this patch with the following command:
-# talosctl gen config --output controlplane.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch '[{"op": "add", "path": "/machine/network/hostname", "value": "william"}]' lyoko https://10.10.10.30:6443
+# talosctl gen config --output controlplane.yml --output-types controlplane --with-secrets secrets.yml --config-patch @base-config.yml --config-patch '[{"op": "add", "path": "/machine/network/hostname", "value": "william"}]' --config-patch @extension-patch.yml lyoko https://10.10.10.30:6443
 version: v1alpha1
 machine:
     certSANs:
@@ -32,8 +32,7 @@ machine:
     install:
       disk: /dev/sda
       image: factory.talos.dev/installer/65726e13452bc69aae01ffa4425866eff157a4ceac5bc3dba5117efe1773e333:v1.9.1
-      kernel:
-        extraArgs:
+      extraKernelArgs:
           - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
 
     nodeLabels:

@@ -11,8 +11,8 @@ terraform/environments/proxmox.tfvars
 *.rom
 nixos/variables.nix
 .DS_Store
-controlplane.yaml
-worker.yaml
-secrets.yaml
+controlplane.yml
+worker.yml
+secrets.yml
 talosconfig
 extension-patch.yml
