@@ -3,9 +3,6 @@ kind: IngressRoute
 metadata:
   name: longhorn-ingress
   namespace: longhorn-system
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    argocd.argoproj.io/sync-wave: "30"
 spec:
   entryPoints:
     - websecure
