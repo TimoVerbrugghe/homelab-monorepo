@@ -91,4 +91,7 @@ cluster:
     - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/reflector.yaml # Trying to see if I can also include helmcharts directly in the bootstrap
     - https://kube-vip.io/manifests/rbac.yaml # RBAC for kube-vip
     - https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml # Cloud controller for kube-vip
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/kube-vip/kube-vip-configmap.yaml # kube-vip configmap
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/kube-vip/kube-vip.yaml # kube-vip manifest
+    
     
