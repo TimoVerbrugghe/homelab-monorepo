@@ -9,6 +9,6 @@ profiles:
           defaultConstraints:
             - maxSkew: 1
               topologyKey: kubernetes.io/hostname
-              # If not possible to do this, schedule the pods anyway on the same node, but 
+              # If not possible to do this, schedule the pods anyway on the same node
               whenUnsatisfiable: ScheduleAnyway
           defaultingType: List
