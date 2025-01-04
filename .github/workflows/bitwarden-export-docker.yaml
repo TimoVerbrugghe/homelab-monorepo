@@ -9,6 +9,10 @@ on:
       - 'docker/bitwarden-export/**'
       - '.github/workflows/bitwarden-export-docker.yaml'
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
