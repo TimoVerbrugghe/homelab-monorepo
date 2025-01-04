@@ -1,6 +1,0 @@
-- name: Run bootstrap script
-  ansible.builtin.script: ../templates/bootstrap-script.sh --tailscaleauthkey "{{ tailscaleAuthkey }}" --nixosFlake "{{ nixosFlake }}"
-
-- name: Reboot the machine
-  ansible.builtin.raw: "reboot"
-  ignore_unreachable: true
