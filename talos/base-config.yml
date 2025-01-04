@@ -46,12 +46,12 @@ machine:
     install:
       disk: /dev/sda
 
-      # Image with these extensions: qemu-guest-agent, i915, tailscale, cloudflared, intel-ucode, iscsi-tools & util-linux-tools
+      # Image with these extensions: qemu-guest-agent, i915, tailscale, cloudflared, intel-ucode, iscsi-tools & util-linux-tools + extraKernelArgs
       # Generated using 
-      image: factory.talos.dev/installer/d2d23df916e96c3c530467d3ef13b67c23ae72d1bf12523304446b248b415869:v1.9.1
+      image: factory.talos.dev/installer/dff4f5e7c9d609e2ea14e4148f50530abbe51d3290fec5c21fa316a2d06fb034:v1.9.1
       extraKernelArgs:
         - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
-        - i915.enable_guc=3 # Enable Intel QuickSync (needed for Jellyfin & Plex)
+        - i915.enable_guc=2 # Enable Intel QuickSync (needed for Jellyfin & Plex)
 
     nodeLabels:
         intel-gpu: true # Tainting this node because it has an intel N100 gpu

@@ -1,6 +1,0 @@
----
-# Creating namespace for traefik to be installed in
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: test
