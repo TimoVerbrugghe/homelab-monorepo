@@ -1,0 +1,16 @@
+---
+# Creating namespace for traefik to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tailscale
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: tailscale
+  namespace: kube-system
+spec:
+  chart: tailscale-operator
+  repo: https://pkgs.tailscale.com/helmcharts
+  targetNamespace: tailscale

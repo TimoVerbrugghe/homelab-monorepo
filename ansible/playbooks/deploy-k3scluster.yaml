@@ -20,7 +20,7 @@
 - name: Update known hosts with VM ssh keys
   vars:
     host_group: k3scluster
-  import_playbook: ./update-known-hosts.yml
+  import_playbook: ./update-known-hosts.yaml
 
 - name: Do first time Ubuntu setup
   hosts: k3scluster

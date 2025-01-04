@@ -1,0 +1,4 @@
+
+
+- name: Install Portainer Server
+  ansible.builtin.include_tasks: portainerserver-install.yaml

@@ -3,9 +3,6 @@ kind: IngressRoute
 metadata:
   name: sonarr
   namespace: traefik
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    argocd.argoproj.io/sync-wave: "70"
 spec:
   entryPoints:
     - websecure
@@ -21,8 +18,6 @@ kind: Service
 metadata:
   name: sonarr-svc
   namespace: traefik
-  annotations:
-    argocd.argoproj.io/sync-wave: "70"
 spec:
-  externalName: sonarr.home.timo.be # Can also be an IP address
+  externalName: sonarr.thefactory.timo.be # Can also be an IP address
   type: ExternalName

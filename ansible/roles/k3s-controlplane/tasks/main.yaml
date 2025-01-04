@@ -15,7 +15,7 @@
     mode: 0644
 
 - name: Deploy kube-vip manifest to first controlplane (will deploy automatically when k3s gets installed)
-  ansible.builtin.include_tasks: kube-vip.yml
+  ansible.builtin.include_tasks: kube-vip.yaml
   when: ansible_hostname == hostvars[groups['k3scontrolplane'][0]]['ansible_hostname']
 
 ## Install k3s on the first controlplane node
@@ -37,7 +37,7 @@
       changed_when: false
   always:
     - name: Save logs of k3s-init.service
-      include_tasks: fetch_k3s_init_logs.yml
+      include_tasks: fetch_k3s_init_logs.yaml
       when: log_destination
       vars:
         log_destination: >-
@@ -119,7 +119,7 @@
       changed_when: false
   always:
     - name: Save logs of k3s-init.service
-      include_tasks: fetch_k3s_init_logs.yml
+      include_tasks: fetch_k3s_init_logs.yaml
       when: log_destination
       vars:
         log_destination: >-

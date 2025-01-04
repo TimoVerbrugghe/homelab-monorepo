@@ -31,7 +31,7 @@
       changed_when: false
   always:
     - name: Save logs of k3s-init.service
-      include_tasks: fetch_k3s_init_logs.yml
+      include_tasks: fetch_k3s_init_logs.yaml
       when: log_destination
       vars:
         log_destination: >-

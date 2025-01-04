@@ -1,5 +1,5 @@
 # Generate a talos factory image id with 
-# curl -X POST --data-binary @talos-image.yml https://factory.talos.dev/schematics
+# curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
 customization:
   extraKernelArgs:
     - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0

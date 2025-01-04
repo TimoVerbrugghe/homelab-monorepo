@@ -1,2 +1,0 @@
-- name: Install Portainer Agent
-  ansible.builtin.include_tasks: portaineragent-install.yml

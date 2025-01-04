@@ -7,4 +7,4 @@ export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 ansible-playbook \
      -i ../inventory/hosts.yaml \
      --limit localhost,sectorfive.local.timo.be,gamingvm \
-     ../playbooks/gamingvm-setup.yml
+     ../playbooks/gamingvm-setup.yaml

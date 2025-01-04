@@ -1,4 +1,4 @@
-name: Build and Publish Bitwarden Export Docker Image
+name: Build and Publish NS-USBLoader Docker Image
 
 on:
   workflow_dispatch:
@@ -6,14 +6,14 @@ on:
     branches:
       - master
     paths:
-      - 'docker/bitwarden-export/**'
-      - '.github/workflows/bitwarden-export-docker.yml'
+      - 'docker/ns-usbloader/**'
+      - '.github/workflows/ns-usbloader-docker.yaml'
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository_owner }}/bitwarden-export
+  IMAGE_NAME: ${{ github.repository_owner }}/ns-usbloader
 
 jobs:
   build-and-publish:
@@ -69,7 +69,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: docker/bitwarden-export
+          context: docker/ns-usbloader
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

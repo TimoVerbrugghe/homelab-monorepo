@@ -50,7 +50,7 @@ services:
       - /path/to/config:/root/.java/.userPrefs/NS-USBloader
 ```
 
-Save the above configuration in a file named `docker-compose.yml`, and then run the following command to start the container:
+Save the above configuration in a file named `docker-compose.yaml`, and then run the following command to start the container:
 
 ```shell
 docker-compose up -d

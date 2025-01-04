@@ -1,5 +1,5 @@
 - name: Update known hosts file
-  ansible.builtin.import_playbook: update-known-hosts.yml
+  ansible.builtin.import_playbook: update-known-hosts.yaml
 
 - name: Install Github SSH Keys
   hosts: all

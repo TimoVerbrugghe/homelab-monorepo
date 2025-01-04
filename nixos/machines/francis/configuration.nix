@@ -22,7 +22,7 @@ let
 
   tailscaleDomain = "werewolf-castor.ts.net";
 
-  portainerCompose = pkgs.writeText "portainer-docker-compose.yml" ''
+  portainerCompose = pkgs.writeText "portainer-docker-compose.yaml" ''
     version: '3.8'
 
     name: portainer

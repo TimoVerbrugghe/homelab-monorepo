@@ -1,5 +1,5 @@
 # Apply this patch with the following command:
-# talosctl gen config --output controlplane.yml --output-types controlplane --with-secrets secrets.yml --config-patch @base-config.yml --config-patch '[{"op": "add", "path": "/machine/network/hostname", "value": "william"}]' --config-patch @extension-patch.yml lyoko https://10.10.10.30:6443
+# talosctl gen config --output controlplane.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch '[{"op": "add", "path": "/machine/network/hostname", "value": "william"}]' --config-patch @extension-patch.yaml lyoko https://10.10.10.30:6443
 version: v1alpha1
 machine:
     certSANs:
@@ -104,11 +104,28 @@ cluster:
 
   # A list of urls that point to additional manifests.
   extraManifests:
-    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/k3s-helm-controller.yaml # Helm Controller from K3S to manage helm charts declaratively. Need to deploy a custom manifest because the official ones give permission issues with service accounts not being created
-    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/reflector.yaml # Trying to see if I can also include helmcharts directly in the bootstrap
-    - https://kube-vip.io/manifests/rbac.yaml # RBAC for kube-vip
-    - https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml # Cloud controller for kube-vip
-    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/kube-vip/kube-vip-configmap.yaml # kube-vip configmap
-    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/kube-vip/kube-vip.yaml # kube-vip manifest
+    # Helm Controller from K3S to manage helm charts declaratively. Need to deploy a custom manifest because the official ones give permission issues with service accounts not being created
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/k3s-helm-controller.yaml 
+
+    # Reflector
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/reflector.yaml
+
+    # Kube-VIP
+    - https://kube-vip.io/manifests/rbac.yaml
+    - https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/kube-vip/kube-vip-configmap.yaml
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/kube-vip/kube-vip.yaml
+
+    # Keel
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/keel.yaml
+
+    # Longhorn
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/longhorn.yaml
+
+    # Portainer
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/portainer.yaml
+
+    # Cert-Manager
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/cert-manager/cert-manager.yaml
     
     

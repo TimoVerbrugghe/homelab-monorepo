@@ -4,4 +4,4 @@ ansible-playbook \
      --limit proxmox,localhost \
      -e "github_username=TimoVerbrugghe" \
      -k \
-     ../playbooks/install-github-keys.yml
+     ../playbooks/install-github-keys.yaml

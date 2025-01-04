@@ -8,7 +8,7 @@
     - role: ../roles/hostprereq
 
 - name: Add Proxmox Public SSH Keys to local system so there is no interrupt on host verification
-  ansible.builtin.import_playbook: install-ssh-keys.yml
+  ansible.builtin.import_playbook: install-ssh-keys.yaml
 
 - name: Configure Proxmox Hosts for GPU passthrough & Create Ubuntu Cloud Init Template
   hosts: proxmox
@@ -37,7 +37,7 @@
 - name: Update known hosts with VM ssh keys
   vars:
     host_group: k3scluster
-  import_playbook: ./update-known-hosts.yml
+  import_playbook: ./update-known-hosts.yaml
 
 - name: Do first time Ubuntu setup
   hosts: vm

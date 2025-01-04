@@ -6,4 +6,4 @@ ansible-playbook -vvv \
      -e "ansible_username=nixos" \
      -e "ansible_password=nixos" \
      -e "ansible_become_password=nixos" \
-     ../playbooks/configure-nixos.yml
+     ../playbooks/configure-nixos.yaml

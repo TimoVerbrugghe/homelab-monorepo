@@ -30,7 +30,7 @@ in
 
 buildDotnetModule rec {
   pname = "ryujinx";
-  version = "1.1.1401"; # Based off of the official github actions builds: https://github.com/Ryujinx/Ryujinx/actions/workflows/release.yml
+  version = "1.1.1401"; # Based off of the official github actions builds: https://github.com/Ryujinx/Ryujinx/actions/workflows/release.yaml
 
   # Official GitHub source got deleted, you need to provide the source manually
   src = source;

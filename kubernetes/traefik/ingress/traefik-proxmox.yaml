@@ -3,9 +3,6 @@ kind: ServersTransport
 metadata:
   name: proxmox-serverstransport
   namespace: traefik
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    argocd.argoproj.io/sync-wave: "70"
 spec:
   insecureSkipVerify: true
 ---
@@ -14,20 +11,19 @@ kind: Service
 metadata:
   name: proxmox-svc
   namespace: traefik
-  annotations:
-    argocd.argoproj.io/sync-wave: "70"
 spec:
-  externalName: forestsector.local.timo.be # Can also be an IP address
+  externalName: forestsector.local.timo.be:8006 # Can also be an IP address
   type: ExternalName
+  healthCheck:
+    path: /
+    intervalSeconds: 10
+    timeoutSeconds: 3
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: proxmox
   namespace: traefik
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    argocd.argoproj.io/sync-wave: "70"
 spec:
   entryPoints:
     - websecure

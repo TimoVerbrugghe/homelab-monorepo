@@ -6,7 +6,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 # provide a github token so you don't get rate limited
 # if you use gh cli you can use:
-#     `export GITHUB_TOKEN="$(cat ~/.config/gh/config.yml | yq '.hosts."github.com".oauth_token' -r)"`
+#     `export GITHUB_TOKEN="$(cat ~/.config/gh/config.yaml | yq '.hosts."github.com".oauth_token' -r)"`
 # or just set your token by hand:
 #     `read -s -p "Enter your token: " GITHUB_TOKEN; export GITHUB_TOKEN`
 #     (we use read so it doesn't show in our shell history and in secret mode so the token you paste isn't visible)

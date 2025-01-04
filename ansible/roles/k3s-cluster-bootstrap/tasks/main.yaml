@@ -1,5 +1,5 @@
 - name: Install Helm
-  ansible.builtin.include_tasks: install-helm.yml
+  ansible.builtin.include_tasks: install-helm.yaml
 
 - name: Deploy cloudflare secrets in cluster (to be used later by cert-manager to get ssl certificates)
   kubernetes.core.k8s:

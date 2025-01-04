@@ -1,7 +1,7 @@
 # Playbook to set up a new proxmox host, this includes setting up iGPU passthrough, automatic upgrades and more
 
 - name: Update known hosts
-  ansible.builtin.import_playbook: update-known-hosts.yml
+  ansible.builtin.import_playbook: update-known-hosts.yaml
 
 - name: Configure Proxmox host
   hosts: all

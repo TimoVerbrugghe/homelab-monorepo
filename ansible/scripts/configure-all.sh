@@ -3,4 +3,4 @@
 
 ansible-playbook \
      -i ../inventory/hosts.yaml \
-     ../playbooks/full-proxmox-setup.yml
+     ../playbooks/full-proxmox-setup.yaml
