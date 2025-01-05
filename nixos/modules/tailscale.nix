@@ -5,14 +5,20 @@ with types;
 
 let
   cfg = config.services.tailscale;
+
+  # Path to tailscale authkey
+  secretFilePath = "/etc/nixos/tailscale-authkey";
+
+  # Check if tailscale authkey file exists
+  secretFileExists = builtins.pathExists secretFilePath;
+
+  # Conditionally read tailscale authkey
+  tailscaleAuthKey = if secretFileExists
+                    then builtins.readFile secretFilePath
+                    else null;
 in
 
 {
-
-  imports =[ 
-      # Include tailscale authkey file, you need to put this manually in your nixos install
-      /etc/nixos/tailscale-authkey.nix
-  ];
 
   options.services.tailscale = {
     hostname = mkOption {
@@ -20,7 +26,8 @@ in
     };
   };
 
-  config = {
+  # Only configure tailscale if tailscale-authkey exists
+  config = lib.mkIf secretFileExists {
     services.tailscale.enable = true;
     services.tailscale.extraUpFlags = [
       "--ssh"
@@ -28,7 +35,7 @@ in
 
     # Tailscale Authkey
     services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
-      ${config.tailscaleAuthKey}
+      ${tailscaleAuthKey}
     '';
 
     systemd.services.tailscale-cert-renewal = {
