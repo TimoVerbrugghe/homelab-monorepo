@@ -3,7 +3,7 @@
 {
 
   environment.systemPackages = with pkgs; [
-    retroarch-full
+    retroarchFull
     duckstation
     cemu
     dolphin-emu

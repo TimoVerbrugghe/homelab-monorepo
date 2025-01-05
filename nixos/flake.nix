@@ -135,7 +135,7 @@
         specialArgs = inputs;
         modules = [
           ./machines/gamingserver/configuration.nix
-          home-manager-unstable.nixosModules.home-manager
+          home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
