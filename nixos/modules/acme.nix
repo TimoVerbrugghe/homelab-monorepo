@@ -22,7 +22,7 @@ in
 {
 
   # Certificates generated will be stored in /var/lib/acme
-  security.acme = {
+  security.acme = lib.mkIf secretFileExists {
     acceptTerms = true;
     defaults.email = acmeEmail;
     defaults.environmentFile = "${pkgs.writeText "cloudflare-env" ''
@@ -35,19 +35,6 @@ in
       "timo.be" = {
         extraDomainNames = [ "*.local.timo.be" "dns.timo.be" "local.timo.be" "home.timo.be" "*.home.timo.be" ];
       };
-    };
-  };
-
-  services.cloudflared.enable = true;
-
-  systemd.services.cloudflareTunnel = {
-    wantedBy = ["multi-user.target"];
-    after = ["network.target"];
-    serviceConfig = {
-        ExecStart = "${pkgs.cloudflared}/bin/cloudflared tunnel --no-autoupdate run --token=${cloudflareTunnelToken}";
-        Restart = "always";
-        User = "cloudflared";
-        Group = "cloudflared";
     };
   };
 

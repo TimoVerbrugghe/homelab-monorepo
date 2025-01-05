@@ -21,9 +21,11 @@ in
 
 {
   
-  services.cloudflared.enable = true;
+  services.cloudflared = lib.mkIf secretFileExists {
+    enable = true;
+  };
 
-  systemd.services.cloudflareTunnel = {
+  systemd.services.cloudflareTunnel = lib.mkIf secretFileExists {
     wantedBy = ["multi-user.target"];
     after = ["network.target"];
     serviceConfig = {
