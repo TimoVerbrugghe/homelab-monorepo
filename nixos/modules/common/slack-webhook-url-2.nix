@@ -30,7 +30,7 @@ in
             echo "Disk Usage above 80%, sending Slack message"
 
             # Send Slack notification using curl
-            curl -X POST -H 'Content-type: application/json' --data '{"text":"Disk Usage above 80% on ${hostname}"}' "${config.slackWebhookUrl}"
+            curl -X POST -H 'Content-type: application/json' --data '{"text":"Disk Usage above 80% on ${hostname}"}' "${slackWebhookUrl}"
 
         fi
       '';
