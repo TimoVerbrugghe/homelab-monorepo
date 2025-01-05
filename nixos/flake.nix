@@ -130,12 +130,12 @@
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file
-      gamingserver = nixpkgs.lib.nixosSystem {
+      gamingserver = nixpkgs-unstable.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
           ./machines/gamingserver/configuration.nix
-          home-manager.nixosModules.home-manager
+          home-manager-unstable.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
