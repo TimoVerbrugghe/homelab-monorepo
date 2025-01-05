@@ -8,7 +8,7 @@ let
 
   hostname = "odd";
   username = "odd";
-  hashedPassword = "$y$j9T$d3l2JQldR0LrUA/uSjlrA0$0oxVCvOd1MxN5FbEzhiCMLTJYcOdRIPauRJyYPOtbR6";
+  hashedPassword = "$y$j9T$91jpnPgNplqW5x/.LCmZb1$53bk2yKa3MyslKZbxHAVJNsG8dqEaRjl4W2QDVVMEw8";
   ipAddress = "10.10.10.9";
   kernelParams = [
      "i915.enable_guc=3" # Enable Intel Quicksync
