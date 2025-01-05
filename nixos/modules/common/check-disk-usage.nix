@@ -8,7 +8,7 @@ in {
 
   imports =[ 
       # Include cloudflare API key file, you need to put this manually in your nixos install
-      /etc/nixos/slack-webhook-url.nix
+      /etc/nixos/slack-webhook-url-2.nix
   ];
 
   # Define the systemd service
