@@ -17,7 +17,7 @@
       ./common/user.nix # Ability to create a user through services.user
       ./common/vars.nix # Import common variables 
       ./common/networking.nix # Some specific networking settings    
-      ./common/check-disk-usage.nix # Check disk usage and send a slack message if it's over a certain threshold
+      ./common/check-disk-usage-2.nix # Check disk usage and send a slack message if it's over a certain threshold
       ./common/github-key.nix # Import github key for flake updates
       ./common/graylog.nix # Enable and configure rsyslog for graylog
     ];
