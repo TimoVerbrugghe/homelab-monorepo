@@ -88,13 +88,23 @@
         ];
       };
 
-      # Build this iso image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#nixosConfigurations.iso-autoinstall.config.system.build.isoImage --no-write-lock-file --refresh
-      iso-autoinstall = nixpkgs.lib.nixosSystem {
+      # Build this iso image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#nixosConfigurations.iso-generic-autoinstall.config.system.build.isoImage --no-write-lock-file --refresh
+      iso-generic-autoinstall = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
           # Basic installer & install configuration
-          ./iso-autoinstall/installer-configuration.nix
+          ./isos/iso-generic-autoinstall/installer-configuration.nix
+        ];
+      };
+
+      # Build this iso image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#nixosConfigurations.iso-flake-autoinstall.config.system.build.isoImage --no-write-lock-file --refresh
+      # Don't forget to change the name of the flake you want to autoinstall first in the installer-configuration.nix
+      iso-flake-autoinstall = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          ./isos/iso-flake-autoinstall/installer-configuration.nix
         ];
       };
 
@@ -104,7 +114,7 @@
         specialArgs = inputs;
         modules = [
           # Basic installer & install configuration
-          ./gamingserver-iso-autoinstall/installer-configuration.nix
+          ./isos/gamingserver-iso-autoinstall/installer-configuration.nix
         ];
       };
 
@@ -114,8 +124,7 @@
         specialArgs = inputs;
         modules = [
           # Basic installer configuration
-          ./surface-iso-install/installer-configuration.nix
-
+          ./isos/surface-iso-install/installer-configuration.nix
           nixos-hardware.nixosModules.microsoft-surface-common
         ];
       };
