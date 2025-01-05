@@ -10,12 +10,12 @@
 - name: Install & Authenticate tailscale
   ansible.builtin.include_tasks: tailscale.yaml
 
-- name: Set limits for zfs ARC (3072 mb - which is 3072*1024*1024 bytes)
+- name: Set limits for zfs ARC (1,5 GB or 1536 MB - which is 1536*1024*1024 bytes) - zfs_arc_min needs to be 1 less than zfs_arc_max
   ansible.builtin.copy:
     dest: /etc/modprobe.d/zfs.conf
     content: |
-      options zfs zfs_arc_max=3221225472
-      options zfs zfs_arc_min=3221225472
+      options zfs zfs_arc_max=1610612735
+      options zfs zfs_arc_min=1610612736
   when: zfs
 
 - name: Set ZFS sync disabled (for performance, this will amount to loss of data in case of power failure of up to 5 seconds but I can live with that)
@@ -56,6 +56,8 @@
 
 - name: Reboot (so we can apply all these iGPU passthrough settings)
   ansible.builtin.reboot:
+    reboot_timeout: 60
+  ignore_errors: true
 
 - name: Wait 20 seconds to make sure proxmox API is running for potential other playbooks
   ansible.builtin.pause:
