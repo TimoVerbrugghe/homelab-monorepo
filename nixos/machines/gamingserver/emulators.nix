@@ -31,7 +31,8 @@
     lime3ds
 
     # Installing ryujinx, source (AppImage or source) has to be provided yourself
-    (pkgs.callPackage ./ryujinx/package-source.nix {})
+    # (pkgs.callPackage ./ryujinx/package-source.nix {})
+    ryujinx
   ];
 
   # Need this for emulationstation-de
