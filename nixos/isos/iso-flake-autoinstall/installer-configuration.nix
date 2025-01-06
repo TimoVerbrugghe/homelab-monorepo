@@ -5,7 +5,7 @@
 let
   
   # Change this with the name of the flake in this github repo you want to autoinstall
-  flake = "ulrich";
+  flake = "odd";
 
 in
 
