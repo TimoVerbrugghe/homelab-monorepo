@@ -48,7 +48,9 @@ in
   # ISO Image options
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
   isoImage.isoBaseName = "nixos-flake-auto-installer";
-  isoImage.isoName = "${flake}-${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
+
+  # Using lib.mkForce because isoName is already defined in the minimal ISO nix file
+  isoImage.isoName = lib.mkForce "${flake}-${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
   isoImage.makeEfiBootable = true;
   isoImage.makeUsbBootable = true;
   isoImage.volumeID = "NIXOS_ISO";
