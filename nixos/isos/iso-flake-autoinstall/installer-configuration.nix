@@ -48,7 +48,7 @@ in
   # ISO Image options
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
   isoImage.isoBaseName = "nixos-flake-auto-installer";
-  isoImage.isoName = "${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
+  isoImage.isoName = "${flake}-${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
   isoImage.makeEfiBootable = true;
   isoImage.makeUsbBootable = true;
   isoImage.volumeID = "NIXOS_ISO";
