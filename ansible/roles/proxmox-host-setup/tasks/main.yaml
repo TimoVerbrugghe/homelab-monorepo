@@ -10,6 +10,15 @@
 - name: Install & Authenticate tailscale
   ansible.builtin.include_tasks: tailscale.yaml
 
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install sensors package for temperature monitoring
+  ansible.builtin.apt:
+    name: lm-sensors
+    state: present
+
 - name: Set limits for zfs ARC (1,5 GB or 1536 MB - which is 1536*1024*1024 bytes) - zfs_arc_min needs to be 1 less than zfs_arc_max
   ansible.builtin.copy:
     dest: /etc/modprobe.d/zfs.conf
