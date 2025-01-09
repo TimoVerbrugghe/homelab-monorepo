@@ -1,8 +1,8 @@
 
 vm:
   hosts:
-    aelita.local.timo.be:
-      ansible_user: aelita
+    yumi.local.timo.be:
+      ansible_user: yumi
       macvlan_routes: |
         - to: 10.10.10.20
       enable_gpu: true
