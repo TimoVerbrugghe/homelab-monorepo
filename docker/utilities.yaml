@@ -4,9 +4,6 @@ services:
     networks:
       - dockerproxy
     container_name: stirlingpdf
-    volumes:
-      - stirlingpdf-trainingdata:/usr/share/tessdata #Required for extra OCR languages
-      - stirlingpdf-configs:/configs
     environment:
       - DOCKER_ENABLE_SECURITY=false
       - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
@@ -102,8 +99,6 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/other/bitwarden-export"
   uptimekuma:
-  stirlingpdf-configs:
-  stirlingpdf-trainingdata:
   isos:
     driver: local
     driver_opts:
