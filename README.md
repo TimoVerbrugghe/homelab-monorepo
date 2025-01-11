@@ -47,12 +47,10 @@ Built using Talos linux. Currently runs following services:
 - Adguardhome-sync
 
 Several services are not running in this cluster and remain on separate NixOS VMs with docker because:
-    - I don't want to run hyperconverged storage solutions (Longhorn, OpenEBS, etc...) due to the amount of resources it takes (so only running stateless services or services that I personally don't see the need to store something out of memory).
-    
-    - I encountered several issues with NFS-backed storage and sqlite databases (f.e. with plex & bitwarden) so not an option to use NFS-backed storage in the cluster.
-    
-    - Services that I want HA and do need local storage (portainer, bitwarden, etc...) are running in the Yumi VM that is HA-enabled in proxmox & can be live migrated.
 
+    - I don't want to run hyperconverged storage solutions (Longhorn, OpenEBS, etc...) due to the amount of resources it takes (so only running stateless services or services that I personally don't see the need to store something out of memory).
+    - I encountered several issues with NFS-backed storage and sqlite databases (f.e. with plex & bitwarden) so not an option to use NFS-backed storage in the cluster.
+    - Services that I want HA and do need local storage (portainer, bitwarden, etc...) are running in the Yumi VM that is HA-enabled in proxmox & can be live migrated.
     - Plex & Jellyfin run in a separate VM (Aelita) because I'm passing through my iGPU which makes the VM not eligible for live migration in Proxmox.
 
 # Future Plans
