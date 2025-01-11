@@ -1,5 +1,5 @@
 #!/bin/sh
 ansible-playbook \
      -i ../inventory/hosts.yaml \
-     --limit localhost,proxmox\
+     --limit localhost,icesector.local.timo.be \
      ../playbooks/proxmox-host-setup.yaml

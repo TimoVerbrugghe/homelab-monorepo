@@ -1,0 +1,24 @@
+# Tasks already created preparing for the upcoming VirGL/Venus technology in Qemu that should allow quicksync plex/jellyfin transcoding on proxmox VM
+
+- name: Ensure sources.list contains non-free and non-free-firmware components
+  lineinfile:
+    path: /etc/apt/sources.list
+    regexp: '^(deb .* main contrib)$'
+    line: '\1 non-free non-free-firmware'
+    backrefs: yes
+
+- name: Install Intel GPU packages on Proxmox
+  apt:
+    name:
+      - intel-media-va-driver-non-free
+      - intel-opencl-icd
+      - vainfo
+      - intel-gpu-tools
+      - libvdpau-va-gl1
+      - libvdpau1
+      - mesa-vdpau-drivers
+      - libvpl2
+      - libmfx1
+      - libmfx-gen1.2
+    state: present
+    update_cache: yes

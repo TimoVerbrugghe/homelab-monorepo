@@ -27,3 +27,4 @@
 - name: Install cloudflared service
   ansible.builtin.command: 
     cmd: cloudflared service install {{ cloudflare_tunnel_token }}
+  ignore_errors: true
