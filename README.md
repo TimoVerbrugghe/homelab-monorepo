@@ -17,7 +17,6 @@ I have the following machines & VMs with a brief overview of services they run. 
     - Forest Sector
         - Yumi (HA, can be live migrated)
             - Adguardhome
-            - Adguardhome-sync
             - Bitwarden
             - Mealie
             - PXEBoot (netbootxyz & iventoy)
@@ -45,6 +44,7 @@ Built using Talos linux. Currently runs following services:
 - Gatus
 - Stirling-PDF
 - Webtop
+- Adguardhome-sync
 
 Several services are not running in this cluster and remain on separate NixOS VMs with docker because:
     - I don't want to run hyperconverged storage solutions (Longhorn, OpenEBS, etc...) due to the amount of resources it takes (so only running stateless services or services that I personally don't see the need to store something out of memory).
