@@ -15,17 +15,6 @@ services:
       traefik.http.services.stirlingpdf.loadbalancer.server.port: 8080
       traefik.http.routers.stirlingpdf.middlewares: keycloak-auth@file
 
-  localspeedtest:
-    restart: always
-    container_name: localspeedtest
-    image: openspeedtest/latest
-    networks:
-      - dockerproxy
-    labels:
-      traefik.http.routers.localspeedtest.entrypoints: https
-      traefik.http.services.localspeedtest.loadbalancer.server.port: 3000
-      traefik.http.routers.localspeedtest.middlewares: keycloak-auth@file
-
   bitwarden:
     image: vaultwarden/server:latest
     container_name: bitwarden
@@ -76,23 +65,6 @@ services:
       traefik.http.routers.uptime-kuma.entrypoints: https
       traefik.http.services.uptime-kuma.loadbalancer.server.port: 3001
       traefik.http.routers.uptime-kuma.middlewares: keycloak-auth@file    
-    
-  iventoy:
-    image: thedrobe/iventoy-docker
-    container_name: iventoy
-    restart: always
-    privileged: true
-    networks:
-      dockervlan:
-        ipv4_address: ${IVENTOY_IP_ADDRESS}
-    volumes:
-      - iventoy-config:/app/data
-      - iventoy-log:/app/log
-      - isos:/app/iso
-    environment:
-      - AUTO_START_PXE=true
-    labels:
-      traefik.enable: false
 
   mealie:
     image: ghcr.io/mealie-recipes/mealie
@@ -121,27 +93,6 @@ services:
       traefik.http.routers.mealie.entrypoints: https
       traefik.http.services.mealie.loadbalancer.server.port: 9000
 
-  webtop:
-    image: lscr.io/linuxserver/webtop:ubuntu-xfce
-    container_name: webtop
-    restart: unless-stopped
-    security_opt:
-      - seccomp=unconfined
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - webtop:/config
-    shm_size: "1gb"
-    labels:
-      traefik.http.routers.webtop.entrypoints: https
-      traefik.http.services.webtop.loadbalancer.server.port: 3000
-      tsdproxy.enable: true
-      tsdproxy.container_port: 3000
-
 volumes:
   bitwarden:
   bitwarden-export:
@@ -151,10 +102,6 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/other/bitwarden-export"
   uptimekuma:
-  netbootxyz-config:
-  netbootxyz-assets:
-  iventoy-config:
-  iventoy-log:
   stirlingpdf-configs:
   stirlingpdf-trainingdata:
   isos:
@@ -170,7 +117,6 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/games/ROMs"
   mealie:
-  webtop:
 
 networks:
   dockerproxy:
