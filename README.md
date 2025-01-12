@@ -15,11 +15,11 @@ I have the following machines & VMs with a brief overview of services they run. 
     - Forest Sector
         - Yumi (HA, can be live migrated)
             - Adguardhome
+            - Cloudflare Tunnel
             - Bitwarden
             - Mealie
             - PXEBoot (netbootxyz & iventoy)
             - Portainer
-            - Cloudflare Tunnel
         - William (kubernetes node)
     - Ice Sector
         - Odd (Adguardhome + Cloudflare Tunnel)
