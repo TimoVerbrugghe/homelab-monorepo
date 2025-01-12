@@ -14,7 +14,7 @@ services:
     labels:
       traefik.enable: false
       tsdproxy.enable: true
-      tsdproxy.name: "traefik-thefactory"
+      tsdproxy.name: "traefik"
       tsdproxy.container_port: 443
 
   tsdproxy:
