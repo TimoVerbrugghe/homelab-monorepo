@@ -8,7 +8,7 @@ let
   hostname = "aelita";
   username = "aelita";
   hashedPassword = "$y$j9T$Q2d7p39EZ1FvibfhyrQNB1$K5tu7VuyiCaH3fnCwhOA6qYnfNDeYjE3.tYRbYHRBxB";
-  ipAddress = "10.10.10.12";
+  ipAddress = "10.10.10.3";
   kernelParams = [
      "i915.enable_guc=3" # Enable Intel Quicksync
   ];
