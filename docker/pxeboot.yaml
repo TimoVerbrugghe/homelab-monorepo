@@ -38,8 +38,8 @@ volumes:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=nfs.local.timo.be,rw,vers=4.2,relatime,sec=sys,hard"
-      device: "/mnt/FranzHopper/isos"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/isos"
 
 networks:
   dockervlan:
