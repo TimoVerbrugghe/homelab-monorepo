@@ -31,23 +31,8 @@ services:
 
 volumes:
   traefik:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/traefik"
   tsdproxy-data:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tsdproxy/data"
   tsdproxy-config:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tsdproxy/config"
 
 networks:    
   dockerproxy:
