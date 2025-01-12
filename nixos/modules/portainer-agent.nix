@@ -42,6 +42,4 @@ in
       RestartSec = "30s";
     };
   };
-
-  networking.firewall.allowedTCPPorts = [ 9001 ];
 }

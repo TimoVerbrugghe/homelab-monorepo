@@ -25,7 +25,7 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ../../modules/common.nix
-      ../../modules/portainer-server.nix
+      ../../modules/portainer-agent.nix
       ../../modules/tailscale.nix
       ../../modules/vm-options.nix
       ../../modules/vscode-server.nix
