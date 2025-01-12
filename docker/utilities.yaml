@@ -8,9 +8,10 @@ services:
       - DOCKER_ENABLE_SECURITY=false
       - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
     labels:
-      traefik.http.routers.stirlingpdf.entrypoints: https
-      traefik.http.services.stirlingpdf.loadbalancer.server.port: 8080
-      traefik.http.routers.stirlingpdf.middlewares: keycloak-auth@file
+      traefik.enable: false
+      tsdproxy.enable: true
+      tsdproxy.name: "stirlingpdf"
+      tsdproxy.container_port: 8080
 
   bitwarden:
     image: vaultwarden/server:latest
