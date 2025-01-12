@@ -37,8 +37,8 @@ volumes:
   isos:
     driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,rw,vers=4.2,relatime,sec=sys,hard"
       device: "/mnt/FranzHopper/isos"
 
 networks:
