@@ -51,4 +51,4 @@ volumes:
 
 networks:    
   dockerproxy:
-    name: dockerproxy
+    external: true
