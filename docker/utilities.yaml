@@ -50,19 +50,6 @@ services:
     labels:
       traefik.enable: false
 
-  uptimekuma:
-    image: louislam/uptime-kuma
-    container_name: uptimekuma
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    volumes:
-      - uptimekuma:/app/data
-    labels:
-      traefik.http.routers.uptime-kuma.entrypoints: https
-      traefik.http.services.uptime-kuma.loadbalancer.server.port: 3001
-      traefik.http.routers.uptime-kuma.middlewares: keycloak-auth@file    
-
   mealie:
     image: ghcr.io/mealie-recipes/mealie
     container_name: mealie
@@ -98,7 +85,6 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/other/bitwarden-export"
-  uptimekuma:
   isos:
     driver: local
     driver_opts:
