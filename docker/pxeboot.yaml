@@ -31,29 +31,9 @@ services:
 
 volumes:
   netbootxyz-config:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/netbootxyz-config"
   netbootxyz-assets:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/netbootxyz-assets"
   iventoy-config:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/iventoy-config"
   iventoy-log:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/iventoy-log"
   isos:
     driver: local
     driver_opts:
