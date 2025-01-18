@@ -17,9 +17,9 @@ if [ ! -f "$PRIVATE_KEY" ]; then
 fi
 
 # Copy the public key to /.well-known/com.tesla.3p.public-key.pem
-mkdir -p /data/.well-known
-rm -rf /data/.well-known/com.tesla.3p.public-key.pem
-cp $PUBLIC_KEY /data/.well-known/com.tesla.3p.public-key.pem
+mkdir -p /data/.well-known/appspecific
+rm -rf /data/.well-known/appspecific/com.tesla.3p.public-key.pem
+cp $PUBLIC_KEY /data/.well-known/appspecific/com.tesla.3p.public-key.pem
 
 # Start a simple HTTP server to serve the public key
 python3 -m http.server 8000

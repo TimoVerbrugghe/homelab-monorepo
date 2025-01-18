@@ -3,7 +3,7 @@
 This folder contains a Home Assistant addon to expose a public key at the following path:
 
 ```
-https://<yourdomain>/.well-known/com.tesla.3p.public-key.pem
+https://<yourdomain>/.well-known/appspecific/com.tesla.3p.public-key.pem
 ```
 
 ## Purpose
@@ -22,7 +22,7 @@ The purpose of this addon is to host a public key that can be accessed by Tesla 
 Once set up as described above, start the addon. The public key will be available at:
 
 ```
-http://<your-home-assistant-url>:<the-port-you-configured>/.well-known/com.tesla.3p.public-key.pem
+http://<your-home-assistant-url>:<the-port-you-configured>/.well-known/appspecific/com.tesla.3p.public-key.pem
 ```
 
 ## HTTPS setup
