@@ -11,7 +11,7 @@ arch:
   - i386
 startup: services
 ports:
-  8000/tcp: 443
+  8000/tcp: 8000
 ports_description:
   8000/tcp: "The port on which the Tesla Fleet Public Key Host will be available."
 options:
