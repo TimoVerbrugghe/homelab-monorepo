@@ -1,6 +1,6 @@
 name: "Tesla Fleet Public Key Host"
 description: "A simple addon that can host the public key of your Tesla Fleet application so that it can be used with the Tesla Fleet integration."
-version: "1.0.6"
+version: "1.0.7"
 slug: "teslafleet-publickeyhost"
 init: false
 arch:
