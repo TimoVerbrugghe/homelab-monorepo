@@ -3,7 +3,7 @@
 This folder contains a Home Assistant addon to expose a public key at the following path:
 
 ```
-/.well-known/com.tesla.3p.public-key.pem
+https://<yourdomain>/.well-known/com.tesla.3p.public-key.pem
 ```
 
 ## Purpose
