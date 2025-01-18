@@ -21,12 +21,11 @@ The purpose of this addon is to provide a public key that can be accessed by Tes
 Once installed, fill out public key under options & start the addon. The public key will be available at:
 
 ```
-http://<your-home-assistant-url>/.well-known/com.tesla.3p.public-key.pem
+http://<your-home-assistant-url>:<the-port-you-configured>/.well-known/com.tesla.3p.public-key.pem
 ```
 
-## Configuration
-
-No additional configuration is required for this addon.
+## HTTPS setup
+You will still need a reverse proxy with SSL enabled that points to http://<your-home-assistant-ip>:<the-port-you-configured>/. I personally use cloudflare tunnels or you could use traefik/nginx proxy manager.
 
 ## License
 
