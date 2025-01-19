@@ -65,18 +65,18 @@ services:
     networks:
       - dockerproxy
 
-  # paperless-ai:
-  #   image: clusterzx/paperless-ai
-  #   container_name: paperless-ai
-  #   restart: unless-stopped
-  #   networks:
-  #     - dockerproxy
-  #   volumes:
-  #     - paperless-ai:/app/data
-  #   labels:
-  #     tsdproxy.enable: true
-  #     tsdproxy.name: "paperlessai"
-  #     tsdproxy.container_port: 3000
+  paperless-ai:
+    image: clusterzx/paperless-ai
+    container_name: paperless-ai
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - paperless-ai:/app/data
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.name: "paperlessai"
+      tsdproxy.container_port: 3000
 
 volumes:
   paperless-data:
@@ -109,12 +109,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/paperless/broker"
-  # paperless-ai:
-  #   driver: local
-  #   driver_opts:
-  #     type: "none"
-  #     o: "bind"
-  #     device: "/mnt/FranzHopper/appdata/paperless-ai"
+  paperless-ai:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/paperless-ai"
 
 networks:
   dockerproxy:
