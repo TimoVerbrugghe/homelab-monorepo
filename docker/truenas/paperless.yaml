@@ -71,9 +71,6 @@ services:
     restart: unless-stopped
     networks:
       - dockerproxy
-    depends_on:
-      paperless-ngx:
-        condition: service_started
     volumes:
       - paperless-ai:/app/data
     labels:
