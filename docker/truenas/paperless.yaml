@@ -47,6 +47,7 @@ services:
 
   paperless-gotenberg:
     image: docker.io/gotenberg/gotenberg:8.7
+    container_name: paperless-gotenberg
     restart: unless-stopped
     networks:
       - dockerproxy
@@ -59,6 +60,7 @@ services:
 
   paperless-tika:
     image: docker.io/apache/tika:latest
+    container_name: paperless-tika
     restart: unless-stopped
     networks:
       - dockerproxy
