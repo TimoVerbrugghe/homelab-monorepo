@@ -35,6 +35,8 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "paperless"
       tsdproxy.container_port: 8000
+    ports:
+      - 8000:8000
 
   paperless-broker:
     image: docker.io/library/redis:7
