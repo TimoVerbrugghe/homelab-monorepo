@@ -58,4 +58,13 @@
         <platform>n3ds</platform>
         <theme>n3ds</theme>
     </system>
+    <system>
+        <name>switch</name>
+        <fullname>Nintendo Switch</fullname>
+        <path>%ROMPATH%/switch</path>
+        <extension>.nca .NCA .nro .NRO .nso .NSO .nsp .NSP .xci .XCI</extension>
+        <command label="Torzu (Standalone)">%EMULATOR_TORZU% -f -g %ROM%</command>
+        <platform>switch</platform>
+        <theme>switch</theme>
+    </system>
 </systemList>
