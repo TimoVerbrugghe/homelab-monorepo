@@ -15,8 +15,6 @@ services:
       - paperless-consume:/usr/src/paperless/consume
     environment:
       PAPERLESS_REDIS: redis://paperless-broker:6379
-      USERMAP_UID: ${PUID}
-      USERMAP_GID: ${PGID}
       PAPERLESS_OCR_LANGUAGES: nld fra eng
       PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
       PAPERLESS_TIME_ZONE: Europe/Brussels
