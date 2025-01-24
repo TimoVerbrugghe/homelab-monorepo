@@ -218,7 +218,7 @@ services:
   swaparr-radarr:
     image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-radarr
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -236,7 +236,7 @@ services:
   swaparr-sonarr: 
     image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-sonarr
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:

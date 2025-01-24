@@ -1,6 +1,7 @@
 services:
   stirling-pdf:
     image: frooodle/s-pdf:latest
+    restart: always
     networks:
       - dockerproxy
     container_name: stirlingpdf
@@ -16,7 +17,7 @@ services:
   bitwarden:
     image: vaultwarden/server:latest
     container_name: bitwarden
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -37,7 +38,7 @@ services:
   bitwarden-export:
     image: ghcr.io/timoverbrugghe/bitwarden-export
     container_name: bitwarden-export
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     volumes:

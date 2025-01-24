@@ -2,7 +2,7 @@ services:
   adguardhome:
     image: adguard/adguardhome
     container_name: adguardhome
-    restart: unless-stopped
+    restart: always
     networks:
       dockervlan:
         ipv4_address: ${ADGUARDHOME_IP_ADDRESS}

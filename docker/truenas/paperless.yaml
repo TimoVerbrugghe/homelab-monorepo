@@ -2,7 +2,7 @@ services:
   paperless-ngx:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless-ngx
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     depends_on:
@@ -37,7 +37,7 @@ services:
   paperless-broker:
     image: docker.io/library/redis:7
     container_name: paperless-broker
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     volumes:
@@ -46,7 +46,7 @@ services:
   paperless-gotenberg:
     image: docker.io/gotenberg/gotenberg:8.7
     container_name: paperless-gotenberg
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     # The gotenberg chromium route is used to convert .eml files. We do not
@@ -59,14 +59,14 @@ services:
   paperless-tika:
     image: docker.io/apache/tika:latest
     container_name: paperless-tika
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
 
   paperless-ai:
     image: clusterzx/paperless-ai
     container_name: paperless-ai
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     volumes:

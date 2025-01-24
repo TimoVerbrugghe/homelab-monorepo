@@ -16,7 +16,7 @@ services:
     volumes:
       - music:/music #must use the :/music for config to work.
       - spotdl:/root/.spotdl
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     labels:

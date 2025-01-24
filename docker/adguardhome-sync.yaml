@@ -32,4 +32,4 @@ services:
       # FEATURES_DNS_SERVERCONFIG: true
       # FEATURES_DNS_ACCESSLISTS: true
       # FEATURES_DNS_REWRITES: true
-    restart: unless-stopped
+    restart: always

@@ -2,7 +2,7 @@ services:
   scanservjs:
     image: sbs20/scanservjs:latest
     container_name: scanservjs
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     volumes:
