@@ -29,6 +29,11 @@
       url = "github:NixOS/nixos-hardware/master";
     };
 
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    }
+
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ... } @inputs : {
@@ -160,6 +165,14 @@
         ];
       };
 
+      # Build this Azure VHD image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#azurenixos --no-write-lock-file --refresh
+      azurenixos = nixos-generators.nixosGenerate {
+        system = "x86_64-linux";
+        modules = [
+          ./machines/azurenixos/configuration.nix
+        ];
+        format = "azure";
+      };
     };
   };
 }
