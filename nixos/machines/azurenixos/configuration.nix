@@ -11,7 +11,7 @@ in
   imports = [
     # ./hardware-configuration.nix
     ../../modules/tailscale.nix
-    ../../modules/vm-options.nix
+    # ../../modules/vm-options.nix
     ../../modules/common/flakes.nix # Enable flakes
     ../../modules/common/git.nix # Add git configuration
     ../../modules/common/packages.nix # Add default packages
@@ -37,5 +37,19 @@ in
   services.tailscale = {
     hostname = "${hostname}";
   };
+
+  ## VM Options
+  # Enable QEMU guest agent for better VM integration
+  services.qemuGuest.enable = true;
+  
+  # Enable watchdog
+  systemd.watchdog.device = "/dev/watchdog";
+  systemd.watchdog.runtimeTime = "30s";
+
+  # Enable fstrim so that discarded blocks are recovered on the host
+  services.fstrim.enable = true;
+
+  # Enable serial console so that I can access console in proxmox
+  boot.kernelParams = [ "console=ttyS0,115200n8" ];
 
 }
