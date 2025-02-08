@@ -17,7 +17,6 @@ in
     ../../modules/common/packages.nix # Add default packages
     ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
     ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
-    ../../modules/common/user.nix # Enable using this machine as remote builder for nixos
   ];
 
   ############################
@@ -28,9 +27,17 @@ in
   networking.hostName = "${hostname}"; # Define your hostname.
 
   # Set up single user using user.nix module
-  services.user = {
-    user = "${username}";
-    hashedPassword = "${hashedPassword}";
+  users.mutableUsers = false;
+
+  users.users = {
+
+    ${username} = {
+      extraGroups = cfg.extragroups;
+      isNormalUser = true;
+      createHome = true;
+      hashedPassword = "${hashedPassword}";
+      openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
+    };
   };
 
   ## Passthrough hostname for tailscale
