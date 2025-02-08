@@ -164,7 +164,9 @@
           }
         ];
       };
+    };
 
+    packages.x86_64-linux = {
       # Build this Azure VHD image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#azurenixos --no-write-lock-file --refresh
       azurenixos = nixos-generators.nixosGenerate {
         system = "x86_64-linux";
