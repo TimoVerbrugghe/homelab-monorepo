@@ -178,7 +178,7 @@
             # come from the flake inputs.nixpkgs.url.
             nix.registry.nixpkgs.flake = nixpkgs;
             # set disk size to to 64G
-            virtualisation.diskSize = 64 * 1024;
+            # virtualisation.diskSize = 64 * 1024;
           }
         ];
         format = "azure";
