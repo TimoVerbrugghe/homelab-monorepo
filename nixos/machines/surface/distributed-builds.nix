@@ -15,8 +15,8 @@
       system = pkgs.stdenv.hostPlatform.system;
       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
       protocol = "ssh-ng";
-      maxjobs = 16;
-      speedfactor = 5;
+      maxJobs = 16;
+      speedFactor = 5;
     }
     {
       hostName = "azurenixbuilder.azure.timo.be";
@@ -25,8 +25,8 @@
       system = pkgs.stdenv.hostPlatform.system;
       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
       protocol = "ssh-ng";
-      maxjobs = 16;
-      speedfactor = 5;
+      maxJobs = 16;
+      speedFactor = 5;
     }
     
   ];
