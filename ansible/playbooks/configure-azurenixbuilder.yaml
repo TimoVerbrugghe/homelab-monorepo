@@ -63,3 +63,9 @@
       systemd:
         name: nix-daemon
         state: restarted
+
+    - name: Append Nix directories to PATH (this has to be done to have nix in the path for a non-interactive ssh session - which remote builder uses)
+      replace:
+        path: /etc/environment
+        regexp: '^PATH="([^"]+)"'
+        replace: 'PATH="\1:/home/{{ remotebuild_user }}/.nix-profile/bin:/nix/var/nix/profiles/default/bin"'

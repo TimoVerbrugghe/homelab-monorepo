@@ -59,7 +59,7 @@
     helm
 
     # Other stuff
-    retroarch-full
+    # retroarch-full
   ];
 
   # Needed to install packages from flathub, including Greenlight for xbox remote play
