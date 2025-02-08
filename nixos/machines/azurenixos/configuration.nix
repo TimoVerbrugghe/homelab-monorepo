@@ -17,7 +17,7 @@ in
     ../../modules/common/packages.nix # Add default packages
     ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
     ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
-    ../../modules/user.nix # Enable using this machine as remote builder for nixos
+    ../../modules/common/user.nix # Enable using this machine as remote builder for nixos
   ];
 
   ############################
