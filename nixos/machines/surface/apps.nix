@@ -59,8 +59,7 @@
     helm
 
     # Other stuff
-    copyq
-    firefox
+    retroarch-full
   ];
 
   # Needed to install packages from flathub, including Greenlight for xbox remote play
