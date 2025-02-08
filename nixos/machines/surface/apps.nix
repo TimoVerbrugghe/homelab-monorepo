@@ -57,6 +57,10 @@
     crane
     kubectl
     helm
+
+    # Other stuff
+    copyq
+    firefox
   ];
 
   # Needed to install packages from flathub, including Greenlight for xbox remote play
