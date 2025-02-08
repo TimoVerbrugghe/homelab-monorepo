@@ -32,7 +32,7 @@ in
   users.users = {
 
     ${username} = {
-      extraGroups = cfg.extragroups;
+      extraGroups = [ "wheel" "docker" "render" "video" "input" ];
       isNormalUser = true;
       createHome = true;
       hashedPassword = "${hashedPassword}";
