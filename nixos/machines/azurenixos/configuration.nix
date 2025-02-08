@@ -9,7 +9,7 @@ let
 in
 {
   imports = [
-    ./hardware-configuration.nix
+    # ./hardware-configuration.nix
     ../../modules/tailscale.nix
     ../../modules/vm-options.nix
     ../../modules/common/flakes.nix # Enable flakes
