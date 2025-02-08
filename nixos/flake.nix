@@ -172,6 +172,13 @@
         system = "x86_64-linux";
         modules = [
           ./machines/azurenixos/configuration.nix
+          {
+            # Pin nixpkgs to the flake input, so that the packages installed
+            # come from the flake inputs.nixpkgs.url.
+            nix.registry.nixpkgs.flake = nixpkgs;
+            # set disk size to to 64G
+            virtualisation.diskSize = 64 * 1024;
+          }
         ];
         format = "azure";
       };
