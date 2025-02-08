@@ -15,5 +15,13 @@
       system = pkgs.stdenv.hostPlatform.system;
       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
     }
+    {
+      hostName = "azurenixbuilder.azure.timo.be";
+      sshUser = "remotebuild";
+      sshKey = "/root/.ssh/remotebuild";
+      system = pkgs.stdenv.hostPlatform.system;
+      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+    }
+    
   ];
 }
