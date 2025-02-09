@@ -57,9 +57,6 @@
     crane
     kubectl
     helm
-
-    # Other stuff
-    retroarch-full
   ];
 
   # Needed to install packages from flathub, including Greenlight for xbox remote play
