@@ -189,32 +189,6 @@ services:
     labels:
       traefik.enable: false
 
-  lidarr:
-    container_name: lidarr
-    image: lscr.io/linuxserver/lidarr:latest
-    restart: always
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=Europe/Brussels
-    volumes:
-      - lidarr:/config
-      - music:/music
-      - downloads:/downloads
-    healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:8686/ping || exit 1"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
-    labels:
-      traefik.http.routers.lidarr.entrypoints: https
-      traefik.http.services.lidarr.loadbalancer.server.port: 8686
-      tsdproxy.enable: true
-      tsdproxy.container_port: 8686
-      tsdproxy.name: "lidarr"
-
   swaparr-radarr:
     image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-radarr
@@ -304,13 +278,7 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/emulatorjs-data"
-  lidarr:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/lidarr"
-
+      
   movies:
     driver: local
     driver_opts:
