@@ -17,10 +17,6 @@ services:
       REPLICA2_USERNAME: ${adguardhome_replica2_username}
       REPLICA2_PASSWORD: ${adguardhome_replica2_password}
 
-      REPLICA3_URL: ${adguardhome_replica3_url}
-      REPLICA3_USERNAME: ${adguardhome_replica3_username}
-      REPLICA3_PASSWORD: ${adguardhome_replica3_password}
-
       CRON: '*/1 * * * *' # run every minute
       RUNONSTART: true
 
@@ -36,4 +32,4 @@ services:
       # FEATURES_DNS_SERVERCONFIG: true
       # FEATURES_DNS_ACCESSLISTS: true
       # FEATURES_DNS_REWRITES: true
-    restart: unless-stopped
+    restart: always

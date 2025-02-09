@@ -12,4 +12,10 @@
   # Enable watchdog
   systemd.watchdog.device = "/dev/watchdog";
   systemd.watchdog.runtimeTime = "30s";
+
+  # Enable fstrim so that discarded blocks are recovered on the host
+  services.fstrim.enable = true;
+
+  # Enable serial console so that I can access console in proxmox
+  boot.kernelParams = [ "console=ttyS0,115200n8" ];
 }

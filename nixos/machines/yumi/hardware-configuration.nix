@@ -13,11 +13,11 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
-  boot.supportedFilesystems = [ "btrfs" "vfat" ];
+  boot.supportedFilesystems = [ "xfs" "vfat" ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-label/nixos";
-      fsType = "btrfs";
+      fsType = "xfs";
     };
 
   fileSystems."/boot" =

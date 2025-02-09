@@ -10,14 +10,6 @@ let
   username = "odd";
   hashedPassword = "$y$j9T$91jpnPgNplqW5x/.LCmZb1$53bk2yKa3MyslKZbxHAVJNsG8dqEaRjl4W2QDVVMEw8";
   ipAddress = "10.10.10.9";
-  kernelParams = [
-     "i915.enable_guc=3" # Enable Intel Quicksync
-  ];
-  
-  # Load bochs (proxmox standard VGA driver) after the i915 driver so that we can use noVNC while iGPU was passed through
-  extraModprobeConfig = ''
-  softdep bochs pre: i915
-  '';
 
 in 
 
@@ -30,7 +22,6 @@ in
       ../../modules/vm-options.nix # Some default options you should enable on VMs      
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey
-      ../../modules/intel-gpu-drivers.nix # Install Intel GPU drivers
       ../../modules/acme.nix # Get certs using nixos's built-in acme function (which uses lego), you need to add a cloudflare api key file to /etc/nixos/cloudflare-apikey.nix
       ../../modules/cloudflare-tunnel.nix # Enable Cloudflare Tunnel
       ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
@@ -42,10 +33,7 @@ in
   system.stateVersion = "23.11";
 
   networking.hostName = "${hostname}"; # Define your hostname.
-  boot.kernelParams = kernelParams;
-  boot.extraModprobeConfig = extraModprobeConfig;
   hardware.cpu.intel.updateMicrocode = true;
-  console.keyMap = "be-latin1";
 
   # Set up single user using user.nix module
   services.user = {

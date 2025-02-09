@@ -1,35 +1,23 @@
 services:
   stirling-pdf:
     image: frooodle/s-pdf:latest
+    restart: always
     networks:
       - dockerproxy
     container_name: stirlingpdf
-    volumes:
-      - stirlingpdf-trainingdata:/usr/share/tessdata #Required for extra OCR languages
-      - stirlingpdf-configs:/configs
     environment:
       - DOCKER_ENABLE_SECURITY=false
       - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
     labels:
-      traefik.http.routers.stirlingpdf.entrypoints: https
-      traefik.http.services.stirlingpdf.loadbalancer.server.port: 8080
-      traefik.http.routers.stirlingpdf.middlewares: keycloak-auth@file
-
-  localspeedtest:
-    restart: always
-    container_name: localspeedtest
-    image: openspeedtest/latest
-    networks:
-      - dockerproxy
-    labels:
-      traefik.http.routers.localspeedtest.entrypoints: https
-      traefik.http.services.localspeedtest.loadbalancer.server.port: 3000
-      traefik.http.routers.localspeedtest.middlewares: keycloak-auth@file
+      traefik.enable: false
+      tsdproxy.enable: true
+      tsdproxy.name: "stirlingpdf"
+      tsdproxy.container_port: 8080
 
   bitwarden:
     image: vaultwarden/server:latest
     container_name: bitwarden
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     environment:
@@ -50,7 +38,7 @@ services:
   bitwarden-export:
     image: ghcr.io/timoverbrugghe/bitwarden-export
     container_name: bitwarden-export
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     volumes:
@@ -61,36 +49,6 @@ services:
       BW_CLIENTSECRET: ${BW_CLIENTSECRET}
       BW_SERVER: http://bitwarden
       BW_PASSWORD: ${BW_PASSWORD}
-    labels:
-      traefik.enable: false
-
-  uptimekuma:
-    image: louislam/uptime-kuma
-    container_name: uptimekuma
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    volumes:
-      - uptimekuma:/app/data
-    labels:
-      traefik.http.routers.uptime-kuma.entrypoints: https
-      traefik.http.services.uptime-kuma.loadbalancer.server.port: 3001
-      traefik.http.routers.uptime-kuma.middlewares: keycloak-auth@file    
-    
-  iventoy:
-    image: thedrobe/iventoy-docker
-    container_name: iventoy
-    restart: always
-    privileged: true
-    networks:
-      dockervlan:
-        ipv4_address: ${IVENTOY_IP_ADDRESS}
-    volumes:
-      - iventoy-config:/app/data
-      - iventoy-log:/app/log
-      - isos:/app/iso
-    environment:
-      - AUTO_START_PXE=true
     labels:
       traefik.enable: false
 
@@ -121,27 +79,6 @@ services:
       traefik.http.routers.mealie.entrypoints: https
       traefik.http.services.mealie.loadbalancer.server.port: 9000
 
-  webtop:
-    image: lscr.io/linuxserver/webtop:ubuntu-xfce
-    container_name: webtop
-    restart: unless-stopped
-    security_opt:
-      - seccomp=unconfined
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - webtop:/config
-    shm_size: "1gb"
-    labels:
-      traefik.http.routers.webtop.entrypoints: https
-      traefik.http.services.webtop.loadbalancer.server.port: 3000
-      tsdproxy.enable: true
-      tsdproxy.container_port: 3000
-
 volumes:
   bitwarden:
   bitwarden-export:
@@ -150,13 +87,6 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/other/bitwarden-export"
-  uptimekuma:
-  netbootxyz-config:
-  netbootxyz-assets:
-  iventoy-config:
-  iventoy-log:
-  stirlingpdf-configs:
-  stirlingpdf-trainingdata:
   isos:
     driver: local
     driver_opts:
@@ -170,7 +100,6 @@ volumes:
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/games/ROMs"
   mealie:
-  webtop:
 
 networks:
   dockerproxy:

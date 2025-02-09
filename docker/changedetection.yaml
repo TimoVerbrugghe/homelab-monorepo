@@ -5,7 +5,7 @@ services:
     hostname: changedetection
     ports:
       - 5000:5000
-    restart: unless-stopped
+    restart: always
     # If WEBDRIVER or PLAYWRIGHT are enabled, changedetection container depends on that
     # and must wait before starting (substitute "browser-chrome" with "playwright-chrome" if last one is used)
     depends_on:
@@ -41,7 +41,7 @@ services:
   playwright-chrome:
     hostname: playwright-chrome
     image: browserless/chrome
-    restart: unless-stopped
+    restart: always
     environment:
         - SCREEN_WIDTH=1920
         - SCREEN_HEIGHT=1024

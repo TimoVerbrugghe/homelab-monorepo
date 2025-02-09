@@ -31,43 +31,16 @@ services:
 
 volumes:
   netbootxyz-config:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/netbootxyz-config"
   netbootxyz-assets:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/netbootxyz-assets"
   iventoy-config:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/iventoy-config"
   iventoy-log:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/iventoy-log"
   isos:
     driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/isos"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/FranzHopper/isos"
 
 networks:
   dockervlan:
-    name: dockervlan
-    driver: macvlan
-    driver_opts:
-      parent: br0
-    ipam:
-      config:
-        - subnet: "10.10.10.0/24"
-          gateway: "10.10.10.1"
+    external: true

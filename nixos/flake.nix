@@ -29,9 +29,14 @@
       url = "github:NixOS/nixos-hardware/master";
     };
 
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ... } @inputs : {
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ssh-keys, nixos-generators, ... } @inputs : {
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
@@ -159,7 +164,25 @@
           }
         ];
       };
+    };
 
+    packages.x86_64-linux = {
+      # Build this Azure VHD image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#azurenixos --no-write-lock-file --refresh
+      azurenixos = nixos-generators.nixosGenerate {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          ./machines/azurenixos/configuration.nix
+          {
+            # Pin nixpkgs to the flake input, so that the packages installed
+            # come from the flake inputs.nixpkgs.url.
+            nix.registry.nixpkgs.flake = nixpkgs;
+            # set disk size to to 64G
+            # virtualisation.diskSize = 64 * 1024;
+          }
+        ];
+        format = "azure";
+      };
     };
   };
 }

@@ -14,6 +14,20 @@
       sshKey = "/root/.ssh/remotebuild";
       system = pkgs.stdenv.hostPlatform.system;
       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+      protocol = "ssh-ng";
+      maxJobs = 16;
+      speedFactor = 5;
     }
+    {
+      hostName = "azurenixbuilder.azure.timo.be";
+      sshUser = "remotebuild";
+      sshKey = "/root/.ssh/remotebuild";
+      system = pkgs.stdenv.hostPlatform.system;
+      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+      protocol = "ssh-ng";
+      maxJobs = 16;
+      speedFactor = 5;
+    }
+    
   ];
 }

@@ -61,4 +61,19 @@
             <entry>~/.local/share/flatpak/exports/bin/org.ppsspp.PPSSPP</entry>
         </rule>
     </emulator>
+    <emulator name="TORZU">
+        <!-- Nintendo Switch emulator Torzu -->
+        <rule type="systempath">
+            <entry>yuzu</entry>
+            <entry>org.yuzu_emu.yuzu</entry>
+        </rule>
+        <rule type="staticpath">
+            <entry>~/Applications/yuzu*.AppImage</entry>
+            <entry>~/.local/share/applications/yuzu*.AppImage</entry>
+            <entry>~/.local/bin/yuzu*.AppImage</entry>
+            <entry>~/bin/yuzu*.AppImage</entry>
+            <entry>/var/lib/flatpak/exports/bin/org.yuzu_emu.yuzu</entry>
+            <entry>~/.local/share/flatpak/exports/bin/org.yuzu_emu.yuzu</entry>
+        </rule>
+    </emulator>
 </ruleList>

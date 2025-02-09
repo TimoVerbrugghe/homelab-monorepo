@@ -2,7 +2,7 @@ services:
   paperless-ngx:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless-ngx
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     depends_on:
@@ -15,8 +15,6 @@ services:
       - paperless-consume:/usr/src/paperless/consume
     environment:
       PAPERLESS_REDIS: redis://paperless-broker:6379
-      USERMAP_UID: ${PUID}
-      USERMAP_GID: ${PGID}
       PAPERLESS_OCR_LANGUAGES: nld fra eng
       PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
       PAPERLESS_TIME_ZONE: Europe/Brussels
@@ -39,7 +37,7 @@ services:
   paperless-broker:
     image: docker.io/library/redis:7
     container_name: paperless-broker
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     volumes:
@@ -47,7 +45,8 @@ services:
 
   paperless-gotenberg:
     image: docker.io/gotenberg/gotenberg:8.7
-    restart: unless-stopped
+    container_name: paperless-gotenberg
+    restart: always
     networks:
       - dockerproxy
     # The gotenberg chromium route is used to convert .eml files. We do not
@@ -59,9 +58,25 @@ services:
 
   paperless-tika:
     image: docker.io/apache/tika:latest
-    restart: unless-stopped
+    container_name: paperless-tika
+    restart: always
     networks:
       - dockerproxy
+
+  paperless-ai:
+    image: clusterzx/paperless-ai
+    container_name: paperless-ai
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - paperless-ai:/app/data
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.name: "paperlessai"
+      tsdproxy.container_port: 3000
+    ports:
+      - 3001:3000
 
 volumes:
   paperless-data:
@@ -94,6 +109,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/paperless/broker"
+  paperless-ai:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/paperless-ai"
 
 networks:
   dockerproxy:

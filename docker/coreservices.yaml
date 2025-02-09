@@ -1,26 +1,10 @@
 services:
-  adguardhome:
-    image: adguard/adguardhome
-    container_name: adguardhome
-    restart: unless-stopped
-    networks:
-      dockervlan:
-        ipv4_address: ${ADGUARDHOME_IP_ADDRESS}
-    volumes:
-      - adguardhome-work:/opt/adguardhome/work
-      - adguardhome-conf:/opt/adguardhome/conf
-      - /var/lib/acme/timo.be:/etc/letsencrypt/live/timo.be
-    labels:
-      traefik.enable: false
-
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
-    restart: unless-stopped
+    restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      traefik.enable: false
 
   dockerproxy:
     image: ghcr.io/tecnativa/docker-socket-proxy:latest
@@ -32,19 +16,4 @@ services:
         - 2375:2375
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
-    restart: unless-stopped
-
-volumes:
-  adguardhome-work:
-  adguardhome-conf:
-
-networks:
-  dockervlan:
-    name: dockervlan
-    driver: macvlan
-    driver_opts:
-      parent: eth0
-    ipam:
-      config:
-        - subnet: "10.10.10.0/24"
-          gateway: "10.10.10.1"
+    restart: always

@@ -1,0 +1,41 @@
+services: 
+  traefik:
+    image: traefik
+    restart: always
+    container_name: traefik
+    networks:
+      - dockerproxy
+    environment:
+      - CF_API_EMAIL=${CF_API_EMAIL}
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+    volumes:
+      - traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "443:443"
+    labels:
+      traefik.enable: false
+      tsdproxy.enable: true
+      tsdproxy.name: "traefik"
+      tsdproxy.container_port: 443
+
+  tsdproxy:
+    container_name: tsdproxy
+    hostname: tsdproxy
+    restart: always
+    networks:
+      - dockerproxy
+    image: almeidapaulopt/tsdproxy:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - tsdproxy-data:/data
+      - tsdproxy-config:/config
+
+volumes:
+  traefik:
+  tsdproxy-data:
+  tsdproxy-config:
+
+networks:    
+  dockerproxy:
+    external: true

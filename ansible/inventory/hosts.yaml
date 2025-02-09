@@ -1,8 +1,8 @@
 
 vm:
   hosts:
-    aelita.local.timo.be:
-      ansible_user: aelita
+    yumi.local.timo.be:
+      ansible_user: yumi
       macvlan_routes: |
         - to: 10.10.10.20
       enable_gpu: true
@@ -82,6 +82,15 @@ k3scluster:
     k3scontrolplane:
     k3sagents:
 
+azure:
+  hosts:
+    azurenixbuilder.azure.timo.be:
+      ansible_user: azureuser
+      ansible_ssh_private_key_file: /home/Timo/.ssh/azurenixbuild_key.pem
+      ansible_become: true
+      ansible_become_method: sudo
+      ansible_become_user: root
+      
 gamingvm:
   hosts:
     gamingvm.local.timo.be:

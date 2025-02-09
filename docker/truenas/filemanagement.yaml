@@ -55,7 +55,7 @@ services:
       - media:/media
       - downloads:/downloads
       - isos:/isos
-    restart: unless-stopped
+    restart: always
     labels:
       traefik.http.routers.doublecommander.entrypoints: https
       traefik.http.services.doublecommander.loadbalancer.server.port: 3000

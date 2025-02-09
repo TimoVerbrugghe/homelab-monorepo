@@ -1,32 +1,8 @@
 services:
-  webtop:
-    image: lscr.io/linuxserver/webtop:ubuntu-xfce
-    container_name: webtop
-    restart: unless-stopped
-    security_opt:
-      - seccomp=unconfined
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - webtop:/config
-      - downloads:/thefactory-downloads
-      - media:/thefactory-media
-      - isos:/thefactory-isos
-    shm_size: "1gb"
-    labels:
-      traefik.http.routers.webtop.entrypoints: https
-      traefik.http.services.webtop.loadbalancer.server.port: 3000
-      tsdproxy.enable: true
-      tsdproxy.container_port: 3000
-
   scanservjs:
     image: sbs20/scanservjs:latest
     container_name: scanservjs
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     volumes:
@@ -72,12 +48,6 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/scanservjs-config"
-  webtop:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/webtop"
   media:
     driver: local
     driver_opts:

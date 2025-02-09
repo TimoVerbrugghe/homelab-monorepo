@@ -16,7 +16,7 @@ services:
     volumes:
       - music:/music #must use the :/music for config to work.
       - spotdl:/root/.spotdl
-    restart: unless-stopped
+    restart: always
     networks:
       - dockerproxy
     labels:
@@ -28,12 +28,13 @@ services:
       tsdproxy.container_port: 8800
 
 volumes:
+  # Using a different volume for spotdl web, otherwise it won't download a song that I might have already downloaded using my cron jobs 
   music:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/X.A.N.A./media/spotdl"
+      device: "/mnt/FranzHopper/downloads/spotdl"
   spotdl:
     driver: local
     driver_opts:

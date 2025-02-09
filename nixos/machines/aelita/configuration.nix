@@ -1,4 +1,5 @@
-## Aelita is a HA VM in my proxmox cluster that only has 1 function: expose an NFS server which will be used as my HA storage in my kubernetes cluster
+## Aelita is a HA VM in my proxmox cluster that only does the following: 
+# 1) Run Plex & Jellyfin because they use sqlite databases and they're unstable if those databases are on NFS
 
 { config, lib, pkgs, ssh-keys, ... }:
 
@@ -7,7 +8,15 @@ let
   hostname = "aelita";
   username = "aelita";
   hashedPassword = "$y$j9T$Q2d7p39EZ1FvibfhyrQNB1$K5tu7VuyiCaH3fnCwhOA6qYnfNDeYjE3.tYRbYHRBxB";
-  ipAddress = "10.10.10.12";
+  ipAddress = "10.10.10.3";
+  kernelParams = [
+     "i915.enable_guc=3" # Enable Intel Quicksync
+  ];
+  
+  # Load bochs (proxmox standard VGA driver) after the i915 driver so that we can use noVNC while iGPU was passed through
+  extraModprobeConfig = ''
+    softdep bochs pre: i915
+  '';
 
 in 
 
@@ -15,20 +24,12 @@ in
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../../modules/vm-options.nix # Some default options you should enable on VMs
-      ../../modules/common/autoupgrade.nix # Enable auto-upgrades
-      ../../modules/common/boot.nix # Boot configuration
-      ../../modules/common/dns.nix # DNS configuration
-      ../../modules/common/firmware.nix # Firmware configuration
-      ../../modules/common/flakes.nix # Enable Flakes
-      ../../modules/common/graylog.nix # Graylog configuration
-      ../../modules/common/networking.nix # Networking configuration
-      ../../modules/common/optimizations.nix # Optimization configuration
-      ../../modules/common/packages.nix # Package configuration
-      ../../modules/common/ssh.nix # SSH configuration
-      ../../modules/common/user.nix # User configuration
-      ../../modules/common/vars.nix # Variables configuration
-
+      ../../modules/common.nix
+      ../../modules/portainer-agent.nix
+      ../../modules/tailscale.nix
+      ../../modules/vm-options.nix
+      ../../modules/vscode-server.nix
+      ../../modules/intel-gpu-drivers.nix
     ];
 
   ############################
@@ -38,7 +39,8 @@ in
   
   networking.hostName = "${hostname}"; # Define your hostname.
   hardware.cpu.intel.updateMicrocode = true;
-  console.keyMap = "be-latin1";
+  boot.kernelParams = kernelParams;
+  boot.extraModprobeConfig = extraModprobeConfig;
 
   # Set up single user using user.nix module
   services.user = {
@@ -48,6 +50,11 @@ in
 
   ## Enable AutoUpgrades using autoupgrade.nix module
   services.autoUpgrade = {
+    hostname = "${hostname}";
+  };
+
+  ## Passthrough hostname for tailscale
+  services.tailscale = {
     hostname = "${hostname}";
   };
 
@@ -63,23 +70,7 @@ in
       };
     };
   };
-
-  ### NFS Setup for Kubernetes (this node is a HA node on proxmox providing storage to my kubernetes cluster)
-  # Creating directories on the system - having "-" at the end tells systemd not to delete these folders
-  systemd.tmpfiles.rules = [
-    "d /nfs 0770 nobody nogroup -"
-    "d /nfs/portainer 0770 nobody nogroup -"
-    "d /nfs/bitwarden 0770 nobody nogroup -"
-    "d /nfs/bitwarden-export 0770 nobody nogroup -"
-  ];
-
-  # NFS Server Configuration
-  services.nfs.server.enable = true;
-  services.nfs.server.exports = ''
-    /nfs                  ${ipAddress}(sec=sys,rw,anonuid=0,anongid=65534,insecure,no_subtree_check)
-    /nfs/portainer        ${ipAddress}(sec=sys,rw,anonuid=0,anongid=65534,insecure,no_subtree_check)
-    /nfs/bitwarden        ${ipAddress}(sec=sys,rw,anonuid=0,anongid=65534,insecure,no_subtree_check)
-    /nfs/bitwarden-export ${ipAddress}(sec=sys,rw,anonuid=0,anongid=65534,insecure,no_subtree_check)
-  '';
-
+  
+  # More ram for plex to transcode in
+  boot.devShmSize = "70%"; 
 }

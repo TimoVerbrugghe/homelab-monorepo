@@ -1,0 +1,71 @@
+---
+- hosts: all
+  become: true
+  vars:
+    remotebuild_user: remotebuild
+
+  tasks:
+    - name: Install Nix package manager
+      ansible.builtin.shell: sh <(curl -L https://nixos.org/nix/install) --daemon --yes
+      ignore_errors: yes
+
+    - name: Update nix
+      ansible.builtin.shell: nix-channel --update
+      environment:
+        PATH: "/home/azureuser/.nix-profile/bin:/nix/var/nix/profiles/default/bin"
+
+    - name: Create remotebuild user
+      user:
+        name: "{{ remotebuild_user }}"
+        comment: "Remote build user"
+        shell: /bin/bash
+        createhome: yes
+
+    - name: Add remotebuild group
+      group:
+        name: remotebuild
+
+    - name: Add remotebuild user to remotebuild group
+      user:
+        name: "{{ remotebuild_user }}"
+        groups: remotebuild
+        append: yes
+
+    - name: Create .ssh directory for remotebuild user
+      file:
+        path: /home/{{ remotebuild_user }}/.ssh
+        state: directory
+        owner: "{{ remotebuild_user }}"
+        group: "{{ remotebuild_user }}"
+        mode: '0700'
+
+    - name: Download SSH public key from GitHub
+      uri:
+        url: https://github.com/TimoVerbrugghe.keys
+        return_content: yes
+      register: github_keys
+
+    - name: Add SSH public key for remotebuild user
+      copy:
+        content: "{{ github_keys.content }}"
+        dest: /home/{{ remotebuild_user }}/.ssh/authorized_keys
+        owner: "{{ remotebuild_user }}"
+        group: "{{ remotebuild_user }}"
+        mode: '0600'
+
+    - name: Configure Nix trusted users
+      lineinfile:
+        path: /etc/nix/nix.conf
+        line: "trusted-users = root {{ remotebuild_user }}"
+        create: yes
+
+    - name: Restart nix-daemon service
+      systemd:
+        name: nix-daemon
+        state: restarted
+
+    - name: Append Nix directories to PATH (this has to be done to have nix in the path for a non-interactive ssh session - which remote builder uses)
+      replace:
+        path: /etc/environment
+        regexp: '^PATH="([^"]+)"'
+        replace: 'PATH="\1:/home/{{ remotebuild_user }}/.nix-profile/bin:/nix/var/nix/profiles/default/bin"'
