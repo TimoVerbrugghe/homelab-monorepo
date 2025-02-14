@@ -25,7 +25,6 @@ in
       ../../modules/common/packages.nix # Add default packages
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
-      ../../modules/tailscale.nix # Enable Tailscale
       ../../modules/common/github-key.nix # Add GitHub PAT key for flake updates
       ../../modules/common/docker.nix # Install docker
 
@@ -99,7 +98,8 @@ in
 
   # Passthrough hostname for tailscale
   services.tailscale = {
-    hostname = "${hostname}";
+    enable = true;
+    openFirewall = true;
 
     # Needed for trayscale to work
     extraUpFlags = [
