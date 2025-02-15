@@ -164,7 +164,7 @@
             home-manager.users.gamer = import ./machines/gamingserver/home.nix;
           }
         ];
-        nixpkgs.overlays = overlays;
+        pkgs.overlays = overlays;
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#surface --refresh --impure --no-write-lock-file
