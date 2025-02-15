@@ -37,6 +37,8 @@
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ssh-keys, nixos-generators, ... } @inputs : {
+    # When applied, the stable nixpkgs set (declared in the flake inputs) will
+    # be accessible through 'pkgs.stable'
     overlays = { 
       stable-packages = final: _prev: {
           stable = import inputs.nixpkgs {
@@ -45,9 +47,6 @@
           };
         };
     };
-
-    nixpkgs-unstable.overlays = [ (self: super: { libgit2 = nixpkgs.libgit2; }) ];
-
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
@@ -146,7 +145,14 @@
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file
-      gamingserver = nixpkgs-unstable.lib.nixosSystem {
+      gamingserver = let
+        overlays = [
+          (self: super: {
+            libgit2 = nixpkgs.lib.libgit2;
+          })
+        ];
+      in      
+       nixpkgs-unstable.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
@@ -158,6 +164,7 @@
             home-manager.users.gamer = import ./machines/gamingserver/home.nix;
           }
         ];
+        nixpkgs.overlays = overlays;
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#surface --refresh --impure --no-write-lock-file
