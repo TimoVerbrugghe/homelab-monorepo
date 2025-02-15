@@ -38,9 +38,10 @@
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ssh-keys, nixos-generators, ... } @inputs : {
     nixpkgs.overlays = [
-      (final: _prev: {
-        unstable = import nixpkgs-unstable {
-          inherit (final) system config;
+      (final: _: {
+        unstable = import inputs.nixpkgs-unstable {
+          inherit (final.stdenv.hostPlatform) system;
+          inherit (final) config;
         };
       })
     ];
