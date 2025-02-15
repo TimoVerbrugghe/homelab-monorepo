@@ -1,6 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixpkgs-unstable, nixpkgs, ... }:
 
 {
+  # Neded for emulationstation-de -> see https://github.com/NixOS/nixpkgs/issues/380330#issuecomment-2646802203
+  nixpkgs-unstable.overlays = [ (self: super: { libgit2 = nixpkgs.libgit2; }) ];
+
   environment.systemPackages = with pkgs; [
     retroarch-full
     duckstation
