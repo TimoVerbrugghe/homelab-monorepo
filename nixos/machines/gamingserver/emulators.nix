@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
 {
+
+  pkgs.overlays = [ (self: super: { libgit2 = nixpkgs.libgit2; }) ];
+
   environment.systemPackages = with pkgs; [
     retroarch-full
     duckstation
