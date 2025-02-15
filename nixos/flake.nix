@@ -37,6 +37,17 @@
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ssh-keys, nixos-generators, ... } @inputs : {
+    overlays = { 
+      stable-packages = final: _prev: {
+          stable = import inputs.nixpkgs {
+            system = final.system;
+            config.allowUnfree = true;
+          };
+        };
+    };
+
+    nixpkgs-unstable.overlays = [ (self: super: { libgit2 = nixpkgs.libgit2; }) ];
+
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
