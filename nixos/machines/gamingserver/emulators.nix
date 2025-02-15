@@ -11,7 +11,7 @@
     mgba
     pcsx2
     ppsspp-sdl-wayland
-    emulationstation-de
+    # emulationstation-de
     xemu
     wineWowPackages.full
     _86Box-with-roms

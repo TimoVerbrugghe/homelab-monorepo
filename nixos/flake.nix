@@ -135,19 +135,7 @@
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file
-      gamingserver = let
-        unstableWithOverlay = inputs.nixpkgs-unstable.override {
-          overlays = [
-            (final: prev: {
-              emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
-                patches = (oldAttrs.patches or []) ++ [ ./fix-libgit2-callback.patch ];
-                # Force the package to use stable libgit2.
-                libgit2 = inputs.nixpkgs.lib.libgit2;
-              });
-            })
-          ];
-        };
-      in unstableWithOverlay.lib.nixosSystem {
+      gamingserver = nixpkgs-unstable.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
