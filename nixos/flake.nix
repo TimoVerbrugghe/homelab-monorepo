@@ -135,24 +135,12 @@
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file
-      gamingserver = let
-        stablePkgs = import inputs.nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
-
-        unstablePkgs = import inputs.nixpkgs-unstable {
-          system = "x86_64-linux";
-          overlays = [
-            (self: super: {
-              # Override libgit2 in unstable with stable's libgit2
-              libgit2 = stablePkgs.libgit2;
-            })
-          ];
-        };
-      in unstablePkgs.lib.nixosSystem {
+      gamingserver = nixpkgs-unstable.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
+        overlays = [
+          (final: prev: { libgit2 = inputs.nixpkgs.lib.libgit2; })
+        ];
         modules = [
           ./machines/gamingserver/configuration.nix
           home-manager-unstable.nixosModules.home-manager
