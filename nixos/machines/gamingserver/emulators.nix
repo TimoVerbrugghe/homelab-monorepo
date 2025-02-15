@@ -3,7 +3,7 @@
 {
 
   # Needed for emulationstation-de - see https://github.com/NixOS/nixpkgs/issues/380330#issuecomment-2646802203
-  nixpkgs.overlays = [ (self: super: { libgit2 = pkgs-stable.libgit2; }) ];
+  nixpkgs-unstable.overlays = [ (self: super: { libgit2 = nixpkgs.libgit2; }) ];
 
   environment.systemPackages = with pkgs; [
     retroarch-full
