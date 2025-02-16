@@ -1,15 +1,7 @@
-{ config, pkgs, nixpkgs-unstable, ... }:
+{ config, pkgs, nixpkgs, ... }:
 
 {
-  nixpkgs.overlays = [
-    (final: _: {
-      # this allows you to access `pkgs.unstable` anywhere in your config
-      unstable = import nixpkgs-unstable {
-        inherit (final.stdenv.hostPlatform) system;
-        inherit (final) config;
-      };
-    })
-  ];
+  nixpkgs.overlays = [ (self: super: { libgit2 = nixpkgs.libgit2; }) ];
 
   environment.systemPackages = with pkgs; [
     retroarchFull
