@@ -1,10 +1,10 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, nixpkgs-unstable, ... }:
 
 {
   nixpkgs.overlays = [
     (final: _: {
       # this allows you to access `pkgs.unstable` anywhere in your config
-      unstable = import inputs.nixpkgs-unstable {
+      unstable = import nixpkgs-unstable {
         inherit (final.stdenv.hostPlatform) system;
         inherit (final) config;
       };
