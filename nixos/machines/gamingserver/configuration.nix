@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ssh-keys, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 let 
 
@@ -76,7 +76,7 @@ in
       isNormalUser = true;
       createHome = true;
       hashedPassword = "${hashedPassword}";
-      openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
+      openssh.authorizedKeys.keyFiles = [ inputs.ssh-keys.outPath ];
     };
 
     root = {
