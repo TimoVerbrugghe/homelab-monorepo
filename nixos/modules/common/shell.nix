@@ -32,7 +32,6 @@
     fzf = "fzf --preview 'bat --color=always {}'";
     z = "zoxide";
     ls = "eza --group-directories-first";
-    cd = "zoxide";
   };
 
   # Fastfetch
