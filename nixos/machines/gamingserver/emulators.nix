@@ -4,7 +4,7 @@
   nixpkgs.overlays = [ (self: super: { libgit2 = pkgs-stable.libgit2; }) ];
 
   environment.systemPackages = with pkgs; [
-    retroarchFull
+    retroarch-full
     duckstation
     cemu
     dolphin-emu
@@ -13,7 +13,7 @@
     mgba
     pcsx2
     ppsspp-sdl-wayland
-    unstable.emulationstation-de
+    emulationstation-de
     xemu
     wineWowPackages.full
     _86Box-with-roms
