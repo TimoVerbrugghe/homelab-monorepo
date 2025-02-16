@@ -6,6 +6,10 @@
     cmatrix
     fzf
     fastfetch
+    zoxide
+    eza
+    nmap
+    jq
   ];
 
   programs.bat = {
@@ -16,13 +20,19 @@
     fuzzyCompletion = true;
   };
 
+  services.iperf3 = {
+    enable = true;
+    openFirewall = true;
+  };
+
   # Shell aliases
   environment.shellAliases = {
     k = "kubectl";
     t = "talosctl";
     fzf = "fzf --preview 'bat --color=always {}'";
-    nixupdatelocalboot = "nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#surface --refresh --impure --no-write-lock-file --builders ''";
-    nixupdatelocalswitch = "nixos-rebuild switch --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#surface --refresh --impure --no-write-lock-file --builders ''";
+    z = "zoxide";
+    ls = "eza --icons --group-directories-first";
+    cd = "zoxide";
   };
 
   programs.bash = {
