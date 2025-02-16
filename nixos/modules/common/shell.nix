@@ -31,7 +31,7 @@
     t = "talosctl";
     fzf = "fzf --preview 'bat --color=always {}'";
     z = "zoxide";
-    ls = "eza --icons --group-directories-first";
+    ls = "eza --group-directories-first";
     cd = "zoxide";
   };
 
