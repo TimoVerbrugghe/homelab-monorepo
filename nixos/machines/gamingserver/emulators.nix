@@ -1,14 +1,18 @@
 { config, pkgs, pkgs-stable, nixpkgs, ... }:
 
 {
+  
+  # Changes to nixpkgs-unstable in order to allow building of NixOS for my gamingserver
 	nixpkgs.overlays = [
     (final: _: {
       # this allows you to access `pkgs.stable` anywhere in your config
+      # Needed for a.o. lime3ds which has issues building in unstable
       stable = import nixpkgs {
         inherit (final.stdenv.hostPlatform) system;
         inherit (final) config;
       };
 
+      # Point the package libgit2 to nixpkgs stable, needed for emulationstation-de package from unstable to build
 			libgit2 = pkgs-stable.libgit2;
     })
   ];
