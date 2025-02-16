@@ -13,46 +13,48 @@ in
   # AX200 Bluetooth module
   boot.kernelModules = [ "btintel" ];
 
-  services.udev.extraRules = ''
-    ACTION=="remove", SUBSYSTEM=="bluetooth", ATTR{address}=="${macAddressProController}", RUN+="${pkgs.systemd}/bin/systemctl start switch-procontroller-bluetooth-reconnect.service"
-  '';
+  ## This is interfering with sleep + I'm not using switch pro controller that much
 
-  systemd.services.switch-procontroller-bluetooth-reconnect = {
-    description = "Bluetooth Reconnect Service for Switch Pro Controller";
-    after = [ "bluetooth.target" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Restart="on-failure";
-      Type="oneshot";
-    };
-    path = with pkgs; [
-      bluez
-    ];
-    enable = true;
-    script = ''
-      ## NEED TO PUT || true in this script because nixos puts set -e in the script automatically which exits script on any non-zero exit code
+  # services.udev.extraRules = ''
+  #   ACTION=="remove", SUBSYSTEM=="bluetooth", ATTR{address}=="${macAddressProController}", RUN+="${pkgs.systemd}/bin/systemctl start switch-procontroller-bluetooth-reconnect.service"
+  # '';
 
-      # Power on the Bluetooth adapter
-      bluetoothctl power on || true
+  # systemd.services.switch-procontroller-bluetooth-reconnect = {
+  #   description = "Bluetooth Reconnect Service for Switch Pro Controller";
+  #   after = [ "bluetooth.target" ];
+  #   wantedBy = [ "multi-user.target" ];
+  #   serviceConfig = {
+  #     Restart="on-failure";
+  #     Type="oneshot";
+  #   };
+  #   path = with pkgs; [
+  #     bluez
+  #   ];
+  #   enable = true;
+  #   script = ''
+  #     ## NEED TO PUT || true in this script because nixos puts set -e in the script automatically which exits script on any non-zero exit code
 
-      # Check if the device is already connected
-      connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes" || true)
+  #     # Power on the Bluetooth adapter
+  #     bluetoothctl power on || true
 
-      while [ -z "$connected" ]; do
-          echo "Device is not connected, trying to connect..."
+  #     # Check if the device is already connected
+  #     connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes" || true)
+
+  #     while [ -z "$connected" ]; do
+  #         echo "Device is not connected, trying to connect..."
           
-          # Connect to the device
-          bluetoothctl connect ${macAddressProController} || true
+  #         # Connect to the device
+  #         bluetoothctl connect ${macAddressProController} || true
 
-          # Check if the connection was successful
-          connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes" || true)
+  #         # Check if the connection was successful
+  #         connected=$(bluetoothctl info ${macAddressProController} | grep "Connected: yes" || true)
 
-          # Sleep for 5 seconds before trying again
-          sleep 5
-      done
+  #         # Sleep for 5 seconds before trying again
+  #         sleep 5
+  #     done
 
-      echo "Device connected successfully"
-    '';
-  };
+  #     echo "Device connected successfully"
+  #   '';
+  # };
 
 }

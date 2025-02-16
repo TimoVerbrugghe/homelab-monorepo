@@ -114,7 +114,7 @@
       };
 
       # Build this iso image with nix build github:TimoVerbrugghe/homelab-monorepo?dir=nixos#nixosConfigurations.gamingserver-iso-autoinstall.config.system.build.isoImage --no-write-lock-file --refresh
-      gamingserver-iso-autoinstall = nixpkgs-unstable.lib.nixosSystem {
+      gamingserver-iso-autoinstall = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
@@ -137,7 +137,7 @@
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file
       gamingserver = nixpkgs-unstable.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = inputs;
+        specialArgs = inputs // { pkgs-stable = inputs.nixpkgs.legacyPackages."x86_64-linux"; };
         modules = [
           ./machines/gamingserver/configuration.nix
           home-manager-unstable.nixosModules.home-manager

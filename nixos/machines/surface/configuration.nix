@@ -25,9 +25,9 @@ in
       ../../modules/common/packages.nix # Add default packages
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
-      ../../modules/tailscale.nix # Enable Tailscale
       ../../modules/common/github-key.nix # Add GitHub PAT key for flake updates
       ../../modules/common/docker.nix # Install docker
+      ../../modules/common/shell.nix # Add shell aliases and tools
 
       # Boot inputs (with specific surface linux settings)
       ./boot.nix
@@ -50,11 +50,14 @@ in
       # Enable distributed builds (using local nixos server VMs as remote builders)
       ./distributed-builds.nix
 
-      # Shellaliases
+      # Surface specifc shellaliases
       ./shell.nix
 
       # Scanner
       ./scan.nix
+
+      # Sleep options
+      ./sleep.nix
 
     ];
 
@@ -99,7 +102,8 @@ in
 
   # Passthrough hostname for tailscale
   services.tailscale = {
-    hostname = "${hostname}";
+    enable = true;
+    openFirewall = true;
 
     # Needed for trayscale to work
     extraUpFlags = [

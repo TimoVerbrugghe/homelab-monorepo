@@ -37,6 +37,7 @@ in
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
       ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
       ../../modules/common/graylog.nix # Enable and configure rsyslog for graylog
+      ../../modules/common/shell.nix # Add shell aliases and tools
 
       # Boot inputs (with specific zfs settings)
       ./boot.nix

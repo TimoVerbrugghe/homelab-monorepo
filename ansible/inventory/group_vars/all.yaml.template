@@ -1,0 +1,57 @@
+## CloudFlare
+certbot_cloudflare_api_token: 
+cert_manager_cloudflare_api_token:
+cloudflare_tunnel_token: 
+
+# this is the user that has ssh access
+ansible_user: root
+
+# Github Username for SSH Keys
+github_username: TimoVerbrugghe
+
+# Proxmox connectivity & setup
+proxmox_api_user: root@pam
+proxmox_api_tokenid: ansible
+proxmox_api_tokensecret: 
+proxmox_api_host: 
+proxmox_node: mountainsector
+vfio_pci_ids: 
+hostpci_igpu_id: 00:02.0
+
+# Cloud Init settings (username and password)
+template_ciuser: admin
+template_cipassword: admin
+
+# VM Template Settings
+ubuntu_cloud_image_url: https://cloud-images.ubuntu.com/releases/23.10/release/ubuntu-23.10-server-cloudimg-amd64.img
+vm_template_id: 9999
+vm_template_name: ubuntu-cloud
+vm_network_bridge: vmbr0
+vm_template_storage: local-zfs
+proxmox_template_node: forestsector
+
+# iGPU VM settings
+igpu_vm_id: 105
+igpu_vm_proxmox_node: 
+
+# Swap settings
+swap_size: 8G
+swap_swappiness: 10
+
+# k3s settings
+kube_vip_ip: 
+tls_san: |
+  - 
+  - 
+kube_vip_ip_range: 10.10.10.35-10.10.10.45
+git_user_email: 
+git_user_name: 
+le_email: 
+le_domain: 
+le_wildcard_domain: '*.example.com'
+traefik_ip: 10.10.10.35
+staging_certificate_name: 
+production_certificate_name: 
+traefik_dashboard_url: traefik.example.com
+
+tailscale_authkey_proxmox: 

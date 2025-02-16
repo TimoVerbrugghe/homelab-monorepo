@@ -6,7 +6,7 @@
 {
   imports =
     [ 
-      (nixpkgs + /nixos/modules/profiles/qemu-guest.nix)
+      (nixpkgs +  "/nixos/modules/profiles/qemu-guest.nix")
     ];
     
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
