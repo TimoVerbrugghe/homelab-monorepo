@@ -140,7 +140,7 @@
         specialArgs = inputs // { pkgs-stable = inputs.nixpkgs.legacyPackages."x86_64-linux"; };
         modules = [
           ./machines/gamingserver/configuration.nix
-          home-manager.nixosModules.home-manager
+          home-manager-unstable.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
