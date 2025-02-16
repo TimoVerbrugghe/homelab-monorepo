@@ -73,6 +73,7 @@ in
   users.users = {
 
     ${username} = {
+      # Need to add user to the group "audio" so that sunshine is able to capture audio sinks & passhthrough sound
       extraGroups = [ "wheel" "render" "video" "input" "audio" ];
       isNormalUser = true;
       createHome = true;
