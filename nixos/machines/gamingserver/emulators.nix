@@ -1,7 +1,7 @@
-{ config, pkgs, nixpkgs, ... }:
+{ config, pkgs, pkgs-stable, ... }:
 
 {
-  nixpkgs.overlays = [ (self: super: { libgit2 = nixpkgs.legacyPackages.${system}.libgit2; }) ];
+  nixpkgs.overlays = [ (self: super: { libgit2 = pkgs-stable.libgit2; }) ];
 
   environment.systemPackages = with pkgs; [
     retroarchFull
