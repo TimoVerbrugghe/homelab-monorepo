@@ -11,6 +11,7 @@
   '';
 
   # Allow the standard user (gamer) to suspend the system, necessary for home assistant ssh command to work without having to elevate privileges
+  # This will allow the user to perform SUDO systemctl suspend without a password (just doing regular systemctl suspend without sudo will still prompt for a password through polkit)
   security.sudo.extraRules = [
     {
       users = [ "gamer" ];
