@@ -53,6 +53,9 @@ in
       ./rom-sync.nix
       ./zfs.nix
       ./controllers.nix
+
+      # Sleep options
+      ./sleep.nix
     ];
 
   ############################

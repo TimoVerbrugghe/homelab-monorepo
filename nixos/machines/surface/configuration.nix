@@ -56,9 +56,6 @@ in
       # Scanner
       ./scan.nix
 
-      # Sleep options
-      ./sleep.nix
-
     ];
 
   ############################
