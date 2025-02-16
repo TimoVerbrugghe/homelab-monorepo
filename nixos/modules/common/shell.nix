@@ -35,12 +35,38 @@
     cd = "zoxide";
   };
 
+  # Fastfetch
+  environment.etc."fastfetch.jsonc".text = ''
+    {
+      "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+      "modules": [
+        "title",
+        "separator",
+        "os",
+        "host",
+        "kernel",
+        "uptime",
+        "display",
+        "de",
+        "wm",
+        "wmtheme",
+        "cpu",
+        "gpu",
+        "memory",
+        "disk",
+        "localip",
+        "battery",
+        "poweradapter"
+      ]
+    }
+  '';
+
   programs.bash = {
-    loginShellInit = '' 
-      # Check if the shell is a login shell 
+    loginShellInit = ''
+      # Check if the shell is a login shell
       if [ -n "$BASH_VERSION" ] && [ -z "$SSH_TTY" ]; then
-        fastfetch -c /home/Timo/.config/fastfetch/config.jsonc  
-      fi 
+        fastfetch -c /etc/fastfetch.jsonc
+      fi
     '';
   };
 }
