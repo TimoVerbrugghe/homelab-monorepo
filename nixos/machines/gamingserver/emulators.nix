@@ -11,8 +11,6 @@
     })
   ];
 
-  nixpkgs-unstable.overlays = [ (self: super: { libgit2 = pkgs.libgit2; }) ];
-
   environment.systemPackages = with pkgs; [
     retroarchFull
     duckstation
