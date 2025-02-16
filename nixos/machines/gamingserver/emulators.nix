@@ -1,7 +1,18 @@
-{ config, pkgs, pkgs-stable, ... }:
+{ config, pkgs, pkgs-stable, nixpkgs, ... }:
 
 {
-  nixpkgs.overlays = [ (self: super: { libgit2 = pkgs-stable.libgit2; }) ];
+	nixpkgs.overlays = [
+    (final: _: {
+      # this allows you to access `pkgs.stable` anywhere in your config
+      stable = import nixpkgs {
+        inherit (final.stdenv.hostPlatform) system;
+        inherit (final) config;
+      };
+
+			libgit2 = pkgs-stable.libgit2;
+    })
+  ];
+
 
   environment.systemPackages = with pkgs; [
     retroarch-full
@@ -29,7 +40,7 @@
     # # Installing citra, source (AppImage or source) has to be provided yourself
     # (pkgs.callPackage ./citra/package-appimage.nix {})
     # Instead of citra, you can also install lime3ds - not working in January 2025
-    lime3ds
+    stable.lime3ds
 
     # Installing ryujinx, source (AppImage or source) has to be provided yourself
     # (pkgs.callPackage ./ryujinx/package-source.nix {})
