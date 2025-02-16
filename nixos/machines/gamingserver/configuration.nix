@@ -72,7 +72,7 @@ in
   users.users = {
 
     ${username} = {
-      extraGroups = [ "wheel" "render" "video" "input" ];
+      extraGroups = [ "wheel" "render" "video" "input" "audio" ];
       isNormalUser = true;
       createHome = true;
       hashedPassword = "${hashedPassword}";
