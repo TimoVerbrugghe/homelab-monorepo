@@ -1,5 +1,6 @@
 # Extend this base config with the following command:
 # talosctl gen config --output controlplane-william.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch '[{"op": "add", "path": "/machine/network/hostname", "value": "william"}]' --config-patch @extension-patch.yaml --config-patch @kubesecrets.yaml lyoko https://10.10.10.30:6443
+# talosctl gen config --with-secrets secrets.yaml --output-types talosconfig -o talosconfig lyoko https://10.10.10.30:6443
 
 version: v1alpha1
 machine:

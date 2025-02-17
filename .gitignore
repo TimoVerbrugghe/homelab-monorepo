@@ -19,3 +19,4 @@ talosconfig
 extension-patch.yaml
 kubesecrets.yaml
 .*
+kubeconfig
