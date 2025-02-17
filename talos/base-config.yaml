@@ -114,5 +114,7 @@ cluster:
 
     # Traefik
     - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/traefik/traefik.yaml
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/traefik/traefik-middlewares.yaml
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/traefik/traefik-tlsdefaultcert.yaml
     
     
