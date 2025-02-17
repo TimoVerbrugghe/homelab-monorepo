@@ -1,5 +1,6 @@
-# Apply this patch with the following command:
+# Extend this base config with the following command:
 # talosctl gen config --output controlplane-william.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch '[{"op": "add", "path": "/machine/network/hostname", "value": "william"}]' --config-patch @extension-patch.yaml --config-patch @kubesecrets.yaml lyoko https://10.10.10.30:6443
+
 version: v1alpha1
 machine:
     certSANs:
@@ -12,16 +13,6 @@ machine:
           nodeStatusUpdateFrequency: 4s
           featureGates:
               GracefulNodeShutdown: true
-
-    # Prepping node for longhorn, see https://www.talos.dev/v1.9/kubernetes-guides/configuration/replicated-local-storage-with-openebs/
-      extraMounts:
-        - destination: /var/lib/longhorn
-          type: bind
-          source: /var/lib/longhorn
-          options:
-            - rbind
-            - rshared
-            - rw
     
     sysctls:
       vm.nr_hugepages: "1024"
@@ -46,15 +37,11 @@ machine:
     install:
       disk: /dev/sda
 
-      # Image with these extensions: qemu-guest-agent, i915, tailscale, cloudflared, intel-ucode, iscsi-tools & util-linux-tools + extraKernelArgs
-      # Generated using 
-      image: factory.talos.dev/installer/dff4f5e7c9d609e2ea14e4148f50530abbe51d3290fec5c21fa316a2d06fb034:v1.9.1
+      # Image with several extensions & kernel args - see talos-image.yaml
+      # curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
+      image: factory.talos.dev/installer/8d9402fcc2442fe51fb19b39464da919e9c580510e67f58922c9a5a322ef05cd:v1.9.4
       extraKernelArgs:
         - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
-        - i915.enable_guc=2 # Enable Intel QuickSync (needed for Jellyfin & Plex)
-
-    nodeLabels:
-        intel-gpu: true # Tainting this node because it has an intel N100 gpu
 
     logging:
         # Logging destination.
@@ -104,12 +91,6 @@ cluster:
 
     # Keel
     - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/keel.yaml
-
-    # Longhorn
-    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/longhorn.yaml
-
-    # Portainer
-    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/portainer.yaml
 
     # Cert-Manager
     - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/cert-manager/cert-manager.yaml

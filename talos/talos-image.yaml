@@ -3,13 +3,10 @@
 customization:
   extraKernelArgs:
     - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
-    - i915.enable_guc=2 # Enable Intel QuickSync (needed for Jellyfin & Plex)
   systemExtensions:
     officialExtensions:
       - siderolabs/qemu-guest-agent
-      - siderolabs/i915
       - siderolabs/tailscale
       - siderolabs/cloudflared
-      - siderolabs/iscsi-tools
       - siderolabs/util-linux-tools
       - siderolabs/intel-ucode
