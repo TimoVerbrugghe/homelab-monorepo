@@ -14,6 +14,10 @@ machine:
           nodeStatusUpdateFrequency: 4s
           featureGates:
               GracefulNodeShutdown: true
+      nodeIP:
+            # The `validSubnets` field configures the networks to pick kubelet node IP from.
+            validSubnets:
+                - 10.10.10.0/24
     
     sysctls:
       vm.nr_hugepages: "1024"
@@ -62,7 +66,14 @@ cluster:
       - kubernetes.local.timo.be
     extraArgs:
         default-not-ready-toleration-seconds: 120
-        default-unreachable-toleration-seconds: 120 
+        default-unreachable-toleration-seconds: 120
+    admissionControl:
+      - name: PodSecurity
+        configuration:
+          exemptions:
+            namespaces:
+              - tailscale
+              - portainer
 
   # These flags are wrong, need to check
   # controllerManager:
@@ -95,5 +106,13 @@ cluster:
 
     # Cert-Manager
     - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/cert-manager/cert-manager.yaml
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/cert-manager/production-certificates.yaml
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/cert-manager/staging-certificates.yaml
+
+    # Portainer Agent
+    - https://downloads.portainer.io/ce2-26/portainer-agent-k8s-lb.yaml
+
+    # Traefik
+    - https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/traefik/traefik.yaml
     
     
