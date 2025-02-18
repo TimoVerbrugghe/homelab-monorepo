@@ -1,4 +1,5 @@
-# Extend this base config with the following command:
+# Generate this base config with the following command:
+# talosctl gen secrets
 # talosctl gen config --output controlplane-william.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch '[{"op": "add", "path": "/machine/network/hostname", "value": "william"}]' --config-patch @extension-patch.yaml --config-patch @kubesecrets.yaml lyoko https://10.10.10.30:6443
 # talosctl gen config --with-secrets secrets.yaml --output-types talosconfig -o talosconfig lyoko https://10.10.10.30:6443
 
@@ -15,9 +16,9 @@ machine:
           featureGates:
               GracefulNodeShutdown: true
       nodeIP:
-            # The `validSubnets` field configures the networks to pick kubelet node IP from.
-            validSubnets:
-                - 10.10.10.0/24
+        # The `validSubnets` field configures the networks to pick kubelet node IP from.
+        validSubnets:
+            - 10.10.10.0/24
     
     sysctls:
       vm.nr_hugepages: "1024"
@@ -67,12 +68,13 @@ cluster:
     extraArgs:
         default-not-ready-toleration-seconds: 120
         default-unreachable-toleration-seconds: 120
+
+    # Need to add portainer namespace as an exception to the PodSecurity Policy since it can only be installed through yaml and cannot apply policies on the namespace directly
     admissionControl:
       - name: PodSecurity
         configuration:
           exemptions:
             namespaces:
-              - tailscale
               - portainer
 
   # These flags are wrong, need to check
