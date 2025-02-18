@@ -15,9 +15,9 @@ machine:
           featureGates:
               GracefulNodeShutdown: true
       nodeIP:
-            # The `validSubnets` field configures the networks to pick kubelet node IP from.
-            validSubnets:
-                - 10.10.10.0/24
+        # The `validSubnets` field configures the networks to pick kubelet node IP from.
+        validSubnets:
+            - 10.10.10.0/24
     
     sysctls:
       vm.nr_hugepages: "1024"
@@ -67,12 +67,13 @@ cluster:
     extraArgs:
         default-not-ready-toleration-seconds: 120
         default-unreachable-toleration-seconds: 120
+
+    # Need to add portainer namespace as an exception to the PodSecurity Policy since it can only be installed through yaml and cannot apply policies on the namespace directly
     admissionControl:
       - name: PodSecurity
         configuration:
           exemptions:
             namespaces:
-              - tailscale
               - portainer
 
   # These flags are wrong, need to check
