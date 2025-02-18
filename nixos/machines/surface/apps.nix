@@ -56,7 +56,7 @@
     talosctl
     crane
     kubectl
-    helm
+    kubernetes-helm
     minikube
   ];
 
