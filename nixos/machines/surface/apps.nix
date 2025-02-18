@@ -57,6 +57,7 @@
     crane
     kubectl
     helm
+    minikube
   ];
 
   # Needed to install packages from flathub, including Greenlight for xbox remote play
