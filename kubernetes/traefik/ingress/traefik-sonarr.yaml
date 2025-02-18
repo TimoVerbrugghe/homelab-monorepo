@@ -3,6 +3,8 @@ kind: IngressRoute
 metadata:
   name: sonarr
   namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
 spec:
   entryPoints:
     - websecure
