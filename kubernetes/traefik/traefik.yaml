@@ -87,6 +87,18 @@ spec:
     # Will define my own services because I want to expose traefik both through tailscale and through kube-vip
     service:
       enabled: false
+
+    keel:
+      # keel policy (all/major/minor/patch/force)
+      policy: all
+      # trigger type, defaults to events such as pubsub, webhooks
+      trigger: poll
+      # polling schedule
+      pollSchedule: "@every 2m"
+      # images to track and update
+      images:
+        - repository: image.repository # [1]
+          tag: image.tag  # [2]
 ---
 apiVersion: v1
 kind: Service
