@@ -1,0 +1,88 @@
+# This custom cluster role binding is required for Keel to work properly - otherwise several apps (including keel itself) cannot be autoupdate
+# You need to remove the existing clusterrolebinding that the keel helm chart creates and apply this one instead
+# kubectl delete clusterrolebinding keel
+---
+# Custom service account that clusterrolebinding can link to
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: keel
+  namespace: kube-system
+  labels:
+    app: keel
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: keel
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: keel
+    namespace: kube-system
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: keel
+  namespace: kube-system
+spec:
+  chart: keel
+  targetNamespace: kube-system
+  repo: https://keel-hq.github.io/keel/
+  valuesContent: |- 
+    image:
+      repository: keelhq/keel
+      tag: 0.19.0
+    service:
+      enabled: true
+      type: ClusterIP
+      port: 9300
+    basicauth:
+      enabled: true
+      user: "admin"
+      password: "admin"
+    helmProvider:
+      enabled: true
+      version: "v3"
+
+    # Enable custom clusterolebinding
+    rbac:
+      enabled: false
+      serviceAccount:
+        name: keel
+        create: false
+
+    # Keel self-update
+    keel:
+      # keel policy (all/major/minor/patch/force)
+      policy: all
+      # trigger type, defaults to events such as pubsub, webhooks
+      trigger: poll
+      # polling schedule
+      pollSchedule: "@every 24h"
+      # images to track and update
+      images:
+        - repository: image.repository
+          tag: image.tag
+---
+# Allowing traefik to route to keel
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: keel
+  namespace: kube-system
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`keel.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: keel
+          port: 9300
