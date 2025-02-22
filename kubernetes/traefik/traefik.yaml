@@ -15,6 +15,12 @@ spec:
   repo: https://traefik.github.io/charts
   targetNamespace: traefik
   valuesContent: |-
+    # Need to put this in manually otherwise keel does not pick it up for auto updates
+    image:
+      repository: traefik
+      tag: 3.3.2
+      pullPolicy: IfNotPresent
+
     globalArguments:
       - "--global.sendanonymoususage"
 
@@ -95,10 +101,11 @@ spec:
       trigger: poll
       # polling schedule
       pollSchedule: "@every 2m"
-      # images to track and update
+        # images to track and update
       images:
         - repository: image.repository # [1]
           tag: image.tag  # [2]
+      
 ---
 apiVersion: v1
 kind: Service
@@ -140,3 +147,86 @@ spec:
     protocol: TCP
     port: 9100
     targetPort: metrics
+---
+# Default TLS Cert to use
+apiVersion: traefik.io/v1alpha1
+kind: TLSStore
+metadata:
+  name: default
+  namespace: traefik
+spec:
+  certificates:
+    - secretName: wildcard-timo-be-production-tls
+  defaultCertificate:
+    secretName: wildcard-timo-be-production-tls
+---
+# Create middlewares for traefik, including headers, ratelimit and middlewares for routing certain apps correctly
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: secureheaders
+  namespace: traefik
+spec:
+  headers:
+    accessControlAllowOriginList:
+        - https://kubernetes.timo.be
+        - https://timo.be
+    frameDeny: true
+    browserXssFilter: true
+    contentTypeNosniff: true
+    forceSTSHeader: true       
+    stsSeconds: 15552000
+    stsIncludeSubdomains: true
+    stsPreload: true
+    customRequestHeaders:
+        X-Forwarded-Proto: https
+    customFrameOptionsValue: SAMEORIGIN
+    hostsProxyHeaders:
+        - X-Forwarded-Host
+    customResponseHeaders:
+        X-Robots-Tag: "noindex,nofollow"
+        Permissions-Policy: "geolocation=(), microphone=(), camera=(), payment=(), usb=(), vr=()"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: ratelimit
+  namespace: traefik
+spec:
+  rateLimit:
+    average: 200
+    burst: 200
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: accountsredirect
+  namespace: traefik
+spec:
+  redirectRegex:
+    regex: "(.)*"
+    replacement: "https://auth.timo.be/realms/HomeServer/account/#/security/linked-accounts"
+    permanent: false
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: statusredirect
+  namespace: traefik
+spec:
+  redirectRegex:
+    regex: "(.)*"
+    replacement: "https://uptime.timo.be/status/default"
+    permanent: false
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-forward-auth
+  namespace: traefik
+spec:
+  forwardAuth:
+    address: http://traefik-forward-auth.authentication:4181
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Forwarded-User
