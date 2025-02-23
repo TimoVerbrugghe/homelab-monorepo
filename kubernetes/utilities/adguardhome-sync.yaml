@@ -1,15 +1,8 @@
----
-# Creating namespace for traefik to be installed in
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: adguardhome
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: adguardhome-sync-deployment
-  namespace: adguardhome
+  namespace: utilities
   annotations:
     keel.sh/policy: all
     keel.sh/trigger: poll            
