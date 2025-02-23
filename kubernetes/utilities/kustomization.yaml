@@ -7,3 +7,4 @@ resources:
   - stirling-pdf.yaml
   - webtop.yaml
   - adguardhome-sync.yaml
+  - keel.yaml
