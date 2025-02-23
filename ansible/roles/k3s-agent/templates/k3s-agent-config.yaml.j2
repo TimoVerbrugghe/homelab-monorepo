@@ -1,8 +1,0 @@
-# Setting IPs for pods & services (needed for tailscale routing)
-cluster-cidr: 10.42.0.0/16
-service-cidr: 10.43.0.0/16
-
-# Disable traefik & servicelb -> Will install traefik manually & using kube-vip
-disable:
-- traefik
-- servicelb

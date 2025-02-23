@@ -1,2 +1,0 @@
-- name: Renew certs with certbot
-  ansible.builtin.include_tasks: renew-certs.yaml
