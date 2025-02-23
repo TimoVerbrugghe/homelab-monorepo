@@ -93,7 +93,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`stirlingpdf.kubernetes.timo.be`)
+    - match: Host(`webtop.kubernetes.timo.be`)
       kind: Rule
       services:
         - name: webtop
