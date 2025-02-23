@@ -1,4 +1,26 @@
 ---
+# Custom service account that clusterrolebinding can link to
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: webtop
+  namespace: utilities
+  labels:
+    app: webtop
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: webtop
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: webtop
+    namespace: utilities
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,6 +40,7 @@ spec:
       labels:
         app: webtop
     spec:
+      serviceAccountName: webtop
       containers:
       - name: webtop
         image: lscr.io/linuxserver/webtop:latest
@@ -75,6 +98,7 @@ spec:
       services:
         - name: webtop
           port: 3000
+          scheme: http
       middlewares:
         - name: auth
           namespace: traefik
