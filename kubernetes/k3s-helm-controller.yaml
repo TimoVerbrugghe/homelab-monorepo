@@ -170,6 +170,10 @@ metadata:
     app.kubernetes.io/name: helm-controller
   name: helm-controller
   namespace: kube-system
+  annotations:
+      keel.sh/policy: all
+      keel.sh/trigger: poll            
+      keel.sh/pollSchedule: "@every 24h"
 spec:
   replicas: 1
   revisionHistoryLimit: 3

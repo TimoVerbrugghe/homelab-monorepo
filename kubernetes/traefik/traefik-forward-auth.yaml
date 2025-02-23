@@ -1,0 +1,131 @@
+---
+## AUTHENTICATION ##
+# Using Traefik-Forward-Auth linked back to Entra ID
+# See https://github.com/thomseddon/traefik-forward-auth for examples & details
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik-forward-auth
+  namespace: traefik
+  labels:
+    app: traefik-forward-auth
+  annotations:
+      keel.sh/policy: all
+      keel.sh/trigger: poll            
+      keel.sh/pollSchedule: "@every 24h"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: traefik-forward-auth
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: traefik-forward-auth
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: traefik-forward-auth
+        image: thomseddon/traefik-forward-auth:latest
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - "ALL"
+          seccompProfile:
+            type: RuntimeDefault
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 4181
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+        env:
+        - name: DEFAULT_PROVIDER
+          value: oidc
+        - name: PROVIDERS_OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: traefik-forward-auth-secrets
+              key: client-id
+        - name: PROVIDERS_OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: traefik-forward-auth-secrets
+              key: client-secret
+        - name: PROVIDERS_OIDC_ISSUER_URL
+          valueFrom:
+            secretKeyRef:
+              name: traefik-forward-auth-secrets
+              key: issuer-url
+        - name: SECRET
+          valueFrom:
+            secretKeyRef:
+              name: traefik-forward-auth-secrets
+              key: secret
+        - name: WHITELIST
+          valueFrom:
+            secretKeyRef:
+              name: traefik-forward-auth-secrets
+              key: whitelist
+        - name: COOKIE_DOMAIN
+          value: "timo.be"
+        - name: DOMAIN
+          value: "timo.be"
+        - name: AUTH_HOST
+          value: "auth.timo.be"
+        - name: INSECURE_COOKIE
+          value: "false"
+        - name: LOG_LEVEL
+          value: "info"
+---
+# auth.timo.be ingress
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-forward-auth
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`auth.kubernetes.timo.be`) || Host(`auth.timo.be`)
+      kind: Rule
+      services:
+        - name: traefik-forward-auth
+          port: 4181
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-forward-auth
+  namespace: traefik
+spec:
+  type: ClusterIP
+  selector:
+    app: traefik-forward-auth
+  ports:
+  - protocol: TCP
+    port: 4181
+    targetPort: 4181
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: auth
+  namespace: traefik
+spec:
+  forwardAuth:
+    # If traefik-forward-auth is deployed in different namespace, it would be traefik-forward-auth.<namespace>:4181
+    address: http://traefik-forward-auth:4181
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Forwarded-User

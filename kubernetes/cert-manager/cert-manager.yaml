@@ -15,7 +15,8 @@ spec:
   repo: https://charts.jetstack.io
   targetNamespace: cert-manager
   valuesContent: |-
-    installCRDs: true
+    crds:
+      enabled: true
     replicaCount: 3
     webhook:
       replicaCount: 3
@@ -28,3 +29,23 @@ spec:
     podDnsConfig:
       nameservers:
         - "1.1.1.1"
+
+    # Keel autoupdate cert-manager container
+    deploymentAnnotations:
+      keel.sh/policy: all
+      keel.sh/trigger: poll
+      keel.sh/pollSchedule: "@every 24h"
+    
+    # Keel autoupdate webhook container
+    webhook:
+      deploymentAnnotations:
+        keel.sh/policy: all
+        keel.sh/trigger: poll
+        keel.sh/pollSchedule: "@every 24h"
+
+    # Keel autoupdate cainjector container
+    cainjector:
+      deploymentAnnotations:
+        keel.sh/policy: all
+        keel.sh/trigger: poll
+        keel.sh/pollSchedule: "@every 24h"

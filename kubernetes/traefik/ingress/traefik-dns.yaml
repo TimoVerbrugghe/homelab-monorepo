@@ -14,10 +14,31 @@ spec:
       services:
         - name: dns1-svc
           port: 80
+          healthCheck:
+            path: /login.html
+            interval: 10
+            timeout: 3
+          sticky:
+            cookie:
+              name: traefik-dns1
         - name: dns2-svc
           port: 80
+          healthCheck:
+            path: /login.html
+            interval: 10
+            timeout: 3
+          sticky:
+            cookie:
+              name: traefik-dns2
         - name: dns3-svc
           port: 80
+          healthCheck:
+            path: /login.html
+            interval: 10
+            timeout: 3
+          sticky:
+            cookie:
+              name: traefik-dns3
 ---
 apiVersion: v1
 kind: Service

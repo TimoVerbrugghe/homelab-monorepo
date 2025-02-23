@@ -21,3 +21,4 @@ kubesecrets.yaml
 .*
 kubeconfig
 talosctl.exe
+test.yaml

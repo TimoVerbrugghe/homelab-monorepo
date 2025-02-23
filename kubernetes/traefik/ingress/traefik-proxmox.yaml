@@ -1,23 +1,30 @@
-apiVersion: traefik.io/v1alpha1
-kind: ServersTransport
-metadata:
-  name: proxmox-serverstransport
-  namespace: traefik
-spec:
-  insecureSkipVerify: true
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: proxmox-svc
+  name: forestsector-svc
   namespace: traefik
 spec:
-  externalName: forestsector.local.timo.be:8006 # Can also be an IP address
+  externalName: forestsector.local.timo.be # Can also be an IP address
   type: ExternalName
-  healthCheck:
-    path: /
-    intervalSeconds: 10
-    timeoutSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: icesector-svc
+  namespace: traefik
+spec:
+  externalName: icesector.local.timo.be
+  type: ExternalName
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mountainsector-svc
+  namespace: traefik
+spec:
+  externalName: mountainsector.local.timo.be
+  type: ExternalName
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -33,7 +40,24 @@ spec:
     - match: Host(`proxmox.kubernetes.timo.be`)
       kind: Rule
       services:
-        - name: proxmox-svc
+        - name: forestsector-svc
           port: 8006
           scheme: https
-          serversTransport: proxmox-serverstransport
+          healthCheck:
+            path: /
+            interval: 10
+            timeout: 3
+        - name: icesector-svc
+          port: 8006
+          scheme: https
+          healthCheck:
+            path: /
+            interval: 10
+            timeout: 3
+        - name: mountainsector-svc
+          port: 8006
+          scheme: https
+          healthCheck:
+            path: /
+            interval: 10
+            timeout: 3

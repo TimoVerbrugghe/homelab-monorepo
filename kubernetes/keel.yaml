@@ -86,3 +86,22 @@ spec:
       services:
         - name: keel
           port: 9300
+      middlewares:
+        - name: auth
+          namespace: traefik
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keel-tailscale
+  namespace: kube-system
+spec:
+  defaultBackend:
+    service:
+      name: keel
+      port:
+        number: 9300
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - keel

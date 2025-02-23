@@ -11,6 +11,10 @@ metadata:
     app.kubernetes.io/version: v0.8.7
   name: kube-vip-ds
   namespace: kube-system
+  annotations:
+      keel.sh/policy: all
+      keel.sh/trigger: poll            
+      keel.sh/pollSchedule: "@every 24h"
 spec:
   selector:
     matchLabels:

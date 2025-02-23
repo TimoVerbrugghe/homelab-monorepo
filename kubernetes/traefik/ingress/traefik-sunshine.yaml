@@ -24,6 +24,9 @@ spec:
           port: 47990
           scheme: https
           serversTransport: sunshine-serverstransport
+      middlewares:
+        - name: auth
+          namespace: traefik
 ---
 apiVersion: v1
 kind: Service
