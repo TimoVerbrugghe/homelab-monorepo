@@ -1,0 +1,32 @@
+crds:
+  enabled: true
+replicaCount: 3  
+extraArgs:
+  - --dns01-recursive-nameservers=1.1.1.1:53
+  - --dns01-recursive-nameservers-only
+podDnsPolicy: None
+podDnsConfig:
+  nameservers:
+    - "1.1.1.1"
+
+# Keel autoupdate cert-manager container
+deploymentAnnotations:
+  keel.sh/policy: all
+  keel.sh/trigger: poll
+  keel.sh/pollSchedule: "@every 24h"
+
+# Keel autoupdate webhook container
+webhook:
+  replicaCount: 3
+  deploymentAnnotations:
+    keel.sh/policy: all
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+
+# Keel autoupdate cainjector container
+cainjector:
+  replicaCount: 3
+  deploymentAnnotations:
+    keel.sh/policy: all
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"

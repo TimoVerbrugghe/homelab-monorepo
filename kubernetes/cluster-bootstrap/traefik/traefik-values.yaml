@@ -1,0 +1,90 @@
+# Need to put this in manually otherwise keel does not pick it up for auto updates
+image:
+  repository: traefik
+  tag: 3.3.2
+  pullPolicy: IfNotPresent
+
+globalArguments:
+  - "--global.sendanonymoususage"
+
+logs:
+  general:
+    level: INFO
+  access:
+    enabled: true
+    bufferingSize: 100
+    filters:
+      statuscodes: "400-499"
+
+deployment:
+  enabled: true
+  replicas: 3
+
+ports:
+  traefik:
+    port: 9000
+    exposedPort: 9000
+    protocol: TCP
+  web:
+    expose:
+      default: false
+  websecure:
+    port: 8443
+    expose:
+      default: true
+    exposedPort: 443
+    protocol: TCP
+    tls:
+      enabled: true
+      middlewares:
+        - traefik-secureheaders@kubernetescrd
+        - traefik-ratelimit@kubernetescrd
+  metrics:
+    port: 9100
+    expose:
+      default: true
+    exposedPort: 9100
+    protocol: TCP
+
+ingressRoute:
+  dashboard:
+    enabled: false
+
+providers:
+  kubernetesCRD:
+    enabled: true
+    namespaces: []
+    allowCrossNamespace: true
+    allowExternalNameServices: true
+    ingressClass: traefik
+
+  kubernetesIngress:
+    enabled: true
+    namespaces: []
+    ingressClass: traefik
+    allowCrossNamespace: true
+    allowExternalNameServices: true
+    publishedService:
+      enabled: true
+
+dashboard:
+  enabled: true
+
+rbac:
+  enabled: true
+  
+# Will define my own services because I want to expose traefik both through tailscale and through kube-vip
+service:
+  enabled: false
+
+keel:
+  # keel policy (all/major/minor/patch/force)
+  policy: all
+  # trigger type, defaults to events such as pubsub, webhooks
+  trigger: poll
+  # polling schedule
+  pollSchedule: "@every 24h"
+    # images to track and update
+  images:
+    - repository: image.repository # [1]
+      tag: image.tag  # [2]

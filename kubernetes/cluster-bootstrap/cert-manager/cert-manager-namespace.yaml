@@ -1,0 +1,5 @@
+# Creating namespace for cert-manager to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager

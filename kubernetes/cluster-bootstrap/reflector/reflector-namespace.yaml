@@ -1,0 +1,6 @@
+---
+# Creating namespace for reflector to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: reflector

@@ -1,0 +1,43 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-kubevip
+  namespace: traefik
+spec:
+  selector:
+    app.kubernetes.io/name: traefik
+  loadBalancerClass: kube-vip.io/kube-vip-class
+  type: LoadBalancer
+  loadBalancerIP: 10.10.10.34
+  ports:
+  - name: websecure
+    protocol: TCP
+    port: 443
+    targetPort: websecure
+  - name: metrics
+    protocol: TCP
+    port: 9100
+    targetPort: metrics
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-tailscale
+  namespace: traefik
+  annotations:
+    tailscale.com/hostname: "traefik-test"
+spec:
+  selector:
+    app.kubernetes.io/name: traefik
+  loadBalancerClass: tailscale
+  type: LoadBalancer
+  ports:
+  - name: websecure
+    protocol: TCP
+    port: 443
+    targetPort: websecure
+  - name: metrics
+    protocol: TCP
+    port: 9100
+    targetPort: metrics

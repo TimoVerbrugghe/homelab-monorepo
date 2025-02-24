@@ -1,0 +1,11 @@
+---
+# Creating namespace for tailscale to be installed in
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tailscale
+  # Tailscale needs network admin and some other permissions
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged
