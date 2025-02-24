@@ -3,6 +3,8 @@
 machine:
   certSANs:
     - 10.10.10.30
+    - william.local.timo.be
+    - william.pony-godzilla.ts.net
   network:
     hostname: william
     interfaces:

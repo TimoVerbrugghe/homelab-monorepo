@@ -3,6 +3,8 @@
 machine:
   certSANs:
     - 10.10.10.31
+    - manta.local.timo.be
+    - manta.pony-godzilla.ts.net
   network:
     hostname: manta
     interfaces:
