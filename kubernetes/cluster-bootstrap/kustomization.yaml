@@ -1,4 +1,4 @@
-# Apply this kustomization with `kubectl apply -k .` from the directory containing this file to bootstrap cluster with several services 
+# Apply this kustomization with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the directory containing this file to bootstrap cluster with several services 
 
 # Reference to all kustomize helmCharts fields: https://kubectl.docs.kubernetes.io/references/kustomize/builtins/#_helmchartinflationgenerator_
 # Examples used as reference: https://medium.com/@tharukam/generate-kubernetes-manifests-with-helm-charts-using-kustomize-2f82ab5c5f11
@@ -12,11 +12,13 @@ resources:
   - kube-vip/kube-vip-configmap.yaml
   - kube-vip/kube-vip.yaml
 
-  # Traefik, tailscale, reflector resources complementary to Helm installation
+  # Resources complementary to Helm installation
   - traefik/traefik-namespace.yaml
   - traefik/traefik-service.yaml
   - tailscale/tailscale-namespace.yaml
   - cert-manager/cert-manager-namespace.yaml
+  - cert-manager/production-certificates.yaml
+  - cert-manager/staging-certificates.yaml
   - reflector/reflector-namespace.yaml
 
   # Portainer agent installation
@@ -35,23 +37,33 @@ helmCharts:
     repo: https://emberstack.github.io/helm-charts
     namespace: reflector
     includeCRDs: true
+    releaseName: reflector
     valuesFile: reflector/reflector-values.yaml
 
   # Cert-manager for certificate management (Let's Encrypt)
+  ## WARNING - If you would ever delete this Helm release, there are webhookconfigurations that will remain in the cluster since the helm chart doesn't delete it - https://github.com/cert-manager/cert-manager/issues/3195#issuecomment-1452780684
+  ## kubectl get validatingwebhookconfiguration.admissionregistration.k8s.io
+  ## kubectl delete validatingwebhookconfiguration.admissionregistration.k8s.io/<Junk Object>
+  ## kubectl get mutatingwebhookconfiguration.admissionregistration.k8s.io
+  ## kubectl delete mutatingwebhookconfiguration.admissionregistration.k8s.io/<Junk Object>
+  
   - name: cert-manager
     repo: https://charts.jetstack.io
-    namespace: cert-manager
     includeCRDs: true
-    valuesFile: cert-manager-values.yaml
+    releaseName: cert-manager
+    namespace: cert-manager
+    valuesFile: cert-manager/cert-manager-values.yaml
 
   - name: traefik
     repo: https://traefik.github.io/charts
     namespace: traefik
     includeCRDs: true
+    releaseName: traefik
     valuesFile: traefik/traefik-values.yaml
   
   - name: tailscale-operator
-    repo: https://tailscale.github.io/tailscale-k8s
+    repo: https://pkgs.tailscale.com/helmcharts
     namespace: tailscale
     includeCRDs: true
+    releaseName: tailscale-operator
     valuesFile: tailscale/tailscale-values.yaml

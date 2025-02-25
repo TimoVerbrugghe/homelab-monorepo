@@ -7,4 +7,12 @@ resources:
   - stirling-pdf.yaml
   - webtop.yaml
   - adguardhome-sync.yaml
-  - keel.yaml
+  - keel/keel-clusterrolebinding.yaml
+  - keel/keel-ingress.yaml
+
+helmCharts:
+  - name: keel
+    repo: https://keel-hq.github.io/keel/
+    releaseName: keel
+    namespace: utilities
+    valuesFile: keel/keel-values.yaml
