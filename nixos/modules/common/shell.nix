@@ -10,6 +10,9 @@
     eza
     nmap
     jq
+    htop
+    lm_sensors
+    s-tui
   ];
 
   programs.bat = {
