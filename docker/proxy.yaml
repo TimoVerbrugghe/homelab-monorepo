@@ -10,6 +10,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - tsdproxy-data:/data
       - tsdproxy-config:/config
+    ports:
+      - 16000:8080
     labels:
       tsdproxy.enable: true
       tsdproxy.name: "tsdproxy-yumi"
