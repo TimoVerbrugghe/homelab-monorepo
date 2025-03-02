@@ -29,6 +29,10 @@ resources:
 
   # Custom Ingresses - TheFactory Media
   - traefik-sonarr.yaml
+  - traefik-radarr.yaml
+  - traefik-bazarr.yaml
+  - traefik-overseerr.yaml
+  - traefik-prowlarr.yaml
 
   # Custom Ingresses - TheFactory Downloaders
   - traefik-qbittorrent.yaml
