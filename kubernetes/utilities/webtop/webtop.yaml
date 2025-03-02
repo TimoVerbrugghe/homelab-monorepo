@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webtop
+  namespace: utilities
+  annotations:
+    keel.sh/policy: all
+    keel.sh/trigger: poll            
+    keel.sh/pollSchedule: "@every 24h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webtop
+  template:
+    metadata:
+      labels:
+        app: webtop
+    spec:
+      serviceAccountName: webtop
+      containers:
+      - name: webtop
+        image: lscr.io/linuxserver/webtop:latest
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Europe/Brussels"
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+          requests:
+            memory: "1.5Gi"
+            cpu: "1500m"    
+        # Cannot add this securityContext because webtop needs additional permissions for chowning files
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   capabilities:
+        #     drop:
+        #       - "ALL"
+        #   seccompProfile:
+        #     type: RuntimeDefault
+        ports:
+        - containerPort: 3000

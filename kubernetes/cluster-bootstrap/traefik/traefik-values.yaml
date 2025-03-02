@@ -12,7 +12,7 @@ logs:
     level: INFO
   access:
     enabled: true
-    bufferingSize: 100
+    format: json
     filters:
       statuscodes: "400-499"
 
