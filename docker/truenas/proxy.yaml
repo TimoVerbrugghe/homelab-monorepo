@@ -10,6 +10,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - tsdproxy-data:/data
       - tsdproxy-config:/config
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.name: "tsdproxy-truenas"
+      tsdproxy.container_port: 8080
 
 volumes:
   tsdproxy-data:
