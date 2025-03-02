@@ -16,6 +16,8 @@ services:
       ADMIN_TOKEN: ${BITWARDEN_ADMIN_TOKEN}
     volumes:
       - bitwarden:/data
+    ports:
+      - 15000:80
     labels:
       traefik.http.routers.bitwarden.entrypoints: https
       traefik.http.services.bitwarden.loadbalancer.server.port: 80
@@ -46,7 +48,7 @@ services:
     volumes:
       - mealie:/app/data/
     ports:
-      - 9300:9000
+      - 15001:9000
     environment:
       ALLOW_SIGNUP: false
       PUID: ${PUID}
