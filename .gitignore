@@ -22,3 +22,5 @@ kubesecrets.yaml
 kubeconfig
 talosctl.exe
 test.yaml
+kubernetes/cluster-bootstrap/kustomize
+**/charts

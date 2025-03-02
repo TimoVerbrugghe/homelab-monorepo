@@ -1,15 +1,17 @@
-# Machine specific config for manta
+# Machine specific config for william
 
 machine:
   certSANs:
-    - 10.10.10.31
+    - 10.10.10.30
+    - william.local.timo.be
+    - william.pony-godzilla.ts.net
   network:
-    hostname: manta
+    hostname: william
     interfaces:
       -   deviceSelector:
               physical: true # should select any hardware network device, if it's just one, that one will be selected
           addresses: # Assigns static IP addresses to the interface.
-          - 10.10.10.31/24
+          - 10.10.10.30/24
           routes:
           -   network: 0.0.0.0/0 # The route's network (destination).
               gateway: 10.10.10.1 # The route's gateway (if empty, creates link scope route).

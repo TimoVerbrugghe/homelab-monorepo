@@ -1,0 +1,35 @@
+# Needed for keel to autoupdate itself
+image:
+  repository: keelhq/keel
+  tag: 0.19.0
+service:
+  enabled: true
+  type: ClusterIP
+  port: 9300
+basicauth:
+  enabled: true
+  user: "admin"
+  password: "admin"
+helmProvider:
+  enabled: true
+  version: "v3"
+
+# Enable custom clusterolebinding
+rbac:
+  enabled: false
+  serviceAccount:
+    name: keel
+    create: false
+
+# Keel self-update
+keel:
+  # keel policy (all/major/minor/patch/force)
+  policy: all
+  # trigger type, defaults to events such as pubsub, webhooks
+  trigger: poll
+  # polling schedule
+  pollSchedule: "@every 24h"
+  # images to track and update
+  images:
+    - repository: image.repository
+      tag: image.tag

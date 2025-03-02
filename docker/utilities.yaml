@@ -60,6 +60,14 @@ services:
       BASE_URL : https://mealie.home.timo.be 
       THEME_DARK_PRIMARY: "#0A2472"
       THEME_LIGHT_PRIMARY: "#0A2472"
+      OIDC_AUTH_ENABLED: true
+      OIDC_SIGNUP_ENABLED: false
+      OIDC_CLIENT_ID: ${MEALIE_OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${MEALIE_OIDC_CLIENT_SECRET}
+      OIDC_CONFIGURATION_URL: "https://accounts.google.com/.well-known/openid-configuration"
+      OIDC_PROVIDER_NAME: "Google"
+      OIDC_REMEMBER_ME: true
+      OIDC_USER_CLAIM: "email"
     labels:
       traefik.http.routers.mealie.entrypoints: https
       traefik.http.services.mealie.loadbalancer.server.port: 9000

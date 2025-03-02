@@ -1,0 +1,11 @@
+# Default TLS Cert to use in traefik, retrieved from cert-manager
+apiVersion: traefik.io/v1alpha1
+kind: TLSStore
+metadata:
+  name: default
+  namespace: traefik
+spec:
+  certificates:
+    - secretName: wildcard-timo-be-production-tls
+  defaultCertificate:
+    secretName: wildcard-timo-be-production-tls

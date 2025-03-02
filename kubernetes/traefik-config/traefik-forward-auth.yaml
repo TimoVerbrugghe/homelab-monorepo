@@ -129,3 +129,4 @@ spec:
     trustForwardHeader: true
     authResponseHeaders:
       - X-Forwarded-User
+    headerField: X-Forwarded-User

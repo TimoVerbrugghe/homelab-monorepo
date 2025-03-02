@@ -1,6 +1,6 @@
 # Generate this base config with the following command:
 # talosctl gen secrets
-# talosctl gen config --output controlplane-william.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @william-patch.yaml --config-patch @extension-patch.yaml --config-patch @kubesecrets.yaml sectorfive https://10.10.10.30:6443
+# talosctl gen config --output controlplane-william.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @william-patch.yaml --config-patch @extension-patch.yaml sectorfive https://10.10.10.30:6443
 # talosctl gen config --with-secrets secrets.yaml --output-types talosconfig -o talosconfig sectorfive https://10.10.10.30:6443
 # talosctl apply-config --insecure -n <IPADDRESSOFNODE> --file controlplane-william.yaml
 # talosctl bootstrap -n 10.10.10.30 -e 10.10.10.30 --talosconfig talosconfig
@@ -9,7 +9,6 @@ version: v1alpha1
 machine:
     certSANs:
         - 10.10.10.33
-        - william.local.timo.be
         - kubernetes.local.timo.be
     kubelet:
       extraConfig:
@@ -52,7 +51,6 @@ cluster:
   apiServer:
     certSANs:
       - 10.10.10.33
-      - william.local.timo.be
       - kubernetes.local.timo.be
     extraArgs:
         default-not-ready-toleration-seconds: 120

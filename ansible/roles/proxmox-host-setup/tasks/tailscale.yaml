@@ -28,4 +28,4 @@
     enabled: yes
 
 - name: Authenticate Tailscale with authkey
-  command: tailscale up --authkey {{ tailscale_authkey_proxmox }}
+  command: tailscale up --authkey {{ tailscale_authkey_proxmox }} --accept-dns=false

@@ -1,15 +1,19 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+// README at: https://github.com/devcontainers/templates/tree/main/src/alpine
 {
-	"name": "Ubuntu",
+	"name": "Alpine",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	"image": "mcr.microsoft.com/devcontainers/base:alpine-3.20",
 	"features": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
 		"ghcr.io/devcontainers/features/nix:1": {},
-		"ghcr.io/devcontainers-contrib/features/ansible:2": {},
-		"ghcr.io/devcontainers-contrib/features/packer-asdf:2": {},
-		"ghcr.io/devcontainers-contrib/features/terraform-asdf:2": {}
-	},
+		"ghcr.io/devcontainers/features/powershell:1": {},
+		"ghcr.io/devcontainers/features/terraform:1": {},
+		"ghcr.io/devcontainers-extra/features/ansible:2": {},
+		"ghcr.io/devcontainers-extra/features/rclone:1": {},
+		"ghcr.io/devcontainers-extra/features/talosctl:1": {}
+	}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -25,16 +29,4 @@
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
-
-
-	// WARNING (don't know why I have to do this) - For this to work, you need to do the following
-	// Edit /etc/wsl.conf in to enable automount of c drive with metadata (otherwise .ssh folder will have 777 permissions which is not allowed by ssh)
-		// [automount]
-		// enabled = true
-		// options = metadata,umask=22,fmask=11
-	// Edit /etc/bash.bashrc (otherwise HOME local variable is /home/ubuntu which is not right in this context)
-		// export HOME=/mnt/c/users/timo
-	"mounts": [
-		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,readonly"
-	]
 }
