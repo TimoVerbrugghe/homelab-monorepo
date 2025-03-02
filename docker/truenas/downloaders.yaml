@@ -89,8 +89,8 @@ services:
     image: spotdl/spotify-downloader
     command: web --host 0.0.0.0 --web-use-output-dir --keep-alive
     environment:
-      - PUID=3000 #CHANGE_TO_YOUR_UID
-      - PGID=3000 #CHANGE_TO_YOUR_GID
+      - PUID=${PUID} #CHANGE_TO_YOUR_UID
+      - PGID=${PGID} #CHANGE_TO_YOUR_GID
       - TZ=Europe/Brussels #CHANGE_TO_YOUR_TZ
     ports:
       - 12005:8800
