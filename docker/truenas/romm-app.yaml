@@ -15,17 +15,21 @@ services:
       # - MOBYGAMES_API_KEY= # https://www.mobygames.com/info/api/
       - STEAMGRIDDB_API_KEY=${STEAMGRIDDB_API_KEY} # https://github.com/rommapp/romm/wiki/Generate-API-Keys#steamgriddb
     volumes:
-      - romm_resources:/romm/resources # Resources fetched from IGDB (covers, screenshots, etc.)
-      - romm_redis_data:/redis-data # Cached data for background tasks
-      - /path/to/library:/romm/library # Your game library. Check https://github.com/rommapp/romm?tab=readme-ov-file#folder-structure for more details.
-      - /path/to/assets:/romm/assets # Uploaded saves, states, etc.
-      - /path/to/config:/romm/config # Path where config.yml is stored
+      - romm-resources:/romm/resources # Resources fetched from IGDB (covers, screenshots, etc.)
+      - romm-redis:/redis-data # Cached data for background tasks
+      - library:/romm/library # Your game library. Check https://github.com/rommapp/romm?tab=readme-ov-file#folder-structure for more details.
+      - romm-assets:/romm/assets # Uploaded saves, states, etc.
+      - romm-config:/romm/config # Path where config.yml is stored
     ports:
       - 17000:8080
     depends_on:
       romm-db:
         condition: service_healthy
         restart: true
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.name: "romm"
+      tsdproxy.container_port: 8080
 
   romm-db:
     image: mariadb:latest
@@ -37,7 +41,7 @@ services:
       - MARIADB_USER=romm-user
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
     volumes:
-      - mysql_data:/var/lib/mysql
+      - romm-db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       start_period: 30s
@@ -47,6 +51,39 @@ services:
       retries: 5
 
 volumes:
-  mysql_data:
-  romm_resources:
-  romm_redis_data:
+  romm-db:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/romm/db"
+  romm-resources:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/romm/resources"
+  romm-redis:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/romm/redis"
+  romm-assets:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/romm/assets"
+  romm-config:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/romm/config"
+  library:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      device: ":/mnt/X.A.N.A./media/games"
