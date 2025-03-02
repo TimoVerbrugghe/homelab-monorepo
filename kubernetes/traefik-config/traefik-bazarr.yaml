@@ -1,7 +1,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: sonarr
+  name: bazarr
   namespace: traefik
   annotations: 
     kubernetes.io/ingress.class: traefik
@@ -9,11 +9,11 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`sonarr.kubernetes.timo.be`)
+    - match: Host(`bazarr.kubernetes.timo.be`)
       kind: Rule
       services:
-        - name: sonarr-svc
-          port: 14000
+        - name: bazarr-svc
+          port: 14002
       middlewares:
         - name: auth
           namespace: traefik
@@ -21,7 +21,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sonarr-svc
+  name: bazarr-svc
   namespace: traefik
 spec:
   externalName: thefactory.local.timo.be # Can also be an IP address

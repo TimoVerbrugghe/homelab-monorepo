@@ -15,11 +15,29 @@ resources:
   # Default middlewares
   - traefik-middlewares.yaml
 
-  # Custom Ingresses
+  # Custom Ingresses - Other Hosts
   - traefik-dashboard.yaml
   - traefik-dns.yaml
   - traefik-proxmox.yaml
-  - traefik-sonarr.yaml
-  - traefik-sunshine.yaml
   - traefik-unifi.yaml
+  - traefik-sunshine.yaml
+  
+  # Custom Ingresses - TheFactory Utilities
   - traefik-graylog.yaml
+  - traefik-paperless.yaml
+  - traefik-scan.yaml
+
+  # Custom Ingresses - TheFactory Media
+  - traefik-sonarr.yaml
+
+  # Custom Ingresses - TheFactory Downloaders
+  - traefik-qbittorrent.yaml
+  - traefik-jdownloader2.yaml
+  - traefik-metube.yaml
+  - traefik-ariang.yaml
+  - traefik-spotdl.yaml
+
+  # Custom Ingresses - TheFactory Filemanagement
+  - traefik-filebrowser.yaml
+  - traefik-doublecommander.yaml
+  - traefik-filezilla.yaml

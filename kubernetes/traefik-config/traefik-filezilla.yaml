@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: filezilla
+  namespace: traefik
+spec:
+  externalName: thefactory.local.timo.be # Can also be an IP address
+  type: ExternalName
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: filezilla
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`filezilla.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: filezilla
+          port: 13001
+      middlewares:
+        - name: auth
+          namespace: traefik

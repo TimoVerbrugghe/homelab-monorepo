@@ -13,9 +13,9 @@ services:
     volumes:
       - qbittorrent:/config
       - downloads:/downloads
+    ports:
+      - 12000:8080
     labels:
-      traefik.http.routers.qbittorrent.entrypoints: https
-      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
       tsdproxy.enable: true
       tsdproxy.name: "qbittorrent"
       tsdproxy.container_port: 8080
@@ -32,9 +32,9 @@ services:
     volumes:
       - jdownloader2:/config
       - downloads:/output
+    ports:
+      - 12001:5800
     labels:
-      traefik.http.routers.qbittorrent.entrypoints: https
-      traefik.http.services.qbittorrent.loadbalancer.server.port: 5800
       tsdproxy.enable: true
       tsdproxy.name: "jdownloader2"
       tsdproxy.container_port: 5800
@@ -55,9 +55,9 @@ services:
     volumes:
       - downloads:/downloads
       - /dev/shm:/tmp
+    ports:
+      - 12002:8081
     labels:
-      traefik.http.routers.qbittorrent.entrypoints: https
-      traefik.http.services.qbittorrent.loadbalancer.server.port: 8081
       tsdproxy.enable: true
       tsdproxy.name: "metube"
       tsdproxy.container_port: 8081
@@ -76,16 +76,34 @@ services:
       - PGID=${PGID}
       - RPC_SECRET=secret
       - ARIA2RPCPORT=443
+    ports:
+      - 12003:8080
+      - 12004:6800
     labels:
-      traefik.http.routers.ariang.entrypoints: https
-      traefik.http.services.ariang.loadbalancer.server.port: 8080
-      traefik.http.routers.ariangrpc.service: ariarpc
-      traefik.http.routers.ariangrpc.rule: Host(`ariang.timo.be`) && PathPrefix(`/jsonrpc`)
-      traefik.http.routers.ariangrpc.entrypoints: https
-      traefik.http.services.ariangrpc.loadbalancer.server.port: 6800
       tsdproxy.enable: true
       tsdproxy.name: "ariang"
       tsdproxy.container_port: 8080
+
+  spotdl:
+    container_name: spotdl
+    image: spotdl/spotify-downloader
+    command: web --host 0.0.0.0 --web-use-output-dir --keep-alive
+    environment:
+      - PUID=3000 #CHANGE_TO_YOUR_UID
+      - PGID=3000 #CHANGE_TO_YOUR_GID
+      - TZ=Europe/Brussels #CHANGE_TO_YOUR_TZ
+    ports:
+      - 12005:8800
+    volumes:
+      - music:/music #must use the :/music for config to work.
+      - spotdl:/root/.spotdl
+    restart: always
+    networks:
+      - dockerproxy
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.name: "spotdl"
+      tsdproxy.container_port: 8800
 
 volumes:
   qbittorrent:
@@ -110,7 +128,20 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/aria2-conf"
-      
+  # Using a different volume for spotdl web, otherwise it won't download a song that I might have already downloaded using my cron jobs 
+  music:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/downloads/spotdl"
+  spotdl:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/spotdl"
+
 networks:
   dockerproxy:
     external: true

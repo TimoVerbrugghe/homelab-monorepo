@@ -13,7 +13,7 @@ spec:
       kind: Rule
       services:
         - name: graylog-svc
-          port: 9000
+          port: 11003
       middlewares:
         - name: auth
           namespace: traefik

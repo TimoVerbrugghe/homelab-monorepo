@@ -10,10 +10,9 @@ services:
       - scanservjs-config:/app/config
     devices: 
       - /dev/bus/usb:/dev/bus/usb
+    ports:
+      - 11006:8080
     labels:
-      traefik.http.routers.scanservjs.entrypoints: https
-      traefik.http.services.scanservjs.loadbalancer.server.port: 8080
-      traefik.http.routers.scanservjs.rule: Host(`scan.thefactory.timo.be`) || Host(`scan.timo.be`)
       tsdproxy.enable: true
       tsdproxy.container_port: 8080
       tsdproxy.name: "scan"

@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: doublecommander
+  namespace: traefik
+spec:
+  externalName: thefactory.local.timo.be # Can also be an IP address
+  type: ExternalName
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: doublecommander
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`doublecommander.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: doublecommander
+          port: 13002
+      middlewares:
+        - name: auth
+          namespace: traefik

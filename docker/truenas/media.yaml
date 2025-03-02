@@ -18,9 +18,9 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    ports:
+      - 14000:8989
     labels:
-      traefik.http.routers.sonarr.entrypoints: https
-      traefik.http.services.sonarr.loadbalancer.server.port: 8989
       tsdproxy.enable: true
       tsdproxy.name: "sonarr"
       tsdproxy.container_port: 8989
@@ -44,9 +44,9 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    ports:
+      - 14001:7878
     labels:
-      traefik.http.routers.radarr.entrypoints: https
-      traefik.http.services.radarr.loadbalancer.server.port: 7878
       tsdproxy.enable: true
       tsdproxy.name: "radarr"
       tsdproxy.container_port: 7878
@@ -75,9 +75,9 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    ports:
+      - 14002:6767
     labels:
-      traefik.http.routers.bazarr.entrypoints: https
-      traefik.http.services.bazarr.loadbalancer.server.port: 6767
       tsdproxy.enable: true
       tsdproxy.container_port: 6767
       tsdproxy.name: "bazarr"
@@ -98,10 +98,9 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    ports:
+      - 14003:5055
     labels:
-      traefik.http.routers.overseerr.rule: Host(`request.thefactory.timo.be`) || Host(`request.timo.be`)
-      traefik.http.routers.overseerr.entrypoints: https
-      traefik.http.services.overseerr.loadbalancer.server.port: 5055
       tsdproxy.container_port: 5055
       tsdproxy.enable: true
       tsdproxy.name: "request"
@@ -123,44 +122,13 @@ services:
       interval: 1s
       timeout: 5s
       retries: 60
+    ports:
+      - 14004:9696
     labels:
-      traefik.http.routers.prowlarr.entrypoints: https
-      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
       tsdproxy.container_port: 9696
       tsdproxy.enable: true
       tsdproxy.name: "prowlarr"
   
-  emulatorjs:
-    image: lscr.io/linuxserver/emulatorjs:latest
-    container_name: emulatorjs
-    restart: always
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=Europe/Brussels
-    volumes:
-      - emulatorjs:/config
-      - emulatorjs-data:/data
-      - dsgames:/data/nds/roms:rw
-      - gbagames:/data/gba/roms:rw
-      - gbcgames:/data/gbc/roms:rw
-      - ps1games:/data/psx/roms:rw
-      - snesgames:/data/snes/roms:rw
-    labels:
-      traefik.http.routers.emulatorjs.rule: Host(`games.thefactory.timo.be`) || Host(`games.timo.be`)
-      traefik.http.routers.emulatorjs.entrypoints: https
-      traefik.http.services.emulatorjs.loadbalancer.server.port: 80
-      traefik.http.routers.emulatorjs.service: emulatorjs
-      traefik.http.routers.emulatorjs-config.service: emulatorjs-config
-      traefik.http.routers.emulatorjs-config.rule: Host(`gamesconfig.thefactory.timo.be`) || Host(`gamesconfig.timo.be`)
-      traefik.http.routers.emulatorjs-config.entrypoints: https
-      traefik.http.services.emulatorjs-config.loadbalancer.server.port: 3000
-      tsdproxy.enable: true
-      tsdproxy.container_port: 80
-      tsdproxy.name: "games"
-
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
@@ -266,19 +234,7 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/recyclarr"
-  emulatorjs:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/emulatorjs"
-  emulatorjs-data:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/emulatorjs-data"
-      
+    
   movies:
     driver: local
     driver_opts:
@@ -303,33 +259,3 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/X.A.N.A./media/music"
-  dsgames:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/games/ROMs/nds"
-  gbagames:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/games/ROMs/gba"
-  ps1games:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/games/ROMs/psx"
-  snesgames:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/games/ROMs/snes"
-  gbcgames:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/games/ROMs/gbc"

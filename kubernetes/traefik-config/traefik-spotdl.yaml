@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spotdl
+  namespace: traefik
+spec:
+  externalName: thefactory.local.timo.be # Can also be an IP address
+  type: ExternalName
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: spotdl
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`spotdl.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: spotdl
+          port: 12005
+      middlewares:
+        - name: auth
+          namespace: traefik

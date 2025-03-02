@@ -14,9 +14,9 @@ services:
       - isos:/srv/isos
       - downloads:/srv/downloads
       - filebrowser:/config
+    ports:
+      - 13000:80
     labels:
-      traefik.http.routers.filebrowser.entrypoints: https
-      traefik.http.services.filebrowser.loadbalancer.server.port: 80
       tsdproxy.enable: true
       tsdproxy.name: "filebrowser"
       tsdproxy.container_port: 80
@@ -34,9 +34,9 @@ services:
       - media:/media
       - isos:/isos
       - downloads:/downloads
+    ports:
+      - 13001:3000
     labels:
-      traefik.http.routers.filezilla.entrypoints: https
-      traefik.http.services.filezilla.loadbalancer.server.port: 3000
       tsdproxy.enable: true
       tsdproxy.name: "filezilla"
       tsdproxy.container_port: 3000
@@ -56,9 +56,9 @@ services:
       - downloads:/downloads
       - isos:/isos
     restart: always
+    ports:
+      - 13002:3000
     labels:
-      traefik.http.routers.doublecommander.entrypoints: https
-      traefik.http.services.doublecommander.loadbalancer.server.port: 3000
       tsdproxy.enable: true
       tsdproxy.name: "doublecommander"
       tsdproxy.container_port: 3000

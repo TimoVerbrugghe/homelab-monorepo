@@ -8,6 +8,8 @@ services:
     depends_on:
       paperless-broker:
         condition: service_started
+    ports:
+      - 11004:8000
     volumes:
       - paperless-data:/usr/src/paperless/data
       - paperless-media:/usr/src/paperless/media
@@ -76,7 +78,7 @@ services:
       tsdproxy.name: "paperlessai"
       tsdproxy.container_port: 3000
     ports:
-      - 3001:3000
+      - 11005:3000
 
 volumes:
   paperless-data:
