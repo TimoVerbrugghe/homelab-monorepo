@@ -4,6 +4,8 @@ services:
     image: rommapp/romm:latest
     container_name: romm
     restart: unless-stopped
+    networks:
+      - dockerproxy
     environment:
       - DB_HOST=romm-db
       - DB_NAME=romm # Should match MARIADB_DATABASE in mariadb
@@ -35,6 +37,8 @@ services:
     image: mariadb:latest
     container_name: romm-db
     restart: unless-stopped
+    networks:
+      - dockerproxy
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_DATABASE=romm
@@ -87,3 +91,7 @@ volumes:
       type: "nfs"
       o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
       device: ":/mnt/X.A.N.A./media/games"
+
+networks:
+  dockerproxy:
+    external: true
