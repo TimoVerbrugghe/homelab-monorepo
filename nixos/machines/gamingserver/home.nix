@@ -68,8 +68,8 @@
       recursive = true;
     };
 
-    # Add steam to ROMs folder so that it can be launched from Emulation Station
-    "ROMs/windows/steam.desktop" = {
+    # Add steam to roms folder so that it can be launched from Emulation Station
+    "roms/windows/steam.desktop" = {
       text = ''
         [Desktop Entry]
         Type=Application
@@ -81,7 +81,7 @@
     };
 
     # PS3 ROM File shortcuts for RPCS3
-    "ROMs/ps3/Ratchet & Clank Future： A Crack In Time.desktop" = {
+    "roms/ps3/Ratchet & Clank Future： A Crack In Time.desktop" = {
       text = ''
       [Desktop Entry]
       Encoding=UTF-8
@@ -96,7 +96,7 @@
       '';
     };
 
-    "ROMs/ps3/Ratchet & Clank® Future： Quest for Booty™.desktop" = {
+    "roms/ps3/Ratchet & Clank® Future： Quest for Booty™.desktop" = {
       text = ''
         [Desktop Entry]
         Encoding=UTF-8
@@ -111,7 +111,7 @@
       '';
     };
 
-    "ROMs/ps3/Ratchet and Clank® Future： Tools of Destruction™.desktop" = {
+    "roms/ps3/Ratchet and Clank® Future： Tools of Destruction™.desktop" = {
       text = ''
         [Desktop Entry]
         Encoding=UTF-8
@@ -126,7 +126,7 @@
       '';
     };
 
-    "ROMs/ps3/Ratchet & Clank™： Going Commando.desktop" = {
+    "roms/ps3/Ratchet & Clank™： Going Commando.desktop" = {
       text = ''
         [Desktop Entry]
         Encoding=UTF-8
@@ -141,7 +141,7 @@
       '';
     };
 
-    "ROMs/ps3/Ratchet & Clank™： Up Your Arsenal.desktop" = {
+    "roms/ps3/Ratchet & Clank™： Up Your Arsenal.desktop" = {
       text = ''
         [Desktop Entry]
         Encoding=UTF-8
@@ -209,7 +209,7 @@
       '';
     };
 
-    "ROMs/windows/harry-potter-and-the-sorcerer-stone.desktop" = {
+    "roms/windows/harry-potter-and-the-sorcerer-stone.desktop" = {
       text = ''
         [Desktop Entry]
         Name=Harry Potter and the Philosopher's Stone
@@ -219,7 +219,7 @@
       '';
     };
 
-    "ROMs/windows/harry-potter-and-the-chamber-of-secrets.desktop" = {
+    "roms/windows/harry-potter-and-the-chamber-of-secrets.desktop" = {
       text = ''
         [Desktop Entry]
         Name=Harry Potter and the Chamber of Secrets
@@ -229,7 +229,7 @@
       '';
     };
 
-    "ROMs/windows/minecraft-story-mode-season-2.desktop" = {
+    "roms/windows/minecraft-story-mode-season-2.desktop" = {
       text = ''
         [Desktop Entry]
         Type=Application
@@ -240,7 +240,7 @@
       '';
     };
 
-    "ROMs/windows/miel-monteur-vliegt-de-wereld-rond.desktop" = {
+    "roms/windows/miel-monteur-vliegt-de-wereld-rond.desktop" = {
       text = ''
         [Desktop Entry]
         Type=Application
@@ -251,7 +251,7 @@
       '';
     };
 
-    "ROMs/windows/miel-monteur-huis-op-stelten.desktop" = {
+    "roms/windows/miel-monteur-huis-op-stelten.desktop" = {
       text = ''
         [Desktop Entry]
         Type=Application
@@ -262,7 +262,7 @@
       '';
     };
 
-    "ROMs/windows/miel-monteur-verkent-de-ruimte.desktop" = {
+    "roms/windows/miel-monteur-verkent-de-ruimte.desktop" = {
       text = ''
         [Desktop Entry]
         Type=Application
@@ -273,47 +273,47 @@
       '';
     };
 
-    "ROMs/windows/miel-monteur-bouwt-autos.desktop" = {
+    "roms/windows/miel-monteur-bouwt-autos.desktop" = {
       text = ''
         [Desktop Entry]
         Type=Application
         Name=Miel Monteur Bouwt Auto's
-        Exec=86Box --config /home/gamer/ROMs/windows/mielmonteur1/86Boxconfig.cfg --rompath /home/gamer/ROMs/windows/mielmonteur1/roms --fullscreen
+        Exec=86Box --config /home/gamer/roms/windows/mielmonteur1/86Boxconfig.cfg --rompath /home/gamer/roms/windows/mielmonteur1/roms --fullscreen
         Categories=Game
-        Path=/home/gamer/ROMs/windows/mielmonteur1
+        Path=/home/gamer/roms/windows/mielmonteur1
       '';
     };
 
-    "ROMs/windows/miel-monteur-recht-door-zee.desktop" = {
+    "roms/windows/miel-monteur-recht-door-zee.desktop" = {
       text = ''
         [Desktop Entry]
         Type=Application
         Name=Miel Monteur Recht Door Zee!
-        Exec=86Box --config /home/gamer/ROMs/windows/mielmonteur2/86Boxconfig.cfg --rompath /home/gamer/ROMs/windows/mielmonteur2/roms --fullscreen
+        Exec=86Box --config /home/gamer/roms/windows/mielmonteur2/86Boxconfig.cfg --rompath /home/gamer/roms/windows/mielmonteur2/roms --fullscreen
         Categories=Game
-        Path=/home/gamer/ROMs/windows/mielmonteur2
+        Path=/home/gamer/roms/windows/mielmonteur2
       '';
     };
 
-    "ROMs/windows/boeboeks-tocht-naar-opa-kakadoris.desktop" = {
+    "roms/windows/boeboeks-tocht-naar-opa-kakadoris.desktop" = {
       text = ''
         [Desktop Entry]
         Type=Application
         Name=Boeboeks - De Tocht Naar Opa Kakadoris
-        Exec=86Box --config /home/gamer/ROMs/windows/boeboeks/86Boxconfig.cfg --rompath /home/gamer/ROMs/windows/boeboeks/roms --fullscreen
+        Exec=86Box --config /home/gamer/roms/windows/boeboeks/86Boxconfig.cfg --rompath /home/gamer/roms/windows/boeboeks/roms --fullscreen
         Categories=Game
-        Path=/home/gamer/ROMs/windows/boeboeks
+        Path=/home/gamer/roms/windows/boeboeks
       '';
     };
 
-    "ROMs/windows/skippy-geheim-van-de-gestolen-papyrusrol.desktop" = {
+    "roms/windows/skippy-geheim-van-de-gestolen-papyrusrol.desktop" = {
       text = ''
         [Desktop Entry]
         Type=Application
         Name=Skippy en Het Geheim van de Gestolen Papyrusrol
-        Exec=86Box --config /home/gamer/ROMs/windows/skippy/86Boxconfig.cfg --rompath /home/gamer/ROMs/windows/skippy/roms --fullscreen
+        Exec=86Box --config /home/gamer/roms/windows/skippy/86Boxconfig.cfg --rompath /home/gamer/roms/windows/skippy/roms --fullscreen
         Categories=Game
-        Path=/home/gamer/ROMs/windows/skippy
+        Path=/home/gamer/roms/windows/skippy
       '';
     };
 

@@ -2,13 +2,13 @@
 
 let
   nasURL = "truenas.local.timo.be";
-  nasROMsDir = "/mnt/X.A.N.A./media/games/ROMs";
-  ROMsDir = "/home/gamer/ROMs";
+  nasromsDir = "/mnt/X.A.N.A./media/games/roms";
+  romsDir = "/home/gamer/roms";
 in
 
 {
   systemd.services.rom-sync = {
-    description = "Sync ROMs directory with NAS ";
+    description = "Sync roms directory with NAS ";
     requires = [ "network.target" ];
     serviceConfig = {
       Type = "oneshot";
@@ -17,18 +17,18 @@ in
     script = ''
       # Temporary directory for mounting nfs share
       temp_dir_mount=$(mktemp -d)
-      ${pkgs.mount}/bin/mount -t nfs ${nasURL}:${nasROMsDir} $temp_dir_mount
+      ${pkgs.mount}/bin/mount -t nfs ${nasURL}:${nasromsDir} $temp_dir_mount
 
-      # Rsync contents of ROMs dir locally to ROMs dir on NAS to f.e. sync over savegames that are stored with the ROMs folder
-      ${pkgs.rsync} -avhP --no-o --no-g ${ROMsDir}/ $temp_dir_mount/
+      # Rsync contents of roms dir locally to roms dir on NAS to f.e. sync over savegames that are stored with the roms folder
+      ${pkgs.rsync} -avhP --no-o --no-g ${romsDir}/ $temp_dir_mount/
 
-      # Rsync contents of ROMs dir on the NAS to system locally to sync over new games that might have been added
-      ${pkgs.rsync} -avhP $temp_dir_mount/ ${ROMsDir}/
+      # Rsync contents of roms dir on the NAS to system locally to sync over new games that might have been added
+      ${pkgs.rsync} -avhP $temp_dir_mount/ ${romsDir}/
 
         # Check if rsync was successful
         if [ $? -eq 0 ]; then
           ${pkgs.umount}/bin/umount $temp_dir_mount
-          echo "ROMs directory sync successful"
+          echo "roms directory sync successful"
         else
           echo "Failed moving backup archive to NAS share"
         fi
@@ -38,9 +38,9 @@ in
     '';
   };
 
-  # Do ROMs sync weekly
+  # Do roms sync weekly
   systemd.timers.rom-sync = {
-    description = "Sync ROMs folder on a weekly basis";
+    description = "Sync roms folder on a weekly basis";
     timerConfig = {
       OnCalendar = "weekly";
       Unit = "rom-sync.service";
