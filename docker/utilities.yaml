@@ -1,19 +1,4 @@
 services:
-  stirling-pdf:
-    image: frooodle/s-pdf:latest
-    restart: always
-    networks:
-      - dockerproxy
-    container_name: stirlingpdf
-    environment:
-      - DOCKER_ENABLE_SECURITY=false
-      - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
-    labels:
-      traefik.enable: false
-      tsdproxy.enable: true
-      tsdproxy.name: "stirlingpdf"
-      tsdproxy.container_port: 8080
-
   bitwarden:
     image: vaultwarden/server:latest
     container_name: bitwarden

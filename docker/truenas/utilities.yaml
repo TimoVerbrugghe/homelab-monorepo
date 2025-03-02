@@ -48,24 +48,6 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/scanservjs-config"
-  media:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media"
-  isos:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/isos"
-  downloads:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/downloads"
   tinshop:
     driver: local
     driver_opts:
