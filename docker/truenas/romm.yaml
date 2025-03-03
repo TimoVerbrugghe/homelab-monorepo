@@ -76,8 +76,8 @@ volumes:
   romm-assets:
     driver: local
     driver_opts:
-      type: "nfs"
-      o: "addr=nfs.local.timo.be,nolock,rw,vers=4.2,relatime,sec=sys,hard"
+      type: "none"
+      o: "bind"
       device: ":/mnt/X.A.N.A./media/games/romm-assets"
   romm-config:
     driver: local
