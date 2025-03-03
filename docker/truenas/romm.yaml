@@ -78,7 +78,7 @@ volumes:
     driver_opts:
       type: "none"
       o: "bind"
-      device: ":/mnt/X.A.N.A./media/games/romm-assets"
+      device: "/mnt/X.A.N.A./media/games/romm-assets"
   romm-config:
     driver: local
     driver_opts:
