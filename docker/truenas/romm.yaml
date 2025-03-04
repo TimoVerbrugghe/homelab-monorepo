@@ -22,7 +22,6 @@ services:
       - OIDC_CLIENT_SECRET=${ROMM_OIDC_CLIENT_SECRET}
       - OIDC_REDIRECT_URI=${ROMM_OIDC_REDIRECT_URI}
       - OIDC_SERVER_APPLICATION_URL=${ROMM_OIDC_SERVER_APPLICATION_URL}
-      - LOGLEVEL=debug
     volumes:
       - romm-resources:/romm/resources # Resources fetched from IGDB (covers, screenshots, etc.)
       - romm-redis:/redis-data # Cached data for background tasks
