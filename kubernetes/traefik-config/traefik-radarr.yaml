@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`radarr.kubernetes.timo.be`)
+    - match: Host(`radarr.kubernetes.timo.be`) || Host(`radarr.timo.be`)
       kind: Rule
       services:
         - name: radarr-svc

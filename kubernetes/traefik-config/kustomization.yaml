@@ -1,6 +1,21 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+secretGenerator:
+  - name: traefik-forward-auth-secrets
+    namespace: cert-manager
+    envs:
+    - secrets/traefik-forward-auth.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "traefik"
+
+generatorOptions:
+ disableNameSuffixHash: true
+
 resources:
   # Certificates (retrieved through cert-manager)
   - certificates/staging-certificates.yaml
@@ -33,7 +48,6 @@ resources:
   - traefik-sonarr.yaml
   - traefik-radarr.yaml
   - traefik-bazarr.yaml
-  - traefik-overseerr.yaml
   - traefik-prowlarr.yaml
 
   # Custom Ingresses - TheFactory Downloaders

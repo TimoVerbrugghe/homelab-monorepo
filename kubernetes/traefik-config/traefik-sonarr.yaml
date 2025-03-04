@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`sonarr.kubernetes.timo.be`)
+    - match: Host(`sonarr.kubernetes.timo.be`) || Host(`sonarr.timo.be`)
       kind: Rule
       services:
         - name: sonarr-svc

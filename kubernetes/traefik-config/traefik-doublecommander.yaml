@@ -18,7 +18,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`doublecommander.kubernetes.timo.be`)
+    - match: Host(`doublecommander.kubernetes.timo.be`) || Host(`doublecommander.timo.be`)
       kind: Rule
       services:
         - name: doublecommander

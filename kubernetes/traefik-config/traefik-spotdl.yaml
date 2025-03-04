@@ -18,7 +18,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`spotdl.kubernetes.timo.be`)
+    - match: Host(`spotdl.kubernetes.timo.be`) || Host(`spotdl.timo.be`)
       kind: Rule
       services:
         - name: spotdl

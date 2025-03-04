@@ -4,7 +4,6 @@ machine:
   certSANs:
     - 10.10.10.32
     - skidbladnir.local.timo.be
-    - skidbladnir.pony-godzilla.ts.net
   network:
     hostname: skidbladnir
     interfaces:

@@ -28,17 +28,6 @@ secretGenerator:
         reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
         reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "tailscale"
 
-  - name: traefik-forward-auth-secrets
-    namespace: cert-manager
-    envs:
-    - secrets/traefik-forward-auth.env
-    type: Opaque
-    options:
-      annotations:
-        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "traefik"
-
 generatorOptions:
  disableNameSuffixHash: true
 

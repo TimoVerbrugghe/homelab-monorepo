@@ -27,7 +27,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`ariang.kubernetes.timo.be`)
+    - match: Host(`ariang.kubernetes.timo.be`) || Host(`ariang.timo.be`)
       kind: Rule
       services:
         - name: ariang
@@ -47,7 +47,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`ariang.kubernetes.timo.be`) && PathPrefix(`/jsonrpc`)
+    - match: (Host(`ariang.kubernetes.timo.be`) || Host(`ariang.timo.be`)) && PathPrefix(`/jsonrpc`)
       kind: Rule
       services:
         - name: ariangrpc

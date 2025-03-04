@@ -10,7 +10,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`stirlingpdf.kubernetes.timo.be`)
+    - match: Host(`stirlingpdf.kubernetes.timo.be`) || Host(`stirlingpdf.timo.be`)
       kind: Rule
       services:
         - name: stirling-pdf

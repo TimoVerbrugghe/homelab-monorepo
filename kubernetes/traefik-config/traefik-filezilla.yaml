@@ -18,7 +18,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`filezilla.kubernetes.timo.be`)
+    - match: Host(`filezilla.kubernetes.timo.be`) || Host(`filezilla.timo.be`)
       kind: Rule
       services:
         - name: filezilla

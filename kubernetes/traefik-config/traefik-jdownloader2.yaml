@@ -18,7 +18,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`jdownloader2.kubernetes.timo.be`)
+    - match: Host(`jdownloader2.kubernetes.timo.be`) || Host(`jdownloader2.timo.be`)
       kind: Rule
       services:
         - name: jdownloader2

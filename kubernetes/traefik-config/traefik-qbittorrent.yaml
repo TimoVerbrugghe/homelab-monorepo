@@ -18,7 +18,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`qbittorrent.kubernetes.timo.be`)
+    - match: Host(`qbittorrent.kubernetes.timo.be`) || Host(`qbittorrent.timo.be`)
       kind: Rule
       services:
         - name: qbittorrent

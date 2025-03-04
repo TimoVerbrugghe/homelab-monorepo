@@ -11,7 +11,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`keel.kubernetes.timo.be`)
+    - match: Host(`keel.kubernetes.timo.be`) || Host(`keel.timo.be`)
       kind: Rule
       services:
         - name: keel

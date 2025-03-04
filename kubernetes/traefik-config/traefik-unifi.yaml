@@ -17,7 +17,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`unifi.kubernetes.timo.be`)
+    - match: Host(`unifi.kubernetes.timo.be`) || Host(`unifi.timo.be`)
       kind: Rule
       services:
         - name: unifi-svc

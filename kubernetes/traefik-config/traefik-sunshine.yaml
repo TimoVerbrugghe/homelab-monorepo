@@ -17,7 +17,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`sunshine.kubernetes.timo.be`)
+    - match: Host(`sunshine.kubernetes.timo.be`) || Host(`sunshine.timo.be`)
       kind: Rule
       services:
         - name: sunshine-svc

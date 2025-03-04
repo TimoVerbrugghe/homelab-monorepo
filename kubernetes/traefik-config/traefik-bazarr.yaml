@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`bazarr.kubernetes.timo.be`)
+    - match: Host(`bazarr.kubernetes.timo.be`) || Host(`bazarr.timo.be`)
       kind: Rule
       services:
         - name: bazarr-svc

@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`graylog.kubernetes.timo.be`)
+    - match: Host(`graylog.kubernetes.timo.be`) || Host(`graylog.timo.be`)
       kind: Rule
       services:
         - name: graylog-svc

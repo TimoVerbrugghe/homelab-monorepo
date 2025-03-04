@@ -1,0 +1,141 @@
+- name: Bootstrap Talos Cluster
+  hosts: localhost
+  vars:
+    talos_cluster_name: "sectorfive"
+    talos_port: 6443
+    talos_dir: "../../kubernetes/talos"
+    cluster_bootstrap_dir: "../../kubernetes/cluster-bootstrap"
+
+  tasks:
+    - name: Wait for user confirmation to proceed
+      ansible.builtin.pause:
+        prompt: |
+          Please ensure the following prerequisites are met:
+          - Talos should be running in configuration mode on all nodes.
+          - talosctl CLI must be installed and accessible.
+          
+          Press "Ctrl+C" and then "c" to confirm that the prerequisites are met and proceed with the playbook.
+          Playbook will continue anyway in 10 seconds.
+        seconds: 10
+
+    - name: Fetch nodes from inventory
+      ansible.builtin.add_host:
+        name: "{{ item }}"
+        hostname: "{{ item }}"
+        short_name: "{{ hostvars[item].short_name }}"
+        temp_ip: "{{ hostvars[item].temp_ip }}"
+      with_items: "{{ groups['taloshosts'] }}"
+      register: talos_nodes
+
+    - name: Set bootstrap node and other control plane nodes
+      ansible.builtin.set_fact:
+        bootstrap_node: "{{ talos_nodes.results[0].item }}"
+        controlplane_nodes: "{{ talos_nodes.results[1:] | map(attribute='item') | list }}"
+
+    # - name: Generate Talos secrets
+    #   command: talosctl gen secrets --force
+    #   args:
+    #     chdir: "{{ talos_dir }}"
+
+    # - name: Generate Talos talosconfig for controlplane node
+    #   command: >
+    #     talosctl gen config
+    #     --with-secrets secrets.yaml
+    #     --output-types talosconfig
+    #     -o talosconfig
+    #     --force
+    #     {{ talos_cluster_name }}
+    #     https://{{ bootstrap_node }}:{{ talos_port }}
+    #   args:
+    #     chdir: "{{ talos_dir }}"
+
+    # - name: Generate Talos configs for the bootstrap node
+    #   ansible.builtin.command: >
+    #     talosctl gen config
+    #     --output controlplane-{{ hostvars[bootstrap_node].short_name }}.yaml
+    #     --output-types controlplane
+    #     --with-secrets secrets.yaml
+    #     --config-patch @base-config.yaml
+    #     --config-patch @{{ hostvars[bootstrap_node].short_name }}-patch.yaml
+    #     --force
+    #     {{ talos_cluster_name }}
+    #     https://{{ bootstrap_node }}:{{ talos_port }}
+    #   args:
+    #     chdir: "{{ talos_dir }}"
+
+    # - name: Generate Talos configs for other control plane nodes
+    #   ansible.builtin.command: >
+    #     talosctl gen config
+    #     --output controlplane-{{ hostvars[item].short_name }}.yaml
+    #     --output-types controlplane
+    #     --with-secrets secrets.yaml
+    #     --config-patch @base-config.yaml
+    #     --config-patch @{{ hostvars[item].short_name }}-patch.yaml
+    #     --force
+    #     {{ talos_cluster_name }}
+    #     https://{{ bootstrap_node }}:{{ talos_port }}
+    #   args:
+    #     chdir: "{{ talos_dir }}"
+    #   with_items: "{{ controlplane_nodes }}"
+
+    # - name: Apply Talos config to bootstrap node
+    #   ansible.builtin.command: >
+    #     talosctl apply-config
+    #     --insecure
+    #     -n {{ hostvars[bootstrap_node].temp_ip }}
+    #     --file controlplane-{{ hostvars[bootstrap_node].short_name }}.yaml
+    #   args:
+    #     chdir: "{{ talos_dir }}"
+
+    # - name: Wait for user confirmation that node has config applied
+    #   ansible.builtin.pause:
+    #     prompt: |
+    #       The first talos node has its config being applied. You can follow the progress on the talos dashboard of the node.
+    #       Press "Ctrl+C" and then "C" to confirm that the node is fully configured and proceed with the playbook.
+          
+    #       Playbook will continue anyway in 180 seconds.
+    #     seconds: 180
+
+    # - name: Bootstrap the control plane on the bootstrap node
+    #   ansible.builtin.command: >
+    #     talosctl bootstrap
+    #     -n {{ bootstrap_node }}
+    #     -e {{ bootstrap_node }}
+    #     --talosconfig talosconfig
+    #   args:
+    #     chdir: "{{ talos_dir }}"
+
+    # - name: Wait for user confirmation that node has bootstrapped
+    #   ansible.builtin.pause:
+    #     prompt: |
+    #       The first talos node is being bootstrapped. You can follow the progress on the talos dashboard of the node.
+    #       Press "Ctrl+C" and then "C" to confirm that the node is fully bootstrapped and proceed with the playbook.
+          
+    #       Playbook will continue anyway in 180 seconds.
+    #     seconds: 180
+
+    # - name: Get kubeconfig from the cluster
+    #   command: >
+    #     talosctl kubeconfig
+    #     -n {{ bootstrap_node }}
+    #     -e {{ bootstrap_node }}
+    #     --talosconfig talosconfig
+    #     --force
+    #   args:
+    #     chdir: "{{ talos_dir }}"
+    #   register: kubeconfig_output
+
+    # - name: Save kubeconfig file locally
+    #   copy:
+    #     content: "{{ kubeconfig_output.stdout }}"
+    #     dest: "{{ talos_dir }}/kubeconfig"
+      
+    - name: Apply Talos config to other control plane nodes
+      ansible.builtin.command: >
+        talosctl apply-config
+        --insecure
+        -n {{ hostvars[item].temp_ip }}
+        --file controlplane-{{ hostvars[item].short_name }}.yaml
+      args:
+        chdir: "{{ talos_dir }}"
+      with_items: "{{ controlplane_nodes }}"

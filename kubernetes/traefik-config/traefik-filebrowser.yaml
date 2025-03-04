@@ -18,7 +18,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`filebrowser.kubernetes.timo.be`)
+    - match: Host(`filebrowser.kubernetes.timo.be`) || Host(`filebrowser.timo.be`)
       kind: Rule
       services:
         - name: filebrowser

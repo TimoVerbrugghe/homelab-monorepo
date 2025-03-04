@@ -26,6 +26,56 @@ spec:
   externalName: mountainsector.local.timo.be
   type: ExternalName
 ---
+# Creating a TraefikService that allows me to loadbalance between the 3 proxmox servers with sticky sessions (necessary otherwise proxmox console does not work correctly)
+# Weighted round robin with same weights for each service to loadbalance equally between them
+apiVersion: traefik.io/v1alpha1
+kind: TraefikService
+metadata:
+  name: proxmox-svc
+  namespace: traefik
+spec:
+  weighted:
+    services:
+      - name: forestsector-svc
+        kind: Service
+        port: 8006
+        scheme: https
+        weight: 1
+        healthCheck:
+          path: /
+          interval: 10
+          timeout: 3
+        sticky:
+          cookie:
+            name: lvl2
+      - name: icesector-svc
+        kind: Service
+        weight: 1
+        port: 8006
+        scheme: https
+        healthCheck:
+          path: /
+          interval: 10
+          timeout: 3
+        sticky:
+          cookie:
+            name: lvl2
+      - name: mountainsector-svc
+        kind: Service
+        weight: 1
+        port: 8006
+        scheme: https
+        healthCheck:
+          path: /
+          interval: 10
+          timeout: 3
+        sticky:
+          cookie:
+            name: lvl2
+    sticky:
+      cookie:
+        name: lvl1
+---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -37,27 +87,8 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`proxmox.kubernetes.timo.be`)
+    - match: Host(`proxmox.kubernetes.timo.be`) || Host(`proxmox.timo.be`)
       kind: Rule
       services:
-        - name: forestsector-svc
-          port: 8006
-          scheme: https
-          healthCheck:
-            path: /
-            interval: 10
-            timeout: 3
-        - name: icesector-svc
-          port: 8006
-          scheme: https
-          healthCheck:
-            path: /
-            interval: 10
-            timeout: 3
-        - name: mountainsector-svc
-          port: 8006
-          scheme: https
-          healthCheck:
-            path: /
-            interval: 10
-            timeout: 3
+        - name: proxmox-svc
+          kind: TraefikService

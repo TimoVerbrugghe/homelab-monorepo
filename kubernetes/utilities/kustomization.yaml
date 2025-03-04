@@ -25,7 +25,12 @@ resources:
   - stirling-pdf/stirling-pdf-service.yaml
   - stirling-pdf/stirling-pdf-ingress.yaml
 
-  - webtop.yaml
+  # Webtop
+  - webtop/webtop.yaml
+  - webtop/webtop-service.yaml
+  - webtop/webtop-ingress.yaml
+  - webtop/webtop-clusterrolebinding.yaml
+  
   - adguardhome/adguardhome-sync.yaml
 
   # Keel

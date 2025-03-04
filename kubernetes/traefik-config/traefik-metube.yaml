@@ -18,7 +18,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`metube.kubernetes.timo.be`)
+    - match: Host(`metube.kubernetes.timo.be`) || Host(`metube.timo.be`)
       kind: Rule
       services:
         - name: metube

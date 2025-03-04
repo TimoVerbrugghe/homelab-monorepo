@@ -18,7 +18,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`iventoy.kubernetes.timo.be`)
+    - match: Host(`iventoy.kubernetes.timo.be`) || Host(`iventoy.timo.be`)
       kind: Rule
       services:
         - name: iventoy

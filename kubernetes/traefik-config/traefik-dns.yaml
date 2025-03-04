@@ -1,44 +1,3 @@
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: dns
-  namespace: traefik
-  annotations: 
-    kubernetes.io/ingress.class: traefik
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: Host(`dns.kubernetes.timo.be`)
-      kind: Rule
-      services:
-        - name: dns1-svc
-          port: 80
-          healthCheck:
-            path: /login.html
-            interval: 10
-            timeout: 3
-          sticky:
-            cookie:
-              name: traefik-dns1
-        - name: dns2-svc
-          port: 80
-          healthCheck:
-            path: /login.html
-            interval: 10
-            timeout: 3
-          sticky:
-            cookie:
-              name: traefik-dns2
-        - name: dns3-svc
-          port: 80
-          healthCheck:
-            path: /login.html
-            interval: 10
-            timeout: 3
-          sticky:
-            cookie:
-              name: traefik-dns3
 ---
 apiVersion: v1
 kind: Service
@@ -66,3 +25,71 @@ metadata:
 spec:
   externalName: 10.10.10.22 # Can also be an IP address
   type: ExternalName
+---
+# Creating a TraefikService that allows me to loadbalance between the 3 DNS servers with sticky sessions (necessary for adguardhome web gui to work)
+# Weighted round robin with same weights for each service to loadbalance equally between them
+apiVersion: traefik.io/v1alpha1
+kind: TraefikService
+metadata:
+  name: dns-svc
+  namespace: traefik
+spec:
+  weighted:
+    services:
+      - name: dns1-svc
+        kind: Service
+        port: 80
+        scheme: http
+        weight: 1
+        healthCheck:
+          path: /login.html
+          interval: 10
+          timeout: 3
+        sticky:
+          cookie:
+            name: lvl2
+      - name: dns2-svc
+        kind: Service
+        weight: 1
+        port: 80
+        scheme: http
+        healthCheck:
+          path: /login.html
+          interval: 10
+          timeout: 3
+        sticky:
+          cookie:
+            name: lvl2
+      - name: dns3-svc
+        kind: Service
+        weight: 1
+        port: 80
+        scheme: http
+        healthCheck:
+          path: /login.html
+          interval: 10
+          timeout: 3
+        sticky:
+          cookie:
+            name: lvl2
+    sticky:
+      cookie:
+        name: lvl1
+---
+# Ingressroute points to the TraefikService
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dns
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`dns.kubernetes.timo.be`) || Host(`dns.timo.be`)
+      kind: Rule
+      services:
+        - name: dns-svc
+          kind: TraefikService

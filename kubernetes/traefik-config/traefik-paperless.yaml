@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`paperless.kubernetes.timo.be`)
+    - match: Host(`paperless.kubernetes.timo.be`) || Host(`paperless.timo.be`)
       kind: Rule
       services:
         - name: paperless-svc
@@ -38,7 +38,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`paperlessai.kubernetes.timo.be`)
+    - match: Host(`paperlessai.kubernetes.timo.be`) || Host(`paperlessai.timo.be`)
       kind: Rule
       services:
         - name: paperless-ai-svc

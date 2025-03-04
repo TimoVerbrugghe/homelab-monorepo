@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`prowlarr.kubernetes.timo.be`)
+    - match: Host(`prowlarr.kubernetes.timo.be`) || Host(`prowlarr.timo.be`)
       kind: Rule
       services:
         - name: prowlarr-svc

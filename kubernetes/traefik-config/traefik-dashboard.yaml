@@ -11,7 +11,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`traefik.kubernetes.timo.be`)
+    - match: Host(`traefik.kubernetes.timo.be`) || Host(`traefik.timo.be`)
       kind: Rule
       services:
         - name: api@internal

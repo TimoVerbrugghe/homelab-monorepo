@@ -56,31 +56,18 @@ proxmox:
       vm_template_storage: local-zfs
       zfs: true
  
-k3scontrolplane:
-  hosts:
-    k3stest.local.timo.be:
-      ansible_user: timo
-      proxmox_node: icesector
-      vm_id: 102
-    william.local.timo.be:
-      ansible_user: william
-      proxmox_node: sectorfive
-      vm_id: 110
-    tower.local.timo.be:
-      ansible_user: tower
-      proxmox_node: sectorfive
-      vm_id: 111
-    skidbladnir.local.timo.be:
-      ansible_user: skidbladnir
-      proxmox_node: sectorfive
-      vm_id: 112
-k3sagents:
-  hosts:
 
-k3scluster:
-  children:
-    k3scontrolplane:
-    k3sagents:
+taloshosts:
+  hosts:
+    william.local.timo.be:
+      short_name: william
+      temp_ip: 10.10.10.180
+    manta.local.timo.be:
+      short_name: manta
+      temp_ip: 10.10.10.231
+    skidbladnir.local.timo.be:
+      short_name: skidbladnir
+      temp_ip: 10.10.10.136
 
 azure:
   hosts:
