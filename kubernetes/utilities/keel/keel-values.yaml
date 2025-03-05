@@ -13,6 +13,8 @@ basicauth:
 helmProvider:
   enabled: true
   version: "v3"
+podAnnotations:
+  app.kubernetes.io/name: keel
 
 # Enable custom clusterolebinding
 rbac:

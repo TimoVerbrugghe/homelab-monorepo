@@ -14,20 +14,6 @@ secretGenerator:
         reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
         reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "utilities"
 
-configMapGenerator:
-  - name: homepage
-    namespace: utilities
-    files:
-      - settings.yaml=homepage/settings.yaml
-      - bookmarks.yaml=homepage/bookmarks.yaml
-      - widgets.yaml=homepage/widgets.yaml
-      - kubernetes.yaml=homepage/kubernetes.yaml
-      - services.yaml=homepage/services.yaml
-      - docker.yaml=homepage/docker.yaml
-    options:
-      labels:
-        app.kubernetes.io/name: homepage
-
 generatorOptions:
  disableNameSuffixHash: true
 
@@ -51,17 +37,16 @@ resources:
   - keel/keel-clusterrolebinding.yaml
   - keel/keel-ingress.yaml
 
-  # Homepage - Based on installation instructions here https://gethomepage.dev/installation/k8s/
-  - homepage/homepage-serviceaccount.yaml
-  - homepage/homepage.yaml
-  - homepage/homepage-ingress.yaml
-  - homepage/homepage-clusterrolebinding.yaml
-  - homepage/homepage-service.yaml
-  - homepage/homepage-secret.yaml
-
 helmCharts:
   - name: keel
     repo: https://keel-hq.github.io/keel/
     releaseName: keel
     namespace: utilities
     valuesFile: keel/keel-values.yaml
+
+# Needed for homepage to detect keel pods
+patches:
+  - target:
+      kind: Deployment
+      name: keel
+    path: keel/keel-patch.yaml

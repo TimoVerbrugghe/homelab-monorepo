@@ -1,11 +1,11 @@
 title: Timo's Homepage
 description: Homepage for Timo's Homelab
 theme: dark
-color: blue
+color: slate
 headerStyle: clean
 language: en
 quicklaunch:
   searchDescriptions: true
   provider: google
   showSearchSuggestions: true
-statusStyle: "dot"
+statusStyle: dot

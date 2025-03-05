@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keel
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: keel

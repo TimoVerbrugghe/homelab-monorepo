@@ -1,16 +1,16 @@
 ---
 - Developer:
     - Github:
-        - icon: mdi-github
+        - icon: si-github-#181717
           href: https://github.com/
 
 - Social:
     - Reddit:
-        - icon: mdi-reddit
+        - icon: si-reddit-#FF4500
           href: https://reddit.com/
           description: The front page of the internet
 
 - Entertainment:
     - YouTube:
-        - icon: mdi-youtube
+        - icon: si-youtube-#FF0000
           href: https://youtube.com/
