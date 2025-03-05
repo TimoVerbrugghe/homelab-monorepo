@@ -1,7 +1,0 @@
-# Only to be used after cert-manager has been deployed
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-  - production-certificates.yaml
-  - staging-certificates.yaml

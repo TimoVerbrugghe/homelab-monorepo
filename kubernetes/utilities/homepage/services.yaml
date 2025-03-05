@@ -1,0 +1,42 @@
+- Media:
+  - Plex:
+    icon: mdi-plex
+    href: https://app.plex.tv/desktop
+    description: Plex Server
+    server: aelita
+    container: plex
+  - Sonarr:
+    icon: mdi-sonarr
+    href: https://sonarr.timo.be
+    description: Sonarr
+    server: thefactory
+    container: sonarr
+
+- Filemanagement:
+  - Nextcloud:
+    icon: si-nextcloud
+    href: https://nextcloud.timo.be
+    description: Nextcloud
+    server: thefactory
+    container: nextcloud-aio-mastercontainer
+  - Filebrowser:
+    icon: sh-file-browser.svg
+    href: https://filebrowser.timo.be
+    description: Filebrowser
+    server: thefactory
+    container: filebrowser
+  - Filezilla:
+    icon: si-filezilla
+    href: https://filezilla.timo.be
+    description: Filezilla FTP Client
+    server: thefactory
+    container: filezilla
+
+- Utilities:
+  - Keel:
+    icon: mdi-update
+    href: https://keel.timo.be
+    description: Keel
+    namespace: utilities
+    app: keel
+  

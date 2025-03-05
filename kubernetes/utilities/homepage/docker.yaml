@@ -1,0 +1,19 @@
+yumi:
+  host: yumi.local.timo.be
+  port: 2375
+
+ulrich:
+  host: ulrich.local.timo.be
+  port: 2375
+
+odd:
+  host: odd.local.timo.be
+  port: 2375
+
+thefactory:
+  host: thefactory.local.timo.be
+  port: 2375
+
+aelita:
+  host: aelita.local.timo.be
+  port: 2375
