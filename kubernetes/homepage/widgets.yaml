@@ -25,7 +25,7 @@
     target: _blank # One of _self, _blank, _parent or _top
 
 - datetime:
-    text_size: xl
+    text_size: md
     locale: en-BE
     format:
       dateStyle: short

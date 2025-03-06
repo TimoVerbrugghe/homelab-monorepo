@@ -1,32 +1,72 @@
+- Hypervisor:
+    - Forest Sector:
+        icon: proxmox.svg
+        href: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+        widget:
+            type: proxmox
+            url: "{{HOMEPAGE_VAR_FORESTSECTOR_PROXMOX_URL}}"
+            username: "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_NAME}}"
+            password: "{{HOMEPAGE_VAR_PROXMOX_API_SECRET}}"
+            node: forestsector
+    - Ice Sector:
+        icon: proxmox.svg
+        href: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+        widget:
+            type: proxmox
+            url: "{{HOMEPAGE_VAR_ICESECTOR_PROXMOX_URL}}"
+            username: "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_NAME}}"
+            password: "{{HOMEPAGE_VAR_PROXMOX_API_SECRET}}"
+            node: icesector
+    - Mountain Sector:
+        icon: proxmox.svg
+        href: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+        widget:
+            type: proxmox
+            url: "{{HOMEPAGE_VAR_MOUNTAINSECTOR_PROXMOX_URL}}"
+            username: "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_NAME}}"
+            password: "{{HOMEPAGE_VAR_PROXMOX_API_SECRET}}"
+            node: mountainsector
 - Media:
-  - Plex:
-      icon: si-plex-#EBAF00
-      href: https://app.plex.tv/desktop
-      description: Plex Server
-      server: aelita
-      container: plex
-  - Sonarr:
-      icon: si-sonarr-#2596BE
-      href: https://sonarr.timo.be
-      description: Sonarr
-      server: thefactory
-      container: sonarr
+    - Plex:
+        icon: plex.svg
+        href: https://app.plex.tv/desktop
+        server: aelita
+        container: plex
+        widget:
+            type: plex
+            url: http://aelita.local.timo.be:32400
+            key: "{{HOMEPAGE_VAR_PLEX_KEY}}"
+    - Overseerr:
+        icon: overseerr.svg
+        href: https://request.timo.be
+        server: thefactory
+        container: overseerr
+        widget:
+            type: overseerr
+            url: http://thefactory.local.timo.be:5055
+            key: "{{HOMEPAGE_VAR_OVERSEERR_KEY}}"
+    - Sonarr:
+        icon: sonarr.svg
+        href: https://sonarr.timo.be
+        description: Sonarr
+        server: thefactory
+        container: sonarr
 
 - Filemanagement:
   - Nextcloud:
-      icon: si-nextcloud-#0082C9
+      icon: nextcloud.svg
       href: https://nextcloud.timo.be
       description: Nextcloud
       server: thefactory
       container: nextcloud-aio-mastercontainer
   - Filebrowser:
-      icon: sh-file-browser.svg
+      icon: filebrowser.svg
       href: https://filebrowser.timo.be
       description: Filebrowser
       server: thefactory
       container: filebrowser
   - Filezilla:
-      icon: si-filezille-#BF0000
+      icon: filezilla.svg
       href: https://filezilla.timo.be
       description: Filezilla FTP Client
       server: thefactory

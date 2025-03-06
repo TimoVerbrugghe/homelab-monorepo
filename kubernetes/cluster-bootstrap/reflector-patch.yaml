@@ -1,0 +1,9 @@
+# Add autoupdate through keel for reflector
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reflector
+  annotations:
+        keel.sh/policy: all
+        keel.sh/trigger: poll
+        keel.sh/pollSchedule: "@every 24h"

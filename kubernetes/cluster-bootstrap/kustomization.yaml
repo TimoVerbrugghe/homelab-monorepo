@@ -48,12 +48,29 @@ resources:
   # Portainer agent installation
   - https://downloads.portainer.io/ce2-27/portainer-agent-k8s-lb.yaml
 
-# Patch to enable keel autoupdating on portainer-agent
+# Patch to enable keel autoupdating on portainer-agent, traefik & kube-vip-cloud-controller
 patches:
   - target:
       kind: Deployment
       name: portainer-agent
     path: portainer-agent-patch.yaml
+  - target:
+      kind: Deployment
+      name: traefik
+    path: traefik-patch.yaml
+  - target:
+      kind: Deployment
+      name: operator
+      namespace: tailscale
+    path: tailscale-operator-patch.yaml
+  - target:
+      kind: Deployment
+      name: reflector
+    path: reflector-patch.yaml
+  - target:
+      kind: Deployment
+      name: kube-vip-cloud-provider
+    path: kube-vip-cloud-provider-patch.yaml
 
 helmCharts:
   # Reflector to automatically copy secrets between namespaces
@@ -62,7 +79,6 @@ helmCharts:
     namespace: reflector
     includeCRDs: true
     releaseName: reflector
-    valuesFile: reflector/reflector-values.yaml
 
   # Cert-manager for certificate management (Let's Encrypt)
   ## WARNING - If you would ever delete this Helm release, there are webhookconfigurations that will remain in the cluster since the helm chart doesn't delete it - https://github.com/cert-manager/cert-manager/issues/3195#issuecomment-1452780684
@@ -90,4 +106,3 @@ helmCharts:
     namespace: tailscale
     includeCRDs: true
     releaseName: tailscale-operator
-    valuesFile: tailscale/tailscale-values.yaml

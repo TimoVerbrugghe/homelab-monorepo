@@ -1,9 +1,3 @@
-# Need to put this in manually otherwise keel does not pick it up for auto updates
-image:
-  repository: traefik
-  tag: 3.3.2
-  pullPolicy: IfNotPresent
-
 globalArguments:
   - "--global.sendanonymoususage"
 
@@ -76,15 +70,3 @@ rbac:
 # Will define my own services because I want to expose traefik both through tailscale and through kube-vip
 service:
   enabled: false
-
-keel:
-  # keel policy (all/major/minor/patch/force)
-  policy: all
-  # trigger type, defaults to events such as pubsub, webhooks
-  trigger: poll
-  # polling schedule
-  pollSchedule: "@every 24h"
-    # images to track and update
-  images:
-    - repository: image.repository # [1]
-      tag: image.tag  # [2]

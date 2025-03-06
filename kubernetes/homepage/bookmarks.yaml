@@ -1,16 +1,21 @@
 ---
 - Developer:
-    - Github:
-        - icon: si-github-#181717
-          href: https://github.com/
+  - Github:
+    - icon: github.svg
+      href: https://github.com/
+  - Cloudflare:
+    - icon: cloudflare.svg
+      href: https://dash.cloudflare.com/
+  - Azure:
+    - icon: azure.svg
+      href: https://portal.azure.com/
 
 - Social:
-    - Reddit:
-        - icon: si-reddit-#FF4500
-          href: https://reddit.com/
-          description: The front page of the internet
+  - Reddit:
+    - icon: reddit.svg
+      href: https://reddit.com/
 
 - Entertainment:
     - YouTube:
-        - icon: si-youtube-#FF0000
+        - icon: youtube.svg
           href: https://youtube.com/

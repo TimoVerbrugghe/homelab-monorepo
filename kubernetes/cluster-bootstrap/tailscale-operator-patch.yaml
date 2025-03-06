@@ -1,0 +1,10 @@
+# Add autoupdate through keel for tailscale-operator
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: operator
+  namespace: tailscale
+  annotations:
+        keel.sh/policy: all
+        keel.sh/trigger: poll
+        keel.sh/pollSchedule: "@every 24h"

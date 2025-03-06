@@ -44,7 +44,7 @@ helmCharts:
     namespace: utilities
     valuesFile: keel/keel-values.yaml
 
-# Needed for homepage to detect keel pods
+# Needed for homepage to detect keel pods & to enable autoupdate on keel
 patches:
   - target:
       kind: Deployment

@@ -9,3 +9,26 @@ quicklaunch:
   provider: google
   showSearchSuggestions: true
 statusStyle: dot
+useEqualHeights: true
+layout:
+  Media:
+    header: true
+    style: row
+    columns: 4
+  Filemanagement:
+    header: true
+    style: row
+    columns: 4
+  Utilities:
+    header: true
+    style: row
+    columns: 4
+  Hypervisor:
+    header: true
+    style: row
+    columns: 3
+  Networking:
+    header: true
+    style: row
+    columns: 4
+  

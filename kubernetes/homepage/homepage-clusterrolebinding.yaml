@@ -59,4 +59,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: homepage
-    namespace: utilities
+    namespace: homepage

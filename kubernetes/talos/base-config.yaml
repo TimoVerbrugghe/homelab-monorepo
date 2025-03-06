@@ -11,6 +11,9 @@ machine:
         - 10.10.10.33
         - kubernetes.local.timo.be
     kubelet:
+      # Required for metrics-server, which is required by homepage to use its kubernetes widget
+      extraArgs:
+        rotate-server-certificates: true
       extraConfig:
           nodeStatusUpdateFrequency: 4s
           featureGates:
