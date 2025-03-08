@@ -43,39 +43,194 @@
         container: overseerr
         widget:
             type: overseerr
-            url: http://thefactory.local.timo.be:5055
+            url: http://thefactory.local.timo.be:14003
             key: "{{HOMEPAGE_VAR_OVERSEERR_KEY}}"
     - Sonarr:
         icon: sonarr.svg
         href: https://sonarr.timo.be
-        description: Sonarr
         server: thefactory
         container: sonarr
+        widget:
+            type: sonarr
+            url: http://thefactory.local.timo.be:14000
+            key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
+    - Radarr:
+        icon: radarr.svg
+        href: https://radarr.timo.be
+        server: thefactory
+        container: radarr
+        widget:
+            type: radarr
+            url: http://thefactory.local.timo.be:14001
+            key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
+    - Bazarr:
+        icon: bazarr.svg
+        href: https://bazarr.timo.be
+        server: thefactory
+        container: bazarr
+        widget:
+            type: bazarr
+            url: http://thefactory.local.timo.be:14002
+            key: "{{HOMEPAGE_VAR_BAZARR_KEY}}"
+    - Prowlarr:
+        icon: prowlarr.svg
+        href: https://prowlarr.timo.be
+        server: thefactory
+        container: prowlarr
+        widget:
+            type: prowlarr
+            url: http://thefactory.local.timo.be:14004
+            key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
+
+- Downloaders:
+    # - Qbittorrent:
+    #     icon: qbittorrent.svg
+    #     href: https://qbittorrent.timo.be
+    #     server: thefactory
+    #     container: qbittorrent
+    #     widget:
+    #         type: qbittorrent
+    #         url: http://thefactory.local.timo.be:12000
+    #         username: "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}"
+    #         password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
+    # - Jdownloader:
+    #     icon: jdownloader.svg
+    #     href: https://jdownloader2.timo.be
+    #     server: thefactory
+    #     container: jdownloader
+    #     widget:
+    #         type: jdownloader
+    #         username: "{{HOMEPAGE_VAR_JDOWNLOADER_USERNAME}}"
+    #         password: "{{HOMEPAGE_VAR_JDOWNLOADER_PASSWORD}}"
+    #         client: Jdownloader@Docker
+    - Spotdl:
+        icon: spotify.svg
+        href: https://spotdl.timo.be
+        server: thefactory
+        container: spotdl
+    - Ariang:
+        icon: ariang.png
+        href: https://ariang.timo.be
+        server: thefactory
+        container: ariang
+    - Metube:
+        icon: metube.svg
+        href: https://metube.timo.be
+        server: thefactory
+        container: metube
+
+- Gaming:
+    - RomM:
+        icon: romm.svg
+        href: https://romm.timo.be 
+        server: thefactory
+        container: romm
+        widget:
+            type: romm
+            url: http://thefactory.local.timo.be:17000
+            username: "{{HOMEPAGE_VAR_ROMM_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_ROMM_PASSWORD}}"
 
 - Filemanagement:
-  - Nextcloud:
-      icon: nextcloud.svg
-      href: https://nextcloud.timo.be
-      description: Nextcloud
-      server: thefactory
-      container: nextcloud-aio-mastercontainer
-  - Filebrowser:
-      icon: filebrowser.svg
-      href: https://filebrowser.timo.be
-      description: Filebrowser
-      server: thefactory
-      container: filebrowser
-  - Filezilla:
-      icon: filezilla.svg
-      href: https://filezilla.timo.be
-      description: Filezilla FTP Client
-      server: thefactory
-      container: filezilla
+    # - Nextcloud:
+    #     icon: nextcloud.svg
+    #     href: https://nextcloud.timo.be
+    #     server: thefactory
+    #     container: nextcloud-aio-mastercontainer
+    #     widget:
+    #         type: nextcloud
+    #         url: http://thefactory.local.timo.be:13000
+    #         key: "{{HOMEPAGE_VAR_NEXTCLOUD_TOKEN}}"
+    - Filebrowser:
+        icon: filebrowser.svg
+        href: https://filebrowser.timo.be
+        server: thefactory
+        container: filebrowser
+    - Filezilla:
+        icon: filezilla.svg
+        href: https://filezilla.timo.be
+        server: thefactory
+        container: filezilla
+    - Double Commander:
+        icon: krusader.svg
+        href: https://doublecommander.timo.be
+        server: thefactory
+        container: doublecommander
 
 - Utilities:
-  - Keel:
+    - Paperless:
+        icon: paperless-ngx.svg
+        href: https://paperless.timo.be
+        server: thefactory
+        container: paperless-ngx
+        widget:
+            type: paperless
+            url: http://thefactory.local.timo.be:11004
+            key: "{{HOMEPAGE_VAR_PAPERLESS_KEY}}"
+    - Paperless-ai:
+        icon: openai.svg
+        href: https://paperlessai.timo.be
+        server: thefactory
+        container: paperless-ai
+    - Keel:
         icon: mdi-update
         href: https://keel.timo.be
-        description: Keel
         namespace: utilities
         app: keel
+    - Scanservjs:
+        icon: scanservjs.webp
+        href: https://scanservjs.timo.be
+        server: thefactory
+        container: scanservjs
+
+- Containers:
+    - Yumi:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 2
+    - Ulrich:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 8
+    - Odd:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 7
+    - Aelita:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 9
+    - The Factory:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 6

@@ -38,4 +38,4 @@ spec:
   ingressClassName: tailscale
   tls:
     - hosts:
-        - keel
+        - homepage

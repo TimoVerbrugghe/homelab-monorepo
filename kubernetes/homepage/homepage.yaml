@@ -11,7 +11,7 @@ metadata:
     keel.sh/pollSchedule: "@every 24h"
 spec:
   revisionHistoryLimit: 3
-  replicas: 3
+  replicas: 1
   strategy:
     type: RollingUpdate
   selector:
