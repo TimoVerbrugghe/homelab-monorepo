@@ -35,7 +35,7 @@ in
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
-      ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
+      # ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
       ../../modules/common/graylog.nix # Enable and configure rsyslog for graylog
       
       # Cannot add this now because it conflicts with using gamingserver as remotebuilder
