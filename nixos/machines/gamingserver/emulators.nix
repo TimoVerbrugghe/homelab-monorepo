@@ -3,8 +3,8 @@
 {
   
   nixpkgs.overlays = [
-    (final: prev: {
-      # Import stable channel
+    (final: prev: {t
+      # Import stable channel for packages from nixpkgs-stable (flake inputs)
       stable = import nixpkgs {
         inherit (final.stdenv.hostPlatform) system;
         inherit (final) config;
@@ -74,11 +74,8 @@
     winetricks
     steam-rom-manager
 
-    # Current 86Box is old (4.1) and I need to wrap the 86Box program with env variable QT_QPA_PLATFORM=xcb in order for 86Box mouse capture to work
-    # (pkgs.callPackage ./86Box-git/package.nix {})
-
+    # Lime3DS does not compile in the unstable branch
     stable.lime3ds
-
     # A replacement for yuzu & ryujinx
     torzu
 
