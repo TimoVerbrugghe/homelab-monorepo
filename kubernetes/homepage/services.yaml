@@ -164,7 +164,7 @@
         server: thefactory
         container: paperless-ngx
         widget:
-            type: paperless
+            type: paperlessngx
             url: http://thefactory.local.timo.be:11004
             key: "{{HOMEPAGE_VAR_PAPERLESS_KEY}}"
     - Paperless-ai:
