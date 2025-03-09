@@ -53,7 +53,7 @@ in
       # ./emulators.nix
       # ./gaming-optimizations.nix
       # ./rom-sync.nix
-      # ./zfs.nix
+      ./zfs.nix
       # ./controllers.nix
 
       # # Sleep options
