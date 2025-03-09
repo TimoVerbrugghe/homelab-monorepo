@@ -189,7 +189,7 @@
         server: yumi
         container: netbootxyz
     - iVentoy:
-        icon: ventoy.svg
+        icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/iventoy.png
         href: https://iventoy.timo.be
         server: yumi
         container: iventoy
@@ -236,7 +236,7 @@
             url: http://thefactory.local.timo.be:11004
             key: "{{HOMEPAGE_VAR_PAPERLESS_KEY}}"
     - Paperless-ai:
-        icon: openai.svg
+        icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/paperlessai.ico
         href: https://paperlessai.timo.be
         server: thefactory
         container: paperless-ai
