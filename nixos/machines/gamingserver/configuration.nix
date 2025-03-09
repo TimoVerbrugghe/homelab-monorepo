@@ -52,9 +52,9 @@ in
       # ./gamelaunchers.nix
       # ./emulators.nix
       # ./gaming-optimizations.nix
-      # ./rom-sync.nix
+      ./rom-sync.nix
       ./zfs.nix
-      # ./controllers.nix
+      ./controllers.nix
 
       # # Sleep options
       ./sleep.nix
