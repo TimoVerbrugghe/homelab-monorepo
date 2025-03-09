@@ -11,7 +11,15 @@ quicklaunch:
 statusStyle: dot
 useEqualHeights: true
 layout:
+  Calendar:
+    header: false
+    style: column
   Media:
+    header: true
+    style: row
+    columns: 4
+    useEqualHeights: true
+  Home Automation:
     header: true
     style: row
     columns: 4

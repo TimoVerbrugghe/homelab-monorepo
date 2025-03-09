@@ -27,6 +27,30 @@
             password: "{{HOMEPAGE_VAR_PROXMOX_API_SECRET}}"
             node: mountainsector
 
+- Calendar:
+    # Calendar widget
+    - "":
+        widget:
+            type: calendar
+            firstDayInWeek: monday
+            view: monthly
+            maxEvents: 10
+            showTime: true
+            timezone: Europe/Brussels
+            integrations:
+                - type: sonarr
+                  service_group: Media
+                  service_name: Sonarr
+                  color: teal
+                  params:
+                      unmonitored: true
+                - type: radarr
+                  service_group: Media
+                  service_name: Radarr
+                  color: amber
+                  params:
+                      unmonitored: true
+
 - Media:
     - Plex:
         icon: plex.svg
@@ -102,6 +126,15 @@
             type: prowlarr
             url: http://thefactory.local.timo.be:14004
             key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
+    - Paperless:
+        icon: paperless-ngx.svg
+        href: https://paperless.timo.be
+        server: thefactory
+        container: paperless-ngx
+        widget:
+            type: paperlessngx
+            url: http://thefactory.local.timo.be:11004
+            key: "{{HOMEPAGE_VAR_PAPERLESS_KEY}}"
 
 - Downloaders:
     - Qbittorrent:
@@ -144,6 +177,7 @@
     - Unifi:
         icon: unifi.svg
         href: https://unifi.ui.com
+        siteMonitor: https://unifi.local.timo.be
         widget:
             type: unifi
             url: https://unifi.local.timo.be
@@ -225,15 +259,6 @@
         href: https://bitwarden.timo.be
         server: yumi
         container: bitwarden
-    - Paperless:
-        icon: paperless-ngx.svg
-        href: https://paperless.timo.be
-        server: thefactory
-        container: paperless-ngx
-        widget:
-            type: paperlessngx
-            url: http://thefactory.local.timo.be:11004
-            key: "{{HOMEPAGE_VAR_PAPERLESS_KEY}}"
     - Paperless-ai:
         icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/paperlessai.ico
         href: https://paperlessai.timo.be
@@ -249,6 +274,25 @@
         href: https://scanservjs.timo.be
         server: thefactory
         container: scanservjs
+    - Stirling-PDF:
+        icon: stirling-pdf.svg
+        href: https://stirlingpdf.timo.be
+        namespace: utilities
+        app: stirling-pdf
+    - Webtop:
+        icon: webtop.webp
+        href: https://webtop.timo.be
+        namespace: utilities
+        app: webtop
+    - Sunshine:
+        icon: sunshine.svg
+        href: https://sunshine.timo.be
+        siteMonitor: https://sunshine.local.timo.be:47990
+    - Graylog:
+        icon: graylog.svg
+        href: https://graylog.timo.be
+        server: thefactory
+        container: graylog
 
 - Containers:
     - Yumi:
@@ -306,9 +350,28 @@
     - TrueNAS:
         icon: truenas.svg
         href: https://truenas.timo.be/ui
+        siteMonitor: https://truenas.local.timo.be
         widget:
             type: truenas
             url: http://truenas.local.timo.be
             key: "{{HOMEPAGE_VAR_TRUENAS_KEY}}"
             enablePools: true
             nasType: scale
+
+- Home Automation:
+    - Home Assistant:
+        icon: home-assistant.svg
+        href: https://hass.timo.be
+        siteMonitor: http://hass.local.timo.be:8123
+        widget:
+            type: homeassistant
+            url: http://hass.local.timo.be:8123
+            key: "{{HOMEPAGE_VAR_HOMEASSISTANT_KEY}}"
+    - Zigbee2MQTT:
+        icon: zigbee2mqtt.svg
+        href: https://hass.timo.be
+        siteMonitor: http://hass.local.timo.be:8099
+    - Scrypted:
+        icon: scrypted.webp
+        href: https://scrypted.timo.be
+        siteMonitor: https://hass.local.timo.be:10443

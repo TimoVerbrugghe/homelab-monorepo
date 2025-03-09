@@ -4,10 +4,10 @@ kind: Deployment
 metadata:
   name: stirling-pdf
   namespace: utilities
-  annotations:
-    keel.sh/policy: all
-    keel.sh/trigger: poll            
-    keel.sh/pollSchedule: "@every 24h"
+  # annotations:
+  #   keel.sh/policy: all
+  #   keel.sh/trigger: poll            
+  #   keel.sh/pollSchedule: "@every 24h"
 spec:
   replicas: 1
   selector:
@@ -17,10 +17,11 @@ spec:
     metadata:
       labels:
         app: stirling-pdf
+        app.kubernetes.io/name: stirling-pdf
     spec:
       containers:
       - name: stirling-pdf
-        image: frooodle/s-pdf:latest
+        image: ghcr.io/stirling-tools/s-pdf:0.41.0 # Have to pin it to this version & disable keel due to issue with unoserver: https://github.com/Stirling-Tools/Stirling-PDF/issues/3030
         env:
         - name: DOCKER_ENABLE_SECURITY
           value: "false"
@@ -33,13 +34,5 @@ spec:
           requests:
             memory: "256Mi"
             cpu: "250m"
-        # Cannot add this securityContext because stirling-pdf needs additional permissions for chowning files
-        # securityContext:
-        #   allowPrivilegeEscalation: false
-        #   capabilities:
-        #     drop:
-        #       - "ALL"
-        #   seccompProfile:
-        #     type: RuntimeDefault
         ports:
         - containerPort: 8080
