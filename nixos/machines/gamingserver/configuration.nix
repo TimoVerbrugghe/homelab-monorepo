@@ -45,19 +45,19 @@ in
       ./boot.nix
 
       # Gaming specific inputs
-      ./input-remapper.nix
-      ./sound.nix
-      ./display.nix
-      ./sunshine.nix
-      ./gamelaunchers.nix
-      ./emulators.nix
-      ./gaming-optimizations.nix
-      ./rom-sync.nix
-      ./zfs.nix
-      ./controllers.nix
+      # ./input-remapper.nix
+      # ./sound.nix
+      # ./display.nix
+      # ./sunshine.nix
+      # ./gamelaunchers.nix
+      # ./emulators.nix
+      # ./gaming-optimizations.nix
+      # ./rom-sync.nix
+      # ./zfs.nix
+      # ./controllers.nix
 
-      # Sleep options
-      ./sleep.nix
+      # # Sleep options
+      # ./sleep.nix
     ];
 
   ############################
