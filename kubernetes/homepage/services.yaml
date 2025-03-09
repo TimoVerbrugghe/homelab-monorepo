@@ -65,6 +65,7 @@
             type: mealie
             url: http://yumi.local.timo.be:15001
             key: "{{HOMEPAGE_VAR_MEALIE_KEY}}"
+            version: 2
     - Sonarr:
         icon: sonarr.svg
         href: https://sonarr.timo.be
@@ -215,7 +216,7 @@
         server: thefactory
         container: filezilla
     - Double Commander:
-        icon: krusader.svg
+        icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/doublecommander.svg
         href: https://doublecommander.timo.be
         server: thefactory
         container: doublecommander
