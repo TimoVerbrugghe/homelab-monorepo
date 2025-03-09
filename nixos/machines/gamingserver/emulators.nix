@@ -10,7 +10,7 @@
       stable = import nixpkgs {
         inherit (final.stdenv.hostPlatform) system;
         inherit (final) config;
-      }
+      };
     })
   ];
 
