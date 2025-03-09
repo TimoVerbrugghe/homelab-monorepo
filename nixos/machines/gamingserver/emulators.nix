@@ -10,10 +10,33 @@
         inherit (final) config;
       };
       
-      # Override just emulationstation-de to use stable libgit2
-      emulationstation-de = prev.emulationstation-de.override {
-        libgit2 = final.stable.libgit2;
-      };
+      # Create a fixed version of emulationstation-de
+      emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
+        # Use both stable libgit2 and stable icu
+        buildInputs = with final.stable; (oldAttrs.buildInputs or [])
+          # Remove unstable versions first (filter them out)
+          # This prevents conflicts between different versions
+          |> (builtins.filter (input: 
+              !(lib.hasPrefix "libgit2" input.name) && 
+              !(lib.hasPrefix "icu" input.name)
+            ))
+          # Add the stable versions
+          ++ [ 
+            libgit2
+            icu
+          ];
+        
+        # Add necessary compiler flags to work around the nullptr comparison issue
+        NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -fpermissive";
+        
+        # Make sure CMake finds the stable versions
+        cmakeFlags = (oldAttrs.cmakeFlags or []) ++ [
+          "-DLIBGIT2_INCLUDE_DIR=${final.stable.libgit2}/include"
+          "-DLIBGIT2_LIBRARIES=${final.stable.libgit2}/lib/libgit2${final.stdenv.hostPlatform.extensions.sharedLibrary}"
+          "-DICU_INCLUDE_DIR=${final.stable.icu}/include"
+          "-DICU_LIBRARY=${final.stable.icu}/lib"
+        ];
+      });
     })
   ];
 
