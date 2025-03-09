@@ -15,7 +15,7 @@ nixpkgs.overlays = [
       # Add stable dev packages for headers
       nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [
         final.stable.pkg-config
-        final.stable.sysprof # For sysprof-capture-4
+        final.stable.sysprof
       ];
       
       # Use both stable libgit2 and stable icu
@@ -27,10 +27,7 @@ nixpkgs.overlays = [
       in
         filteredInputs ++ [ 
           final.stable.libgit2
-          # Add both runtime and dev versions of ICU
           final.stable.icu
-          (final.stable.icu.override { withDev = true; })
-          # Add glib with sysprof explicitly
           final.stable.glib
         ];
       
@@ -44,9 +41,6 @@ nixpkgs.overlays = [
         "-DICU_ROOT=${final.stable.icu.dev}"
         "-DICU_INCLUDE_DIR=${final.stable.icu.dev}/include"
         "-DICU_LIBRARY_DIR=${final.stable.icu}/lib"
-        "-DICU_I18N_LIBRARY_RELEASE=${final.stable.icu}/lib/libicui18n${final.stdenv.hostPlatform.extensions.sharedLibrary}"
-        "-DICU_UC_LIBRARY_RELEASE=${final.stable.icu}/lib/libicuuc${final.stdenv.hostPlatform.extensions.sharedLibrary}"
-        "-DICU_DATA_LIBRARY_RELEASE=${final.stable.icu}/lib/libicudata${final.stdenv.hostPlatform.extensions.sharedLibrary}"
       ];
       
       # Add environment variables for pkg-config to find the right dependencies
