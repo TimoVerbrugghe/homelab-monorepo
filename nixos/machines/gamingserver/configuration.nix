@@ -50,7 +50,7 @@ in
       ./display.nix
       ./sunshine.nix
       ./gamelaunchers.nix
-      # ./emulators.nix
+      ./emulators.nix
       ./gaming-optimizations.nix
       ./rom-sync.nix
       ./zfs.nix
