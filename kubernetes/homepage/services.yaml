@@ -303,3 +303,16 @@
             url: https://yumi.local.timo.be:9443
             key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
             env: 6
+
+- Storage:
+    - TrueNAS:
+        icon: truenas.svg
+        href: https://truenas.timo.be
+        server: thefactory
+        container: truenas
+        widget:
+            type: truenas
+            url: http://truenas.local.timo.be
+            key: "{{HOMEPAGE_VAR_TRUENAS_KEY}}"
+            enablePools: true
+            nasType: scale

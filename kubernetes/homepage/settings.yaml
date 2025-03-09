@@ -23,12 +23,14 @@ layout:
     header: true
     style: row
     columns: 4
-  Hypervisor:
-    header: true
-    style: row
-    columns: 3
-  Networking:
+  Downloaders:
     header: true
     style: row
     columns: 4
+  Hypervisor:
+    header: true
+  Networking:
+    header: true
+  Containers:
+    header: true
   
