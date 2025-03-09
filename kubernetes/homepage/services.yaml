@@ -144,8 +144,6 @@
     - Unifi:
         icon: unifi.svg
         href: https://unifi.ui.com
-        server: thefactory
-        container: unifi
         widget:
             type: unifi
             url: https://unifi.local.timo.be
@@ -307,9 +305,7 @@
 - Storage:
     - TrueNAS:
         icon: truenas.svg
-        href: https://truenas.timo.be
-        server: thefactory
-        container: truenas
+        href: https://truenas.timo.be/ui
         widget:
             type: truenas
             url: http://truenas.local.timo.be

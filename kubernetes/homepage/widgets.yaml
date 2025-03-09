@@ -31,9 +31,3 @@
       dateStyle: short
       timeStyle: short
       hourCycle: h23
-
-# - unifi_console:
-#     url: http://unifi.local.timo.be
-#     username: user
-#     password: pass
-#     site: Site Name # optional

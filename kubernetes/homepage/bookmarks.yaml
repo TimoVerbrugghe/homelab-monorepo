@@ -1,21 +1,29 @@
----
 - Developer:
   - Github:
     - icon: github.svg
       href: https://github.com/
-  - Cloudflare:
-    - icon: cloudflare.svg
-      href: https://dash.cloudflare.com/
+  - NixOS:
+    - icon: nixos.svg
+      href: https://nixos.org/
   - Azure:
     - icon: azure.svg
       href: https://portal.azure.com/
 
-- Social:
+- Network:
+  - Cloudflare:
+    - icon: cloudflare.svg
+      href: https://dash.cloudflare.com/
+  - Tailscale:
+    - icon: tailscale.svg
+      href: https://tailscale.com/admin
+
+- News & Entertainment:
+  - VRT NWS:
+    - icon: https://www.vrt.be/vrtnws/next-public/favicon.ico
+      href: https://www.vrt.be/vrtnws/nl/
   - Reddit:
     - icon: reddit.svg
       href: https://reddit.com/
-
-- Entertainment:
-    - YouTube:
-        - icon: youtube.svg
-          href: https://youtube.com/
+  - YouTube:
+    - icon: youtube.svg
+      href: https://youtube.com/
