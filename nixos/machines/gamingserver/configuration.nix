@@ -57,7 +57,7 @@ in
       # ./controllers.nix
 
       # # Sleep options
-      # ./sleep.nix
+      ./sleep.nix
     ];
 
   ############################
