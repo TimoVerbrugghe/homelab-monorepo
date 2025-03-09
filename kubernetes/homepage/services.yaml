@@ -26,6 +26,7 @@
             username: "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_NAME}}"
             password: "{{HOMEPAGE_VAR_PROXMOX_API_SECRET}}"
             node: mountainsector
+
 - Media:
     - Plex:
         icon: plex.svg
@@ -45,6 +46,25 @@
             type: overseerr
             url: http://thefactory.local.timo.be:14003
             key: "{{HOMEPAGE_VAR_OVERSEERR_KEY}}"
+    - RomM:
+        icon: romm.svg
+        href: https://romm.timo.be 
+        server: thefactory
+        container: romm
+        widget:
+            type: romm
+            url: http://thefactory.local.timo.be:17000
+            username: "{{HOMEPAGE_VAR_ROMM_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_ROMM_PASSWORD}}"
+    - Mealie:
+        icon: mealie.svg
+        href: https://mealie.timo.be
+        server: yumi
+        container: mealie
+        widget:
+            type: mealie
+            url: http://yumi.local.timo.be:15001
+            key: "{{HOMEPAGE_VAR_MEALIE_KEY}}"
     - Sonarr:
         icon: sonarr.svg
         href: https://sonarr.timo.be
@@ -83,16 +103,16 @@
             key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
 
 - Downloaders:
-    # - Qbittorrent:
-    #     icon: qbittorrent.svg
-    #     href: https://qbittorrent.timo.be
-    #     server: thefactory
-    #     container: qbittorrent
-    #     widget:
-    #         type: qbittorrent
-    #         url: http://thefactory.local.timo.be:12000
-    #         username: "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}"
-    #         password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
+    - Qbittorrent:
+        icon: qbittorrent.svg
+        href: https://qbittorrent.timo.be
+        server: thefactory
+        container: qbittorrent
+        widget:
+            type: qbittorrent
+            url: http://thefactory.local.timo.be:12000
+            username: "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
     # - Jdownloader:
     #     icon: jdownloader.svg
     #     href: https://jdownloader2.timo.be
@@ -119,28 +139,71 @@
         server: thefactory
         container: metube
 
-- Gaming:
-    - RomM:
-        icon: romm.svg
-        href: https://romm.timo.be 
+- Networking:
+    - Unifi:
+        icon: unifi.svg
+        href: https://unifi.ui.com
         server: thefactory
-        container: romm
+        container: unifi
         widget:
-            type: romm
-            url: http://thefactory.local.timo.be:17000
-            username: "{{HOMEPAGE_VAR_ROMM_USERNAME}}"
-            password: "{{HOMEPAGE_VAR_ROMM_PASSWORD}}"
+            type: unifi
+            url: https://unifi.local.timo.be
+            username: "{{HOMEPAGE_VAR_UNIFI_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_UNIFI_PASSWORD}}"
+    - Adguardhome (Odd):
+        icon: adguard-home.svg
+        description: "10.10.10.22"
+        href: https://adguard.timo.be
+        server: odd
+        container: adguardhome
+        widget:
+            type: adguard
+            url: http://10.10.10.22
+            username: "{{HOMEPAGE_VAR_ADGUARDHOME_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
+    - Adguardhome (Ulrich):
+        icon: adguard-home.svg
+        description: "10.10.10.21"
+        href: https://adguard.timo.be
+        server: ulrich
+        container: adguardhome
+        widget:
+            type: adguard
+            url: http://10.10.10.21
+            username: "{{HOMEPAGE_VAR_ADGUARDHOME_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
+    - Adguardhome (Yumi):
+        icon: adguard-home.svg
+        description: "10.10.10.20"
+        href: https://adguard.timo.be
+        server: yumi
+        container: adguardhome
+        widget:
+            type: adguard
+            url: http://10.10.10.20
+            username: "{{HOMEPAGE_VAR_ADGUARDHOME_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
+    - Netbootxyz:
+        icon: netboot.svg
+        href: https://netbootxyz.timo.be
+        server: yumi
+        container: netbootxyz
+    - iVentoy:
+        icon: ventoy.svg
+        href: https://iventoy.timo.be
+        server: yumi
+        container: iventoy
 
 - Filemanagement:
-    # - Nextcloud:
-    #     icon: nextcloud.svg
-    #     href: https://nextcloud.timo.be
-    #     server: thefactory
-    #     container: nextcloud-aio-mastercontainer
-    #     widget:
-    #         type: nextcloud
-    #         url: http://thefactory.local.timo.be:13000
-    #         key: "{{HOMEPAGE_VAR_NEXTCLOUD_TOKEN}}"
+    - Nextcloud:
+        icon: nextcloud.svg
+        href: https://nextcloud.timo.be
+        server: thefactory
+        container: nextcloud-aio-mastercontainer
+        widget:
+            type: nextcloud
+            url: http://thefactory.local.timo.be:11000
+            key: "{{HOMEPAGE_VAR_NEXTCLOUD_TOKEN}}"
     - Filebrowser:
         icon: filebrowser.svg
         href: https://filebrowser.timo.be
@@ -158,6 +221,11 @@
         container: doublecommander
 
 - Utilities:
+    - Bitwarden:
+        icon: bitwarden.svg
+        href: https://bitwarden.timo.be
+        server: yumi
+        container: bitwarden
     - Paperless:
         icon: paperless-ngx.svg
         href: https://paperless.timo.be
