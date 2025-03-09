@@ -14,9 +14,10 @@
       emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
         # Use both stable libgit2 and stable icu
         buildInputs = let
+          # Use prev.lib to access the lib function
           filteredInputs = builtins.filter (input: 
-            !(lib.hasPrefix "libgit2" input.name) && 
-            !(lib.hasPrefix "icu" input.name)
+            !(prev.lib.hasPrefix "libgit2" (input.name or "")) && 
+            !(prev.lib.hasPrefix "icu" (input.name or ""))
           ) (oldAttrs.buildInputs or []);
         in
           filteredInputs ++ [ 
