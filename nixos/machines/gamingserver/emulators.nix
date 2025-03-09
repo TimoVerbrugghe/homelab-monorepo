@@ -13,17 +13,15 @@
       # Create a fixed version of emulationstation-de
       emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
         # Use both stable libgit2 and stable icu
-        buildInputs = with final.stable; (oldAttrs.buildInputs or [])
-          # Remove unstable versions first (filter them out)
-          # This prevents conflicts between different versions
-          |> (builtins.filter (input: 
-              !(lib.hasPrefix "libgit2" input.name) && 
-              !(lib.hasPrefix "icu" input.name)
-            ))
-          # Add the stable versions
-          ++ [ 
-            libgit2
-            icu
+        buildInputs = let
+          filteredInputs = builtins.filter (input: 
+            !(lib.hasPrefix "libgit2" input.name) && 
+            !(lib.hasPrefix "icu" input.name)
+          ) (oldAttrs.buildInputs or []);
+        in
+          filteredInputs ++ [ 
+            final.stable.libgit2
+            final.stable.icu
           ];
         
         # Add necessary compiler flags to work around the nullptr comparison issue
