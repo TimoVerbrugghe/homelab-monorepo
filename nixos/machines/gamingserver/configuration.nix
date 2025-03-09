@@ -35,23 +35,23 @@ in
       ../../modules/common/vars.nix # Add some default variables
       ../../modules/vscode-server.nix # Enable VS Code server
       ../../modules/tailscale.nix # Common tailscale config options, you need to add a tailscale authkey file to /etc/nixos/tailscale-authkey.nix
-      # ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
+      ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
       ../../modules/common/graylog.nix # Enable and configure rsyslog for graylog
       
       # Cannot add this now because it conflicts with using gamingserver as remotebuilder
-      # ../../modules/common/shell.nix # Add shell aliases and tools
+      ../../modules/common/shell.nix # Add shell aliases and tools
 
       # Boot inputs (with specific zfs settings)
       ./boot.nix
 
       # Gaming specific inputs
-      # ./input-remapper.nix
-      # ./sound.nix
-      # ./display.nix
-      # ./sunshine.nix
-      # ./gamelaunchers.nix
+      ./input-remapper.nix
+      ./sound.nix
+      ./display.nix
+      ./sunshine.nix
+      ./gamelaunchers.nix
       # ./emulators.nix
-      # ./gaming-optimizations.nix
+      ./gaming-optimizations.nix
       ./rom-sync.nix
       ./zfs.nix
       ./controllers.nix
