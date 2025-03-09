@@ -76,8 +76,8 @@ nixpkgs.overlays = [
 
     # # Installing citra, source (AppImage or source) has to be provided yourself
     # (pkgs.callPackage ./citra/package-appimage.nix {})
-    # Instead of citra, you can also install lime3ds - not working in January 2025
-    lime3ds
+    # Instead of citra, you can also install lime3ds - but only compiles from the stable branch
+    stable.lime3ds
 
     # Installing ryujinx, source (AppImage or source) has to be provided yourself
     # (pkgs.callPackage ./ryujinx/package-source.nix {})
