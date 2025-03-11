@@ -7,10 +7,11 @@ metadata:
     app.kubernetes.io/name: gatus
   annotations:
     keel.sh/policy: all
-    keel.sh/trigger: poll            
+    keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
 spec:
-  replicas: 3
+  # Cannot do more replicas since otherwise Gatus will send multiple alerts for the same failure (each pod will send an alert)
+  replicas: 1
   strategy:
     type: RollingUpdate
   selector:
@@ -30,6 +31,9 @@ spec:
           env:
             - name: GATUS_CONFIG_PATH
               value: /config
+          envFrom:
+            - secretRef:
+                name: gatus-secrets
           resources:
             limits:
               cpu: 250m
@@ -60,4 +64,3 @@ spec:
         - name: gatus-config
           configMap:
             name: gatus
-          

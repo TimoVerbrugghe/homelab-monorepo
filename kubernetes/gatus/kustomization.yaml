@@ -8,6 +8,17 @@ configMapGenerator:
     files:
       - storage.yaml
       - endpoints.yaml
+      - alerting.yaml
+    options:
+      labels:
+        app.kubernetes.io/name: gatus
+
+secretGenerator:
+  - name: gatus-secrets
+    namespace: gatus
+    envs:
+      - gatus-secrets.env
+    type: Opaque
     options:
       labels:
         app.kubernetes.io/name: gatus

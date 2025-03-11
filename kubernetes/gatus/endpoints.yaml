@@ -4,3 +4,10 @@ endpoints:
     interval: 30s
     conditions:
       - "[STATUS] == 200"
+  - name: doublecommander
+    url: http://thefactory.local.timo.be:13002
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: pushover
