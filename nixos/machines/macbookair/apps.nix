@@ -20,6 +20,7 @@ in
     python313Packages.dnspython
     talosctl
     minikube
+    vscode
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
@@ -35,11 +36,41 @@ in
       "mas"
       "kubernetes-cli"
       "nano"
+      "helm"
     ];
     casks = [
       "tailscale"
+      "vlc"
+      "moonlight"
+      "microsoft-edge"
+      "spotify"
+      "gimp"
+      "sony-ps-remote-play"
+      "microsoft-teams"
+      "intune-company-portal"
+      "orbstack"
+      "google-chrome"
+      "monitorcontrol"
     ];
-    masApps = {};
+    masApps = {
+      "Bitwarden" = 1352778147;
+      "Xcode" = 497799835;
+      "Whatsapp" = 310633997;
+      "Windows App" = 1295203466;
+      "Microsoft Word" = 462054704;
+      "Microsoft Excel" = 462058435;
+      "Microsoft PowerPoint" = 462062816;
+      "Microsoft Outlook" = 985367838;
+      "Microsoft OneNote" = 784801555;
+      "Microsoft OneDrive" = 823766827;
+      "Microsoft To Do" = 1274495053;
+      "Plexamp" = 1500797510;
+      "Slack" = 803453959;
+      "Localsend" = 1661733229;
+      "Home Assistant" = 1099568401;
+      "Microsoft Copilot" = 6738511300;
+      "Microsoft Universal Print" = 6450432292;
+    };
 
     # Remove any casks that are not defined in this nix config
     onActivation.cleanup = "zap";
