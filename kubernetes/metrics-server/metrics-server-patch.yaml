@@ -1,0 +1,9 @@
+# Add autoupdate through keel for metrics-server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-server
+  annotations:
+        keel.sh/policy: all
+        keel.sh/trigger: poll
+        keel.sh/pollSchedule: "@every 24h"

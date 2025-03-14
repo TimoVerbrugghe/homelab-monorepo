@@ -1,0 +1,44 @@
+title: Timo's Homepage
+description: Homepage for Timo's Homelab
+theme: dark
+color: slate
+headerStyle: clean
+language: en
+quicklaunch:
+  searchDescriptions: true
+  provider: google
+  showSearchSuggestions: true
+statusStyle: dot
+useEqualHeights: true
+layout:
+  Calendar:
+    header: false
+    style: column
+  Media:
+    header: true
+    style: row
+    columns: 4
+    useEqualHeights: true
+  Home Automation:
+    header: true
+    style: row
+    columns: 4
+  Filemanagement:
+    header: true
+    style: row
+    columns: 4
+  Utilities:
+    header: true
+    style: row
+    columns: 4
+  Downloaders:
+    header: true
+    style: row
+    columns: 4
+  Hypervisor:
+    header: true
+  Networking:
+    header: true
+  Containers:
+    header: true
+  

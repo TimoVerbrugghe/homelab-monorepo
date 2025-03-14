@@ -1,0 +1,18 @@
+# Metrics server is required by homepage to use its kubernetes widget
+# Installation instructions from https://www.talos.dev/v1.9/kubernetes-guides/configuration/deploy-metrics-server/
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/refs/heads/main/deploy/standalone-install.yaml
+  - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: metrics-server
+    path: metrics-server-patch.yaml
+  - target:
+      kind: Deployment
+      name: kubelet-serving-cert-approver
+    path: kubelet-serving-cert-approver-patch.yaml

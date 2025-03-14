@@ -1,0 +1,377 @@
+- Hypervisor:
+    - Forest Sector:
+        icon: proxmox.svg
+        href: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+        widget:
+            type: proxmox
+            url: "{{HOMEPAGE_VAR_FORESTSECTOR_PROXMOX_URL}}"
+            username: "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_NAME}}"
+            password: "{{HOMEPAGE_VAR_PROXMOX_API_SECRET}}"
+            node: forestsector
+    - Ice Sector:
+        icon: proxmox.svg
+        href: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+        widget:
+            type: proxmox
+            url: "{{HOMEPAGE_VAR_ICESECTOR_PROXMOX_URL}}"
+            username: "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_NAME}}"
+            password: "{{HOMEPAGE_VAR_PROXMOX_API_SECRET}}"
+            node: icesector
+    - Mountain Sector:
+        icon: proxmox.svg
+        href: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+        widget:
+            type: proxmox
+            url: "{{HOMEPAGE_VAR_MOUNTAINSECTOR_PROXMOX_URL}}"
+            username: "{{HOMEPAGE_VAR_PROXMOX_API_TOKEN_NAME}}"
+            password: "{{HOMEPAGE_VAR_PROXMOX_API_SECRET}}"
+            node: mountainsector
+
+- Calendar:
+    # Calendar widget
+    - "":
+        widget:
+            type: calendar
+            firstDayInWeek: monday
+            view: monthly
+            maxEvents: 10
+            showTime: true
+            timezone: Europe/Brussels
+            integrations:
+                - type: sonarr
+                  service_group: Media
+                  service_name: Sonarr
+                  color: teal
+                  params:
+                      unmonitored: true
+                - type: radarr
+                  service_group: Media
+                  service_name: Radarr
+                  color: amber
+                  params:
+                      unmonitored: true
+
+- Media:
+    - Plex:
+        icon: plex.svg
+        href: https://app.plex.tv/desktop
+        server: aelita
+        container: plex
+        widget:
+            type: plex
+            url: http://aelita.local.timo.be:32400
+            key: "{{HOMEPAGE_VAR_PLEX_KEY}}"
+    - Overseerr:
+        icon: overseerr.svg
+        href: https://request.timo.be
+        server: thefactory
+        container: overseerr
+        widget:
+            type: overseerr
+            url: http://thefactory.local.timo.be:14003
+            key: "{{HOMEPAGE_VAR_OVERSEERR_KEY}}"
+    - RomM:
+        icon: romm.svg
+        href: https://romm.timo.be 
+        server: thefactory
+        container: romm
+        widget:
+            type: romm
+            url: http://thefactory.local.timo.be:17000
+            username: "{{HOMEPAGE_VAR_ROMM_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_ROMM_PASSWORD}}"
+    - Mealie:
+        icon: mealie.svg
+        href: https://mealie.timo.be
+        server: yumi
+        container: mealie
+        widget:
+            type: mealie
+            url: http://yumi.local.timo.be:15001
+            key: "{{HOMEPAGE_VAR_MEALIE_KEY}}"
+            version: 2
+    - Sonarr:
+        icon: sonarr.svg
+        href: https://sonarr.timo.be
+        server: thefactory
+        container: sonarr
+        widget:
+            type: sonarr
+            url: http://thefactory.local.timo.be:14000
+            key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
+    - Radarr:
+        icon: radarr.svg
+        href: https://radarr.timo.be
+        server: thefactory
+        container: radarr
+        widget:
+            type: radarr
+            url: http://thefactory.local.timo.be:14001
+            key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
+    - Bazarr:
+        icon: bazarr.svg
+        href: https://bazarr.timo.be
+        server: thefactory
+        container: bazarr
+        widget:
+            type: bazarr
+            url: http://thefactory.local.timo.be:14002
+            key: "{{HOMEPAGE_VAR_BAZARR_KEY}}"
+    - Prowlarr:
+        icon: prowlarr.svg
+        href: https://prowlarr.timo.be
+        server: thefactory
+        container: prowlarr
+        widget:
+            type: prowlarr
+            url: http://thefactory.local.timo.be:14004
+            key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
+    - Paperless:
+        icon: paperless-ngx.svg
+        href: https://paperless.timo.be
+        server: thefactory
+        container: paperless-ngx
+        widget:
+            type: paperlessngx
+            url: http://thefactory.local.timo.be:11004
+            key: "{{HOMEPAGE_VAR_PAPERLESS_KEY}}"
+
+- Downloaders:
+    - Qbittorrent:
+        icon: qbittorrent.svg
+        href: https://qbittorrent.timo.be
+        server: thefactory
+        container: qbittorrent
+        widget:
+            type: qbittorrent
+            url: http://thefactory.local.timo.be:12000
+            username: "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
+    # - Jdownloader:
+    #     icon: jdownloader.svg
+    #     href: https://jdownloader2.timo.be
+    #     server: thefactory
+    #     container: jdownloader
+    #     widget:
+    #         type: jdownloader
+    #         username: "{{HOMEPAGE_VAR_JDOWNLOADER_USERNAME}}"
+    #         password: "{{HOMEPAGE_VAR_JDOWNLOADER_PASSWORD}}"
+    #         client: Jdownloader@Docker
+    - Spotdl:
+        icon: spotify.svg
+        href: https://spotdl.timo.be
+        server: thefactory
+        container: spotdl
+    - Ariang:
+        icon: ariang.png
+        href: https://ariang.timo.be
+        server: thefactory
+        container: ariang
+    - Metube:
+        icon: metube.svg
+        href: https://metube.timo.be
+        server: thefactory
+        container: metube
+
+- Networking:
+    - Unifi:
+        icon: unifi.svg
+        href: https://unifi.ui.com
+        siteMonitor: https://unifi.local.timo.be
+        widget:
+            type: unifi
+            url: https://unifi.local.timo.be
+            username: "{{HOMEPAGE_VAR_UNIFI_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_UNIFI_PASSWORD}}"
+    - Adguardhome (Odd):
+        icon: adguard-home.svg
+        description: "10.10.10.22"
+        href: https://adguard.timo.be
+        server: odd
+        container: adguardhome
+        widget:
+            type: adguard
+            url: http://10.10.10.22
+            username: "{{HOMEPAGE_VAR_ADGUARDHOME_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
+    - Adguardhome (Ulrich):
+        icon: adguard-home.svg
+        description: "10.10.10.21"
+        href: https://adguard.timo.be
+        server: ulrich
+        container: adguardhome
+        widget:
+            type: adguard
+            url: http://10.10.10.21
+            username: "{{HOMEPAGE_VAR_ADGUARDHOME_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
+    - Adguardhome (Yumi):
+        icon: adguard-home.svg
+        description: "10.10.10.20"
+        href: https://adguard.timo.be
+        server: yumi
+        container: adguardhome
+        widget:
+            type: adguard
+            url: http://10.10.10.20
+            username: "{{HOMEPAGE_VAR_ADGUARDHOME_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
+    - Netbootxyz:
+        icon: netboot.svg
+        href: https://netbootxyz.timo.be
+        server: yumi
+        container: netbootxyz
+    - iVentoy:
+        icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/iventoy.png
+        href: https://iventoy.timo.be
+        server: yumi
+        container: iventoy
+
+- Filemanagement:
+    - Nextcloud:
+        icon: nextcloud.svg
+        href: https://nextcloud.timo.be
+        server: thefactory
+        container: nextcloud-aio-mastercontainer
+        widget:
+            type: nextcloud
+            url: http://thefactory.local.timo.be:11000
+            key: "{{HOMEPAGE_VAR_NEXTCLOUD_TOKEN}}"
+    - Filebrowser:
+        icon: filebrowser.svg
+        href: https://filebrowser.timo.be
+        server: thefactory
+        container: filebrowser
+    - Filezilla:
+        icon: filezilla.svg
+        href: https://filezilla.timo.be
+        server: thefactory
+        container: filezilla
+    - Double Commander:
+        icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/doublecommander.svg
+        href: https://doublecommander.timo.be
+        server: thefactory
+        container: doublecommander
+
+- Utilities:
+    - Bitwarden:
+        icon: bitwarden.svg
+        href: https://bitwarden.timo.be
+        server: yumi
+        container: bitwarden
+    - Paperless-ai:
+        icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/paperlessai.ico
+        href: https://paperlessai.timo.be
+        server: thefactory
+        container: paperless-ai
+    - Keel:
+        icon: mdi-update
+        href: https://keel.timo.be
+        namespace: utilities
+        app: keel
+    - Scanservjs:
+        icon: scanservjs.webp
+        href: https://scanservjs.timo.be
+        server: thefactory
+        container: scanservjs
+    - Stirling-PDF:
+        icon: stirling-pdf.svg
+        href: https://stirlingpdf.timo.be
+        namespace: utilities
+        app: stirling-pdf
+    - Webtop:
+        icon: webtop.webp
+        href: https://webtop.timo.be
+        namespace: utilities
+        app: webtop
+    - Sunshine:
+        icon: sunshine.svg
+        href: https://sunshine.timo.be
+        siteMonitor: https://sunshine.local.timo.be:47990
+    - Graylog:
+        icon: graylog.svg
+        href: https://graylog.timo.be
+        server: thefactory
+        container: graylog
+
+- Containers:
+    - Yumi:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 2
+    - Ulrich:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 8
+    - Odd:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 7
+    - Aelita:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 9
+    - The Factory:
+        icon: portainer.svg
+        href: https://portainer.timo.be
+        server: yumi
+        container: portainer
+        widget:
+            type: portainer
+            url: https://yumi.local.timo.be:9443
+            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+            env: 6
+
+- Storage:
+    - TrueNAS:
+        icon: truenas.svg
+        href: https://truenas.timo.be/ui
+        siteMonitor: https://truenas.local.timo.be
+        widget:
+            type: truenas
+            url: http://truenas.local.timo.be
+            key: "{{HOMEPAGE_VAR_TRUENAS_KEY}}"
+            enablePools: true
+            nasType: scale
+
+- Home Automation:
+    - Home Assistant:
+        icon: home-assistant.svg
+        href: https://hass.timo.be
+        siteMonitor: http://hass.local.timo.be:8123
+        widget:
+            type: homeassistant
+            url: http://hass.local.timo.be:8123
+            key: "{{HOMEPAGE_VAR_HOMEASSISTANT_KEY}}"
+    - Zigbee2MQTT:
+        icon: zigbee2mqtt.svg
+        href: https://hass.timo.be
+        siteMonitor: http://hass.local.timo.be:8099
+    - Scrypted:
+        icon: scrypted.webp
+        href: https://scrypted.timo.be
+        siteMonitor: https://hass.local.timo.be:10443

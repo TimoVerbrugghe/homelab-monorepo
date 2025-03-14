@@ -2,21 +2,60 @@
 
 {
   
-  # Changes to nixpkgs-unstable in order to allow building of NixOS for my gamingserver
-	nixpkgs.overlays = [
-    (final: _: {
-      # this allows you to access `pkgs.stable` anywhere in your config
-      # Needed for a.o. lime3ds which has issues building in unstable
+  nixpkgs.overlays = [
+    (final: prev: {t
+      # Import stable channel for packages from nixpkgs-stable (flake inputs)
       stable = import nixpkgs {
         inherit (final.stdenv.hostPlatform) system;
         inherit (final) config;
       };
-
-      # Point the package libgit2 to nixpkgs stable, needed for emulationstation-de package from unstable to build
-			libgit2 = pkgs-stable.libgit2;
+      
+      # Several changes needed to the emulationstation-de package to make it compile on unstable
+      # Changes created by Claude AI - https://claude.ai/share/29fa4ca6-c9ba-425f-a500-24e62917c43a
+      emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
+        # Add stable dev packages for headers
+        nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [
+          final.stable.pkg-config
+          final.stable.sysprof
+        ];
+        
+        # Use both stable libgit2 and stable icu
+        buildInputs = let
+          filteredInputs = builtins.filter (input: 
+            !(prev.lib.hasPrefix "libgit2" (input.name or "")) && 
+            !(prev.lib.hasPrefix "icu" (input.name or ""))
+          ) (oldAttrs.buildInputs or []);
+        in
+          filteredInputs ++ [ 
+            final.stable.libgit2
+            final.stable.icu
+            final.stable.glib
+          ];
+        
+        # Add necessary compiler flags
+        NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -fpermissive";
+        
+        # Point to ICU dev files explicitly
+        cmakeFlags = (oldAttrs.cmakeFlags or []) ++ [
+          "-DLIBGIT2_INCLUDE_DIR=${final.stable.libgit2}/include"
+          "-DLIBGIT2_LIBRARIES=${final.stable.libgit2}/lib/libgit2${final.stdenv.hostPlatform.extensions.sharedLibrary}"
+          "-DICU_ROOT=${final.stable.icu.dev}"
+          "-DICU_INCLUDE_DIR=${final.stable.icu.dev}/include"
+          "-DICU_LIBRARY_DIR=${final.stable.icu}/lib"
+        ];
+        
+        # Add environment variables for pkg-config to find the right dependencies
+        preConfigure = (oldAttrs.preConfigure or "") + ''
+          export PKG_CONFIG_PATH="${final.stable.sysprof}/lib/pkgconfig:${final.stable.glib.dev}/lib/pkgconfig:$PKG_CONFIG_PATH"
+        '';
+      });
     })
   ];
 
+  # Need this for emulationstation-de
+  nixpkgs.config.permittedInsecurePackages = [
+    "freeimage-unstable-2021-11-01"
+  ];
 
   environment.systemPackages = with pkgs; [
     retroarch-full
@@ -35,29 +74,11 @@
     winetricks
     steam-rom-manager
 
-    # Trying to build ppsspp without the system_ffmpeg flag because getting severe graphical glitches
-    # (pkgs.callPackage ./ppsspp-standard-ffmpeg/package.nix {})
-
-    # Current 86Box is old (4.1) and I need to wrap the 86Box program with env variable QT_QPA_PLATFORM=xcb in order for 86Box mouse capture to work
-    # (pkgs.callPackage ./86Box-git/package.nix {})
-
-    # # Installing citra, source (AppImage or source) has to be provided yourself
-    # (pkgs.callPackage ./citra/package-appimage.nix {})
-    # Instead of citra, you can also install lime3ds - not working in January 2025
+    # Lime3DS does not compile in the unstable branch
     stable.lime3ds
-
-    # Installing ryujinx, source (AppImage or source) has to be provided yourself
-    # (pkgs.callPackage ./ryujinx/package-source.nix {})
-    # ryujinx
-
     # A replacement for yuzu & ryujinx
     torzu
 
-  ];
-
-  # Need this for emulationstation-de
-  nixpkgs.config.permittedInsecurePackages = [
-    "freeimage-unstable-2021-11-01"
   ];
 
 }

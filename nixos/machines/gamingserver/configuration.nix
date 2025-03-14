@@ -39,7 +39,7 @@ in
       ../../modules/common/graylog.nix # Enable and configure rsyslog for graylog
       
       # Cannot add this now because it conflicts with using gamingserver as remotebuilder
-      # ../../modules/common/shell.nix # Add shell aliases and tools
+      ../../modules/common/shell.nix # Add shell aliases and tools
 
       # Boot inputs (with specific zfs settings)
       ./boot.nix
@@ -56,7 +56,7 @@ in
       ./zfs.nix
       ./controllers.nix
 
-      # Sleep options
+      # # Sleep options
       ./sleep.nix
     ];
 

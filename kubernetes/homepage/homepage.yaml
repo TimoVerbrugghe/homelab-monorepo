@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: homepage
-  namespace: utilities
+  namespace: homepage
   labels:
     app.kubernetes.io/name: homepage
   annotations:
@@ -11,7 +11,7 @@ metadata:
     keel.sh/pollSchedule: "@every 24h"
 spec:
   revisionHistoryLimit: 3
-  replicas: 1
+  replicas: 3
   strategy:
     type: RollingUpdate
   selector:
@@ -29,7 +29,7 @@ spec:
       containers:
         - name: homepage
           image: "ghcr.io/gethomepage/homepage:latest"
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           resources:
             limits:
               memory: "512Mi"
@@ -37,25 +37,16 @@ spec:
             requests:
               memory: "256Mi"
               cpu: "250m"
+          env:
+            # Only putting log in stdout, not in a log file so that I can mount configmap without using subpath, which allows instant updating of configfiles
+            - name: LOG_TARGETS
+              value: stdout
+          envFrom:
+            - secretRef:
+                name: homepage-secrets
           volumeMounts:
-            - mountPath: /app/config/bookmarks.yaml
+            - mountPath: /app/config
               name: homepage-config
-              subPath: bookmarks.yaml
-            - mountPath: /app/config/docker.yaml
-              name: homepage-config
-              subPath: docker.yaml
-            - mountPath: /app/config/kubernetes.yaml
-              name: homepage-config
-              subPath: kubernetes.yaml
-            - mountPath: /app/config/services.yaml
-              name: homepage-config
-              subPath: services.yaml
-            - mountPath: /app/config/settings.yaml
-              name: homepage-config
-              subPath: settings.yaml
-            - mountPath: /app/config/widgets.yaml
-              name: homepage-config
-              subPath: widgets.yaml
       volumes:
         - name: homepage-config
           configMap:

@@ -16,6 +16,7 @@ spec:
     metadata:
       labels:
         app: webtop
+        app.kubernetes.io/name: webtop
     spec:
       serviceAccountName: webtop
       containers:
