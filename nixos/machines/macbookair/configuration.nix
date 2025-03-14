@@ -1,0 +1,55 @@
+{ config, inputs, lib, pkgs, ssh-keys, ... }:
+
+let
+
+  username = "timo";
+  hostname = "Timo's Macbook Air";
+
+in
+
+{
+  imports =
+    [ 
+      ./apps.nix
+      ./system-settings.nix    
+    ];
+
+  networking.hostName = "${hostname}";
+  networking.computerName = "${hostname}";
+  system.defaults.smb.NetBIOSName = "${hostname}";
+
+  users.users."${username}" = {
+    home = "/Users/${username}";
+    description = "${username}";
+  };
+
+  nix.settings.trusted-users = [ "${username}" ];
+
+  # Necessary for using flakes on this system.
+  nix.settings.experimental-features = "nix-command flakes";
+
+  # Auto upgrade nix package and the daemon service.
+  services.nix-daemon.enable = true;
+  nix.package = pkgs.nix;
+
+  # Allow installation of unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+  # Set Git commit hash for darwin-version.
+  system.configurationRevision = self.rev or self.dirtyRev or null;
+
+  # Used for backwards compatibility, please read the changelog before changing.
+  # $ darwin-rebuild changelog
+  system.stateVersion = 6;
+
+  # The platform the configuration will be used on.
+  nixpkgs.hostPlatform = "aarch64-darwin";
+
+  system.activationScripts = {
+    postUserActivation.text = ''
+      # activateSettings -u will reload the settings from the database and apply them to the current session,
+      # so we do not need to logout and login again to make the changes take effect.
+      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+    '';
+  };
+}
