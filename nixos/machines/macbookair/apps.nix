@@ -1,11 +1,5 @@
 { config, pkgs, ... }:
 
-let 
-
-  username = "timo";
-
-in
-
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
