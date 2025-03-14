@@ -11,7 +11,6 @@
     git
     ansible
     sshpass
-    python313Packages.dnspython
     talosctl
     minikube
     vscode
@@ -31,6 +30,7 @@
       "kubernetes-cli"
       "nano"
       "helm"
+      "python"
     ];
     casks = [
       "tailscale"
