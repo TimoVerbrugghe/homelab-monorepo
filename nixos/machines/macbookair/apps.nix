@@ -64,6 +64,11 @@
       "Home Assistant" = 1099568401;
       "Microsoft Copilot" = 6738511300;
       "Microsoft Universal Print" = 6450432292;
+      "Keynote" = 409183694;
+      "Numbers" = 409203825;
+      "Pages" = 409201541;
+      "iMovie" = 408981434;
+      "GarageBand" = 682658836;
     };
 
     # Remove any casks that are not defined in this nix config
