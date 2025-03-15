@@ -41,8 +41,8 @@ in
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  # Let nix-darwin manage the nix installation, nix-daemon & nix settings
+  nix.enable = true;
   nix.package = pkgs.nix;
 
   # Allow installation of unfree packages
