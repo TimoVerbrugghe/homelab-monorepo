@@ -24,6 +24,13 @@ in
     description = "${username}";
   };
 
+	# Nix-store optimizations
+  nix.optimise.automatic = true;
+  nix.gc = {
+    automatic = true;
+    options = "--delete-older-than 7d";
+  };
+
   nix.settings.trusted-users = [ "${username}" ];
 
   # Necessary for using flakes on this system.
