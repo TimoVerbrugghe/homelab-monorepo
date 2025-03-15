@@ -14,6 +14,12 @@
   programs.zsh.enable = true;
   programs.tmux.enable = true;
 
+
+  ## Homebrew packages
+  # For packages mentioned below to be installed, you need to FIRST install the following
+  # xcode Command Line Tools: xcode-select --install
+  # Rosetta 2 (for Apple Silicon): softwareupdate --install-rosetta
+  # ANY Mac App: you NEED to have purchased or downloaded the app before from the app store, this INCLUDES free apps as well!
   homebrew = {
     enable = true;
 
