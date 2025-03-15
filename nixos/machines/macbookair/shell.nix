@@ -21,6 +21,12 @@
     jq
   ];
 
+  homebrew = {
+    brews = [
+      "bat"
+    ];
+  };
+
 	# Shell aliases
   environment.shellAliases = {
     k = "kubectl";

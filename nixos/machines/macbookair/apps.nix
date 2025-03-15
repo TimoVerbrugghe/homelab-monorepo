@@ -8,6 +8,7 @@
   environment.systemPackages = with pkgs; [ 
     vscode
     direnv
+    iperf
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
