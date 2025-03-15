@@ -14,6 +14,12 @@
     talosctl
     minikube
     vscode
+		cmatrix
+    fzf
+    zoxide
+    eza
+    nmap
+    jq
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
