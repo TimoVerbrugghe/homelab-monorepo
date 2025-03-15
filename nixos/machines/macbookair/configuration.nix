@@ -31,6 +31,11 @@ in
     options = "--delete-older-than 7d";
   };
 
+	# Add github key to avoid auth errors when doing multiple darwin-rebuilds in quick succession
+	nix.extraOptions = ''
+    !include /etc/github.key
+  '';
+
   nix.settings.trusted-users = [ "${username}" ];
 
   # Necessary for using flakes on this system.
