@@ -3,7 +3,7 @@
 let
 
   username = "timo";
-  hostname = "Timo's Macbook Air";
+  hostname = "Timos-Macbook-Air";
 
 in
 
