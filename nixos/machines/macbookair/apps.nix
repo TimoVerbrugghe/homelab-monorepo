@@ -70,6 +70,6 @@
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
 
-  }
+  };
 
 }
