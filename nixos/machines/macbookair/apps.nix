@@ -7,6 +7,7 @@
   # WARNING: Less stable on MacOS than homebrew
   environment.systemPackages = with pkgs; [ 
     vscode
+    direnv
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
@@ -69,6 +70,7 @@
       "Pages" = 409201541;
       "iMovie" = 408981434;
       "GarageBand" = 682658836;
+      "Hidden Bar" = 1452453066;
     };
 
     # Remove any casks that are not defined in this nix config
