@@ -11,7 +11,8 @@ in
   imports =
     [ 
       ./apps.nix
-      ./system-settings.nix    
+      ./system-settings.nix
+			./shell.nix    
     ];
 
   networking.hostName = "${hostname}";
