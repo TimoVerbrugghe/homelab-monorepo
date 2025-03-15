@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ssh-keys, ... }:
+{ config, inputs, lib, pkgs, ssh-keys, self, ... }:
 
 let
 
