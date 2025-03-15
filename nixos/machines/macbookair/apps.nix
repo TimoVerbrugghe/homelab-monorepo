@@ -6,20 +6,7 @@
 
   # WARNING: Less stable on MacOS than homebrew
   environment.systemPackages = with pkgs; [ 
-    vim
-    fastfetch
-    git
-    ansible
-    sshpass
-    talosctl
-    minikube
     vscode
-		cmatrix
-    fzf
-    zoxide
-    eza
-    nmap
-    jq
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
