@@ -20,4 +20,14 @@
     nmap
     jq
   ];
+
+	# Shell aliases
+  environment.shellAliases = {
+    k = "kubectl";
+    t = "talosctl --talosconfig talosconfig";
+    fzf = "fzf --preview 'bat --color=always {}'";
+    z = "zoxide";
+    ls = "eza --group-directories-first";
+  };
+
  }
