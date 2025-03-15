@@ -217,7 +217,7 @@
 
     darwinConfigurations = {
       # Switch to this config with darwin-rebuild switch --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#macbookair --impure
-      macbookair = nix-darwin.lib.systems.examples.macbookair {
+      macbookair = nix-darwin.lib.darwinSystem {
         specialArgs = inputs;
         modules = [
           # Fixes some issues with programs installed by nix (searching in spotlight, adding to dock) - see https://github.com/hraban/mac-app-util
