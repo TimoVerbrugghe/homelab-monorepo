@@ -62,6 +62,7 @@
       "Pages" = 409201541;
       "iMovie" = 408981434;
       "GarageBand" = 682658836;
+			"Maccy" = 1527619437;
     };
 
     # Remove any casks that are not defined in this nix config
