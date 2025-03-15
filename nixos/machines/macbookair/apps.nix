@@ -18,7 +18,7 @@
   ## Homebrew packages
   # For packages mentioned below to be installed, you need to FIRST install the following
   # xcode Command Line Tools: xcode-select --install
-  # Rosetta 2 (for Apple Silicon): softwareupdate --install-rosetta
+  # + Agreeing to the xcode license agreement: sudo xcodebuild -license accept
   # ANY Mac App: you NEED to have purchased or downloaded the app before from the app store, this INCLUDES free apps as well!
   homebrew = {
     enable = true;
@@ -38,12 +38,13 @@
       "microsoft-edge"
       "spotify"
       "gimp"
-      "sony-ps-remote-play"
+      # "sony-ps-remote-play" - This still needs rosetta 
       "microsoft-teams"
       "intune-company-portal"
       "orbstack"
       "google-chrome"
       "monitorcontrol"
+      "maccy"
     ];
     masApps = {
       "Bitwarden" = 1352778147;
@@ -68,7 +69,6 @@
       "Pages" = 409201541;
       "iMovie" = 408981434;
       "GarageBand" = 682658836;
-			"Maccy" = 1527619437;
     };
 
     # Remove any casks that are not defined in this nix config
