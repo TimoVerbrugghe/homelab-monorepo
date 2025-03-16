@@ -73,7 +73,6 @@
       "iMovie" = 408981434;
       "GarageBand" = 682658836;
       "Hidden Bar" = 1452453066;
-      "BetterSnapTool" = 417375580;
     };
 
     # Remove any casks that are not defined in this nix config
