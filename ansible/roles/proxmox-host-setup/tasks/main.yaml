@@ -10,9 +10,6 @@
 - name: Install & Authenticate tailscale
   ansible.builtin.include_tasks: tailscale.yaml
 
-- name: Install & Configure cloudflare tunnel
-  ansible.builtin.include_tasks: cloudflare-tunnel.yaml
-
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: yes
