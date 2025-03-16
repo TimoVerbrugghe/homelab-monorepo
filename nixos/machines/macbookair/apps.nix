@@ -73,6 +73,7 @@
       "iMovie" = 408981434;
       "GarageBand" = 682658836;
       "Hidden Bar" = 1452453066;
+      "Pushover" = 506088175;
     };
 
     # Remove any casks that are not defined in this nix config

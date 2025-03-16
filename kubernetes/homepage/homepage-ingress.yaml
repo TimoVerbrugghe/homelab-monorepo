@@ -10,7 +10,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`homepage.kubernetes.timo.be`) || Host(`home.timo.be`)
+    - match: Host(`homepage.kubernetes.timo.be`) || Host(`home.timo.be`) || Host(`homepage.timo.be`)
       kind: Rule
       services:
         - name: homepage
