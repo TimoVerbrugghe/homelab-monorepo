@@ -47,6 +47,7 @@
       "google-chrome"
       "monitorcontrol"
       "maccy"
+      "bettertouchtool"
     ];
     masApps = {
       "Bitwarden" = 1352778147;
