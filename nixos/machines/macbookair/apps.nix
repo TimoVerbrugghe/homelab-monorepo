@@ -48,6 +48,7 @@
       "monitorcontrol"
       "maccy"
       "bettertouchtool"
+      "jabra-direct"
     ];
     masApps = {
       "Bitwarden" = 1352778147;
