@@ -17,5 +17,5 @@
   services.fstrim.enable = true;
 
   # Enable serial console so that I can access console in proxmox
-  boot.kernelParams = [ "console=ttyS0,115200n8" ];
+  boot.kernelParams = [ "console=tty0" "console=ttyS0,115200" ];
 }
