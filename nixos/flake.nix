@@ -44,7 +44,9 @@
     };
 
     nix-homebrew = {
-      url = "github:zhaofengli-wip/nix-homebrew";
+      # Need to temporarily change the url to a specific PR to fix homebrew bundle migration. See https://github.com/zhaofengli/nix-homebrew/issues/70
+      # url = "github:zhaofengli/nix-homebrew";
+      url = "git+https://github.com/zhaofengli/nix-homebrew?ref=refs/pull/71/merge";
     };
 
     # Declarative tap management
