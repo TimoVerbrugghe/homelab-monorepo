@@ -3,7 +3,7 @@
 {
   
   nixpkgs.overlays = [
-    (final: prev: {t
+    (final: prev: {
       # Import stable channel for packages from nixpkgs-stable (flake inputs)
       stable = import nixpkgs {
         inherit (final.stdenv.hostPlatform) system;
