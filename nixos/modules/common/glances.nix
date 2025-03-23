@@ -4,6 +4,10 @@
   services.glances = {
     enable = true;
     openFirewall = true;
-    extraArgs = "--disable-webui --server --quiet";
+    extraArgs = [
+      "--disable-webui"
+      "--server"
+      "--quiet"
+    ];
   };
 }
