@@ -13,11 +13,8 @@
     htop
     lm_sensors
     s-tui
+    bat
   ];
-
-  programs.bat = {
-    enable = true;
-  };
 
   programs.fzf = {
     fuzzyCompletion = true;
