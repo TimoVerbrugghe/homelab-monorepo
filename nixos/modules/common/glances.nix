@@ -7,7 +7,6 @@
     extraArgs = [
       "--webserver"
       "--disable-webui"
-      "--server"
       "--quiet"
     ];
   };
