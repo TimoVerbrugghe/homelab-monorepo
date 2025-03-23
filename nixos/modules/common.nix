@@ -21,6 +21,7 @@
       ./common/github-key.nix # Import github key for flake updates
       ./common/graylog.nix # Enable and configure rsyslog for graylog
       ./common/shell.nix # Shell aliases and tools
+      ./common/glances.nix # Enable glances
     ];
 
 }
