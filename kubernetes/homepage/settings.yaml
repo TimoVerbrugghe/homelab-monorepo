@@ -13,7 +13,7 @@ useEqualHeights: true
 layout:
   Calendar:
     header: false
-    style: column
+    style: row
   Media:
     header: true
     style: row

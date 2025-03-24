@@ -38,6 +38,7 @@ in
       ../../modules/remote-builder.nix # Enable using this machine as remote builder for nixos
       ../../modules/common/graylog.nix # Enable and configure rsyslog for graylog
       ../../modules/common/glances.nix # Enable glances
+      ../../modules/common/github-key.nix # Import github key for flake updates
       
       # Cannot add this now because it conflicts with using gamingserver as remotebuilder
       ../../modules/common/shell.nix # Add shell aliases and tools
