@@ -15,8 +15,6 @@ stdenv.mkDerivation rec {
     sha256 = "0mgdkcq9z4r9wlwl02ihrigg3hay5kn7475vqmqgs13nvpy22000"; # Update this if needed for 0.28
   };
 
-  dontBuild = true;
-
   # Add zstd to nativeBuildInputs for extraction
   nativeBuildInputs = [ zstd ];
 
