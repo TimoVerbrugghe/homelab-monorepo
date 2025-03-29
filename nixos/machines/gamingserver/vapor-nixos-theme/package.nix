@@ -12,7 +12,8 @@ stdenv.mkDerivation rec {
   
   src = fetchurl {
     url = "https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/steamdeck-kde-presets-${version}-1-any.pkg.tar.zst";
-    sha256 = "0mgdkcq9z4r9wlwl02ihrigg3hay5kn7475vqmqgs13nvpy22000"; # Update this if needed for 0.28
+    sha256 = "1189zj55qcc3xh3n4j9dxjcrqa7qgbl29wkcgxkxqz92gvwb9ll0"; # Update this if needed for 0.27
+    # sha256 = "0mgdkcq9z4r9wlwl02ihrigg3hay5kn7475vqmqgs13nvpy22000"; # Update this if needed for 0.28
   };
 
   # Add zstd to nativeBuildInputs for extraction
