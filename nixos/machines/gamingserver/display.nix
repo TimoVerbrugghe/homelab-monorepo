@@ -42,7 +42,7 @@
 
   # Install a custom version of the KDE theme that Valve ships on SteamDeck
   environment.systemPackages = with pkgs; [
-    (pkgs.callPackage ./vapor-nixos-theme/package.nix {})
+    (pkgs.callPackage ./vapor-theme.nix {})
   ];
 
   # Set up default KDE5 Plasma settings by putting config files in /etc/xdg

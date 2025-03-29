@@ -1,3 +1,5 @@
+# Vapor - SteamOS Theme based on KDE Breeze and Breath
+
 { stdenv, lib, fetchurl, zstd }:
 
 let
