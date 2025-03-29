@@ -32,7 +32,7 @@
       enable = true;
       wayland.enable = true;
       wayland.compositor = "kwin";
-      theme = "VaporNixos";
+      theme = "Vapor";
       autoLogin.relogin = true;
     };
   };
@@ -271,7 +271,7 @@
     "xdg/kdeglobals" = {
       text = ''
         [KDE]
-        LookAndFeelPackage=VaporNixos
+        LookAndFeelPackage=Vapor
         SingleClick=false
 
         [KDE Action Restrictions][$i]
@@ -280,7 +280,7 @@
         action/lock_screen=false
       
         [General]
-        ColorScheme=VaporNixos
+        ColorScheme=Vapor
         font=Noto Sans,11,-1,5,50,0,0,0,0,0
         menuFont=Noto Sans,11,-1,5,50,0,0,0,0,0
         smallestReadableFont=Noto Sans,9,-1,5,50,0,0,0,0,0
