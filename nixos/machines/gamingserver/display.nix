@@ -18,11 +18,14 @@
     enable = true;
     xkb.layout = "be";
     videoDrivers = ["amdgpu"];
-    desktopManager.plasma5.enable = true;
+  };
+
+  services.desktopManager = {
+    plasma6.enable = true;
   };
 
   services.displayManager = {
-    defaultSession = "plasmawayland";
+    defaultSession = "plasma";
     autoLogin.enable = true;
     autoLogin.user = "gamer";
     sddm = {
