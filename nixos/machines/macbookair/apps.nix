@@ -49,6 +49,7 @@
       "maccy"
       "bettertouchtool"
       "jabra-direct"
+      "background-music"
     ];
     masApps = {
       "Bitwarden" = 1352778147;
@@ -75,7 +76,6 @@
       "GarageBand" = 682658836;
       "Hidden Bar" = 1452453066;
       "Pushover" = 506088175;
-      "Sound Control" = 6473855293;
     };
 
     # Remove any casks that are not defined in this nix config
