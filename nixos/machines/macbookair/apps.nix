@@ -10,6 +10,23 @@
     direnv
     iperf
     powershell
+    nano
+    kubernetes-helm
+    kubectl
+    python3Full
+    mas
+    moonlight-qt
+    spotify
+    gimp
+    teams
+    google-chrome
+    monitorcontrol
+    maccy
+    bitwarden-desktop
+    whatsapp-for-mac
+    slack
+    localsend
+    hidden-bar
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
@@ -28,34 +45,20 @@
 
     # Install mas cli to get Mac App Store IDs for masApps
     brews = [
-      "mas"
-      "kubernetes-cli"
-      "nano"
-      "helm"
-      "python"
     ];
     casks = [
       "tailscale"
       "vlc"
-      "moonlight"
       "microsoft-edge"
-      "spotify"
-      "gimp"
       # "sony-ps-remote-play" - This still needs rosetta 
-      "microsoft-teams"
       "intune-company-portal"
       "orbstack"
-      "google-chrome"
-      "monitorcontrol"
-      "maccy"
       "bettertouchtool"
       "jabra-direct"
       "background-music"
     ];
     masApps = {
-      "Bitwarden" = 1352778147;
       "Xcode" = 497799835;
-      "Whatsapp" = 310633997;
       "Windows App" = 1295203466;
       "Microsoft Word" = 462054704;
       "Microsoft Excel" = 462058435;
@@ -65,8 +68,6 @@
       "Microsoft OneDrive" = 823766827;
       "Microsoft To Do" = 1274495053;
       "Plexamp" = 1500797510;
-      "Slack" = 803453959;
-      "Localsend" = 1661733229;
       "Home Assistant" = 1099568401;
       "Microsoft Copilot" = 6738511300;
       "Microsoft Universal Print" = 6450432292;
@@ -75,7 +76,6 @@
       "Pages" = 409201541;
       "iMovie" = 408981434;
       "GarageBand" = 682658836;
-      "Hidden Bar" = 1452453066;
       "Pushover" = 506088175;
     };
 
