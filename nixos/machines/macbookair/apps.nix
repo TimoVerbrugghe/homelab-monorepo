@@ -23,7 +23,6 @@
     monitorcontrol
     maccy
     bitwarden-desktop
-    whatsapp-for-mac
     slack
     localsend
     hidden-bar
@@ -33,7 +32,6 @@
   # this is required if you want to use darwin's default shell - zsh
   programs.zsh.enable = true;
   programs.tmux.enable = true;
-
 
   ## Homebrew packages
   # For packages mentioned below to be installed, you need to FIRST install the following
@@ -77,6 +75,7 @@
       "iMovie" = 408981434;
       "GarageBand" = 682658836;
       "Pushover" = 506088175;
+      "Whatsapp" = 310633997;
     };
 
     # Remove any casks that are not defined in this nix config
