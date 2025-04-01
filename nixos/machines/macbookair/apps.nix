@@ -18,7 +18,6 @@
     moonlight-qt
     spotify
     gimp
-    teams
     google-chrome
     monitorcontrol
     maccy
@@ -54,6 +53,7 @@
       "bettertouchtool"
       "jabra-direct"
       "background-music"
+      "microsoft-teams"
     ];
     masApps = {
       "Xcode" = 497799835;
