@@ -25,7 +25,6 @@
     slack
     localsend
     hidden-bar
-    handbrake
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
@@ -55,6 +54,7 @@
       "jabra-direct"
       "background-music"
       "microsoft-teams"
+      "handbrake"
     ];
     masApps = {
       "Xcode" = 497799835;
