@@ -25,6 +25,7 @@
     slack
     localsend
     hidden-bar
+    handbrake
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
