@@ -293,6 +293,14 @@
         href: https://graylog.timo.be
         server: thefactory
         container: graylog
+    - Gatus:
+        icon: gatus.svg
+        href: https://gatus.timo.be
+        namespace: gatus
+        app: gatus
+        widget:
+            type: gatus
+            url: http://gatus.gatus.svc.cluster.local:8080
 
 - Containers:
     - Yumi:
