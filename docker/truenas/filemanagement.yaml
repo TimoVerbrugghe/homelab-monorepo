@@ -62,6 +62,10 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "doublecommander"
       tsdproxy.container_port: 3000
+      traefik.enable: true
+      traefik.http.routers.doublecommander.entrypoints: web
+      traefik.http.routers.doublecommander.rule: Host(`doublecommander.thefactory.timo.be`)
+      traefik.http.services.doublecommander.loadbalancer.server.port: 3000
 
 volumes:
   filebrowser:
