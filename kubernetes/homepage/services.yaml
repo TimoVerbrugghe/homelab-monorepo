@@ -216,6 +216,14 @@
             url: http://10.10.10.20
             username: "{{HOMEPAGE_VAR_ADGUARDHOME_USERNAME}}"
             password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
+    - Traefik:
+        icon: traefik.svg
+        href: https://traefik.timo.be
+        namespace: traefik
+        app: traefik
+        widget:
+            type: traefik
+            url: https://traefikapi.kubernetes.timo.be
     - Netbootxyz:
         icon: netboot.svg
         href: https://netbootxyz.timo.be
