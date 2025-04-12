@@ -9,7 +9,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
