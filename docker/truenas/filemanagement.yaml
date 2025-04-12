@@ -64,7 +64,7 @@ services:
       tsdproxy.container_port: 3000
       traefik.enable: true
       traefik.http.routers.doublecommander.entrypoints: web
-      traefik.http.routers.doublecommander.rule: Host(`test5.thefactory.timo.be`)
+      traefik.http.routers.doublecommander.rule: Host(`test5.thefactory.timo.be`) || Host(`doublecommander.kubernetes.timo.be`)
       traefik.http.services.doublecommander.loadbalancer.server.port: 3000
 
 volumes:
