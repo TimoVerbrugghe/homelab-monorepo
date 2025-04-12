@@ -5,7 +5,7 @@ metadata:
   name: doublecommander
   namespace: traefik
 spec:
-  externalName: test5.thefactory.timo.be # Can also be an IP address
+  externalName: 10.10.10.2 # Can also be an IP address
   type: ExternalName
 ---
 apiVersion: traefik.io/v1alpha1
@@ -23,7 +23,7 @@ spec:
       kind: Rule
       services:
         - name: doublecommander
-          port: 8081
+          port: 13002
       middlewares:
         - name: auth
           namespace: traefik
