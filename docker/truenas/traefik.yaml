@@ -1,0 +1,20 @@
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: always
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "8080:80"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - dockerproxy
+
+networks:
+  dockerproxy:
+    external: true

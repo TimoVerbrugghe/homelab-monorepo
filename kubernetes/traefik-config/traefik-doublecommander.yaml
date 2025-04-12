@@ -6,8 +6,37 @@ metadata:
 spec:
   headers:
     customRequestHeaders:
-      Upgrade: websocket
-      Connection: Upgrade
+      Connection: keep-alive, Upgrade
+      X-Forwarded-Proto: https
+      Host: doublecommander.kubernetes.timo.be
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: doublecommander-transport
+  namespace: traefik
+
+spec:
+  forwardingTimeouts:
+    dialTimeout: "30s"
+    idleConnTimeout: "0s"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: cors
+  namespace: traefik
+spec:
+  headers:
+    accessControlAllowOriginList:
+      - "*"
+    accessControlAllowMethods:
+      - GET
+      - POST
+      - OPTIONS
+    accessControlAllowHeaders:
+      - Content-Type
+      - Authorization
 ---
 apiVersion: v1
 kind: Service
@@ -15,7 +44,7 @@ metadata:
   name: doublecommander
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
+  externalName: 10.10.10.2 # Can also be an IP address
   type: ExternalName
 ---
 apiVersion: traefik.io/v1alpha1
@@ -34,8 +63,12 @@ spec:
       services:
         - name: doublecommander
           port: 13002
+          passHostHeader: false
+          serversTransport: doublecommander-transport
       middlewares:
         - name: auth
           namespace: traefik
-        # - name: websocket-headers
-        #   namespace: traefik
+        - name: websocket-headers
+          namespace: traefik
+        - name: cors
+          namespace: traefik
