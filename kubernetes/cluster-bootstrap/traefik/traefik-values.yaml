@@ -29,8 +29,8 @@ ports:
     asDefault: true
     exposedPort: 443
     protocol: TCP
-
-    # Necessary for VNC and other apps (sonarr/prowlarr) to work without issues. Otherwise you get connection and timeout issues.
+    # Necessary for VNC and other apps to work without issues. Otherwise you get connection and timeout issues.
+    # See https://community.traefik.io/t/traefik-vnc-web-apps-works-in-docker-but-not-in-kubernetes/27180/2
     transport:
       respondingTimeouts:
         readTimeout: 420
