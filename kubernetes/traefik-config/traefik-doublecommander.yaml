@@ -5,7 +5,7 @@ metadata:
   name: doublecommander
   namespace: traefik
 spec:
-  externalName: 10.10.10.2 # Can also be an IP address
+  externalName: thefactory.local.timo.be
   type: ExternalName
 ---
 apiVersion: traefik.io/v1alpha1

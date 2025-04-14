@@ -26,8 +26,16 @@ ports:
     port: 8443
     expose:
       default: true
+    asDefault: true
     exposedPort: 443
     protocol: TCP
+
+    # Necessary for VNC and other apps (sonarr/prowlarr) to work without issues. Otherwise you get connection and timeout issues.
+    transport:
+      respondingTimeouts:
+        readTimeout: 420
+        writeTimeout: 420
+        idleTimeout: 420
     tls:
       enabled: true
       middlewares:
