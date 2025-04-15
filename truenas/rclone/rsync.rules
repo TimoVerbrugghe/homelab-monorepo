@@ -52,6 +52,7 @@
 ## Include folders
 + /other/**
 + /games/**
++ /music/**
 
 # Exclude everything else
 - *
