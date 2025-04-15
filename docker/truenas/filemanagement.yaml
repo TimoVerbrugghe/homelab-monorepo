@@ -55,6 +55,7 @@ services:
       - media:/media
       - downloads:/downloads
       - isos:/isos
+      - jeremy:/jeremy
     restart: always
     ports:
       - 13002:3000
@@ -104,6 +105,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/downloads"
+  jeremy:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/Jeremy"
 
 networks:
   dockerproxy:
