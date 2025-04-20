@@ -76,7 +76,7 @@
       genesis-plus-gx
       snes9x
       flycast
-      mupen64plus-next
+      mupen64plus
     ]))
 
     duckstation
