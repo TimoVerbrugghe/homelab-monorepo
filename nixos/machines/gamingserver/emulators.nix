@@ -10,46 +10,46 @@
         inherit (final) config;
       };
       
-      # Several changes needed to the emulationstation-de package to make it compile on unstable
-      # Changes created by Claude AI - https://claude.ai/share/29fa4ca6-c9ba-425f-a500-24e62917c43a
-      emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
-        # Add stable dev packages for headers
-        nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [
-          final.stable.pkg-config
-          final.stable.sysprof
-        ];
+    #   # Several changes needed to the emulationstation-de package to make it compile on unstable
+    #   # Changes created by Claude AI - https://claude.ai/share/29fa4ca6-c9ba-425f-a500-24e62917c43a
+    #   emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
+    #     # Add stable dev packages for headers
+    #     nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [
+    #       final.stable.pkg-config
+    #       final.stable.sysprof
+    #     ];
         
-        # Use both stable libgit2 and stable icu
-        buildInputs = let
-          filteredInputs = builtins.filter (input: 
-            !(prev.lib.hasPrefix "libgit2" (input.name or "")) && 
-            !(prev.lib.hasPrefix "icu" (input.name or ""))
-          ) (oldAttrs.buildInputs or []);
-        in
-          filteredInputs ++ [ 
-            final.stable.libgit2
-            final.stable.icu
-            final.stable.glib
-          ];
+    #     # Use both stable libgit2 and stable icu
+    #     buildInputs = let
+    #       filteredInputs = builtins.filter (input: 
+    #         !(prev.lib.hasPrefix "libgit2" (input.name or "")) && 
+    #         !(prev.lib.hasPrefix "icu" (input.name or ""))
+    #       ) (oldAttrs.buildInputs or []);
+    #     in
+    #       filteredInputs ++ [ 
+    #         final.stable.libgit2
+    #         final.stable.icu
+    #         final.stable.glib
+    #       ];
         
-        # Add necessary compiler flags
-        NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -fpermissive";
+    #     # Add necessary compiler flags
+    #     NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -fpermissive";
         
-        # Point to ICU dev files explicitly
-        cmakeFlags = (oldAttrs.cmakeFlags or []) ++ [
-          "-DLIBGIT2_INCLUDE_DIR=${final.stable.libgit2}/include"
-          "-DLIBGIT2_LIBRARIES=${final.stable.libgit2}/lib/libgit2${final.stdenv.hostPlatform.extensions.sharedLibrary}"
-          "-DICU_ROOT=${final.stable.icu.dev}"
-          "-DICU_INCLUDE_DIR=${final.stable.icu.dev}/include"
-          "-DICU_LIBRARY_DIR=${final.stable.icu}/lib"
-        ];
+    #     # Point to ICU dev files explicitly
+    #     cmakeFlags = (oldAttrs.cmakeFlags or []) ++ [
+    #       "-DLIBGIT2_INCLUDE_DIR=${final.stable.libgit2}/include"
+    #       "-DLIBGIT2_LIBRARIES=${final.stable.libgit2}/lib/libgit2${final.stdenv.hostPlatform.extensions.sharedLibrary}"
+    #       "-DICU_ROOT=${final.stable.icu.dev}"
+    #       "-DICU_INCLUDE_DIR=${final.stable.icu.dev}/include"
+    #       "-DICU_LIBRARY_DIR=${final.stable.icu}/lib"
+    #     ];
         
-        # Add environment variables for pkg-config to find the right dependencies
-        preConfigure = (oldAttrs.preConfigure or "") + ''
-          export PKG_CONFIG_PATH="${final.stable.sysprof}/lib/pkgconfig:${final.stable.glib.dev}/lib/pkgconfig:$PKG_CONFIG_PATH"
-        '';
-      });
-    })
+    #     # Add environment variables for pkg-config to find the right dependencies
+    #     preConfigure = (oldAttrs.preConfigure or "") + ''
+    #       export PKG_CONFIG_PATH="${final.stable.sysprof}/lib/pkgconfig:${final.stable.glib.dev}/lib/pkgconfig:$PKG_CONFIG_PATH"
+    #     '';
+    #   });
+    # })
   ];
 
   # Need this for emulationstation-de
