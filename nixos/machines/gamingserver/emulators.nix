@@ -9,6 +9,18 @@
         inherit (final.stdenv.hostPlatform) system;
         inherit (final) config;
       };
+
+      emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
+        # Update the buildInputs to include OpenGL-related dependencies
+        buildInputs = let
+          filteredInputs = builtins.filter (input:
+            !(prev.lib.hasPrefix "libGL" (input.name or ""))
+          ) (oldAttrs.buildInputs or []);
+        in
+          filteredInputs ++ [
+            final.libGL
+          ];
+      });
       
     #   # Several changes needed to the emulationstation-de package to make it compile on unstable
     #   # Changes created by Claude AI - https://claude.ai/share/29fa4ca6-c9ba-425f-a500-24e62917c43a
