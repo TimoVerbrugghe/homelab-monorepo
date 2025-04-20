@@ -70,7 +70,14 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    retroarch-full
+    # Retroarch and cores
+    retroarch.withCores (cores: with cores; [
+      nestopia
+      genesis-plus-gx
+      snes9x
+      flycast
+      mupen64plus-next
+    ])
     duckstation
     cemu
     dolphin-emu
