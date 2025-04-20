@@ -83,7 +83,7 @@
     cemu
     dolphin-emu
     melonDS
-    stable.rpcs3
+    rpcs3
     mgba
     pcsx2
     ppsspp-sdl-wayland
