@@ -19,6 +19,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "qbittorrent"
       tsdproxy.container_port: 8080
+      tsdproxy.ephemeral: false
 
   jdownloader2:
     image: jlesage/jdownloader-2
@@ -38,6 +39,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "jdownloader2"
       tsdproxy.container_port: 5800
+      tsdproxy.ephemeral: false
 
   metube:
     image: ghcr.io/alexta69/metube
@@ -61,6 +63,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "metube"
       tsdproxy.container_port: 8081
+      tsdproxy.ephemeral: false
 
   ariang:
     image: hurlenko/aria2-ariang
@@ -84,6 +87,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "ariang"
       tsdproxy.container_port: 8080
+      tsdproxy.ephemeral: false
 
   spotdl:
     container_name: spotdl
@@ -105,6 +109,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "spotdl"
       tsdproxy.container_port: 8800
+      tsdproxy.ephemeral: false
 
 volumes:
   qbittorrent:

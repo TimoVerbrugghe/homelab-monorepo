@@ -47,6 +47,7 @@ let
           tsdproxy.enable: true
           tsdproxy.container_port: 9443
           tsdproxy.name: "portainer"
+          tsdproxy.ephemeral: false
     
     volumes:
       portainer:

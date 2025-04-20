@@ -20,6 +20,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "filebrowser"
       tsdproxy.container_port: 80
+      tsdproxy.ephemeral: false
 
   filezilla:
     image: lscr.io/linuxserver/filezilla:latest
@@ -40,6 +41,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "filezilla"
       tsdproxy.container_port: 3000
+      tsdproxy.ephemeral: false
 
   doublecommander:
     image: lscr.io/linuxserver/doublecommander:latest
@@ -63,6 +65,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "doublecommander"
       tsdproxy.container_port: 3000
+      tsdproxy.ephemeral: false
       traefik.enable: true
       traefik.http.routers.doublecommander.entrypoints: web
       traefik.http.routers.doublecommander.rule: Host(`test5.thefactory.timo.be`) || Host(`doublecommander.kubernetes.timo.be`) || Host(`doublecommander2.timo.be`)

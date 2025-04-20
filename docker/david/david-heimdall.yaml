@@ -17,6 +17,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 80
       tsdproxy.name: "heimdall"
+      tsdproxy.ephemeral: false
 
 volumes:
   heimdall:

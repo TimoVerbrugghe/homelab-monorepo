@@ -34,6 +34,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 80
       tsdproxy.name: "filebrowser"
+      tsdproxy.ephemeral: false
 
 volumes:
   filebrowser:
