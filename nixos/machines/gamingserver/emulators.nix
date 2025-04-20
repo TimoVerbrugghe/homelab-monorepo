@@ -49,7 +49,7 @@
     #       export PKG_CONFIG_PATH="${final.stable.sysprof}/lib/pkgconfig:${final.stable.glib.dev}/lib/pkgconfig:$PKG_CONFIG_PATH"
     #     '';
     #   });
-    # })
+    })
   ];
 
   # Need this for emulationstation-de
