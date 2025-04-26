@@ -16,11 +16,11 @@
       (nixpkgs + /nixos/modules/installer/cd-dvd/channel.nix)
 
       # Trying to mimic as much as possible the final installation
-      ../machines/surface/apps.nix
-      ../machines/surface/display.nix
-      ../machines/surface/gnome.nix
-      ../machines/surface/powermanagement.nix
-      ../machines/surface/networking.nix
+      ../../machines/surface/apps.nix
+      ../../machines/surface/display.nix
+      ../../machines/surface/gnome.nix
+      ../../machines/surface/powermanagement.nix
+      ../../machines/surface/networking.nix
 
     ];
 

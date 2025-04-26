@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - webtop.yaml
+  - webtop-service.yaml
+  - webtop-ingress.yaml
+  - webtop-clusterrolebinding.yaml
