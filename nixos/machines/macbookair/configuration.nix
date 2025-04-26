@@ -41,6 +41,9 @@ in
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
 
+  # Increase the download buffer size to 500M to avoid timeouts when downloading large files.
+  nix.settings.download-buffer-size = 524288000;
+
   # Let nix-darwin manage the nix installation, nix-daemon & nix settings
   nix.enable = true;
   nix.package = pkgs.nix;
