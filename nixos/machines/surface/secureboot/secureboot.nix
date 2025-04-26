@@ -13,6 +13,13 @@ let
 in
 
 {
+  boot.loader.systemd-boot.extraEntries = { 
+    "hashtool.conf" = ''
+      title HashTool
+      efi /efi/systemd/HashTool.efi
+    '';
+  };
+
   environment.systemPackages = with pkgs; [
     # For debugging and troubleshooting Secure Boot.
     sbctl
