@@ -22,7 +22,6 @@ I have the following machines & VMs with a brief overview of services they run. 
 - Proxmox cluster (Lyoko)
     - Forest Sector
         - Yumi (HA, can be live migrated)
-            - Adguardhome
             - Cloudflare Tunnel
             - Bitwarden
             - Mealie
@@ -51,6 +50,7 @@ Built using Talos linux. Currently runs following services:
 - Stirling-PDF
 - Webtop
 - Adguardhome-sync
+- Adguardhome
 
 Several services are not running in this cluster and remain on separate NixOS VMs with docker because:
 
@@ -63,5 +63,4 @@ Several services are not running in this cluster and remain on separate NixOS VM
 - Plex & Jellyfin run in a separate VM (Aelita) because I'm passing through my iGPU which makes the VM not eligible for live migration in Proxmox.
 
 # Future Plans
-- Replace Ulrich/Odd by running adguardhome directly in the cluster: https://pablomurga.com/posts/adguard-home/
 - Run Cloudflare Tunnel directly in kubernetes: https://developers.cloudflare.com/cloudflare-one/tutorials/many-cfd-one-tunnel/
