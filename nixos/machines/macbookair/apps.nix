@@ -13,7 +13,7 @@
     nano
     kubernetes-helm
     kubectl
-    # ansible
+    ansible
     mas
     moonlight-qt
     spotify
@@ -41,7 +41,6 @@
 
     # Install mas cli to get Mac App Store IDs for masApps
     brews = [
-      "ansible"
     ];
     casks = [
       "tailscale"
