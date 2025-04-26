@@ -34,9 +34,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ssh-keys, nixos-generators, ... } @inputs : {
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ssh-keys, nixos-generators, lanzaboote, ... } @inputs : {
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
@@ -154,6 +159,7 @@
         system = "x86_64-linux";
         specialArgs = inputs;
         modules = [
+          lanzaboote.nixosModules.lanzaboote
           ./machines/surface/configuration.nix
           nixos-hardware.nixosModules.microsoft-surface-common
           home-manager-unstable.nixosModules.home-manager
