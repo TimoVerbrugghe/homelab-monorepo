@@ -1,0 +1,22 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: adguardhome-traefik
+  namespace: adguardhome
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`adguardhome.kubernetes.timo.be`) || Host(`adguardhome.timo.be`)
+      kind: Rule
+      services:
+        - name: adguardhome-traefik
+          port: 80
+          sticky:
+            cookie:
+              secure: true
+              httpOnly: true
+              sameSite: none

@@ -1,0 +1,74 @@
+# StatefulSet used so that hostnames are stable and persistent, which is necessary for adguardhome-sync & traefik
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: adguardhome
+  namespace: adguardhome
+  labels:
+    app.kubernetes.io/name: adguardhome
+  annotations:
+    keel.sh/policy: all
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+spec:
+  serviceName: adguardhome
+  replicas: 3
+  selector:
+    matchLabels:
+      app: adguardhome
+  template:
+    metadata:
+      labels:
+        app: adguardhome
+    spec:
+      containers:
+      - name: adguardhome
+        image: adguard/adguardhome:latest
+        ports:
+        - containerPort: 53 #dns
+          name: dns
+          protocol: UDP
+        - containerPort: 80 #web gui
+          name: http
+          protocol: TCP
+        - containerPort: 443 #DNS-over-HTTPS
+          name: https
+          protocol: TCP
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+          - mountPath: /opt/adguardhome/work
+            name: adguardhome-work-cache
+          - mountPath: /opt/adguardhome/conf
+            name: adguardhome-config-cache
+          - mountPath: /opt/adguardhome/certs
+            name: adguardhome-certs
+      initContainers:
+      - name: init-adguardhome
+        image: busybox:latest
+        command: ["sh", "-c", "cp /etc/adguard/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml"]
+        volumeMounts:
+          - mountPath: /etc/adguard
+            name: adguardhome-config
+          - mountPath: /opt/adguardhome/conf
+            name: adguardhome-config-cache
+      volumes:
+        - name: adguardhome-config
+          configMap:
+            name: adguardhome-config
+        - name: adguardhome-config-cache
+          emptyDir:
+            sizeLimit: 100Mi
+            medium: Memory
+        - name: adguardhome-work-cache
+          emptyDir:
+            sizeLimit: 500Mi
+            medium: Memory
+        - name: adguardhome-certs
+          secret:
+            secretName: wildcard-timo-be-production-tls

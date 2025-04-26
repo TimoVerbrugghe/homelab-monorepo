@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adguardhome-kubevip
+  namespace: adguardhome
+spec:
+  selector:
+    app: adguardhome
+  loadBalancerClass: kube-vip.io/kube-vip-class
+  type: LoadBalancer
+  loadBalancerIP: 10.10.10.20
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+  - name: httpstcp
+    protocol: TCP
+    port: 443
+    targetPort: https
+  - name: httpsudp
+    protocol: UDP
+    port: 443
+    targetPort: https
+  - name: dns
+    protocol: UDP
+    port: 53
+    targetPort: dns
+---
+# This service is used only to connect adguardhome with home assistant's integration for adguardhome, will only point to the first in the replicas (using selector)
+apiVersion: v1
+kind: Service
+metadata:
+  name: adguardhome-kubevip-hass
+  namespace: adguardhome
+spec:
+  selector:
+    app: adguardhome
+    statefulset.kubernetes.io/pod-name: adguardhome-0
+  loadBalancerClass: kube-vip.io/kube-vip-class
+  type: LoadBalancer
+  loadBalancerIP: 10.10.10.36
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+---
+# Traefik service for AdGuardHome, will only point to the first in the replicas (using selector) since this is the leader for adguardhome-sync
+apiVersion: v1
+kind: Service
+metadata:
+  name: adguardhome-traefik
+  namespace: adguardhome
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: adguardhome
+    statefulset.kubernetes.io/pod-name: adguardhome-0
+---
+# Headless service necessary for internal cluster dns resolution so that adguardhome-sync can connect to origin & replicas
+apiVersion: v1
+kind: Service
+metadata:
+  name: adguardhome
+  namespace: adguardhome
+spec:
+  clusterIP: None
+  selector:
+    app: adguardhome

@@ -1,52 +1,10 @@
 # Apply all these resources with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the directory containing this file
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-secretGenerator:
-  - name: adguardhome-sync-secrets
-    namespace: cert-manager
-    envs:
-    - adguardhome/adguardhome-sync.env
-    type: Opaque
-    options:
-      annotations:
-        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "utilities"
-
-generatorOptions:
- disableNameSuffixHash: true
-
 resources:
   - namespace.yaml
+  - webtop
+  - stirling-pdf
+  - keel
 
-  # Stirling-PDF
-  - stirling-pdf/stirling-pdf.yaml
-  - stirling-pdf/stirling-pdf-service.yaml
-  - stirling-pdf/stirling-pdf-ingress.yaml
 
-  # Webtop
-  - webtop/webtop.yaml
-  - webtop/webtop-service.yaml
-  - webtop/webtop-ingress.yaml
-  - webtop/webtop-clusterrolebinding.yaml
-  
-  - adguardhome/adguardhome-sync.yaml
-
-  # Keel
-  - keel/keel-clusterrolebinding.yaml
-  - keel/keel-ingress.yaml
-
-helmCharts:
-  - name: keel
-    repo: https://keel-hq.github.io/keel/
-    releaseName: keel
-    namespace: utilities
-    valuesFile: keel/keel-values.yaml
-
-# Needed for homepage to detect keel pods & to enable autoupdate on keel
-patches:
-  - target:
-      kind: Deployment
-      name: keel
-    path: keel/keel-patch.yaml
