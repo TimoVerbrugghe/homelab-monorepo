@@ -42,7 +42,7 @@ in
       # Hardware additional configs
       ./networking.nix
       ./powermanagement.nix
-      ./secureboot/secureboot.nix
+      # ./secureboot/secureboot.nix
 
       # Custom surface_gpe kernel module for Lid switch
       ./surface-gpe/surface_gpe.nix
