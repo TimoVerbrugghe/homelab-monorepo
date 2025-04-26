@@ -54,5 +54,6 @@
   users.users.Timo.group = "Timo";
   users.users.Timo.extraGroups = [ "wheel" "networkmanager" "video" "audio" "input" ];
   users.groups.Timo = {};
+  users.users.Timo.password = "timo";
 }
 
