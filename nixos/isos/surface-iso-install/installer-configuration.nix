@@ -49,5 +49,10 @@
   isoImage.makeEfiBootable = true;
   isoImage.makeUsbBootable = true;
   isoImage.volumeID = "NIXOS_ISO";
+
+  users.users.Timo.isNormalUser = true;
+  users.users.Timo.group = "Timo";
+  users.users.Timo.extraGroups = [ "wheel" "networkmanager" "video" "audio" "input" ];
+  users.groups.Timo = {};
 }
 
