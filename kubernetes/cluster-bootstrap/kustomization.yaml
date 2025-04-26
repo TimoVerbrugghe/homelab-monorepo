@@ -57,20 +57,20 @@ patches:
   - target:
       kind: Deployment
       name: traefik
-    path: traefik-patch.yaml
+    path: traefik/traefik-patch.yaml
   - target:
       kind: Deployment
       name: operator
       namespace: tailscale
-    path: tailscale-operator-patch.yaml
+    path: tailscale/tailscale-operator-patch.yaml
   - target:
       kind: Deployment
       name: reflector
-    path: reflector-patch.yaml
+    path: reflector/reflector-patch.yaml
   - target:
       kind: Deployment
       name: kube-vip-cloud-provider
-    path: kube-vip-cloud-provider-patch.yaml
+    path: kube-vip/kube-vip-cloud-provider-patch.yaml
 
 helmCharts:
   # Reflector to automatically copy secrets between namespaces

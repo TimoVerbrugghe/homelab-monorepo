@@ -21,22 +21,22 @@
     }
   ];
 
-  # # Autosleep at 3 am (if I forget to put the computer manually to sleep)
-  # systemd.services.sleepAtFour = {
-  #   description = "Put the machine to sleep at 4 am";
-  #   wantedBy = [ "timers.target" ];
-  #   serviceConfig = {
-  #     Type = "oneshot";
-  #     ExecStart = "${pkgs.systemd}/bin/systemctl suspend";
-  #   };
-  # };
+  # Put system to sleep at 4 am if I would forget to put it to sleep myself
+  systemd.services.scheduled-sleep = {
+    description = "Put system to sleep";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.systemd}/bin/systemctl suspend";
+    };
+  };
 
-  # systemd.timers.sleepAtFourTimer = {
-  #   description = "Timer to put the machine to sleep at 4 am";
-  #   wantedBy = [ "timers.target" ];
-  #   timerConfig = {
-  #     OnCalendar = "*-*-* 04:00:00";
-  #     Persistent = true;  # Ensure the timer isn't missed if the machine was asleep at the scheduled time
-  #   };
-  # };
+  systemd.timers.scheduled-sleep = {
+    description = "Timer to put system to sleep at 4 AM";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*-*-* 04:00:00";
+      Persistent = false;  # Don't trigger missed executions (so that it doesn't trigger after sleep of several days)
+      Unit = "scheduled-sleep.service";
+    };
+  };
 }

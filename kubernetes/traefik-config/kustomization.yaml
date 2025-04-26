@@ -61,3 +61,6 @@ resources:
   - traefik-filebrowser.yaml
   - traefik-doublecommander.yaml
   - traefik-filezilla.yaml
+
+  # Custom Ingresses - Traefik API for homepage
+  - traefik-api.yaml

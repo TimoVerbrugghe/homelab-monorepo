@@ -18,18 +18,21 @@
     enable = true;
     xkb.layout = "be";
     videoDrivers = ["amdgpu"];
-    desktopManager.plasma5.enable = true;
+  };
+
+  services.desktopManager = {
+    plasma6.enable = true;
   };
 
   services.displayManager = {
-    defaultSession = "plasmawayland";
+    defaultSession = "plasma";
     autoLogin.enable = true;
     autoLogin.user = "gamer";
     sddm = {
       enable = true;
       wayland.enable = true;
       wayland.compositor = "kwin";
-      theme = "VaporNixos";
+      theme = "Vapor";
       autoLogin.relogin = true;
     };
   };
@@ -39,7 +42,7 @@
 
   # Install a custom version of the KDE theme that Valve ships on SteamDeck
   environment.systemPackages = with pkgs; [
-    (pkgs.callPackage ./vapor-nixos-theme/package.nix {})
+    (pkgs.callPackage ./vapor-theme.nix {})
   ];
 
   # Set up default KDE5 Plasma settings by putting config files in /etc/xdg
@@ -268,7 +271,7 @@
     "xdg/kdeglobals" = {
       text = ''
         [KDE]
-        LookAndFeelPackage=VaporNixos
+        LookAndFeelPackage=Vapor
         SingleClick=false
 
         [KDE Action Restrictions][$i]
@@ -277,7 +280,7 @@
         action/lock_screen=false
       
         [General]
-        ColorScheme=VaporNixos
+        ColorScheme=Vapor
         font=Noto Sans,11,-1,5,50,0,0,0,0,0
         menuFont=Noto Sans,11,-1,5,50,0,0,0,0,0
         smallestReadableFont=Noto Sans,9,-1,5,50,0,0,0,0,0

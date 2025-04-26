@@ -25,6 +25,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "nextcloud-aio"
       tsdproxy.container_port: 8080
+      tsdproxy.ephemeral: false
 
 volumes: # If you want to store the data on a different drive, see https://github.com/nextcloud/all-in-one#how-to-store-the-filesinstallation-on-a-separate-drive
   nextcloud_aio_mastercontainer:

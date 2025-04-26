@@ -12,7 +12,9 @@ let
   ipAddress = "192.168.0.3";
   defaultGateway = "192.168.0.1";
   kernelParams = [
-     "i915.enable_guc=2" # Enable Intel Quicksync
+    "i915.enable_guc=2" # Enable Intel Quicksync
+    "console=tty0" # Enable serial console for NixOS VM on Proxmox
+    "console=ttyS0,115200"
   ];
   
   # Load bochs (proxmox standard VGA driver) after the i915 driver so that we can use noVNC while iGPU was passed through

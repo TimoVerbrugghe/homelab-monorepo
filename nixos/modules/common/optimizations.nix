@@ -8,4 +8,7 @@
     dates = "weekly";
     options = "--delete-older-than 7d";
   };
+
+  # Increase download buffer size
+  nix.settings.download-buffer-size = 524288000;
 }

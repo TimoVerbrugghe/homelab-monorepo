@@ -20,6 +20,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "filebrowser"
       tsdproxy.container_port: 80
+      tsdproxy.ephemeral: false
 
   filezilla:
     image: lscr.io/linuxserver/filezilla:latest
@@ -40,6 +41,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "filezilla"
       tsdproxy.container_port: 3000
+      tsdproxy.ephemeral: false
 
   doublecommander:
     image: lscr.io/linuxserver/doublecommander:latest
@@ -55,6 +57,7 @@ services:
       - media:/media
       - downloads:/downloads
       - isos:/isos
+      - jeremy:/jeremy
     restart: always
     ports:
       - 13002:3000
@@ -62,6 +65,11 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "doublecommander"
       tsdproxy.container_port: 3000
+      tsdproxy.ephemeral: false
+      traefik.enable: true
+      traefik.http.routers.doublecommander.entrypoints: web
+      traefik.http.routers.doublecommander.rule: Host(`test5.thefactory.timo.be`) || Host(`doublecommander.kubernetes.timo.be`) || Host(`doublecommander2.timo.be`)
+      traefik.http.services.doublecommander.loadbalancer.server.port: 3000
 
 volumes:
   filebrowser:
@@ -100,6 +108,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/downloads"
+  jeremy:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/Jeremy"
 
 networks:
   dockerproxy:

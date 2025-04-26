@@ -1,5 +1,5 @@
 {
-  description = "flake for nixos";
+  description = "Flake for Timo's homelab & personal machines";
 
   inputs = {
     nixpkgs = {
@@ -34,14 +34,39 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
-      inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+    };
+
+    nix-homebrew = {
+      url = "github:zhaofengli/nix-homebrew";
+    };
+
+    # Declarative tap management
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
+
 
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ssh-keys, nixos-generators, lanzaboote, ... } @inputs : {
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ssh-keys, nixos-generators, nix-darwin, mac-app-util, nix-homebrew, homebrew-core, homebrew-cask, homebrew-bundle, ... } @inputs : {
     nixosConfigurations = {
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
@@ -190,5 +215,44 @@
         format = "azure";
       };
     };
+
+    darwinConfigurations = {
+      # For a fresh install, first install nix-darwin by following instructions (including the flake init and installing a simple flake first) at https://github.com/LnL7/nix-darwin
+      # Switch to this config with darwin-rebuild switch --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#TimosMacbookAir --impure --no-write-lock-file
+      Timos-Macbook-Air = nix-darwin.lib.darwinSystem {
+        specialArgs = inputs;
+        modules = [
+          # Fixes some issues with programs installed by nix (searching in spotlight, adding to dock) - see https://github.com/hraban/mac-app-util
+          mac-app-util.darwinModules.default
+          nix-homebrew.darwinModules.nix-homebrew
+          ./machines/macbookair/configuration.nix
+          {
+            nix-homebrew = {
+              # Install Homebrew under the default prefix
+              enable = true;
+
+              # Apple Silicon Only: Also install Homebrew under the default Intel prefix for Rosetta 2
+              enableRosetta = true;
+
+              # User owning the Homebrew prefix
+              user = "timo";
+
+              # Optional: Declarative tap management
+              taps = {
+                "homebrew/homebrew-core" = homebrew-core;
+                "homebrew/homebrew-cask" = homebrew-cask;
+                "homebrew/homebrew-bundle" = homebrew-bundle;
+              };
+
+              # Optional: Enable fully-declarative tap management
+              #
+              # With mutableTaps disabled, taps can no longer be added imperatively with `brew tap`.
+              mutableTaps = false;
+            };
+          }
+        ];
+      };
+    };
+  
   };
 }

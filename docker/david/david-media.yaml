@@ -32,6 +32,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 32400
       tsdproxy.name: "plex"
+      tsdproxy.ephemeral: false
 
   plex-autolanguages:
     container_name: plex-autolanguagues
@@ -73,6 +74,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 8989
       tsdproxy.name: "sonarr"
+      tsdproxy.ephemeral: false
 
   ### RADARR - MANAGING MOVIES
   radarr:
@@ -95,6 +97,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 7878
       tsdproxy.name: "radarr"
+      tsdproxy.ephemeral: false
 
   ### BAZARR - MANAGING SUBTITLES
   bazarr:
@@ -122,6 +125,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 6767
       tsdproxy.name: "bazarr"
+      tsdproxy.ephemeral: false
 
   ### MEDIA REQUEST MANAGEMENT ###
   ### OVERSEERR - MANAGING REQUESTS
@@ -142,6 +146,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 5055
       tsdproxy.name: "overseerr"
+      tsdproxy.ephemeral: false
 
   ### DOWNLOAD MANAGEMENT ###
   ### PROWLARR - MANAGING TORRENT SITES
@@ -163,6 +168,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 9696
       tsdproxy.name: "prowlarr"
+      tsdproxy.ephemeral: false
     
   ### QBITTORRENT - MANAGING DOWNLOADS
   qbittorrent: 
@@ -184,6 +190,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 8080
       tsdproxy.name: "qbittorrent"
+      tsdproxy.ephemeral: false
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -217,6 +224,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.container_port: 8787
       tsdproxy.name: "readarr"
+      tsdproxy.ephemeral: false
 
 volumes:
   sonarr:

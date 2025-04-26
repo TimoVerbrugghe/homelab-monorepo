@@ -1,0 +1,18 @@
+---
+# Deploy traefik api so that homepage can get access to it. Does not have auth, but only accessible from within the network
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dashboard-api
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`traefikapi.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService

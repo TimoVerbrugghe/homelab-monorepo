@@ -1,0 +1,9 @@
+alerting:
+  pushover:
+    application-token: ${PUSHOVER_APPLICATION_TOKEN}
+    user-key: ${PUSHOVER_USER_KEY}
+    default-alert:
+      description: "Health check failed"
+      send-on-resolved: true
+      failure-treshold: 2
+      success-treshold: 2

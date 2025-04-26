@@ -36,13 +36,5 @@ spec:
           requests:
             memory: "1.5Gi"
             cpu: "1500m"    
-        # Cannot add this securityContext because webtop needs additional permissions for chowning files
-        # securityContext:
-        #   allowPrivilegeEscalation: false
-        #   capabilities:
-        #     drop:
-        #       - "ALL"
-        #   seccompProfile:
-        #     type: RuntimeDefault
         ports:
         - containerPort: 3000

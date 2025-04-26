@@ -16,6 +16,7 @@ services:
       tsdproxy.enable: true
       tsdproxy.name: "tsdproxy-truenas"
       tsdproxy.container_port: 8080
+      tsdproxy.ephemeral: false
 
 volumes:
   tsdproxy-data:
