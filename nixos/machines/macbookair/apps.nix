@@ -13,7 +13,7 @@
     nano
     kubernetes-helm
     kubectl
-    python3Full
+    ansible
     mas
     moonlight-qt
     spotify
