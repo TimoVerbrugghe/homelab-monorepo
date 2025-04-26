@@ -21,7 +21,6 @@
     google-chrome
     monitorcontrol
     maccy
-    bitwarden-desktop
     slack
     localsend
     hidden-bar
@@ -77,6 +76,7 @@
       "GarageBand" = 682658836;
       "Pushover" = 506088175;
       "Whatsapp" = 310633997;
+      "Bitwarden"= 1352778147;
     };
 
     # Remove any casks that are not defined in this nix config
