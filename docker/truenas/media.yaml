@@ -213,6 +213,7 @@ services:
 
   recommendarr:
     image: tannermiddleton/recommendarr:latest
+    container_name: recommendarr
     restart: always
     networks:
       - dockerproxy
