@@ -211,22 +211,22 @@ services:
     environment:
       - TZ=Europe/Brussels
 
-  recommendarr:
-    image: tannermiddleton/recommendarr:latest
-    container_name: recommendarr
-    restart: always
-    networks:
-      - dockerproxy
-    ports:
-      - 14006:3000
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - PUBLIC_URL=https://recommendarr.timo.be
-      - BASE_URL=/
-      - FORCE_SECURE_COOKIES=true
-    volumes:
-      - recommendarr:/app/server/data
+  # recommendarr:
+  #   image: tannermiddleton/recommendarr:latest
+  #   container_name: recommendarr
+  #   restart: always
+  #   networks:
+  #     - dockerproxy
+  #   ports:
+  #     - 14006:3000
+  #   environment:
+  #     - NODE_ENV=production
+  #     - PORT=3000
+  #     - PUBLIC_URL=https://recommendarr.timo.be
+  #     - BASE_URL=/
+  #     - FORCE_SECURE_COOKIES=true
+  #   volumes:
+  #     - recommendarr:/app/server/data
 
 networks:
   dockerproxy:
@@ -300,9 +300,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/huntarr"
-  recommendarr:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/recommendarr"
+  # recommendarr:
+  #   driver: local
+  #   driver_opts:
+  #     type: "none"
+  #     o: "bind"
+  #     device: "/mnt/FranzHopper/appdata/recommendarr"
