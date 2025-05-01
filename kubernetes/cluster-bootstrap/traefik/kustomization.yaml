@@ -1,0 +1,24 @@
+# Apply all these resources with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generatorOptions:
+ disableNameSuffixHash: true
+
+resources:
+  - traefik-namespace.yaml
+  - traefik-service.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: traefik
+    path: traefik-patch.yaml
+
+helmCharts:
+  - name: traefik
+    repo: https://traefik.github.io/charts
+    namespace: traefik
+    includeCRDs: true
+    releaseName: traefik
+    valuesFile: traefik-values.yaml

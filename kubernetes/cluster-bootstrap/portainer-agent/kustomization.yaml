@@ -1,0 +1,12 @@
+# Apply all these resources with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - https://downloads.portainer.io/ce2-27/portainer-agent-k8s-lb.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: portainer-agent
+    path: portainer-agent-patch.yaml

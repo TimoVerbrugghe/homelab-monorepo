@@ -1,0 +1,36 @@
+# Apply all these resources with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generatorOptions:
+ disableNameSuffixHash: true
+
+secretGenerator:
+  - name: cloudflare-token-secret
+    namespace: cert-manager
+    envs:
+    - cloudflaretoken.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager, traefik"
+
+resources:
+  - cert-manager-namespace.yaml
+
+helmCharts:
+  # Cert-manager for certificate management (Let's Encrypt)
+  ## WARNING - If you would ever delete this Helm release, there are webhookconfigurations that will remain in the cluster since the helm chart doesn't delete it - https://github.com/cert-manager/cert-manager/issues/3195#issuecomment-1452780684
+  ## kubectl get validatingwebhookconfiguration.admissionregistration.k8s.io
+  ## kubectl delete validatingwebhookconfiguration.admissionregistration.k8s.io/<Junk Object>
+  ## kubectl get mutatingwebhookconfiguration.admissionregistration.k8s.io
+  ## kubectl delete mutatingwebhookconfiguration.admissionregistration.k8s.io/<Junk Object>
+  
+  - name: cert-manager
+    repo: https://charts.jetstack.io
+    includeCRDs: true
+    releaseName: cert-manager
+    namespace: cert-manager
+    valuesFile: cert-manager-values.yaml

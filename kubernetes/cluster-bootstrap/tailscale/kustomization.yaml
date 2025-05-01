@@ -1,0 +1,35 @@
+# Apply all these resources with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generatorOptions:
+ disableNameSuffixHash: true
+
+secretGenerator:
+  - name: operator-oauth
+    namespace: cert-manager
+    envs:
+    - tailscale.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "tailscale"
+
+resources:
+  - tailscale-namespace.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: operator
+      namespace: tailscale
+    path: tailscale-operator-patch.yaml
+
+helmCharts:
+  - name: tailscale-operator
+    repo: https://pkgs.tailscale.com/helmcharts
+    namespace: tailscale
+    includeCRDs: true
+    releaseName: tailscale-operator

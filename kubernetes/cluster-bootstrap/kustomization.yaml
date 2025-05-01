@@ -4,105 +4,11 @@
 # Examples used as reference: https://medium.com/@tharukam/generate-kubernetes-manifests-with-helm-charts-using-kustomize-2f82ab5c5f11
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-secretGenerator:
-  - name: cloudflare-token-secret
-    namespace: cert-manager
-    envs:
-    - secrets/cloudflaretoken.env
-    type: Opaque
-    options:
-      annotations:
-        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager, traefik"
-
-  - name: operator-oauth
-    namespace: cert-manager
-    envs:
-    - secrets/tailscale.env
-    type: Opaque
-    options:
-      annotations:
-        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "tailscale"
-
-generatorOptions:
- disableNameSuffixHash: true
-
 resources:
-  # Kube-VIP installation for Virtual IP management
-  - https://kube-vip.io/manifests/rbac.yaml
-  - https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml
-  - kube-vip/kube-vip-configmap.yaml
-  - kube-vip/kube-vip.yaml
-
-  # Resources complementary to Helm installation
-  - traefik/traefik-namespace.yaml
-  - traefik/traefik-service.yaml
-  - tailscale/tailscale-namespace.yaml
-  - cert-manager/cert-manager-namespace.yaml
-  - reflector/reflector-namespace.yaml
-
-  # Portainer agent installation
-  - https://downloads.portainer.io/ce2-27/portainer-agent-k8s-lb.yaml
-
-# Patch to enable keel autoupdating on portainer-agent, traefik & kube-vip-cloud-controller
-patches:
-  - target:
-      kind: Deployment
-      name: portainer-agent
-    path: portainer-agent-patch.yaml
-  - target:
-      kind: Deployment
-      name: traefik
-    path: traefik/traefik-patch.yaml
-  - target:
-      kind: Deployment
-      name: operator
-      namespace: tailscale
-    path: tailscale/tailscale-operator-patch.yaml
-  - target:
-      kind: Deployment
-      name: reflector
-    path: reflector/reflector-patch.yaml
-  - target:
-      kind: Deployment
-      name: kube-vip-cloud-provider
-    path: kube-vip/kube-vip-cloud-provider-patch.yaml
-
-helmCharts:
-  # Reflector to automatically copy secrets between namespaces
-  - name: reflector
-    repo: https://emberstack.github.io/helm-charts
-    namespace: reflector
-    includeCRDs: true
-    releaseName: reflector
-
-  # Cert-manager for certificate management (Let's Encrypt)
-  ## WARNING - If you would ever delete this Helm release, there are webhookconfigurations that will remain in the cluster since the helm chart doesn't delete it - https://github.com/cert-manager/cert-manager/issues/3195#issuecomment-1452780684
-  ## kubectl get validatingwebhookconfiguration.admissionregistration.k8s.io
-  ## kubectl delete validatingwebhookconfiguration.admissionregistration.k8s.io/<Junk Object>
-  ## kubectl get mutatingwebhookconfiguration.admissionregistration.k8s.io
-  ## kubectl delete mutatingwebhookconfiguration.admissionregistration.k8s.io/<Junk Object>
-  
-  - name: cert-manager
-    repo: https://charts.jetstack.io
-    includeCRDs: true
-    releaseName: cert-manager
-    namespace: cert-manager
-    valuesFile: cert-manager/cert-manager-values.yaml
-
-  - name: traefik
-    repo: https://traefik.github.io/charts
-    namespace: traefik
-    includeCRDs: true
-    releaseName: traefik
-    valuesFile: traefik/traefik-values.yaml
-  
-  - name: tailscale-operator
-    repo: https://pkgs.tailscale.com/helmcharts
-    namespace: tailscale
-    includeCRDs: true
-    releaseName: tailscale-operator
+  - namespace.yaml
+  - traefik
+  - tailscale
+  - reflector
+  - kubevip
+  - cert-manager
+  - portainer-agent
