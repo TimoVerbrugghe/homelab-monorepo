@@ -7,8 +7,13 @@ logs:
   access:
     enabled: true
     format: json
+    fields:
+      defaultMode: keep
+      headers:
+        defaultMode: drop
     filters:
-      statuscodes: "400-499"
+      statuscodes: "400-499,500-599"
+      retryattempts: true
 
 deployment:
   enabled: true
@@ -33,14 +38,14 @@ ports:
     # See https://community.traefik.io/t/traefik-vnc-web-apps-works-in-docker-but-not-in-kubernetes/27180/2
     transport:
       respondingTimeouts:
-        readTimeout: 420
-        writeTimeout: 420
-        idleTimeout: 420
+        readTimeout: 420s
+        writeTimeout: 420s
+        idleTimeout: 420s
     tls:
       enabled: true
-      middlewares:
-        - traefik-secureheaders@kubernetescrd
-        - traefik-ratelimit@kubernetescrd
+    middlewares:
+      - traefik-secureheaders@kubernetescrd
+      - traefik-ratelimit@kubernetescrd
   metrics:
     port: 9100
     expose:

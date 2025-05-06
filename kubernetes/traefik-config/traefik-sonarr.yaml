@@ -14,6 +14,7 @@ spec:
       services:
         - name: sonarr-svc
           port: 14000
+          serversTransport: serverstransport
       middlewares:
         - name: auth
           namespace: traefik
@@ -24,5 +25,5 @@ metadata:
   name: sonarr-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
+  externalName: 10.10.10.2 # Can also be an IP address
   type: ExternalName
