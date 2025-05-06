@@ -13,7 +13,8 @@ patches:
   - target:
       kind: Deployment
       name: traefik
-    path: traefik-patch.yaml
+    path: traefik-deployment-patch.yaml
+      
 
 helmCharts:
   - name: traefik

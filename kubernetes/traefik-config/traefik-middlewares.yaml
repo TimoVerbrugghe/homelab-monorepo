@@ -32,7 +32,7 @@ metadata:
   namespace: traefik
 spec:
   rateLimit:
-    average: 0
+    average: 200
     burst: 200
 ---
 apiVersion: traefik.io/v1alpha1

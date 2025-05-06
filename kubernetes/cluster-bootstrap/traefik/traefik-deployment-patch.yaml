@@ -1,0 +1,11 @@
+# Add autoupdate through keel for traefik
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik
+  annotations:
+    # Need to put this in patch to avoid updating traefik from 3.3.6 to 3.4.0 since issue with CRDs & clusterrole (not having access to configmaps)
+    # See https://github.com/traefik/traefik/issues/11739
+    keel.sh/policy: patch
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
