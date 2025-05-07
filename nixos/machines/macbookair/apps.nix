@@ -24,6 +24,7 @@
     slack
     localsend
     hidden-bar
+    talosctl
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
