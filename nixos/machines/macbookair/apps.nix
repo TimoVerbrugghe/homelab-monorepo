@@ -25,6 +25,8 @@
     localsend
     hidden-bar
     talosctl
+    handbrake
+    teams
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
@@ -53,8 +55,8 @@
       "bettertouchtool"
       "jabra-direct"
       "background-music"
-      "microsoft-teams"
-      "handbrake"
+      # "microsoft-teams"
+      # "handbrake"
     ];
     masApps = {
       "Xcode" = 497799835;
