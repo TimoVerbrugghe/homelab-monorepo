@@ -10,7 +10,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`webtop.kubernetes.timo.be`) || Host(`webtop.timo.be`)
+    - match: Host(`webtop.kubernetes.timo.be`) || Host(`webtop.timo.be`) || Host(`testtraefik.timo.be`) || Host(`testtraefik.kubernetes.timo.be`) 
       kind: Rule
       services:
         - name: webtop

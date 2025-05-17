@@ -32,9 +32,9 @@ spec:
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "*.kubernetes.timo.be"
   dnsNames:
     - "*.kubernetes.timo.be"
+    - "*.timo.be"
   secretTemplate:
     annotations:
       # Reflect (aka sync) this certificate from cert-manager namespace to other namespaces so it can be used for wildcard domain ssl

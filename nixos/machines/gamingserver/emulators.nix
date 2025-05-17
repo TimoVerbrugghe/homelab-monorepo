@@ -56,8 +56,8 @@
 
     # Lime3DS does not compile in the unstable branch
     stable.lime3ds
-    # A replacement for yuzu & ryujinx
-    torzu
+    # A replacement for yuzu
+    ryujinx
 
   ];
 
