@@ -58,7 +58,7 @@
         <platform>n3ds</platform>
         <theme>n3ds</theme>
     </system>
-    <system>
+    <!-- <system>
         <name>switch</name>
         <fullname>Nintendo Switch</fullname>
         <path>%ROMPATH%/switch</path>
@@ -66,5 +66,5 @@
         <command label="Torzu (Standalone)">%EMULATOR_TORZU% -f -g %ROM%</command>
         <platform>switch</platform>
         <theme>switch</theme>
-    </system>
+    </system> -->
 </systemList>
