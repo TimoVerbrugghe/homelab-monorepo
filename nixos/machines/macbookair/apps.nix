@@ -25,7 +25,6 @@
     localsend
     hidden-bar
     talosctl
-    handbrake
     teams
   ];
   
@@ -56,7 +55,7 @@
       "jabra-direct"
       "background-music"
       # "microsoft-teams"
-      # "handbrake"
+      "handbrake"
     ];
     masApps = {
       "Xcode" = 497799835;
