@@ -24,6 +24,8 @@ in
     description = "${username}";
   };
 
+  system.primaryUser = "${username}";
+
 	# Nix-store optimizations
   nix.optimise.automatic = true;
   nix.gc = {
@@ -62,7 +64,7 @@ in
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   system.activationScripts = {
-    postUserActivation.text = ''
+    activateSettings = ''
       # activateSettings -u will reload the settings from the database and apply them to the current session,
       # so we do not need to logout and login again to make the changes take effect.
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
