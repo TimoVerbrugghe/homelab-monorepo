@@ -28,6 +28,10 @@ defaults-ping: &defaults-ping
 defaults-alerts: &defaults-alerts
   alerts:
     - type: pushover
+      failure-threshold: 6
+      success-threshold: 2
+      description: "Health check failed"
+      send-on-resolved: true
 
 endpoints:
   # Hypervisor Group
