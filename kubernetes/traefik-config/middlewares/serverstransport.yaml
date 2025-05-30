@@ -1,0 +1,10 @@
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: serverstransport
+  namespace: traefik
+spec:
+  forwardingTimeouts:
+    responseHeaderTimeout: 180s
+    idleConnTimeout: 180s
+  insecureSkipVerify: true
