@@ -89,8 +89,9 @@ services:
       tsdproxy.container_port: 8080
       tsdproxy.ephemeral: false
 
-  spotdl:
-    container_name: spotdl
+  # Using separate container & appdata folder for spotdl web which does not use user auth (since this is difficult with spotdl in docker container)
+  spotdl-web:
+    container_name: spotdl-web
     image: spotdl/spotify-downloader
     command: web --host 0.0.0.0 --web-use-output-dir --keep-alive
     environment:
@@ -101,7 +102,7 @@ services:
       - 12005:8800
     volumes:
       - music:/music #must use the :/music for config to work.
-      - spotdl:/root/.spotdl
+      - spotdl-web:/root/.spotdl
     restart: always
     networks:
       - dockerproxy
@@ -141,12 +142,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/downloads/spotdl"
-  spotdl:
+  spotdl-web:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/FranzHopper/appdata/spotdl"
+      device: "/mnt/FranzHopper/appdata/spotdl-web"
 
 networks:
   dockerproxy:
