@@ -256,8 +256,6 @@ filtering:
       answer: 10.10.10.2
     - domain: '*.thefactory.timo.be'
       answer: 10.10.10.2
-    - domain: doublecommander.thefactory.timo.be
-      answer: 10.10.10.2
     - domain: aelita.local.timo.be
       answer: 10.10.10.3
     - domain: forestsector.local.timo.be
@@ -289,17 +287,83 @@ filtering:
     - domain: sunshine.local.timo.be
       answer: 10.10.10.15
     - domain: dns.local.timo.be
-      answer: 10.10.10.36
+      answer: 10.10.10.20
+    - domain: adguardhome-ulrich.local.timo.be
+      answer: 10.10.10.21
+    - domain: adguardhome-odd.local.timo.be
+      answer: 10.10.10.22
     - domain: hass.local.timo.be
       answer: 10.10.10.28
     - domain: tesla.local.timo.be
       answer: 10.10.10.28
     - domain: william.local.timo.be
       answer: 10.10.10.30
+    - domain: manta.local.timo.be
+      answer: 10.10.10.31
+    - domain: skidbladnir.local.timo.be
+      answer: 10.10.10.32
     - domain: kubernetes.local.timo.be
       answer: 10.10.10.33
     - domain: '*.kubernetes.timo.be'
       answer: 10.10.10.34
+    - domain: shellyplugfreezer.local.timo.be
+      answer: 10.10.10.50
+    - domain: shellyplugserverrack.local.timo.be
+      answer: 10.10.10.52
+    - domain: shellypluglivingroom1.local.timo.be
+      answer: 10.10.10.53
+    - domain: shellypluglivingroom2.local.timo.be
+      answer: 10.10.10.54
+    - domain: shellypluglivingroom3.local.timo.be
+      answer: 10.10.10.55
+    - domain: shellypluglivingroom4.local.timo.be
+      answer: 10.10.10.56
+    - domain: shellylivingroommainspots.local.timo.be
+      answer: 10.10.10.60
+    - domain: shellytimosoffice.local.timo.be
+      answer: 10.10.10.61
+    - domain: shellyguestbedroom.local.timo.be
+      answer: 10.10.10.62
+    - domain: shellyincomehall.local.timo.be
+      answer: 10.10.10.63
+    - domain: shellybedroomceiling.local.timo.be
+      answer: 10.10.10.64
+    - domain: shellydressingroom.local.timo.be
+      answer: 10.10.10.65
+    - domain: shellyincomehalltoilet.local.timo.be
+      answer: 10.10.10.66
+    - domain: shellylivingroommainspots2.local.timo.be
+      answer: 10.10.10.67
+    - domain: shellyfrontdoor.local.timo.be
+      answer: 10.10.10.68
+    - domain: shellyfirstfloorhall.local.timo.be
+      answer: 10.10.10.69
+    - domain: shellykitchentable.local.timo.be
+      answer: 10.10.10.70
+    - domain: shellyattic.local.timo.be
+      answer: 10.10.10.71
+    - domain: shellykitchenisland.local.timo.be
+      answer: 10.10.10.72
+    - domain: shellyfirstfloortoiletoccupancy.local.timo.be
+      answer: 10.10.10.73
+    - domain: shellyattictechnical.local.timo.be
+      answer: 10.10.10.74
+    - domain: shellyguestbathroom.local.timo.be
+      answer: 10.10.10.75
+    - domain: shellygardenshedceiling.local.timo.be
+      answer: 10.10.10.76
+    - domain: shellyjasmijnofficeceiling.local.timo.be
+      answer: 10.10.10.77
+    - domain: ecowittgateway.local.timo.be
+      answer: 10.10.10.78
+    - domain: shellylounge.local.timo.be
+      answer: 10.10.10.79
+    - domain: shellybathroomceiling.local.timo.be
+      answer: 10.10.10.81
+    - domain: shellybedroomblinds.local.timo.be
+      answer: 10.10.10.82
+    - domain: shellybathroommirror.local.timo.be
+      answer: 10.10.10.83
     - domain: azurenixbuilder.azure.timo.be
       answer: 4.223.119.74
   safe_fs_patterns:
