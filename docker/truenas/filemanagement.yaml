@@ -29,8 +29,6 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
       - TZ=Europe/Brussels
     volumes:
       - filezilla:/config
