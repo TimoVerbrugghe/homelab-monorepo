@@ -195,11 +195,6 @@ endpoints:
     group: Filemanagement
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "Filebrowser"
-    url: "http://thefactory.local.timo.be:13000"
-    group: Filemanagement
-    <<: [*defaults-http, *defaults-alerts]
-
   - name: "Filezilla"
     url: "http://thefactory.local.timo.be:13001"
     group: Filemanagement

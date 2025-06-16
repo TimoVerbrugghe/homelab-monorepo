@@ -245,11 +245,6 @@
             type: nextcloud
             url: http://thefactory.local.timo.be:11000
             key: "{{HOMEPAGE_VAR_NEXTCLOUD_TOKEN}}"
-    - Filebrowser:
-        icon: filebrowser.svg
-        href: https://filebrowser.timo.be
-        server: thefactory
-        container: filebrowser
     - Filezilla:
         icon: filezilla.svg
         href: https://filezilla.timo.be

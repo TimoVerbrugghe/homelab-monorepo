@@ -32,7 +32,6 @@ resources:
   - traefik-spotdl.yaml
 
   # Custom Ingresses - TheFactory Filemanagement
-  - traefik-filebrowser.yaml
   - traefik-doublecommander.yaml
   - traefik-filezilla.yaml
 
