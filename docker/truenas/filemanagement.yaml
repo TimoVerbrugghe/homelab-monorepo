@@ -1,27 +1,4 @@
 services:
-  filebrowser:
-    container_name: filebrowser
-    image: filebrowser/filebrowser
-    restart: always
-    networks:
-      - dockerproxy
-    environment:
-      - FB_DATABASE=/config/database.db
-      - FB_CONFIG=/config/filebrowser.json
-      - FB_NOAUTH=true
-    volumes:
-      - media:/srv/media
-      - isos:/srv/isos
-      - downloads:/srv/downloads
-      - filebrowser:/config
-    ports:
-      - 13000:80
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "filebrowser"
-      tsdproxy.container_port: 80
-      tsdproxy.ephemeral: false
-
   filezilla:
     image: lscr.io/linuxserver/filezilla:latest
     container_name: filezilla
@@ -72,12 +49,6 @@ services:
       traefik.http.services.doublecommander.loadbalancer.server.port: 3000
 
 volumes:
-  filebrowser:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/filebrowser"
   filezilla:
     driver: local
     driver_opts:
