@@ -24,7 +24,7 @@
     lm_sensors
     vlc
     plexamp
-    plex-media-player
+    plex-desktop
     slack
     moonlight-qt
     gparted
