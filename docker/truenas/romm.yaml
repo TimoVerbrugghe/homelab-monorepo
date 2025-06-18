@@ -23,7 +23,6 @@ services:
       - OIDC_REDIRECT_URI=${ROMM_OIDC_REDIRECT_URI}
       - OIDC_SERVER_APPLICATION_URL=${ROMM_OIDC_SERVER_APPLICATION_URL}
       - DISABLE_USERPASS_LOGIN=true # Disable the default user/pass login, only use OIDC
-      - DISABLE_CSRF_PROTECTION=true # Disable CSRF protection for OIDC login
     volumes:
       - romm-resources:/romm/resources # Resources fetched from IGDB (covers, screenshots, etc.)
       - romm-redis:/redis-data # Cached data for background tasks
