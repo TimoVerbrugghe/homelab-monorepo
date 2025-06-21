@@ -8,4 +8,4 @@ SPOTDL_MUSIC_FOLDER="/mnt/X.A.N.A./media/spotdl"
 docker run -it --rm -v $SPOTDL_CONFIG:/root/.spotdl -v $SPOTDL_MUSIC_FOLDER:/music spotdl/spotify-downloader download all-user-saved-albums --config --user-auth --headless --output "{album}/{artists} - {title}.{output-ext}"
 
 ## SpotDL - Download all user liked songs
-docker run -it --rm -v $SPOTDL_CONFIG:/root/.spotdl -v $SPOTDL_MUSIC_FOLDER/music spotdl/spotify-downloader download saved --config --user-auth --headless --output "{list-name}/{artists} - {title}.{output-ext}"
+docker run -it --rm -v $SPOTDL_CONFIG:/root/.spotdl -v $SPOTDL_MUSIC_FOLDER:/music spotdl/spotify-downloader download saved --config --user-auth --headless --output "{list-name}/{artists} - {title}.{output-ext}"
