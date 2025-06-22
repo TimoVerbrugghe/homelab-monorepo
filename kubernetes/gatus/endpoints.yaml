@@ -227,7 +227,7 @@ endpoints:
   #   <<: [*defaults-http, *defaults-alerts]
 
   - name: "Stirling-PDF"
-    url: "http://stirling-pdf.utilities.svc.cluster.local:8080"
+    url: "http://stirlingpdf.utilities.svc.cluster.local:8080"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
