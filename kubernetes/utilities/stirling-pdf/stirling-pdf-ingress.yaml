@@ -2,7 +2,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: stirling-pdf-traefik
+  name: stirlingpdf-traefik
   namespace: utilities
   annotations: 
     kubernetes.io/ingress.class: traefik
@@ -13,7 +13,7 @@ spec:
     - match: Host(`stirlingpdf.kubernetes.timo.be`) || Host(`stirlingpdf.timo.be`)
       kind: Rule
       services:
-        - name: stirling-pdf
+        - name: stirlingpdf
           port: 8080
       middlewares:
         - name: auth
@@ -22,12 +22,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: stirling-pdf-tailscale
+  name: stirlingpdf-tailscale
   namespace: utilities
 spec:
   defaultBackend:
     service:
-      name: stirling-pdf
+      name: stirlingpdf
       port:
         number: 8080
   ingressClassName: tailscale

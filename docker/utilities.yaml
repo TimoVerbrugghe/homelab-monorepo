@@ -70,6 +70,7 @@ services:
       OIDC_PROVIDER_NAME: "Google"
       OIDC_REMEMBER_ME: true
       OIDC_USER_CLAIM: "email"
+      ALLOW_PASSWORD_LOGIN: false
     labels:
       traefik.http.routers.mealie.entrypoints: https
       traefik.http.services.mealie.loadbalancer.server.port: 9000

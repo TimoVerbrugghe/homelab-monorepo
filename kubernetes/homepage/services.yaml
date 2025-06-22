@@ -161,7 +161,7 @@
         icon: spotify.svg
         href: https://spotdl.timo.be
         server: thefactory
-        container: spotdl
+        container: spotdl-web
     - Ariang:
         icon: ariang.png
         href: https://ariang.timo.be
@@ -186,7 +186,7 @@
     - Adguardhome (Odd):
         icon: adguard-home.svg
         description: "10.10.10.22"
-        href: https://adguard.timo.be
+        href: https://adguardhome.timo.be
         server: odd
         container: adguardhome
         widget:
@@ -197,7 +197,7 @@
     - Adguardhome (Ulrich):
         icon: adguard-home.svg
         description: "10.10.10.21"
-        href: https://adguard.timo.be
+        href: https://adguardhome.timo.be
         server: ulrich
         container: adguardhome
         widget:
@@ -208,9 +208,9 @@
     - Adguardhome (Yumi):
         icon: adguard-home.svg
         description: "10.10.10.20"
-        href: https://adguard.timo.be
-        server: yumi
-        container: adguardhome
+        href: https://adguardhome.timo.be
+        namespace: adguardhome
+        app: adguardhome
         widget:
             type: adguard
             url: http://10.10.10.20
@@ -281,7 +281,7 @@
         icon: stirling-pdf.svg
         href: https://stirlingpdf.timo.be
         namespace: utilities
-        app: stirling-pdf
+        app: stirlingpdf
     - Webtop:
         icon: webtop.webp
         href: https://webtop.timo.be

@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stirling-pdf
+  name: stirlingpdf
   namespace: utilities
   # annotations:
   #   keel.sh/policy: all
@@ -12,15 +12,16 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stirling-pdf
+      app: stirlingpdf
+      app.kubernetes.io/name: stirlingpdf
   template:
     metadata:
       labels:
-        app: stirling-pdf
-        app.kubernetes.io/name: stirling-pdf
+        app: stirlingpdf
+        app.kubernetes.io/name: stirlingpdf
     spec:
       containers:
-      - name: stirling-pdf
+      - name: stirlingpdf
         image: ghcr.io/stirling-tools/s-pdf:0.41.0 # Have to pin it to this version & disable keel due to issue with unoserver: https://github.com/Stirling-Tools/Stirling-PDF/issues/3030
         env:
         - name: DOCKER_ENABLE_SECURITY
