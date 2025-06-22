@@ -164,7 +164,7 @@ endpoints:
     group: Networking
     <<: [*defaults-http, *defaults-nochecktls]
 
-  - name: "Adguardhome (Odd)"
+  - name: "Adguardhome (Kubernetes)"
     url: "10.10.10.20"
     group: Networking
     <<: [*defaults-dns, *defaults-alerts]
@@ -174,7 +174,7 @@ endpoints:
     group: Networking
     <<: [*defaults-dns, *defaults-alerts]
 
-  - name: "Adguardhome (Yumi)"
+  - name: "Adguardhome (Odd)"
     url: "10.10.10.22"
     group: Networking
     <<: [*defaults-dns, *defaults-alerts]

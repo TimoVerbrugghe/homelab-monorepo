@@ -205,7 +205,7 @@
             url: http://10.10.10.21
             username: "{{HOMEPAGE_VAR_ADGUARDHOME_USERNAME}}"
             password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
-    - Adguardhome (Yumi):
+    - Adguardhome (Kubernetes):
         icon: adguard-home.svg
         description: "10.10.10.20"
         href: https://adguardhome.timo.be
