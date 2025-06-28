@@ -55,6 +55,7 @@
         <!-- Adding a fullscreen option for lime3DS -->
         <command label="Lime3DS (Standalone)">%EMULATOR_LIME3DS% -f %ROM%</command>
         <command label="Panda3DS (Standalone)">%EMULATOR_PANDA3DS% %ROM%</command>
+        <command label="Azahar (Standalone)">%EMULATOR_AZAHAR% -f %ROM%</command>
         <platform>n3ds</platform>
         <theme>n3ds</theme>
     </system>

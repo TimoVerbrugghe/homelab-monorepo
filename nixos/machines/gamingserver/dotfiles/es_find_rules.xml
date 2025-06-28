@@ -30,6 +30,12 @@
             <entry>citra-qt</entry>
         </rule>
     </emulator>
+    <emulator name="AZAHAR">
+        <!-- Nintendo 3DS emulator Azahar -->
+        <rule type="systempath">
+            <entry>azahar</entry>
+        </rule>
+    </emulator>
     <emulator name="MGBA">
         <!-- Nintendo Game Boy Advance emulator mGBA -->
         <rule type="systempath">
