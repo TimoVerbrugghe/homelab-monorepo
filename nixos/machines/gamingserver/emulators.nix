@@ -2,30 +2,30 @@
 
 {
   
-  nixpkgs.overlays = [
-    (final: prev: {
-      # Import stable channel for packages from nixpkgs-stable (flake inputs)
-      stable = import nixpkgs {
-        inherit (final.stdenv.hostPlatform) system;
-        inherit (final) config;
-      };
+  # nixpkgs.overlays = [
+  #   (final: prev: {
+  #     # Import stable channel for packages from nixpkgs-stable (flake inputs)
+  #     stable = import nixpkgs {
+  #       inherit (final.stdenv.hostPlatform) system;
+  #       inherit (final) config;
+  #     };
 
-      # emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
-      #   # Update the buildInputs to include OpenGL-related dependencies
-      #   buildInputs = let
-      #     filteredInputs = builtins.filter (input:
-      #       !(prev.lib.hasPrefix "libGL" (input.name or ""))
-      #     ) (oldAttrs.buildInputs or []);
-      #   in
-      #     filteredInputs ++ [
-      #       final.libGL
-      #     ];
-      # });
-    })
-  ];
+  #     # emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
+  #     #   # Update the buildInputs to include OpenGL-related dependencies
+  #     #   buildInputs = let
+  #     #     filteredInputs = builtins.filter (input:
+  #     #       !(prev.lib.hasPrefix "libGL" (input.name or ""))
+  #     #     ) (oldAttrs.buildInputs or []);
+  #     #   in
+  #     #     filteredInputs ++ [
+  #     #       final.libGL
+  #     #     ];
+  #     # });
+  #   })
+  # ];
 
   # Need this for emulationstation-de
-  permittedInsecurePackages = [
+  nixpkgs.config.permittedInsecurePackages = [
     "freeimage-3.18.0-unstable-2024-04-18"
   ];
 
@@ -54,8 +54,8 @@
     winetricks
     steam-rom-manager
 
-    # Lime3DS does not compile in the unstable branch
-    stable.lime3ds
+    # Change lime3ds with azahar
+    azahar
     # A replacement for yuzu
     ryujinx
 

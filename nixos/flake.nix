@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs = {
-      url = "github:NixOS/nixpkgs/nixos-24.11";
+      url = "github:NixOS/nixpkgs/nixos-25.05";
     };
     
     nixpkgs-unstable = { 
@@ -170,12 +170,12 @@
       };
 
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#gamingserver --refresh --impure --no-write-lock-file
-      gamingserver = nixpkgs-unstable.lib.nixosSystem {
+      gamingserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = inputs // { pkgs-stable = inputs.nixpkgs.legacyPackages."x86_64-linux"; };
+        specialArgs = inputs;
         modules = [
           ./machines/gamingserver/configuration.nix
-          home-manager-unstable.nixosModules.home-manager
+          home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
