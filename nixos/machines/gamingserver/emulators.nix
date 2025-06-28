@@ -25,7 +25,7 @@
   ];
 
   # Need this for emulationstation-de
-  nixpkgs.config.permittedInsecurePackages = [
+  permittedInsecurePackages = [
     "freeimage-3.18.0-unstable-2024-04-18"
   ];
 
