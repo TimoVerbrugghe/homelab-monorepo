@@ -10,24 +10,24 @@
         inherit (final) config;
       };
 
-      emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
-        # Update the buildInputs to include OpenGL-related dependencies
-        buildInputs = let
-          filteredInputs = builtins.filter (input:
-            !(prev.lib.hasPrefix "libGL" (input.name or ""))
-          ) (oldAttrs.buildInputs or []);
-        in
-          filteredInputs ++ [
-            final.libGL
-          ];
-      });
+      # emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
+      #   # Update the buildInputs to include OpenGL-related dependencies
+      #   buildInputs = let
+      #     filteredInputs = builtins.filter (input:
+      #       !(prev.lib.hasPrefix "libGL" (input.name or ""))
+      #     ) (oldAttrs.buildInputs or []);
+      #   in
+      #     filteredInputs ++ [
+      #       final.libGL
+      #     ];
+      # });
     })
   ];
 
   # Need this for emulationstation-de
-  nixpkgs.config.permittedInsecurePackages = [
-    "freeimage-3.18.0-unstable-2024-04-18"
-  ];
+  # nixpkgs.config.permittedInsecurePackages = [
+  #   "freeimage-3.18.0-unstable-2024-04-18"
+  # ];
 
   environment.systemPackages = with pkgs; [
     # Retroarch and cores
