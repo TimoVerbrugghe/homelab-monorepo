@@ -7,5 +7,5 @@ alerting:
       description: "Health check failed"
       send-on-resolved: true
       # Only send alerts if the endpoint is down for more than 2,5 minutes (actual failure, not just a quick update), 30 seconds interval
-      failure-treshold: 6
+      failure-treshold: 10
       success-treshold: 2
