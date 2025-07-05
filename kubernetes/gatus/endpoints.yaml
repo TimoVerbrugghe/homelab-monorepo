@@ -25,6 +25,11 @@ defaults-ping: &defaults-ping
   conditions:
     - "[CONNECTED] == true"
 
+defaults-tcp: &defaults-tcp
+  interval: 30s
+  conditions:
+    - "[CONNECTED] == true"
+
 defaults-alerts: &defaults-alerts
   alerts:
     - type: pushover
@@ -252,6 +257,31 @@ endpoints:
     url: "https://yumi.local.timo.be:9443"
     group: Containers
     <<: [*defaults-http, *defaults-nochecktls, *defaults-alerts]
+
+  - name: "Portainer Agent (Kubernetes)"
+    url: "tcp://portainer-agent.portainer.svc.cluster.local:9001"
+    group: Containers
+    <<: [*defaults-tcp, *defaults-alerts]
+
+  - name: "Portainer Agents (Aelita)"
+    url: "tcp://odd.local.timo.be:9001"
+    group: Containers
+    <<: [*defaults-tcp, *defaults-alerts]
+  
+  - name: "Portainer Agents (Ulrich)"
+    url: "tcp://ulrich.local.timo.be:9001"
+    group: Containers
+    <<: [*defaults-tcp, *defaults-alerts]
+
+  - name: "Portainer Agents (Odd)"
+    url: "tcp://odd.local.timo.be:9001"
+    group: Containers
+    <<: [*defaults-tcp, *defaults-alerts]
+
+  - name: "Portainer Agents (TheFactory)"
+    url: "tcp://thefactory.local.timo.be:9001"
+    group: Containers
+    <<: [*defaults-tcp, *defaults-alerts]
 
   # Storage Group
   - name: "TrueNAS Web UI"
