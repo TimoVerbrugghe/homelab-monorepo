@@ -204,6 +204,7 @@ user_rules:
   - '@@||click.email.microsoftemail.com^$important'
   - '@@||tracking.dfranklincreation.com^$important'
   - '@@||drive.bydauto.be^$important'
+  - '@@||my.koelnmesse.io^$important'
 dhcp:
   enabled: false
   interface_name: ""
