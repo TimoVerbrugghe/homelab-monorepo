@@ -33,7 +33,7 @@ defaults-tcp: &defaults-tcp
 defaults-alerts: &defaults-alerts
   alerts:
     - type: pushover
-      failure-threshold: 6
+      failure-threshold: 10
       success-threshold: 2
       description: "Health check failed"
       send-on-resolved: true
