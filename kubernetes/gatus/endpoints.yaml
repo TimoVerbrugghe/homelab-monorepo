@@ -198,7 +198,14 @@ endpoints:
   - name: "Nextcloud"
     url: "http://thefactory.local.timo.be:11000"
     group: Filemanagement
-    <<: [*defaults-http, *defaults-alerts]
+    # Nextcloud takes very long to update, so we increase failure-treshold specifically for this service
+    alerts:
+    - type: pushover
+      failure-threshold: 30
+      success-threshold: 2
+      description: "Health check failed"
+      send-on-resolved: true
+    <<: [*defaults-http]
 
   - name: "Filezilla"
     url: "http://thefactory.local.timo.be:13001"
