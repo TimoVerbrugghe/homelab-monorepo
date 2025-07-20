@@ -249,11 +249,6 @@ endpoints:
     group: Utilities
     <<: *defaults-http
 
-  - name: "Graylog"
-    url: "http://thefactory.local.timo.be:11003"
-    group: Utilities
-    <<: [*defaults-http, *defaults-alerts]
-
   # Containers Group
   - name: "Portainer"
     url: "https://yumi.local.timo.be:9443"

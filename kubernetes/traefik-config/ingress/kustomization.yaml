@@ -12,7 +12,6 @@ resources:
   - traefik-iventoy.yaml
   
   # Custom Ingresses - TheFactory Utilities
-  - traefik-graylog.yaml
   - traefik-paperless.yaml
   - traefik-scan.yaml
 

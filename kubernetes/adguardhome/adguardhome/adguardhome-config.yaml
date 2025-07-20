@@ -253,8 +253,6 @@ filtering:
       answer: 10.10.10.2
     - domain: nfs.local.timo.be
       answer: 10.10.10.2
-    - domain: graylog.local.timo.be
-      answer: 10.10.10.2
     - domain: '*.thefactory.timo.be'
       answer: 10.10.10.2
     - domain: aelita.local.timo.be
