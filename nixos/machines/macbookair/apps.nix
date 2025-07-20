@@ -45,12 +45,11 @@
     brews = [
     ];
     casks = [
-      "tailscale"
+      "tailscale-app"
       "vlc"
       "microsoft-edge"
       # "sony-ps-remote-play" - This still needs rosetta 
       "intune-company-portal"
-      "orbstack"
       "bettertouchtool"
       "jabra-direct"
       "background-music"

@@ -1,28 +1,6 @@
 { config, pkgs, pkgs-stable, nixpkgs, ... }:
 
 {
-  
-  # nixpkgs.overlays = [
-  #   (final: prev: {
-  #     # Import stable channel for packages from nixpkgs-stable (flake inputs)
-  #     stable = import nixpkgs {
-  #       inherit (final.stdenv.hostPlatform) system;
-  #       inherit (final) config;
-  #     };
-
-  #     # emulationstation-de = prev.emulationstation-de.overrideAttrs (oldAttrs: {
-  #     #   # Update the buildInputs to include OpenGL-related dependencies
-  #     #   buildInputs = let
-  #     #     filteredInputs = builtins.filter (input:
-  #     #       !(prev.lib.hasPrefix "libGL" (input.name or ""))
-  #     #     ) (oldAttrs.buildInputs or []);
-  #     #   in
-  #     #     filteredInputs ++ [
-  #     #       final.libGL
-  #     #     ];
-  #     # });
-  #   })
-  # ];
 
   # Need this for emulationstation-de
   nixpkgs.config.permittedInsecurePackages = [
