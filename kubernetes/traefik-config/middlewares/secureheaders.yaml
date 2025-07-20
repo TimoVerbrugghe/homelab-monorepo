@@ -6,8 +6,8 @@ metadata:
 spec:
   headers:
     accessControlAllowOriginList:
-        - https://kubernetes.timo.be
-        - https://timo.be
+      - https://kubernetes.timo.be
+      - https://timo.be
     frameDeny: true
     browserXssFilter: true
     contentTypeNosniff: true

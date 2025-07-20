@@ -7,6 +7,19 @@ spec:
   externalName: thefactory.local.timo.be # Can also be an IP address
   type: ExternalName
 ---
+# Based on nginx configuration for reverse proxying on qbittorrent wiki: https://github.com/qbittorrent/qBittorrent/wiki/NGINX-Reverse-Proxy-for-Web-UI
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: qbittorrent-headers
+  namespace: traefik
+spec:
+  headers:
+    customRequestHeaders:
+      Host: thefactory.local.timo.be
+      X-Forwarded-Host: qbittorrent.timo.be
+      X-Forwarded-Proto: https
+---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -25,4 +38,6 @@ spec:
           port: 12000
       middlewares:
         - name: auth
+          namespace: traefik
+        - name: qbittorrent-headers
           namespace: traefik
