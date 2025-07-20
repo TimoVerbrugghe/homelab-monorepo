@@ -30,7 +30,7 @@
 	# Shell aliases
   environment.shellAliases = {
     k = "kubectl";
-    t = "talosctl --talosconfig talosconfig";
+    t = "talosctl --talosconfig talosconfig -n william.local.timo.be -e william.local.timo.be";
     fzf = "fzf --preview 'bat --color=always {}'";
     z = "zoxide";
     ls = "eza --group-directories-first";
