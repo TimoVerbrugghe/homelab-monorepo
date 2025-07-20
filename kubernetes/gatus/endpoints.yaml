@@ -236,11 +236,6 @@ endpoints:
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "Webtop"
-    url: "http://webtop.utilities.svc.cluster.local:3000"
-    group: Utilities
-    <<: [*defaults-http, *defaults-alerts]
-
   # Since gamingserver is not always running, not using the defaults since don't want to get alerts on this one
   - name: "Sunshine"
     url: "https://sunshine.local.timo.be:47990"
