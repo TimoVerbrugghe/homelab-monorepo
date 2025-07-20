@@ -4,9 +4,6 @@
 - name: Setup proxmox host (iGPU passthrough)
   ansible.builtin.include_tasks: proxmox-igpu-passthrough.yaml
 
-- name: Set up graylog logging
-  ansible.builtin.include_tasks: graylog.yaml
-
 - name: Install & Authenticate tailscale
   ansible.builtin.include_tasks: tailscale.yaml
 
