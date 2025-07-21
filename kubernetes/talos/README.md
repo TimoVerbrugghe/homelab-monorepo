@@ -1,5 +1,3 @@
-# Kubernetes
-
 ## Installing Talos Linux
 
 Replace IP address below with the IP address of your first node

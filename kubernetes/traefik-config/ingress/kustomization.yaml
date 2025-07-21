@@ -8,8 +8,6 @@ resources:
   - traefik-proxmox.yaml
   - traefik-unifi.yaml
   - traefik-sunshine.yaml
-  - traefik-netbootxyz.yaml
-  - traefik-iventoy.yaml
   
   # Custom Ingresses - TheFactory Utilities
   - traefik-paperless.yaml

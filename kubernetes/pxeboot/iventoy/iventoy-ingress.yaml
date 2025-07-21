@@ -13,7 +13,7 @@ spec:
     - match: Host(`iventoy.kubernetes.timo.be`) || Host(`iventoy.timo.be`)
       kind: Rule
       services:
-        - name: iventoy
+        - name: iventoy-traefik
           port: 26000
       middlewares:
         - name: auth

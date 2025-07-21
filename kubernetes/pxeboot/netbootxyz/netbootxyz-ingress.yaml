@@ -13,7 +13,7 @@ spec:
     - match: Host(`netbootxyz.kubernetes.timo.be`) || Host(`netbootxyz.timo.be`)
       kind: Rule
       services:
-        - name: netbootxyz
+        - name: netbootxyz-traefik
           port: 3000
       middlewares:
         - name: auth

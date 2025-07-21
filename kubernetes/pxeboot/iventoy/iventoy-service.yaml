@@ -40,3 +40,4 @@ spec:
     - name: webui
       protocol: TCP
       port: 26000
+      targetPort: webui
