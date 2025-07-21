@@ -227,14 +227,14 @@
     - Netbootxyz:
         icon: netboot.svg
         href: https://netbootxyz.timo.be
-        server: yumi
-        container: netbootxyz
+        namespace: pxeboot
+        app: netbootxyz
     - iVentoy:
         icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/iventoy.png
         href: https://iventoy.timo.be
-        server: yumi
-        container: iventoy
-
+        namespace: pxeboot
+        app: iventoy
+        
 - Filemanagement:
     - Nextcloud:
         icon: nextcloud.svg
