@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iventoy
+  namespace: pxeboot
+  labels:
+    app.kubernetes.io/name: iventoy
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iventoy
+  template:
+    metadata:
+      labels:
+        app: iventoy
+    spec:
+      containers:
+        - name: iventoy
+          image: ziggyds/iventoy:latest
+          # Must run as root according to the iventoy documentation
+          securityContext:
+            privileged: true
+          env:
+            - name: AUTO_START_PXE
+              value: "true"
+          ports:
+            - containerPort: 16000
+              protocol: TCP
+              name: pxe
+            - containerPort: 69
+              protocol: UDP
+              name: tftp
+            - containerPort: 26000
+              protocol: TCP
+              name: webui
+            - containerPort: 10809
+              protocol: TCP
+              name: nbd
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 26000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 26000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          volumeMounts:
+            - name: iso
+              mountPath: /app/iso
+      volumes:
+        - name: iso
+          nfs:
+            server: nfs.local.timo.be
+            path: /mnt/FranzHopper/isos

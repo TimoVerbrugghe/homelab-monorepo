@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iventoy-kubevip
+  namespace: pxeboot
+spec:
+  selector:
+    app: iventoy
+  loadBalancerClass: kube-vip.io/kube-vip-class
+  type: LoadBalancer
+  loadBalancerIP: 10.10.10.38
+  ports:
+  - name: tftp
+    protocol: UDP
+    port: 69
+    targetPort: tftp
+  - name: pxe
+    protocol: TCP
+    port: 16000
+    targetPort: pxe
+  - name: nbd
+    protocol: TCP
+    port: 10809
+    targetPort: nbd
+  - name: webui
+    protocol: TCP
+    port: 26000
+    targetPort: webui
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iventoy-traefik
+  namespace: pxeboot
+spec:
+  selector:
+    app: iventoy
+  ports:
+    - name: webui
+      protocol: TCP
+      port: 26000

@@ -14,18 +14,21 @@
 | 10.10.10.10   | Zigbee SLZB-06 PoE Coordinator |
 | 10.10.10.11   | NetbootXYZ                     |
 | 10.10.10.12   | PDU                            |
-| 10.10.10.13   | iVentoy                        |
+| 10.10.10.13   |                                |
 | 10.10.10.14   |                                |
 | 10.10.10.15   | GamingServer                   |
 | 10.10.10.20   | Adguardhome (Kubernetes)       |
-| 10.10.10.21   | Adguardhome (Ulrich)       |
-| 10.10.10.22   | Adguardhome (Odd)           |
-| 10.10.10.28   | Home Assistant |
-| 10.10.10.30   | William (Kubernetes Node)  |
-| 10.10.10.31   | Manta (Kubernetes Node)  |
-| 10.10.10.32   | Skidbladnir (Kubernetes Node)               |
-| 10.10.10.33   | Kubernetes API                 |
-| 10.10.10.34   | Traefik (in Kubernetes)                    |
+| 10.10.10.21   | Adguardhome (Ulrich)                  |
+| 10.10.10.22   | Adguardhome (Odd)                     |
+| 10.10.10.28   | Home Assistant                        |
+| 10.10.10.30   | William (Kubernetes Node)             |
+| 10.10.10.31   | Manta (Kubernetes Node)               |
+| 10.10.10.32   | Skidbladnir (Kubernetes Node)         |
+| 10.10.10.33   | Kubernetes API                        |
+| 10.10.10.34   | Traefik (in Kubernetes)               |
+| 10.10.10.36   | Adguardhome (home assistant connection) |
+| 10.10.10.37   | NetbootXYZ PXE Server |
+| 10.10.10.36   | iVentoy PXE Server |
 | 10.10.10.50   | Shelly Plug Freezer                   |
 | 10.10.10.52   | Shelly Plug Server Rack               |
 | 10.10.10.53   | Shelly Plug Living Room 1             |

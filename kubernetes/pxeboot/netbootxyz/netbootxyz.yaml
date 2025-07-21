@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbootxyz
+  namespace: pxeboot
+  labels:
+    app.kubernetes.io/name: netbootxyz
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netbootxyz
+  template:
+    metadata:
+      labels:
+        app: netbootxyz
+    spec:
+      containers:
+        - name: netbootxyz
+          image: ghcr.io/netbootxyz/netbootxyz:latest
+          env:
+            - name: TFTPD_OPTS
+              value: "--tftp-single-port"
+          ports:
+            - containerPort: 80
+              protocol: TCP
+              name: http
+            - containerPort: 69
+              protocol: UDP
+              name: tftp
+            - containerPort: 3000
+              protocol: TCP
+              name: webui
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: assets
+              mountPath: /assets   
+      volumes:
+        - name: config
+          emptyDir:
+            medium: Memory
+            sizeLimit: 100Mi
+        - name: assets
+          emptyDir:
+            medium: Memory
+            sizeLimit: 100Mi

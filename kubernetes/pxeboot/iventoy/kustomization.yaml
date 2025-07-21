@@ -1,0 +1,7 @@
+# Apply all these resources with `kubectl apply -k .` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - iventoy.yaml
+  - iventoy-service.yaml
+  - iventoy-ingress.yaml
