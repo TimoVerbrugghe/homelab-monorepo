@@ -205,6 +205,7 @@ user_rules:
   - '@@||tracking.dfranklincreation.com^$important'
   - '@@||drive.bydauto.be^$important'
   - '@@||my.koelnmesse.io^$important'
+  - '@@||cwwk.net^$important'
 dhcp:
   enabled: false
   interface_name: ""
