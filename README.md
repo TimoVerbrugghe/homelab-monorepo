@@ -25,7 +25,6 @@ I have the following machines & VMs with a brief overview of services they run. 
             - Cloudflare Tunnel
             - Bitwarden
             - Mealie
-            - PXEBoot (netbootxyz & iventoy)
             - Portainer
         - William (kubernetes node)
     - Ice Sector
@@ -51,6 +50,7 @@ Built using Talos linux. Currently runs following services:
 - Webtop
 - Adguardhome-sync
 - Adguardhome
+- PXEBoot (netbootxyz & iVentoy)
 
 Several services are not running in this cluster and remain on separate NixOS VMs with docker because:
 
