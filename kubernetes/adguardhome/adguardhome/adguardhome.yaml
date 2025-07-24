@@ -7,9 +7,10 @@ metadata:
   labels:
     app.kubernetes.io/name: adguardhome
   annotations:
-    keel.sh/policy: all
+    keel.sh/policy: force
     keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
 spec:
   serviceName: adguardhome
   replicas: 3

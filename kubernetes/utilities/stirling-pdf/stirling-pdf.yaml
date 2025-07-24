@@ -4,10 +4,11 @@ kind: Deployment
 metadata:
   name: stirlingpdf
   namespace: utilities
-  # annotations:
-  #   keel.sh/policy: all
-  #   keel.sh/trigger: poll            
-  #   keel.sh/pollSchedule: "@every 24h"
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll            
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
 spec:
   replicas: 1
   selector:
@@ -22,7 +23,7 @@ spec:
     spec:
       containers:
       - name: stirlingpdf
-        image: ghcr.io/stirling-tools/s-pdf:0.41.0 # Have to pin it to this version & disable keel due to issue with unoserver: https://github.com/Stirling-Tools/Stirling-PDF/issues/3030
+        image: ghcr.io/stirling-tools/s-pdf:latest
         env:
         - name: DOCKER_ENABLE_SECURITY
           value: "false"

@@ -6,9 +6,10 @@ metadata:
   labels:
     app.kubernetes.io/name: homepage
   annotations:
-    keel.sh/policy: all
+    keel.sh/policy: force
     keel.sh/trigger: poll            
     keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
 spec:
   revisionHistoryLimit: 3
   replicas: 3
@@ -28,7 +29,7 @@ spec:
       enableServiceLinks: true
       containers:
         - name: homepage
-          image: "ghcr.io/gethomepage/homepage:latest"
+          image: ghcr.io/gethomepage/homepage:latest
           imagePullPolicy: IfNotPresent
           resources:
             limits:

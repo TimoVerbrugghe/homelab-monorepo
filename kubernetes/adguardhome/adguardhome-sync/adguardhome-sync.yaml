@@ -4,9 +4,10 @@ metadata:
   name: adguardhome-sync-deployment
   namespace: adguardhome
   annotations:
-    keel.sh/policy: all
+    keel.sh/policy: force
     keel.sh/trigger: poll            
     keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
 spec:
   replicas: 1
   selector:

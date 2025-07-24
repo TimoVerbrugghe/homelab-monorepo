@@ -6,9 +6,10 @@ metadata:
   labels:
     app.kubernetes.io/name: gatus
   annotations:
-    keel.sh/policy: all
+    keel.sh/policy: force
     keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
 spec:
   # Cannot do more replicas since otherwise Gatus will send multiple alerts for the same failure (each pod will send an alert)
   replicas: 1
@@ -25,7 +26,7 @@ spec:
       serviceAccountName: gatus
       terminationGracePeriodSeconds: 5
       containers:
-        - image: twinproduction/gatus
+        - image: twinproduction/gatus:latest
           imagePullPolicy: IfNotPresent
           name: gatus
           env:
