@@ -16,13 +16,15 @@ services:
       - IGDB_CLIENT_SECRET=${IGDB_CLIENT_SECRET} # https://api-docs.igdb.com/#account-creation
       # - MOBYGAMES_API_KEY= # https://www.mobygames.com/info/api/
       - STEAMGRIDDB_API_KEY=${STEAMGRIDDB_API_KEY} # https://github.com/rommapp/romm/wiki/Generate-API-Keys#steamgriddb
-      - OIDC_ENABLED=true
       - OIDC_PROVIDER=microsoft
       - OIDC_CLIENT_ID=${ROMM_OIDC_CLIENT_ID}
       - OIDC_CLIENT_SECRET=${ROMM_OIDC_CLIENT_SECRET}
       - OIDC_REDIRECT_URI=${ROMM_OIDC_REDIRECT_URI}
       - OIDC_SERVER_APPLICATION_URL=${ROMM_OIDC_SERVER_APPLICATION_URL}
-      - DISABLE_USERPASS_LOGIN=true # Disable the default user/pass login, only use OIDC
+
+      # Temporarily disable OIDC until issue is fixed - https://github.com/rommapp/romm/issues/1502
+      - OIDC_ENABLED=false
+      - DISABLE_USERPASS_LOGIN=false # Disable the default user/pass login, only use OIDC
     volumes:
       - romm-resources:/romm/resources # Resources fetched from IGDB (covers, screenshots, etc.)
       - romm-redis:/redis-data # Cached data for background tasks
