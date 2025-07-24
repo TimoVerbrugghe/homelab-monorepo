@@ -12,7 +12,7 @@
 | 10.10.10.8    | Ulrich                         |
 | 10.10.10.9    | Odd                            |
 | 10.10.10.10   | Zigbee SLZB-06 PoE Coordinator |
-| 10.10.10.11   | NetbootXYZ                     |
+| 10.10.10.11   |                                |
 | 10.10.10.12   | PDU                            |
 | 10.10.10.13   |                                |
 | 10.10.10.14   |                                |
@@ -28,7 +28,7 @@
 | 10.10.10.34   | Traefik (in Kubernetes)               |
 | 10.10.10.36   | Adguardhome (home assistant connection) |
 | 10.10.10.37   | NetbootXYZ PXE Server |
-| 10.10.10.36   | iVentoy PXE Server |
+| 10.10.10.38   | iVentoy PXE Server |
 | 10.10.10.50   | Shelly Plug Freezer                   |
 | 10.10.10.52   | Shelly Plug Server Rack               |
 | 10.10.10.53   | Shelly Plug Living Room 1             |

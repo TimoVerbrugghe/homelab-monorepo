@@ -34,6 +34,6 @@
     fzf = "fzf --preview 'bat --color=always {}'";
     z = "zoxide";
     ls = "eza --group-directories-first";
-    nixupdate = "darwin-rebuild switch --flake 'github:TimoVerbrugghe/homelab-monorepo?dir=nixos#Timos-Macbook-Air' --refresh --impure --no-write-lock-file";
+    nixupdate = "sudo darwin-rebuild switch --flake 'github:TimoVerbrugghe/homelab-monorepo?dir=nixos#Timos-Macbook-Air' --refresh --impure --no-write-lock-file";
   };
  }

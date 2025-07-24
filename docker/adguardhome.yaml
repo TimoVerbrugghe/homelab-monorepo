@@ -10,8 +10,6 @@ services:
       - adguardhome-work:/opt/adguardhome/work
       - adguardhome-conf:/opt/adguardhome/conf
       - /var/lib/acme/timo.be:/etc/letsencrypt/live/timo.be
-    labels:
-      traefik.enable: false
 
 volumes:
   adguardhome-work:

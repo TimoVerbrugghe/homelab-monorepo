@@ -182,5 +182,3 @@ networks:
 #   volumes:
 #       - icloudpd-timo:/config
 #       - icloudpd-data:/home/user/iCloud
-#   labels:
-#     traefik.enable: false

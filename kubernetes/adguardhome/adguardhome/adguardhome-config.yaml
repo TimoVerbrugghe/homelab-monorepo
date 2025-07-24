@@ -277,11 +277,11 @@ filtering:
     - domain: zigbee.local.timo.be
       answer: 10.10.10.10
     - domain: netbootxyz.local.timo.be
-      answer: 10.10.10.11
+      answer: 10.10.10.37
     - domain: pdu.local.timo.be
       answer: 10.10.10.12
     - domain: iventoy.local.timo.be
-      answer: 10.10.10.13
+      answer: 10.10.10.38
     - domain: gamingserver.local.timo.be
       answer: 10.10.10.15
     - domain: sunshine.local.timo.be

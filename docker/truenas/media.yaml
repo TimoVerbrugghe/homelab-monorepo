@@ -145,8 +145,6 @@ services:
     environment:
       - TZ=Europe/Brussels
       - CRON_SCHEDULE=@daily
-    labels:
-      traefik.enable: false
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -159,8 +157,6 @@ services:
       - LOG_HTML=${LOG_HTML:-false}
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
       - TZ=Europe/Brussels
-    labels:
-      traefik.enable: false
 
   swaparr-radarr:
     image: ghcr.io/thijmengthn/swaparr:latest
@@ -177,8 +173,6 @@ services:
       - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
       - AGGRESSIVE_STRIKES=true      # Boolean              (Optional) default: false 
-    labels:
-      traefik.enable: false
 
   swaparr-sonarr: 
     image: ghcr.io/thijmengthn/swaparr:latest
@@ -195,8 +189,6 @@ services:
       - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
       - AGGRESSIVE_STRIKES=true      # Boolean              (Optional) default: false
-    labels:
-      traefik.enable: false
 
   huntarr:
     image: huntarr/huntarr:latest
@@ -283,9 +275,3 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/huntarr"
-  # recommendarr:
-  #   driver: local
-  #   driver_opts:
-  #     type: "none"
-  #     o: "bind"
-  #     device: "/mnt/FranzHopper/appdata/recommendarr"

@@ -60,8 +60,6 @@ services:
       - TZ=Europe/Brussels
     depends_on:
       - plex
-    labels:
-      traefik.enable: false
 
 volumes:
   movies:

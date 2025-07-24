@@ -25,7 +25,6 @@
     localsend
     hidden-bar
     talosctl
-    teams
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.

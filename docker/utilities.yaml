@@ -36,8 +36,6 @@ services:
       BW_CLIENTSECRET: ${BW_CLIENTSECRET}
       BW_SERVER: http://bitwarden
       BW_PASSWORD: ${BW_PASSWORD}
-    labels:
-      traefik.enable: false
 
   mealie:
     image: ghcr.io/mealie-recipes/mealie
