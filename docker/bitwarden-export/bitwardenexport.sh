@@ -48,7 +48,11 @@ else
 fi
 
 ## Cleanup ##
+# Keep only the last 3 vaultbackup_ and orgbackup_ files based on modification time
+find "$EXPORTFOLDER" -type f -name 'vaultbackup_*.json' -printf '%T@ %p\n' | sort -nr | awk 'NR>3 {print $2}' | xargs -r rm --
+find "$EXPORTFOLDER" -type f -name 'orgbackup_*.json' -printf '%T@ %p\n' | sort -nr | awk 'NR>3 {print $2}' | xargs -r rm --
 
+## Closing out ##
 printf "\nBackup done. Locking vault & logging out.\n"
 bw lock
 bw logout
