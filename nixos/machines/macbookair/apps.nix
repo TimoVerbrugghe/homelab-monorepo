@@ -52,7 +52,7 @@
       "bettertouchtool"
       "jabra-direct"
       "background-music"
-      "microsoft-teams"
+      "microsoft-teams" # Weird certificate issues when installing Teams via nixpkgs
       "handbrake"
     ];
     masApps = {

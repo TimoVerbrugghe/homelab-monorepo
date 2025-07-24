@@ -1,0 +1,86 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: talos-upgrade-notification
+  namespace: upgrade-notification
+spec:
+  # Run every Sunday at 4 AM
+  schedule: "0 4 * * 0"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 60
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          initContainers:
+            - name: talos-version-check
+              image: alpine:latest
+              env:
+                - name: TALOS_NODE
+                  value: "william.local.timo.be"
+                - name: TALOS_ENDPOINT
+                  value: "william.local.timo.be"
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  apk add --no-cache curl
+                  wget -O /usr/local/bin/talosctl https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-amd64
+                  chmod +x /usr/local/bin/talosctl
+                  talosctl version --nodes "$TALOS_NODE" --endpoints "$TALOS_ENDPOINT" --talosconfig /talosconfig/talosconfig --short > /shared/talos_version.txt
+              volumeMounts:
+                - name: talosconfig
+                  mountPath: /talosconfig
+                  readOnly: true
+                - name: shared-data
+                  mountPath: /shared
+                
+          containers:
+            - name: notify
+              image: alpine:latest
+              env:
+                - name: PUSHOVER_USER_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: pushover-secret
+                      key: user_key
+                - name: PUSHOVER_API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: pushover-secret
+                      key: api_token
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  apk add --no-cache curl
+
+                  # Get Current Talos version from the file
+                  CURRENT_TAG=$(grep 'Tag:' /shared/talos_version.txt | awk '{print $2}')
+
+                  # Get latest release tag from GitHub
+                  LATEST_TAG=$(curl -s https://api.github.com/repos/siderolabs/talos/releases/latest | grep '"tag_name":' | head -n 1 | awk -F '"' '{print $4}')
+                  
+                  # Compare and notify if different
+                  if [ "$CURRENT_TAG" != "$LATEST_TAG" ]; then
+                    curl -s \
+                      --form-string "token=$PUSHOVER_API_TOKEN" \
+                      --form-string "user=$PUSHOVER_USER_KEY" \
+                      --form-string "title=Talos upgrade available: $CURRENT_TAG → $LATEST_TAG" \
+                      --form-string "message=You can perform the upgrade using 't upgrade -n <node-name>'. You can also upgrade kubernetes version by performing 't upgrade-k8s'." \
+                      https://api.pushover.net/1/messages.json
+                  fi
+
+              volumeMounts:
+                - name: shared-data
+                  mountPath: /shared
+
+          restartPolicy: OnFailure
+          volumes:
+          - name: talosconfig
+            secret:
+              secretName: talosconfig-secret
+          - name: shared-data
+            emptyDir: {}

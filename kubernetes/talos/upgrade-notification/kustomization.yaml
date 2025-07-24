@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - upgrade-notification.yaml
+  - namespace.yaml
+
+secretGenerator:
+  - name: talosconfig-secret
+    namespace: upgrade-notification
+    files:
+      - talosconfig=talosconfig
+
+  - name: pushover-secret
+    namespace: upgrade-notification
+    envs:
+      - pushover.env
+    type: Opaque
+
+generatorOptions:
+  disableNameSuffixHash: true
