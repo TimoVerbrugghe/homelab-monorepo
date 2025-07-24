@@ -23,7 +23,7 @@ services:
       - OIDC_SERVER_APPLICATION_URL=${ROMM_OIDC_SERVER_APPLICATION_URL}
 
       # Temporarily disable OIDC until issue is fixed - https://github.com/rommapp/romm/issues/1502
-      - OIDC_ENABLED=false
+      - OIDC_ENABLED=true
       - DISABLE_USERPASS_LOGIN=false # Disable the default user/pass login, only use OIDC
     volumes:
       - romm-resources:/romm/resources # Resources fetched from IGDB (covers, screenshots, etc.)
