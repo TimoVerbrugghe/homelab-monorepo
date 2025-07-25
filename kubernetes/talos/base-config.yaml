@@ -47,14 +47,6 @@ cluster:
         default-not-ready-toleration-seconds: 120
         default-unreachable-toleration-seconds: 120
 
-    # Need to add portainer namespace as an exception to the PodSecurity Policy since it can only be installed through yaml and cannot apply policies on the namespace directly
-    admissionControl:
-      - name: PodSecurity
-        configuration:
-          exemptions:
-            namespaces:
-              - portainer
-
   # These flags are wrong, need to check
   # controllerManager:
   #     extraArgs:

@@ -1,0 +1,17 @@
+# Machine specific config for yumi2
+
+machine:
+  certSANs:
+    - 10.10.10.41
+    - yumi2.local.timo.be
+  network:
+    hostname: yumi2
+    interfaces:
+      - deviceSelector:
+          physical: true # should select any hardware network device, if it's just one, that one will be selected
+        addresses: # Assigns static IP addresses to the interface.
+          - 10.10.10.41/24
+        routes:
+          - network: 0.0.0.0/0 # The route's network (destination).
+            gateway: 10.10.10.1 # The route's gateway (if empty, creates link scope route).
+        mtu: 1500 # The interface's MTU.

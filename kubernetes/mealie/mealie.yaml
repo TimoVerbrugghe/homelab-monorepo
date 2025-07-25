@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mealie
+  namespace: mealie
+  labels:
+    app.kubernetes.io/name: gatus
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mealie
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mealie
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: yumi2
+      containers:
+        - name: mealie
+          image: ghcr.io/mealie-recipes/mealie:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mealie-secrets
+                  key: openai_api_key
+            - name: OPENAI_MODEL
+              value: "gpt-4o"
+            - name: OPENAI_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mealie-secrets
+                  key: openai_base_url
+            - name: OPENAI_CUSTOM_PARAMS
+              value: '{"api-version":"2024-08-01-preview"}'
+            - name: OPENAI_CUSTOM_HEADERS
+              valueFrom:
+                secretKeyRef:
+                  name: mealie-secrets
+                  key: openai_custom_headers
+            - name: ALLOW_SIGNUP
+              value: "false"
+            - name: TZ
+              value: "Europe/Brussels"
+            - name: BASE_URL
+              value: "https://mealie.timo.be"
+            - name: THEME_DARK_PRIMARY
+              value: "#0A2472"
+            - name: THEME_LIGHT_PRIMARY
+              value: "#0A2472"
+            - name: OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mealie-secrets
+                  key: oidc_client_id
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mealie-secrets
+                  key: oidc_client_secret
+            - name: OIDC_AUTH_ENABLED
+              value: "true"
+            - name: OIDC_SIGNUP_ENABLED
+              value: "false"
+            - name: OIDC_CONFIGURATION_URL
+              value: "https://accounts.google.com/.well-known/openid-configuration"
+            - name: OIDC_PROVIDER_NAME
+              value: "Google"
+            - name: OIDC_REMEMBER_ME
+              value: "true"
+            - name: OIDC_USER_CLAIM
+              value: "email"
+            - name: ALLOW_PASSWORD_LOGIN
+              value: "false"
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          volumeMounts:
+            - name: mealie-data
+              mountPath: /app/data
+      volumes:
+        - name: mealie-data
+          hostPath:
+            path: /var/mnt/mealie
+            type: Directory

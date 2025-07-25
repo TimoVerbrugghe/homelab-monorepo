@@ -1,0 +1,20 @@
+---
+# Local Storage for mealie
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: mealie
+provisioning:
+  diskSelector:
+    match: "!system_disk"
+  minSize: 2GB
+  maxSize: 2GB
+---
+# Local storage for portainer server
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: portainer
+provisioning:
+  diskSelector:
+    match: "!system_disk"
+  minSize: 5GB
+  maxSize: 5GB
