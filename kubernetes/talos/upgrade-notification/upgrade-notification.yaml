@@ -69,7 +69,7 @@ spec:
                       --form-string "token=$PUSHOVER_API_TOKEN" \
                       --form-string "user=$PUSHOVER_USER_KEY" \
                       --form-string "title=Talos upgrade available: $CURRENT_TAG → $LATEST_TAG" \
-                      --form-string "message=You can perform the upgrade using 't upgrade -n <node-name>'. You can also upgrade kubernetes version by performing 't upgrade-k8s'." \
+                      --form-string "message=You can perform the upgrade using 't upgrade -n <node-name> --image <imagecode>:$LATEST_TAG'. You can also upgrade kubernetes version by performing 't upgrade-k8s'." \
                       https://api.pushover.net/1/messages.json
                   fi
 
