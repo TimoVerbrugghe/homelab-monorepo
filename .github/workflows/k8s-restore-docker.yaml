@@ -1,4 +1,4 @@
-name: Build and Publish k8s-backup Docker Image
+name: Build and Publish k8s-restore Docker Image
 
 on:
   workflow_dispatch:
@@ -6,8 +6,8 @@ on:
     branches:
       - master
     paths:
-      - 'docker/k8s-backup/**'
-      - '.github/workflows/k8s-backup-docker.yaml'
+      - 'docker/k8s-restore/**'
+      - '.github/workflows/k8s-restore-docker.yaml'
 
 permissions:
   contents: read
@@ -17,7 +17,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository_owner }}/k8s-backup
+  IMAGE_NAME: ${{ github.repository_owner }}/k8s-restore
 
 jobs:
   build-and-publish:
@@ -73,7 +73,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: docker/k8s-backup
+          context: docker/k8s-restore
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
