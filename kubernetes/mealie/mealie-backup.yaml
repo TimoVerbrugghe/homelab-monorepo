@@ -12,21 +12,15 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: backup
-              image: alpine:latest
-              command:
-                - /bin/sh
-                - -c
-                - |
-                  set -e
-                  BACKUP_NAME="mealie-backup-$(date +%Y%m%d%H%M%S).tar.gz"
-                  tar czf "/nfs/${BACKUP_NAME}" -C /backup .
-                  cd /nfs
-                  ls -1t mealie-backup-*.tar.gz | tail -n +4 | xargs -r rm --
+              image: ghcr.io/timoverbrugghe/k8s-backup:latest
+              env:
+                - name: BACKUP_NAME
+                  value: "mealie"
               volumeMounts:
                 - name: mealie-data
-                  mountPath: /backup
+                  mountPath: /appdata
                 - name: nfs-backup
-                  mountPath: /nfs
+                  mountPath: /backup
           volumes:
             - name: mealie-data
               hostPath:

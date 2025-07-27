@@ -19,7 +19,6 @@ secrets.yaml
 talosconfig
 extension-patch.yaml
 kubesecrets.yaml
-.*
 kubeconfig
 talosctl.exe
 test.yaml
