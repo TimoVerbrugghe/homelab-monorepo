@@ -4,7 +4,7 @@ metadata:
   name: mealie
   namespace: mealie
   labels:
-    app.kubernetes.io/name: gatus
+    app.kubernetes.io/name: mealie
   annotations:
     keel.sh/policy: force
     keel.sh/match-tag: "true"

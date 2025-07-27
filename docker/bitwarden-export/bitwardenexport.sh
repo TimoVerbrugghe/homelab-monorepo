@@ -2,9 +2,7 @@
 
 ## Configuration variables ##
 
-ENV_FILE=/environment.sh
-APPDATAFOLDER=/appdata
-EXPORTFOLDER="$APPDATAFOLDER"/export
+EXPORTFOLDER=/backup
 EXPORTFILE="$EXPORTFOLDER/vaultbackup_$(date '+%d%m%Y').json"
 
 ## Starting Backup ##
@@ -13,17 +11,12 @@ printf "\nStarting backup of bitwarden. Current date & time is $(date).\n"
 ## Loading Variables ##
 printf "\nLoading Client ID, Client Secret, Server and Password variables.\n"
 
-source <(cat "$ENV_FILE" | grep "BW_CLIENTID")
-source <(cat "$ENV_FILE" | grep "BW_CLIENTSECRET")
-source <(cat "$ENV_FILE" | grep "BW_SERVER")
-source <(cat "$ENV_FILE" | grep "BW_PASSWORD")
-
 ## Connecting to Bitwarden Server ##
 printf "\nConnecting to bitwarden server $BW_SERVER.\n"
 bw config server "$BW_SERVER"
 bw login --apikey
 
-BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
+BW_SESSION=$(bw unlock --raw --passwordenv $BW_PASSWORD)
 bw sync
 
 ## Exporting vault ##

@@ -20,13 +20,20 @@ deployment:
   replicas: 3
 
 ports:
+  web:
+    # Setting port manually to 8001 since portaineredge uses port 8000, otherwise default helm chat values will use 8000
+    port: 8001
+    expose:
+      default: false
+    redirections:
+      entryPoint: 
+        to: websecure
+        scheme: https
+        permanent: true
   traefik:
     port: 9000
     exposedPort: 9000
     protocol: TCP
-  web:
-    expose:
-      default: false
   websecure:
     port: 8443
     expose:
@@ -51,6 +58,12 @@ ports:
     expose:
       default: true
     exposedPort: 9100
+    protocol: TCP
+  portaineredge:
+    port: 8000
+    expose:
+      default: false
+    exposedPort: 8000
     protocol: TCP
 
 ingressRoute:

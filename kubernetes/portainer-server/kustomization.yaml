@@ -1,0 +1,21 @@
+# Apply all these resources with `kubectl apply -k .` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+secretGenerator:
+  - name: portainer-backup-secret
+    type: Opaque
+    namespace: portainer
+    envs:
+      - portainer-backup-secret.env
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+resources:
+  - portainer-server.yaml
+  - portainer-server-ingress.yaml
+  - portainer-server-service.yaml
+  - portainer-server-backup.yaml
+  - portainer-server-serviceaccount.yaml
+  - namespace.yaml

@@ -18,3 +18,13 @@ provisioning:
     match: "!system_disk"
   minSize: 5GB
   maxSize: 5GB
+---
+# Local storage for bitwarden
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: bitwarden
+provisioning:
+  diskSelector:
+    match: "!system_disk"
+  minSize: 5GB
+  maxSize: 5GB

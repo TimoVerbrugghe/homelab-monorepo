@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bitwarden-restore
+  namespace: bitwarden
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: bitwarden-data
+          hostPath:
+            path: /var/mnt/bitwarden
+        - name: nfs-backup
+          nfs:
+            server: nfs.local.timo.be
+            path: /mnt/FranzHopper/appdata/bitwarden
+      containers:
+        - name: restore
+          image: alpine:3.19
+          command:
+            - /bin/sh
+            - -c
+            - |
+              # Clean bitwarden data directory
+              rm -rf /data/*
+
+              # Find latest backup tar.gz file
+              LATEST_TAR=$(ls -1t /backup/*.tar.gz | head -n1)
+
+              # Extract backup
+              tar -xzvf "$LATEST_TAR" -C /data
+          volumeMounts:
+            - name: bitwarden-data
+              mountPath: /data
+            - name: nfs-backup
+              mountPath: /backup

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bitwarden
+  namespace: bitwarden
+  labels:
+    app.kubernetes.io/name: bitwarden
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bitwarden
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bitwarden
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: yumi2
+      containers:
+        - name: bitwarden
+          image: vaultwarden/server:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          env:
+            - name: DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: bitwarden-secret
+                  key: DOMAIN
+            - name: SERVER_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: bitwarden-secret
+                  key: SERVER_ADMIN_EMAIL
+            - name: SIGNUPS_ALLOWED
+              value: "false"
+            - name: INVITATIONS_ALLOWED
+              value: "false"
+            - name: WEBSOCKET_ENABLED
+              value: "false"
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bitwarden-secret
+                  key: ADMIN_TOKEN
+          volumeMounts:
+            - name: bitwarden-data
+              mountPath: /data
+      volumes:
+        - name: bitwarden-data
+          hostPath:
+            path: /var/mnt/bitwarden
+            type: Directory

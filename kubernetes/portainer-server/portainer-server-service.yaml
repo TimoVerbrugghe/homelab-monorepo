@@ -1,0 +1,28 @@
+# Source: portainer/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: portainer
+  namespace: portainer
+  labels:
+    io.portainer.kubernetes.application.stack: portainer
+    app.kubernetes.io/name: portainer
+    app.kubernetes.io/instance: portainer
+    app.kubernetes.io/version: "ce-latest-ee-lts"
+spec:
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+      name: http
+    - port: 9443
+      targetPort: 9443
+      protocol: TCP
+      name: https
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: edge
+  selector:
+    app.kubernetes.io/name: portainer
+    app.kubernetes.io/instance: portainer

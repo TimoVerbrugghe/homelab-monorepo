@@ -10,7 +10,7 @@ ENV DISPLAY=:0
 VOLUME /nsp
 VOLUME /root/.java/.userPrefs/NS-USBloader
 
-# Install wget (if not already installed)
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     wget tar \
     libx11-6 libxxf86vm1 libgl1-mesa-glx \

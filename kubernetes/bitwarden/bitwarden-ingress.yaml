@@ -1,0 +1,33 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: bitwarden
+  namespace: bitwarden
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`bitwarden.kubernetes.timo.be`) || Host(`bitwarden.timo.be`)
+      kind: Rule
+      services:
+        - name: bitwarden
+          port: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bitwarden-tailscale
+  namespace: bitwarden
+spec:
+  defaultBackend:
+    service:
+      name: bitwarden
+      port:
+        number: 80
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - bitwarden

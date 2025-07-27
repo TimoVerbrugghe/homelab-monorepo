@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: portainer-backup
+  namespace: portainer
+spec:
+  schedule: "0 4 * * 0" # Runs weekly on Sunday at 4 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              image: alpine:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -e
+                  apk add --no-cache curl jq
+
+                  BACKUP_NAME="portainer-backup-$(date +%Y%m%d%H%M%S).tar.gz"
+
+                  # Request backup from Portainer API, using -k for insecure connections since portainer uses self-signed certificates
+                  curl -k -L -X POST \
+                    -H "X-API-Key: $API_KEY" \
+                    -H "Content-Type: application/json" \
+                    --data '{ "password": "'"$BACKUP_PASSWORD"'" }' \
+                    --url "$PORTAINER_URL/api/backup" \
+                    -o "/nfs/${BACKUP_NAME}"
+
+                  # Keep only the 3 most recent backups
+                  cd /nfs
+                  ls -1t portainer-backup-*.tar.gz | tail -n +4 | xargs -r rm --
+              env:
+                - name: PORTAINER_URL
+                  value: https://portainer.portainer.svc.cluster.local:9443
+                - name: BACKUP_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: portainer-backup-secret
+                      key: backupPassword
+                - name: API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: portainer-backup-secret
+                      key: apiKey
+              volumeMounts:
+                - name: nfs-backup
+                  mountPath: /nfs
+          volumes:
+            - name: nfs-backup
+              nfs:
+                server: nfs.local.timo.be
+                path: /mnt/FranzHopper/appdata/portainer
