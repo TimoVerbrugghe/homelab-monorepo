@@ -1,0 +1,10 @@
+{
+  "domain": "kubeassistant",
+  "name": "KubeAssistant",
+  "version": "0.1.0",
+  "requirements": [
+    "kubernetes==29.0.0"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/yourrepo/kubeassistant"
+}
