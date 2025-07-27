@@ -12,21 +12,15 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: backup
-              image: alpine:latest
-              command:
-                - /bin/sh
-                - -c
-                - |
-                  set -e
-                  BACKUP_NAME="bitwarden-backup-$(date +%Y%m%d%H%M%S).tar.gz"
-                  tar czf "/nfs/${BACKUP_NAME}" -C /backup .
-                  cd /nfs
-                  ls -1t bitwarden-backup-*.tar.gz | tail -n +4 | xargs -r rm --
+              image: ghcr.io/timoverbrugghe/k8s-backup:latest
+              env:
+                - name: BACKUP_NAME
+                  value: "bitwarden"
               volumeMounts:
                 - name: bitwarden-data
-                  mountPath: /backup
+                  mountPath: /appdata
                 - name: nfs-backup
-                  mountPath: /nfs
+                  mountPath: /backup
           volumes:
             - name: bitwarden-data
               hostPath:

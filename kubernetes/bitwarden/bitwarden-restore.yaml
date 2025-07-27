@@ -17,21 +17,9 @@ spec:
             path: /mnt/FranzHopper/appdata/bitwarden
       containers:
         - name: restore
-          image: alpine:3.19
-          command:
-            - /bin/sh
-            - -c
-            - |
-              # Clean bitwarden data directory
-              rm -rf /data/*
-
-              # Find latest backup tar.gz file
-              LATEST_TAR=$(ls -1t /backup/*.tar.gz | head -n1)
-
-              # Extract backup
-              tar -xzvf "$LATEST_TAR" -C /data
+          image: ghcr.io/timoverbrugghe/k8s-restore:latest
           volumeMounts:
             - name: bitwarden-data
-              mountPath: /data
+              mountPath: /appdata
             - name: nfs-backup
               mountPath: /backup
