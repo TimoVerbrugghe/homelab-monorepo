@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Boeboeks - De Tocht Naar Opa Kakadoris
+Exec=86Box --config /home/deck/Emulation/roms/lutris/boeboeks/86Boxconfig.cfg --rompath /home/deck/Emulation/roms/lutris/boeboeks/roms --fullscreen
+Categories=Game
+Path=/home/deck/Emulation/roms/lutris/boeboeks
