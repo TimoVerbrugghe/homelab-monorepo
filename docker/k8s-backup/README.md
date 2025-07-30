@@ -52,4 +52,4 @@ This Docker container is designed for use in a homelab environment to automate b
 ## Notes
 
 - Ensure the container has the necessary permissions to read from `/appdata` and write to `/backup`.
-- This can be used together with k8s-restore docker container from this repo.
+- This can be used together with k8s-restore docker container from this repo
