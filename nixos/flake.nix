@@ -223,7 +223,7 @@
 
     darwinConfigurations = {
       # For a fresh install, first install nix-darwin by following instructions (including the flake init and installing a simple flake first) at https://github.com/LnL7/nix-darwin
-      # Switch to this config with darwin-rebuild switch --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#TimosMacbookAir --impure --no-write-lock-file
+      # Switch to this config with sudo darwin-rebuild switch --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#TimosMacbookAir --impure --no-write-lock-file
       Timos-Macbook-Air = nix-darwin.lib.darwinSystem {
         specialArgs = inputs;
         modules = [
