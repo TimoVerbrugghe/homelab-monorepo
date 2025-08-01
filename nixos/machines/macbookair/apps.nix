@@ -35,7 +35,7 @@
     ];
     casks = [
       "vlc"
-      # "microsoft-edge" -> Installed through MDM
+      "microsoft-edge"
       # "sony-ps-remote-play" - This still needs rosetta 
       "intune-company-portal"
       "bettertouchtool"
