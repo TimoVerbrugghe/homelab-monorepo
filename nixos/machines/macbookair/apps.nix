@@ -35,14 +35,14 @@
     ];
     casks = [
       "vlc"
-      "microsoft-edge"
+      # "microsoft-edge" -> Installed through MDM
       # "sony-ps-remote-play" - This still needs rosetta 
       "intune-company-portal"
       "bettertouchtool"
       "jabra-direct"
       "background-music"
       "microsoft-teams" # Weird certificate issues when installing Teams via nixpkgs
-      "handbrake"
+      "handbrake-app"
       "visual-studio-code"
       # "tailscale" -> THIS CAUSES SEVERAL DISCONNECT ISSUES WHEN YOU INSTALL THIS PACKAGE THROUGH NIX, DO NOT INSTALL THROUGH THIS WAY (either install via the mac app store or manually download from tailscale website)
       # "spotify"
