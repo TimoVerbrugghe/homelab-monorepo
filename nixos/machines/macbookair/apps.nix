@@ -43,7 +43,6 @@
     brews = [
     ];
     casks = [
-      "tailscale-app"
       "vlc"
       "microsoft-edge"
       # "sony-ps-remote-play" - This still needs rosetta 
@@ -54,6 +53,7 @@
       "microsoft-teams" # Weird certificate issues when installing Teams via nixpkgs
       "handbrake"
       "visual-studio-code"
+      # "tailscale" -> THIS CAUSES SEVERAL DISCONNECT ISSUES WHEN YOU INSTALL THIS PACKAGE THROUGH NIX, DO NOT INSTALL THROUGH THIS WAY (either install via the mac app store or manually download from tailscale website)
     ];
     masApps = {
       "Xcode" = 497799835;
@@ -77,6 +77,7 @@
       "Pushover" = 506088175;
       "Whatsapp" = 310633997;
       "Bitwarden"= 1352778147;
+      "Tailscale" = 1475387142;
     };
 
     # Remove any casks that are not defined in this nix config
