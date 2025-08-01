@@ -1,0 +1,23 @@
+name: Miel Monteur - Recht door Zee
+version: 1.0.0
+description: Installer for Miel Monteur - Recht door Zee
+author: Timo Verbrugghe
+game_slug: miel-monteur-recht-door-zee
+installer_slug: miel-monteur-recht-door-zee-installer
+runner: wine
+script:
+  game:
+    exe: $GAMEDIR/prefix/drive_c/Program Files/TRANSPOSIA/Miel Monteur - Recht Door Zee!/Mullebat.exe
+    prefix: $GAMEDIR/prefix
+    arch: win32
+    working_dir: $GAMEDIR/prefix
+  files:
+    - installer: "N/A:Select the game's setup file"
+  installer:
+    - task:
+        executable: installer
+        name: wineexec
+        prefix: $GAMEDIR/prefix
+        return_code: "18432"
+slug: miel-monteur-recht-door-zee
+year: 1998

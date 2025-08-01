@@ -2,6 +2,10 @@
 
 This guide was written to explain how to install some specific older PC games that I have on the Steam Deck using SteamOS. Heavily inspired by [this guide](https://rentry.co/steamdeckpiratescove).
 
+## steamos-installed folder
+
+It might be that I have already installed these games in the past in /home/deck/Games/Games and zipped that folder onto my NAS. In that case, extract the zipped folder back to /home/deck/Games/Games and follow only the post-installation steps described below.
+
 ## Default Installation Steps
 
 1. **Extract the Game Files**  
@@ -92,3 +96,48 @@ Some games can be played by simply extracting and adding the executable:
 - Skippy & Het Geheim van de Gestolen Papyrusrol
 
 ---
+
+## Special Installation Steps for Specific Games
+
+### Miel Monteur - Recht Door Zee
+
+This game requires installation via Lutris:
+
+1. **Install with Lutris**  
+    Use the `miel-monteur-recht-door-zee.yaml` file from this repo in Lutris & choose "install using yaml file" when adding a game.
+    During Setup, when prompted for the installation destination, select:  
+
+    ```dos
+    Z:\home\deck\Games\Games\Miel Monteur - Recht Door Zee
+    ```
+
+2. **Add Executable to Steam**  
+    After installation, add `Mullebat.exe` (found in the install folder) as a non-Steam game in Steam.  
+    Enable **Proton Experimental** compatibility.
+
+3. **Configure with Protontricks**  
+    - Enable virtual desktop as described above.
+    - Add the ISO as an `E:` drive in WineCfg as described above.
+
+---
+
+### Miel Monteur - Huis op Stelten
+
+This game requires specific installation steps in Steam since it does not like to be installed anywhere else but the C:\ drive.
+
+1. **Extract ISO**
+    Extract the ISO (mielmonteur4) to
+
+    ```bash
+    /home/deck/Games/Games/Miel Monteur - Huis op Stelten
+    ```
+
+2. **Adding Game to Steam**
+    Open Steam (in desktop mode), go to Library, click "Add a Game" and "Add a Non-Steam Game". Click on Browse and locate "MielHuizen.exe" in the folder where you extracted the iso. Also add Proton experimental compatibility to the non-steam game.
+
+3. **Install the Game**
+    Launch the non-Steam game, click on "Speel" and go through installation process of Miel Monteur & Quicktime. Leave the destination paths to default (C:\...).
+
+4. **Configure with Protontricks**  
+    - Enable virtual desktop for 800x600 display as described above.
+    - Add the ISO as an `E:` drive in WineCfg as described above.
