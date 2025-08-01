@@ -26,30 +26,6 @@ in
 
   system.primaryUser = "${username}";
 
-	# Nix-store optimizations
-  nix.optimise.automatic = true;
-  nix.gc = {
-    automatic = true;
-    options = "--delete-older-than 7d";
-  };
-
-	# Add github key to avoid auth errors when doing multiple darwin-rebuilds in quick succession
-	nix.extraOptions = ''
-    !include /etc/nix/github.key
-  '';
-
-  nix.settings.trusted-users = [ "${username}" ];
-
-  # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
-
-  # Increase the download buffer size to 500M to avoid timeouts when downloading large files.
-  nix.settings.download-buffer-size = 524288000;
-
-  # Let nix-darwin manage the nix installation, nix-daemon & nix settings
-  nix.enable = true;
-  nix.package = pkgs.nix;
-
   # Allow installation of unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -70,4 +46,31 @@ in
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
     '';
   };
+
+  ## Nix Optimization Settings. These have been commented out since I will now be using determinate Nix (in --determinate mode) due to nix-darwin and nix-pure install misconfiguring certifcates in /etc/ssl/certs (even after full uninstall & reboot), which meant that my internet was dropping out every few seconds on my mac.
+
+  # Nix-store optimizations
+  # nix.optimise.automatic = true;
+  # nix.gc = {
+  #  automatic = true;
+  #  options = "--delete-older-than 7d";
+  # };
+
+  # Add github key to avoid auth errors when doing multiple darwin-rebuilds in quick succession
+  # nix.extraOptions = ''
+  #   !include /etc/nix/github.key
+  # '';
+
+  # nix.settings.trusted-users = [ "${username}" ];
+
+  # Necessary for using flakes on this system.
+  # nix.settings.experimental-features = "nix-command flakes";
+
+  # Increase the download buffer size to 500M to avoid timeouts when downloading large files.
+  # nix.settings.download-buffer-size = 524288000;
+
+  # Let nix-darwin manage the nix installation, nix-daemon & nix settings
+  # nix.enable = true;
+  # nix.package = pkgs.nix;
+
 }
