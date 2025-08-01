@@ -14,15 +14,6 @@
     kubectl
     ansible
     mas
-    moonlight-qt
-    spotify
-    gimp
-    google-chrome
-    monitorcontrol
-    maccy
-    slack
-    localsend
-    hidden-bar
     talosctl
   ];
   
@@ -54,6 +45,11 @@
       "handbrake"
       "visual-studio-code"
       # "tailscale" -> THIS CAUSES SEVERAL DISCONNECT ISSUES WHEN YOU INSTALL THIS PACKAGE THROUGH NIX, DO NOT INSTALL THROUGH THIS WAY (either install via the mac app store or manually download from tailscale website)
+      # "spotify"
+      # "gimp"
+      # "google-chrome"
+      # "monitorcontrol"
+      # "moonlight"
     ];
     masApps = {
       "Xcode" = 497799835;
@@ -65,7 +61,6 @@
       "Microsoft OneNote" = 784801555;
       "Microsoft OneDrive" = 823766827;
       "Microsoft To Do" = 1274495053;
-      "Plexamp" = 1500797510;
       "Home Assistant" = 1099568401;
       "Microsoft Copilot" = 6738511300;
       "Microsoft Universal Print" = 6450432292;
@@ -74,10 +69,16 @@
       "Pages" = 409201541;
       "iMovie" = 408981434;
       "GarageBand" = 682658836;
-      "Pushover" = 506088175;
       "Whatsapp" = 310633997;
       "Bitwarden"= 1352778147;
       "Tailscale" = 1475387142;
+      "Slack" = 803453959;
+      "LocalSend" = 1661733229;
+      "Hidden Bar" = 1452453066;
+
+      # Mas does not support iOS/iPadOS apps, so these will not work
+      # "Plexamp" = 1500797510;
+      # "Pushover" = 506088175;
     };
 
     # Remove any casks that are not defined in this nix config
