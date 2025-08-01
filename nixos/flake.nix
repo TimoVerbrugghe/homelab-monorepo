@@ -222,8 +222,10 @@
     };
 
     darwinConfigurations = {
-      # For a fresh install, first install nix-darwin by following instructions (including the flake init and installing a simple flake first) at https://github.com/LnL7/nix-darwin
+      # For a fresh install, first install determinate nix using their MacOS package (
+      # Then install nix-darwin by following instructions (including the flake init and installing a simple flake first) at https://github.com/LnL7/nix-darwin
       # Switch to this config with sudo darwin-rebuild switch --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#TimosMacbookAir --impure --no-write-lock-file
+
       Timos-Macbook-Air = nix-darwin.lib.darwinSystem {
         specialArgs = inputs;
         modules = [
@@ -232,6 +234,9 @@
           nix-homebrew.darwinModules.nix-homebrew
           ./machines/macbookair/configuration.nix
           {
+            # Disable nix-darwin managing nix since nix itself will be managed using determinate systems' installer - see https://docs.determinate.systems/guides/nix-darwin
+            nix.enable = false;
+
             nix-homebrew = {
               # Install Homebrew under the default prefix
               enable = true;
@@ -253,6 +258,7 @@
               #
               # With mutableTaps disabled, taps can no longer be added imperatively with `brew tap`.
               mutableTaps = false;
+
             };
           }
         ];
