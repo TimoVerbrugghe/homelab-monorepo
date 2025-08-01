@@ -1,6 +1,6 @@
 # Installing Older PC Games on SteamOS/Steam Deck
 
-This guide was written to explain how to install some specific older PC games that I have on the Steam Deck using SteamOS.
+This guide was written to explain how to install some specific older PC games that I have on the Steam Deck using SteamOS. Heavily inspired by [this guide](https://rentry.co/steamdeckpiratescove).
 
 ## Default Installation Steps
 
