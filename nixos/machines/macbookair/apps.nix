@@ -34,9 +34,10 @@
     brews = [
     ];
     casks = [
+      # "tailscale" -> THIS CAUSES SEVERAL DISCONNECT ISSUES WHEN YOU INSTALL THIS PACKAGE THROUGH NIX, DO NOT INSTALL THROUGH THIS WAY (either install via the mac app store or manually download from tailscale website)
+      # "sony-ps-remote-play" - This still needs rosetta 
       "vlc"
       "microsoft-edge"
-      # "sony-ps-remote-play" - This still needs rosetta 
       "intune-company-portal"
       "bettertouchtool"
       "jabra-direct"
@@ -44,12 +45,11 @@
       "microsoft-teams" # Weird certificate issues when installing Teams via nixpkgs
       "handbrake-app"
       "visual-studio-code"
-      # "tailscale" -> THIS CAUSES SEVERAL DISCONNECT ISSUES WHEN YOU INSTALL THIS PACKAGE THROUGH NIX, DO NOT INSTALL THROUGH THIS WAY (either install via the mac app store or manually download from tailscale website)
-      # "spotify"
-      # "gimp"
-      # "google-chrome"
-      # "monitorcontrol"
-      # "moonlight"
+      "spotify"
+      "gimp"
+      "google-chrome"
+      "monitorcontrol"
+      "moonlight"
     ];
     masApps = {
       "Xcode" = 497799835;
@@ -71,10 +71,10 @@
       "GarageBand" = 682658836;
       "Whatsapp" = 310633997;
       "Bitwarden"= 1352778147;
-      # "Tailscale" = 1475387142;
-      # "Slack" = 803453959;
-      # "LocalSend" = 1661733229;
-      # "Hidden Bar" = 1452453066;
+      "Tailscale" = 1475387142;
+      "Slack" = 803453959;
+      "LocalSend" = 1661733229;
+      "Hidden Bar" = 1452453066;
 
       # Mas does not support iOS/iPadOS apps, so these will not work
       # "Plexamp" = 1500797510;
