@@ -1,6 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Skippy en Het Geheim van de Gestolen Papyrusrol
-Exec=86Box --config /home/deck/Emulation/roms/lutris/skippy/86Boxconfig.cfg --rompath /home/deck/Emulation/roms/lutris/skippy/roms --fullscreen
-Categories=Game
-Path=/home/deck/Emulation/roms/lutris/skippy
