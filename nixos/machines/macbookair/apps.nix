@@ -71,10 +71,10 @@
       "GarageBand" = 682658836;
       "Whatsapp" = 310633997;
       "Bitwarden"= 1352778147;
-      "Tailscale" = 1475387142;
-      "Slack" = 803453959;
-      "LocalSend" = 1661733229;
-      "Hidden Bar" = 1452453066;
+      # "Tailscale" = 1475387142;
+      # "Slack" = 803453959;
+      # "LocalSend" = 1661733229;
+      # "Hidden Bar" = 1452453066;
 
       # Mas does not support iOS/iPadOS apps, so these will not work
       # "Plexamp" = 1500797510;
