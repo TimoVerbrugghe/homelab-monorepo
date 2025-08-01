@@ -6,7 +6,6 @@
 
   # WARNING: Less stable on MacOS than homebrew
   environment.systemPackages = with pkgs; [ 
-    vscode
     direnv
     iperf
     powershell
@@ -54,6 +53,7 @@
       "background-music"
       "microsoft-teams" # Weird certificate issues when installing Teams via nixpkgs
       "handbrake"
+      "visual-studio-code"
     ];
     masApps = {
       "Xcode" = 497799835;
