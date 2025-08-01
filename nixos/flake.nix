@@ -222,10 +222,9 @@
     };
 
     darwinConfigurations = {
-      # For a fresh install, first install determinate nix using their MacOS package (
-      # Then install nix-darwin by following instructions (including the flake init and installing a simple flake first) at https://github.com/LnL7/nix-darwin
-      # Switch to this config with sudo darwin-rebuild switch --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#TimosMacbookAir --impure --no-write-lock-file
-
+      # For a fresh install, first install determinate nix using their MacOS package
+      # Then switch to this config with sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake 'github:TimoVerbrugghe/homelab-monorepo?dir=nixos#Timos-Macbook-Air' --impure --no-write-lock-file
+      ## WARNING: This will setup some "sh" login Items (System Settings -> Users & Groups -> Login Items) that will run nix commands on login, which set up the nix environment at boot. DO NOT TURN THESE OFF (otherwise /run/current-system will not be created and none of the nix packages will work).
       Timos-Macbook-Air = nix-darwin.lib.darwinSystem {
         specialArgs = inputs;
         modules = [
