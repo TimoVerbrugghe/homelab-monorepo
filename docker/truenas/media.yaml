@@ -212,7 +212,7 @@ services:
     volumes:
       - watcharr:/data
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:3080/api/v1/status || exit 1"]
+      test: ["CMD-SHELL", "curl --fail http://localhost:3080/login || exit 1"]
       interval: 1s
       timeout: 5s
       retries: 60
