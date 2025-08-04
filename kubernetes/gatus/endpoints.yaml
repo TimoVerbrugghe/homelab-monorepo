@@ -252,12 +252,6 @@ endpoints:
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
-  # Since gamingserver is not always running, not using the defaults since don't want to get alerts on this one
-  - name: "Sunshine"
-    url: "https://sunshine.local.timo.be:47990"
-    group: Utilities
-    <<: *defaults-http
-
   # Containers Group
   - name: "Portainer"
     url: "https://yumi.local.timo.be:9443"

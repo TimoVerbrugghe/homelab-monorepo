@@ -14,6 +14,7 @@ Below is a list of applications currently installed from the Discover Store on m
 - **Peazip**
 - **Protontricks**
 - **ProtonUp-Qt**
+- **Sunshine**
 
 ---
 
