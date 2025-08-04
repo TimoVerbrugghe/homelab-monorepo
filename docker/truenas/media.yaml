@@ -203,6 +203,27 @@ services:
     environment:
       - TZ=Europe/Brussels
 
+  watcharr:
+    image: ghcr.io/Watcharr/Watcharr:latest
+    container_name: watcharr
+    restart: always
+    networks:
+      - dockerproxy
+    volumes:
+      - watcharr:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3080/api/v1/status || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+    ports:
+      - 14006:3080
+    labels:
+      tsdproxy.container_port: 3080
+      tsdproxy.enable: true
+      tsdproxy.name: "watcharr"
+      tsdproxy.ephemeral: false
+
 networks:
   dockerproxy:
     external: true
@@ -275,3 +296,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/huntarr"
+  watcharr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/watcharr"
