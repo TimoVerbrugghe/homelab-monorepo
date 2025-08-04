@@ -204,7 +204,7 @@ services:
       - TZ=Europe/Brussels
 
   watcharr:
-    image: ghcr.io/Watcharr/Watcharr:latest
+    image: ghcr.io/sbondco/watcharr:latest
     container_name: watcharr
     restart: always
     networks:
