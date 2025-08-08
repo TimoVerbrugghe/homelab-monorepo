@@ -19,7 +19,6 @@ resources:
   - traefik-bazarr.yaml
   - traefik-prowlarr.yaml
   - traefik-huntarr.yaml
-  - traefik-yamtrack.yaml
 
   # Custom Ingresses - TheFactory Downloaders
   - traefik-qbittorrent.yaml
