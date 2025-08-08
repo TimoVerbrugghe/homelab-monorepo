@@ -4,12 +4,12 @@
 
 - name: Add Tailscale GPG key
   ansible.builtin.uri:
-    url: https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg
+    url: https://pkgs.tailscale.com/stable/debian/trixie.noarmor.gpg
     dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
 
 - name: Add Tailscale repository
   ansible.builtin.uri:
-    url: https://pkgs.tailscale.com/stable/debian/bookworm.tailscale-keyring.list
+    url: https://pkgs.tailscale.com/stable/debian/trixie.tailscale-keyring.list
     dest: /etc/apt/sources.list.d/tailscale.list
     
 - name: Update apt cache
