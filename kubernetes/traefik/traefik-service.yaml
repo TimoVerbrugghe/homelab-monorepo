@@ -26,7 +26,7 @@ metadata:
   name: traefik-tailscale
   namespace: traefik
   annotations:
-    tailscale.com/hostname: "traefik-test"
+    tailscale.com/hostname: "traefik"
 spec:
   selector:
     app.kubernetes.io/name: traefik

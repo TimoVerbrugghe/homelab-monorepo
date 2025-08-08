@@ -5,6 +5,9 @@ kind: Kustomization
 generatorOptions:
  disableNameSuffixHash: true
 
+resources:
+  - https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/cmd/k8s-operator/deploy/manifests/operator.yaml
+
 secretGenerator:
   - name: operator-oauth
     namespace: cert-manager
@@ -17,19 +20,23 @@ secretGenerator:
         reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
         reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "tailscale"
 
-resources:
-  - tailscale-namespace.yaml
-
 patches:
+  # Add autoupdate through keel for tailscale-operator
   - target:
       kind: Deployment
       name: operator
       namespace: tailscale
-    path: tailscale-operator-patch.yaml
+    path: tailscale-operator-patch-deployment.yaml
 
-helmCharts:
-  - name: tailscale-operator
-    repo: https://pkgs.tailscale.com/helmcharts
-    namespace: tailscale
-    includeCRDs: true
-    releaseName: tailscale-operator
+  # Delete the operator-oauth secret, as I create it separately
+  - target:
+      kind: Secret
+      name: operator-oauth
+      namespace: tailscale
+    path: tailscale-operator-patch-delete-secret.yaml
+  
+  # Add necessary permissions to the namespace for Tailscale to work
+  - target:
+      kind: Namespace
+      name: tailscale
+    path: tailscale-namespace.yaml
