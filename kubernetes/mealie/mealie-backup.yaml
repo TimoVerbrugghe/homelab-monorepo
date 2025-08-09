@@ -10,6 +10,8 @@ spec:
       template:
         spec:
           restartPolicy: OnFailure
+          nodeSelector:
+            kubernetes.io/hostname: yumi2
           containers:
             - name: backup
               image: ghcr.io/timoverbrugghe/k8s-backup:latest

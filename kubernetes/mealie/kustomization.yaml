@@ -7,6 +7,7 @@ resources:
   - mealie-ingress.yaml
   - mealie-service.yaml
   - namespace.yaml
+  - mealie-backup.yaml
 
 secretGenerator:
   - name: mealie-secrets

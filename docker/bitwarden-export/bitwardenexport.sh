@@ -16,7 +16,8 @@ printf "\nConnecting to bitwarden server $BW_SERVER.\n"
 bw config server "$BW_SERVER"
 bw login --apikey
 
-BW_SESSION=$(bw unlock --raw --passwordenv $BW_PASSWORD)
+# The following will look for an environment variable BW_PASSWORD. If BW_PASSWORD is non-empty and has correct values, the CLI will successfully unlock and return a session key. See https://bitwarden.com/help/article/cli/#unlock
+BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
 bw sync
 
 ## Exporting vault ##
