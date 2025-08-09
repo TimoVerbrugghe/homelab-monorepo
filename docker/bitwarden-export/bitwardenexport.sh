@@ -3,7 +3,7 @@
 ## Configuration variables ##
 
 EXPORTFOLDER=/backup
-EXPORTFILE="$EXPORTFOLDER/vaultbackup_$(date '+%d%m%Y').json"
+EXPORTFILE="$EXPORTFOLDER/vaultbackup_$(date +%Y%m%d%H%M%S).json"
 
 ## Starting Backup ##
 printf "\nStarting backup of bitwarden. Current date & time is $(date).\n"
@@ -43,8 +43,8 @@ fi
 
 ## Cleanup ##
 # Keep only the last 3 vaultbackup_ and orgbackup_ files based on modification time
-find "$EXPORTFOLDER" -type f -name 'vaultbackup_*.json' -printf '%T@ %p\n' | sort -nr | awk 'NR>3 {print $2}' | xargs -r rm --
-find "$EXPORTFOLDER" -type f -name 'orgbackup_*.json' -printf '%T@ %p\n' | sort -nr | awk 'NR>3 {print $2}' | xargs -r rm --
+find "$EXPORTFOLDER" -maxdepth 1 -name 'vaultbackup_*.json' -type f -print0 | xargs -0 ls -t 2>/dev/null | tail -n +4 | xargs -r rm --
+find "$EXPORTFOLDER" -maxdepth 1 -name 'orgbackup_*.json' -type f -print0 | xargs -0 ls -t 2>/dev/null | tail -n +4 | xargs -r rm --
 
 ## Closing out ##
 printf "\nBackup done. Locking vault & logging out.\n"
