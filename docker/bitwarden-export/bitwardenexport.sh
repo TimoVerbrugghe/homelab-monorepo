@@ -35,7 +35,7 @@ then
         orgname=$(printf "$ORGS" | jq -r --argjson index $i '.[$index] | .name')
         printf "\nExporting vault for organization $orgname\n"
         orgid=$(printf "$ORGS" | jq -r --argjson index $i '.[$index] | .id')
-        bw export --format json --organizationid $orgid --session "$BW_SESSION" --output "$EXPORTFOLDER/orgbackup_$orgname_$(date '+%d%m%Y').json"
+        bw export --format json --organizationid $orgid --session "$BW_SESSION" --output "$EXPORTFOLDER/orgbackup_$orgname_$(date +%Y%m%d%H%M%S).json"
     done
 else
     printf "\nNo organizations found.\n"
