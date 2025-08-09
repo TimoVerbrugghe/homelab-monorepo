@@ -43,6 +43,7 @@ fi
 
 ## Cleanup ##
 # Keep only the last 3 vaultbackup_ and orgbackup_ files based on modification time
+printf "\nCleaning up old backups (if needed).\n"
 find "$EXPORTFOLDER" -maxdepth 1 -name 'vaultbackup_*.json' -type f -print0 | xargs -0 ls -t 2>/dev/null | tail -n +4 | xargs -r rm --
 find "$EXPORTFOLDER" -maxdepth 1 -name 'orgbackup_*.json' -type f -print0 | xargs -0 ls -t 2>/dev/null | tail -n +4 | xargs -r rm --
 
