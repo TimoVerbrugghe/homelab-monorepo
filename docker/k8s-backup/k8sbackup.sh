@@ -4,7 +4,7 @@ set -e
 BACKUP_FILENAME="$BACKUP_NAME-backup-$(date +%Y%m%d%H%M%S).tar.gz"
 
 # Tar the contents of /appdata into /backup
-tar czf "/appdata/${BACKUP_FILENAME}" -C /backup .
+tar czf "/backup/${BACKUP_FILENAME}" -C /appdata .
 
 # Only keep the last 3 backups
 # This will remove the oldest backups, keeping the 3 most recent ones
