@@ -26,5 +26,5 @@ name: bitwarden
 provisioning:
   diskSelector:
     match: "!system_disk"
-  minSize: 5GB
-  maxSize: 5GB
+  minSize: 1GB
+  maxSize: 1GB
