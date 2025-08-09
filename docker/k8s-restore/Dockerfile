@@ -1,8 +1,8 @@
 FROM alpine:latest
 
-# Create appdata & restore folder
-RUN mkdir -p /appdata /restore
-VOLUME ["/appdata", "/restore"]
+# Create appdata & backup folder
+RUN mkdir -p /appdata /backup
+VOLUME ["/appdata", "/backup"]
 
 COPY k8srestore.sh /k8srestore.sh
 RUN chmod +x /k8srestore.sh

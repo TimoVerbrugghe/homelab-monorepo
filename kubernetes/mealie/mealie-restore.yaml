@@ -11,6 +11,7 @@ spec:
         - name: mealie-data
           hostPath:
             path: /var/mnt/mealie
+            type: Directory
         - name: nfs-backup
           nfs:
             server: nfs.local.timo.be
@@ -18,6 +19,11 @@ spec:
       containers:
         - name: restore
           image: ghcr.io/timoverbrugghe/k8s-restore:latest
+          env:
+            - name: PUID
+              value: "3000"
+            - name: PGID
+              value: "3000"
           volumeMounts:
             - name: mealie-data
               mountPath: /appdata
