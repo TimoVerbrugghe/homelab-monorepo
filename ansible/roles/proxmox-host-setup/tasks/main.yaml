@@ -11,15 +11,23 @@
   ansible.builtin.apt:
     update_cache: yes
 
-- name: Install sensors package for temperature monitoring
+- name: Install required packages for monitoring and CPU microcode updates
   ansible.builtin.apt:
-    name: lm-sensors
+    name:
+      - lm-sensors
+      - intel-microcode
+      - powertop
+      - linux-cpupower
     state: present
 
-- name: Install intel-microcode package for CPU microcode updates
-  ansible.builtin.apt:
-    name: intel-microcode
-    state: present
+- name: Set CPU scaling governor to powersave
+  ansible.builtin.shell: |
+    for cpu in /sys/devices/system/cpu/cpu[0-9]*; do
+      echo powersave > "$cpu/cpufreq/scaling_governor"
+    done
+  args:
+    executable: /bin/bash
+  become: true
 
 - name: Set limits for zfs ARC (1,5 GB or 1536 MB - which is 1536*1024*1024 bytes) - zfs_arc_min needs to be 1 less than zfs_arc_max
   ansible.builtin.copy:
