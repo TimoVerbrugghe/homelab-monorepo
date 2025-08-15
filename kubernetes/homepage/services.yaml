@@ -299,7 +299,7 @@
         container: portainer
         widget:
             type: portainer
-            url: https://yumi.local.timo.be:9443
+            url: https://portainer.portainer.svc.cluster.local:9443
             key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
             env: 2
     - Ulrich:

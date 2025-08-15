@@ -263,31 +263,26 @@ endpoints:
 
   # Containers Group
   - name: "Portainer"
-    url: "https://yumi.local.timo.be:9443"
+    url: "https://portainer.portainer.svc.cluster.local:9443"
     group: Containers
     <<: [*defaults-http, *defaults-nochecktls, *defaults-alerts]
 
-  - name: "Portainer Agent (Kubernetes)"
-    url: "tcp://portainer-agent.portainer.svc.cluster.local:9001"
-    group: Containers
-    <<: [*defaults-tcp, *defaults-alerts]
-
-  - name: "Portainer Agents (Aelita)"
+  - name: "Portainer Agent (Aelita)"
     url: "tcp://odd.local.timo.be:9001"
     group: Containers
     <<: [*defaults-tcp, *defaults-alerts]
   
-  - name: "Portainer Agents (Ulrich)"
+  - name: "Portainer Agent (Ulrich)"
     url: "tcp://ulrich.local.timo.be:9001"
     group: Containers
     <<: [*defaults-tcp, *defaults-alerts]
 
-  - name: "Portainer Agents (Odd)"
+  - name: "Portainer Agent (Odd)"
     url: "tcp://odd.local.timo.be:9001"
     group: Containers
     <<: [*defaults-tcp, *defaults-alerts]
 
-  - name: "Portainer Agents (TheFactory)"
+  - name: "Portainer Agent (TheFactory)"
     url: "tcp://thefactory.local.timo.be:9001"
     group: Containers
     <<: [*defaults-tcp, *defaults-alerts]
