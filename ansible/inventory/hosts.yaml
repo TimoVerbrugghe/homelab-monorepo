@@ -1,15 +1,6 @@
 
 vm:
   hosts:
-    yumi.local.timo.be:
-      ansible_user: yumi
-      macvlan_routes: |
-        - to: 10.10.10.20
-      enable_gpu: true
-      portainer_server: true
-      proxmox_node: forestsector
-      vm_id: 105
-      hostpci_gpu_id: '00:02.0'
     odd.local.timo.be:
       ansible_user: odd
       macvlan_routes: |

@@ -21,7 +21,7 @@ I have the following machines & VMs with a brief overview of services they run. 
 
 - Proxmox cluster (Lyoko)
     - Forest Sector
-        - Yumi (HA, can be live migrated)
+        - Yumi (kubernetes node with local storage, HA, can be live migrated)
             - Cloudflare Tunnel
             - Bitwarden
             - Mealie
@@ -58,7 +58,7 @@ Several services are not running in this cluster and remain on separate NixOS VM
 
 - I encountered several issues with NFS-backed storage (even with NFSv4) and sqlite databases (f.e. with plex & bitwarden) so not an option to use NFS-backed storage in the cluster.
 
-- Services that I want HA and do need local storage (portainer, bitwarden, etc...) are running in the Yumi VM that is HA-enabled in proxmox & can be live migrated.
+- Services that I want HA and do need local storage (portainer, bitwarden, etc...) are running in the Yumi kubernetes node that is HA-enabled in proxmox & can be live migrated.
 
 - Plex & Jellyfin run in a separate VM (Aelita) because I'm passing through my iGPU which makes the VM not eligible for live migration in Proxmox.
 
