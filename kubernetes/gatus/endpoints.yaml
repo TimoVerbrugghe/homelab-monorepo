@@ -113,7 +113,7 @@ endpoints:
     <<: [*defaults-http, *defaults-alerts]
 
   - name: "Mealie"
-    url: "http://yumi.local.timo.be:15001"
+    url: "http://mealie.mealie.svc.cluster.local:9000"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
@@ -237,7 +237,7 @@ endpoints:
 
   # Utilities Group
   - name: "Bitwarden"
-    url: "http://yumi.local.timo.be:15000"
+    url: "http://bitwarden.bitwarden.cluster.svc.local"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
