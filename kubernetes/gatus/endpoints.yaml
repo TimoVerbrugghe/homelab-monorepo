@@ -237,7 +237,7 @@ endpoints:
 
   # Utilities Group
   - name: "Bitwarden"
-    url: "http://bitwarden.bitwarden.cluster.svc.local"
+    url: "http://bitwarden.bitwarden.svc.cluster.local"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
