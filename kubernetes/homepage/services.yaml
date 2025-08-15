@@ -260,8 +260,8 @@
     - Bitwarden:
         icon: bitwarden.svg
         href: https://bitwarden.timo.be
-        server: yumi
-        container: bitwarden
+        namespace: bitwarden
+        app: bitwarden
     - Paperless-ai:
         icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/paperlessai.ico
         href: https://paperlessai.timo.be
@@ -282,15 +282,6 @@
         href: https://stirlingpdf.timo.be
         namespace: utilities
         app: stirlingpdf
-    - Webtop:
-        icon: webtop.webp
-        href: https://webtop.timo.be
-        namespace: utilities
-        app: webtop
-    - Sunshine:
-        icon: sunshine.svg
-        href: https://sunshine.timo.be
-        siteMonitor: https://sunshine.local.timo.be:47990
     - Gatus:
         icon: gatus.svg
         href: https://gatus.timo.be
