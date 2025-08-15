@@ -203,6 +203,15 @@ endpoints:
       - "[STATUS] == 200"
     <<: [*defaults-alerts]
 
+  - name: "Cloudflare Tunnel (Kubernetes - For K8S services only)"
+    url: "http://cloudflared.cloudflare-kubernetes.svc.cluster.local:2000/ready"
+    group: Networking
+    interval: 30s
+    # Cloudflared has a /ready endpoint which returns 200 if and only if it has an active connection to Cloudflare's network.
+    conditions:
+      - "[STATUS] == 200"
+    <<: [*defaults-alerts]
+
   # Filemanagement Group
   - name: "Nextcloud"
     url: "http://thefactory.local.timo.be:11000"

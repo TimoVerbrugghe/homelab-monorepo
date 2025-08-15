@@ -20,6 +20,7 @@ ENV BW_CLIENTID=""
 ENV BW_CLIENTSECRET=""
 ENV BW_SERVER=""
 ENV BW_PASSWORD=""
+ENV BW_APPID=""
 
 # Container start
 ENTRYPOINT [ "/bitwardenexport.sh" ]

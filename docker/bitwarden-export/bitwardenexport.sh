@@ -11,6 +11,14 @@ printf "\nStarting backup of bitwarden. Current date & time is $(date).\n"
 ## Loading Variables ##
 printf "\nLoading Client ID, Client Secret, Server and Password variables.\n"
 
+printf "\nLoading Application ID variable (if it was set).\n"
+if [[ -n "$BW_APPID" ]]; then
+    CONFIG_DIR="/root/.config/Bitwarden CLI"
+    CONFIG_FILE="$CONFIG_DIR/data.json"
+    mkdir -p "$CONFIG_DIR"
+    echo "{\"global_applicationId_appId\": \"$BW_APPID\"}" > "$CONFIG_FILE"
+fi
+
 ## Connecting to Bitwarden Server ##
 printf "\nConnecting to bitwarden server $BW_SERVER.\n"
 bw config server "$BW_SERVER"

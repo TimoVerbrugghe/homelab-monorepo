@@ -1,0 +1,18 @@
+# Apply all these resources with `kubectl apply -k .` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+secretGenerator:
+  - name: cloudflare-tunnel-token
+    namespace: cloudflare-kubernetes
+    envs:
+      - cloudflare-tunnel-token.env
+    type: Opaque
+
+generatorOptions:
+ disableNameSuffixHash: true
+ 
+resources:
+  - cloudflare-tunnel.yaml
+  - namespace.yaml
+  - cloudflare-service.yaml
