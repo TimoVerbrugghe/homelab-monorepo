@@ -87,7 +87,7 @@
         container: mealie
         widget:
             type: mealie
-            url: http://yumi.local.timo.be:15001
+            url: http://mealie.mealie.svc.cluster.local:9000
             key: "{{HOMEPAGE_VAR_MEALIE_KEY}}"
             version: 2
     - Sonarr:
