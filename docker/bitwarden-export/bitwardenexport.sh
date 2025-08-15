@@ -42,8 +42,10 @@ then
     for ((i = 0; i <= $ORGLENGTH - 1; i++)); do
         orgname=$(printf "$ORGS" | jq -r --argjson index $i '.[$index] | .name')
         printf "\nExporting vault for organization $orgname\n"
+        # Sanitize orgname for use in filename (replace spaces and special chars with underscores)
+        safe_orgname=$(echo "$orgname" | tr -cs '[:alnum:]' '_' | tr '[:upper:]' '[:lower:]')
         orgid=$(printf "$ORGS" | jq -r --argjson index $i '.[$index] | .id')
-        bw export --format json --organizationid $orgid --session "$BW_SESSION" --output "$EXPORTFOLDER/orgbackup_$orgname_$(date +%Y%m%d%H%M%S).json"
+        bw export --format json --organizationid $orgid --session "$BW_SESSION" --output "$EXPORTFOLDER/orgbackup_${safe_orgname}_$(date +%Y%m%d%H%M%S).json"
     done
 else
     printf "\nNo organizations found.\n"
