@@ -6,8 +6,8 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
+      - PUID=${PUID:-3000}
+      - PGID=${PGID:-3000}
       - TZ=Europe/Brussels
       - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
     volumes:
@@ -28,8 +28,8 @@ services:
     networks:
       - dockerproxy
     environment:
-      - USER_ID=${PUID}
-      - GROUP_ID=${PGID}
+      - USER_ID=${PUID:-3000}
+      - GROUP_ID=${PGID:-3000}
     volumes:
       - jdownloader2:/config
       - downloads:/output
@@ -48,8 +48,8 @@ services:
     networks:
       - dockerproxy
     environment:
-      - UID=${PUID}
-      - GID=${PGID}
+      - UID=${PUID:-3000}
+      - GID=${PGID:-3000}
       - TEMP_DIR=/tmp
       - DARK_MODE=true
       - DOWNLOAD_DIR=/downloads/metube
@@ -75,8 +75,8 @@ services:
       - downloads:/aria2/data
       - aria2-conf:/aria2/conf
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
+      - PUID=${PUID:-3000}
+      - PGID=${PGID:-3000}
       - RPC_SECRET=secret
       - ARIA2RPCPORT=443
       - EMBED_RPC_SECRET=true # embeds RPC_SECRET into web ui js code. This allows you to skip entering the secret but everyone who has access to the webui will be able to see it. Only use this with some sort of authentication (e.g. basic auth)
@@ -95,8 +95,8 @@ services:
     image: spotdl/spotify-downloader
     command: web --host 0.0.0.0 --web-use-output-dir --keep-alive
     environment:
-      - PUID=${PUID} #CHANGE_TO_YOUR_UID
-      - PGID=${PGID} #CHANGE_TO_YOUR_GID
+      - PUID=${PUID:-3000} #CHANGE_TO_YOUR_UID
+      - PGID=${PGID:-3000} #CHANGE_TO_YOUR_GID
       - TZ=Europe/Brussels #CHANGE_TO_YOUR_TZ
     ports:
       - 12005:8800

@@ -26,8 +26,8 @@ services:
     networks:
       - dockerproxy
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
+      - PUID=${PUID:-3000}
+      - PGID=${PGID:-3000}
       - TZ=Etc/UTC
     volumes:
       - doublecommander:/config
