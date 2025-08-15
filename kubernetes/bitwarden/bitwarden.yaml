@@ -21,7 +21,7 @@ spec:
         app.kubernetes.io/name: bitwarden
     spec:
       nodeSelector:
-        kubernetes.io/hostname: yumi2
+        kubernetes.io/hostname: yumi
       containers:
         - name: bitwarden
           image: vaultwarden/server:latest

@@ -14,7 +14,7 @@ machine:
       nodeIP:
         # The `validSubnets` field configures the networks to pick kubelet node IP from.
         validSubnets:
-            - 10.10.10.0/24
+          - 10.10.10.0/24
     
     sysctls:
       vm.nr_hugepages: "1024"
@@ -35,31 +35,6 @@ machine:
         - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
 
 cluster:
-  allowSchedulingOnControlPlanes: true
   controlPlane:
-    endpoint: https://10.10.10.33:6443 
-
-  apiServer:
-    certSANs:
-      - 10.10.10.33
-      - kubernetes.local.timo.be
-    extraArgs:
-        default-not-ready-toleration-seconds: 120
-        default-unreachable-toleration-seconds: 120
-
-  # These flags are wrong, need to check
-  # controllerManager:
-  #     extraArgs:
-  #         node-monitor-period-duration: 4s
-  #         node-monitor-grace-period-duration: 16s
-
-  # files:
-  #     - content: '' # The contents of the file.
-  #       permissions: 0666 # The file's permissions in octal.
-  #       path: /etc/kubeschedulerconfig.yaml # The path of the file.
-  #       op: append # The operation to use
-
-  # A list of urls that point to additional manifests.
-  # extraManifests:
-    
+    endpoint: https://10.10.10.33:6443
     

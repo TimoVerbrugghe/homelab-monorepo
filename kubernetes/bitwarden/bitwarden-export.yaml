@@ -11,7 +11,7 @@ spec:
         spec:
           restartPolicy: OnFailure
           nodeSelector:
-            kubernetes.io/hostname: yumi2
+            kubernetes.io/hostname: yumi
           containers:
             - name: bitwarden-export
               image: ghcr.io/timoverbrugghe/bitwarden-export:latest # Replace with your container image

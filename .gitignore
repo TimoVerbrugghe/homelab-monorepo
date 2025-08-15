@@ -13,6 +13,7 @@ nixos/variables.nix
 .DS_Store
 controlplane.yaml
 controlplane*.yaml
+!controlplane-config.yaml
 worker*.yaml
 worker.yaml
 secrets.yaml

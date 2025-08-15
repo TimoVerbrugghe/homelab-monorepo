@@ -8,7 +8,7 @@ spec:
     spec:
       restartPolicy: Never
       nodeSelector:
-        kubernetes.io/hostname: yumi2
+        kubernetes.io/hostname: yumi
       volumes:
         - name: bitwarden-data
           hostPath:

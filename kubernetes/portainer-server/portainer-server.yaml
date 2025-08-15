@@ -29,7 +29,7 @@ spec:
         app.kubernetes.io/instance: portainer
     spec:
       nodeSelector:
-        kubernetes.io/hostname: yumi2
+        kubernetes.io/hostname: yumi
       serviceAccountName: portainer-sa-clusteradmin
       volumes:
         - name: data

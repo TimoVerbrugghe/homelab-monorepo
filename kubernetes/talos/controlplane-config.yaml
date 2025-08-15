@@ -1,0 +1,12 @@
+cluster:
+  allowSchedulingOnControlPlanes: true
+  controlPlane:
+    endpoint: https://10.10.10.33:6443 
+
+  apiServer:
+    certSANs:
+      - 10.10.10.33
+      - kubernetes.local.timo.be
+    extraArgs:
+        default-not-ready-toleration-seconds: 120
+        default-unreachable-toleration-seconds: 120

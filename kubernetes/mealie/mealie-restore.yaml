@@ -7,7 +7,7 @@ spec:
   template:
     spec:
       nodeSelector:
-        kubernetes.io/hostname: yumi2
+        kubernetes.io/hostname: yumi
       restartPolicy: Never
       volumes:
         - name: mealie-data

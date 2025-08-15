@@ -11,16 +11,16 @@ Replace IP address below with the IP address of your first node
 talosctl gen secrets
 
 # Generating configs for the controlplane node william
-talosctl gen config --output controlplane-william.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @william-patch.yaml sectorfive https://10.10.10.30:6443
+talosctl gen config --output controlplane-william.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @controlplane-config.yaml --config-patch @william-patch.yaml sectorfive https://10.10.10.30:6443
 
 # Generating configs for the controlplane node skidbladnir
-talosctl gen config --output controlplane-skidbladnir.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @skidbladnir-patch.yaml sectorfive https://10.10.10.30:6443
+talosctl gen config --output controlplane-skidbladnir.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @controlplane-config.yaml --config-patch @skidbladnir-patch.yaml sectorfive https://10.10.10.30:6443
 
 # Generating configs for the controlplane node manta
-talosctl gen config --output controlplane-manta.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @manta-patch.yaml sectorfive https://10.10.10.30:6443
+talosctl gen config --output controlplane-manta.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @controlplane-config.yaml --config-patch @manta-patch.yaml sectorfive https://10.10.10.30:6443
 
-# Generating configs for the worker node yumi2
-talosctl gen config --output worker-yumi2.yaml --output-types worker --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @yumi2-patch.yaml --config-patch @yumi2-patch-localstorage.yaml sectorfive https://10.10.10.30:6443
+# Generating configs for the worker node yumi
+talosctl gen config --output worker-yumi.yaml --output-types worker --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @yumi-patch.yaml --config-patch @yumi-patch-localstorage.yaml sectorfive https://10.10.10.30:6443
 
 # Generating talosconfig file
 talosctl gen config --with-secrets secrets.yaml --output-types talosconfig -o talosconfig sectorfive https://10.10.10.30:6443
