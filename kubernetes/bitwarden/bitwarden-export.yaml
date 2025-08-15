@@ -18,6 +18,11 @@ spec:
               env:
                 - name: BW_SERVER
                   value: http://bitwarden.bitwarden.svc.cluster.local
+                - name: BW_APPID
+                  valueFrom:
+                    secretKeyRef:
+                      name: bitwarden-export-secret
+                      key: BW_APPID
                 - name: BW_CLIENTID
                   valueFrom:
                     secretKeyRef:
