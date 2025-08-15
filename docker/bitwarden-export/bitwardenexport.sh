@@ -55,7 +55,14 @@ fi
 # Keep only the last 3 vaultbackup_ and orgbackup_ files based on modification time
 printf "\nCleaning up old backups (if needed).\n"
 find "$EXPORTFOLDER" -maxdepth 1 -name 'vaultbackup_*.json' -type f -print0 | xargs -0 ls -t 2>/dev/null | tail -n +4 | xargs -r rm --
-find "$EXPORTFOLDER" -maxdepth 1 -name 'orgbackup_*.json' -type f -print0 | xargs -0 ls -t 2>/dev/null | tail -n +4 | xargs -r rm --
+
+# Calculate how many orgbackup_ files to keep: 3 per organization
+ORG_KEEP_COUNT=$((ORGLENGTH * 3))
+if [[ $ORG_KEEP_COUNT -gt 0 ]]; then
+    find "$EXPORTFOLDER" -maxdepth 1 -name 'orgbackup_*.json' -type f -print0 | xargs -0 ls -t 2>/dev/null | tail -n +$((ORG_KEEP_COUNT + 1)) | xargs -r rm --
+else
+     printf "\nNo organizations found. Skipping cleanup of old organization backups.\n"
+fi
 
 ## Closing out ##
 printf "\nBackup done. Locking vault & logging out.\n"
