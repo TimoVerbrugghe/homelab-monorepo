@@ -1,0 +1,4 @@
+maintenance:
+  start: 01:00
+  duration: 6h
+  timezone: "Europe/Brussels"
