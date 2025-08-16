@@ -1,0 +1,90 @@
+services:
+  # jellyfin:
+  #   container_name: jellyfin
+  #   image: jellyfin/jellyfin
+  #   restart: always
+  #   networks:
+  #     - dockerproxy
+  #   environment:
+  #     - TZ=Europe/Brussels
+  #   volumes:
+  #     - jellyfin:/config
+  #     - /tmp:/cache
+  #     - movies:/movies
+  #     - tvshows:/tv
+  #     - /dev/shm:/dev/shm
+  #   devices:
+  #     - /dev/dri:/dev/dri
+  #   ports:
+  #     - 8096:8096/tcp # local access
+  #     - 1901:1900/udp # autodiscovery
+  #     - 7359:7359/udp # autodiscovery
+  #   labels:
+  #     traefik.http.routers.jellyfin.entrypoints: https
+  #     traefik.http.services.jellyfin.loadbalancer.server.port: 8096
+
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      PLEX_UID: ${PUID:-3000}
+      PLEX_GID: ${PGID:-3000}
+      TZ: Europe/Brussels
+      PLEX_CLAIM: ${PLEX_CLAIM_TOKEN}
+    ports:
+      - 32400:32400/tcp
+    volumes:
+      - movies:/movies:rw
+      - tvshows:/tv:rw
+      - plex:/config:rw
+      - /dev/shm:/dev/shm
+      - music:/music
+    devices:
+      - /dev/dri:/dev/dri
+      
+  plex-autolanguages:
+    container_name: plex-autolanguages
+    image: remirigal/plex-auto-languages:latest
+    networks:
+      - dockerproxy
+    restart: always
+    environment:
+      - PLEX_URL=http://plex:32400
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - TZ=Europe/Brussels
+    depends_on:
+      - plex
+
+volumes:
+  movies:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/movies"
+  tvshows:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/tvshows"
+  music:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/music"
+
+  plex:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/plex"
+
+networks:
+  dockerproxy:
+    external: true
