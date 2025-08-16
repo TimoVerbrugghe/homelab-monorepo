@@ -1,7 +1,11 @@
 from kubernetes import config, client
 from homeassistant.core import HomeAssistant
+import os
+import logging
 
 DOMAIN = "kubeassistant"
+
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry):
     kubeconfig = entry.data["kubeconfig"]
@@ -23,3 +27,14 @@ async def async_setup_entry(hass: HomeAssistant, entry):
         hass.config_entries.async_forward_entry_setup(entry, "sensor")
     )
     return True
+
+async def async_unload_entry(hass, entry):
+    """Handle removal of an entry."""
+    # Remove the stored kubeconfig file
+    kubeconfig_path = entry.data.get("kubeconfig_stored_path")
+    if kubeconfig_path and os.path.exists(kubeconfig_path):
+        try:
+            os.remove(kubeconfig_path)
+            _LOGGER.info(f"Removed kubeconfig file: {kubeconfig_path}")
+        except Exception as e:
+            _LOGGER.warning(f"Failed to remove kubeconfig file: {kubeconfig_path}, error: {e}")
