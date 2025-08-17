@@ -66,4 +66,5 @@ Several services are not running in this cluster and remain on separate NixOS VM
 
 ## Future Plans
 
+- Create high level architecture diagram of the homelab in draw.io
 - Build an integration for HomeAssistant (KubeAssistant) to monitor my kubernetes cluster at home
