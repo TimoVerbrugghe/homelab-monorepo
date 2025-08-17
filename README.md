@@ -29,12 +29,10 @@ I have the following machines & VMs with a brief overview of services they run. 
       - Portainer
     - William (kubernetes node)
   - Ice Sector
-    - Odd (Adguardhome + Cloudflare Tunnel)
+    - Odd (Adguardhome on NixOS)
     - Manta (kubernetes node)
-    - Aelita
-      - Plex & Jellyfin
   - Forest Sector
-    - Ulrich (Adguardhome + Cloudflare Tunnel)
+    - Ulrich (Adguardhome on NixOS)
     - Hass (Home Assistant OS)
     - Skidbladnir (kubernetes node)
 
@@ -66,8 +64,6 @@ Several services are not running in this cluster and remain on separate NixOS VM
 
 - Services that I want HA and do need local storage (portainer, bitwarden, etc...) are running in the Yumi kubernetes node that is HA-enabled in proxmox & can be live migrated.
 
-- Plex & Jellyfin run in a separate VM (Aelita) because I'm passing through my iGPU which makes the VM not eligible for live migration in Proxmox.
-
 ## Future Plans
 
-- Run Cloudflare Tunnel directly in kubernetes: <https://developers.cloudflare.com/cloudflare-one/tutorials/many-cfd-one-tunnel/>
+- Build an integration for HomeAssistant (KubeAssistant) to monitor my kubernetes cluster at home
