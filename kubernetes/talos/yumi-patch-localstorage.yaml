@@ -28,3 +28,13 @@ provisioning:
     match: "!system_disk"
   minSize: 1GB
   maxSize: 1GB
+---
+# Local storage for Changedetection
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: changedetection
+provisioning:
+  diskSelector:
+    match: "!system_disk"
+  minSize: 1GB
+  maxSize: 1GB

@@ -74,15 +74,6 @@
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, home-manager-unstable, nixos-hardware, ssh-keys, nixos-generators, nix-darwin, mac-app-util, nix-homebrew, homebrew-core, homebrew-cask, homebrew-bundle, lanzaboote, ... } @inputs : {
     nixosConfigurations = {
 
-      # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#aelita --refresh --impure --no-write-lock-file
-      aelita = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = inputs;
-        modules = [
-          ./machines/aelita/configuration.nix
-        ];
-      };
-
       # Switch to this config (for the next boot) with nixos-rebuild boot --flake github:TimoVerbrugghe/homelab-monorepo?dir=nixos#odd --refresh --impure --no-write-lock-file
       odd = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
