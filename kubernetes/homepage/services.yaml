@@ -55,11 +55,11 @@
     - Plex:
         icon: plex.svg
         href: https://app.plex.tv/desktop
-        server: aelita
+        server: thefactory
         container: plex
         widget:
             type: plex
-            url: http://aelita.local.timo.be:32400
+            url: http://plex.local.timo.be:32400
             key: "{{HOMEPAGE_VAR_PLEX_KEY}}"
     - Overseerr:
         icon: overseerr.svg
@@ -322,16 +322,6 @@
             url: https://yumi.local.timo.be:9443
             key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
             env: 7
-    - Aelita:
-        icon: portainer.svg
-        href: https://portainer.timo.be
-        server: yumi
-        container: portainer
-        widget:
-            type: portainer
-            url: https://yumi.local.timo.be:9443
-            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
-            env: 9
     - The Factory:
         icon: portainer.svg
         href: https://portainer.timo.be

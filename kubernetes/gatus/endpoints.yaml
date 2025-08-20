@@ -261,11 +261,6 @@ endpoints:
     url: "https://portainer.portainer.svc.cluster.local:9443"
     group: Containers
     <<: [*defaults-http, *defaults-nochecktls, *defaults-alerts]
-
-  - name: "Portainer Agent (Aelita)"
-    url: "tcp://odd.local.timo.be:9001"
-    group: Containers
-    <<: [*defaults-tcp, *defaults-alerts]
   
   - name: "Portainer Agent (Ulrich)"
     url: "tcp://ulrich.local.timo.be:9001"
