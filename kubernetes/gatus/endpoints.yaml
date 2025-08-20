@@ -91,14 +91,9 @@ endpoints:
     group: VM
     <<: [*defaults-ping, *defaults-alerts]
 
-  - name: "Aelita"
-    url: "icmp://aelita.local.timo.be"
-    group: VM
-    <<: [*defaults-ping, *defaults-alerts]
-
   # Media Group
   - name: "Plex"
-    url: "http://aelita.local.timo.be:32400/identity"
+    url: "http://plex.local.timo.be:32400/identity"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 

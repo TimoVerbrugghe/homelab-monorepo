@@ -256,8 +256,6 @@ filtering:
       answer: 10.10.10.2
     - domain: '*.thefactory.timo.be'
       answer: 10.10.10.2
-    - domain: aelita.local.timo.be
-      answer: 10.10.10.3
     - domain: forestsector.local.timo.be
       answer: 10.10.10.4
     - domain: mountainsector.local.timo.be
@@ -267,9 +265,9 @@ filtering:
     - domain: yumi.local.timo.be
       answer: 10.10.10.7
     - domain: jellyfin.local.timo.be
-      answer: 10.10.10.3
+      answer: 10.10.10.2
     - domain: plex.local.timo.be
-      answer: 10.10.10.3
+      answer: 10.10.10.2
     - domain: ulrich.local.timo.be
       answer: 10.10.10.8
     - domain: odd.local.timo.be
