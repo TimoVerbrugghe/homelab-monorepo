@@ -6,7 +6,7 @@ metadata:
   namespace: pxeboot
 spec:
   selector:
-    app: iventoy
+    app.kubernetes.io/name: iventoy
   loadBalancerClass: kube-vip.io/kube-vip-class
   type: LoadBalancer
   loadBalancerIP: 10.10.10.38
@@ -35,7 +35,7 @@ metadata:
   namespace: pxeboot
 spec:
   selector:
-    app: iventoy
+    app.kubernetes.io/name: iventoy
   ports:
     - name: webui
       protocol: TCP

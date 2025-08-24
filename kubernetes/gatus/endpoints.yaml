@@ -71,11 +71,6 @@ endpoints:
     <<: [*defaults-ping, *defaults-alerts]
 
   # VM Group
-  - name: "Yumi"
-    url: "icmp://yumi.local.timo.be"
-    group: VM
-    <<: [*defaults-ping, *defaults-alerts]
-
   - name: "Ulrich"
     url: "icmp://ulrich.local.timo.be"
     group: VM
@@ -89,6 +84,27 @@ endpoints:
   - name: "Hass"
     url: "icmp://hass.local.timo.be"
     group: VM
+    <<: [*defaults-ping, *defaults-alerts]
+
+  # Sector Five Group
+  - name: "William"
+    url: "icmp://william.local.timo.be"
+    group: Sector Five
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Manta"
+    url: "icmp://manta.local.timo.be"
+    group: Sector Five
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Skidbladnir"
+    url: "icmp://skidbladnir.local.timo.be"
+    group: Sector Five
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Yumi"
+    url: "icmp://yumi.local.timo.be"
+    group: Sector Five
     <<: [*defaults-ping, *defaults-alerts]
 
   # Media Group

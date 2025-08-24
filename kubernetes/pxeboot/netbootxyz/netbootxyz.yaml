@@ -14,11 +14,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: netbootxyz
+      app.kubernetes.io/name: netbootxyz
   template:
     metadata:
       labels:
-        app: netbootxyz
+        app.kubernetes.io/name: netbootxyz
     spec:
       containers:
         - name: netbootxyz

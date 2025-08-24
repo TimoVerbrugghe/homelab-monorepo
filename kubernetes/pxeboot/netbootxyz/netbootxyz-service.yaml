@@ -6,7 +6,7 @@ metadata:
   namespace: pxeboot
 spec:
   selector:
-    app: netbootxyz
+    app.kubernetes.io/name: netbootxyz
   loadBalancerClass: kube-vip.io/kube-vip-class
   type: LoadBalancer
   loadBalancerIP: 10.10.10.37
@@ -31,7 +31,7 @@ metadata:
   namespace: pxeboot
 spec:
   selector:
-    app: netbootxyz
+    app.kubernetes.io/name: netbootxyz
   ports:
     - name: webui
       protocol: TCP

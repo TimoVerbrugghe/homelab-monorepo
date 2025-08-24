@@ -14,11 +14,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: iventoy
+      app.kubernetes.io/name: iventoy
   template:
     metadata:
       labels:
-        app: iventoy
+        app.kubernetes.io/name: iventoy
     spec:
       containers:
         - name: iventoy

@@ -83,8 +83,8 @@
     - Mealie:
         icon: mealie.svg
         href: https://mealie.timo.be
-        server: yumi
-        container: mealie
+        namespace: mealie
+        app: mealie
         widget:
             type: mealie
             url: http://mealie.mealie.svc.cluster.local:9000
@@ -292,46 +292,36 @@
             url: http://gatus.gatus.svc.cluster.local:8080
 
 - Containers:
-    - Yumi:
+    - Ulrich:
         icon: portainer.svg
         href: https://portainer.timo.be
-        server: yumi
-        container: portainer
+        namespace: portainer
+        app: portainer
         widget:
             type: portainer
             url: https://portainer.portainer.svc.cluster.local:9443
             key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
-            env: 2
-    - Ulrich:
-        icon: portainer.svg
-        href: https://portainer.timo.be
-        server: yumi
-        container: portainer
-        widget:
-            type: portainer
-            url: https://yumi.local.timo.be:9443
-            key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
-            env: 8
+            env: 5
     - Odd:
         icon: portainer.svg
         href: https://portainer.timo.be
-        server: yumi
-        container: portainer
+        namespace: portainer
+        app: portainer
         widget:
             type: portainer
-            url: https://yumi.local.timo.be:9443
+            url: https://portainer.portainer.svc.cluster.local:9443
             key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
-            env: 7
+            env: 4
     - The Factory:
         icon: portainer.svg
         href: https://portainer.timo.be
-        server: yumi
-        container: portainer
+        namespace: portainer
+        app: portainer
         widget:
             type: portainer
-            url: https://yumi.local.timo.be:9443
+            url: https://portainer.portainer.svc.cluster.local:9443
             key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
-            env: 6
+            env: 3
 
 - Storage:
     - TrueNAS:
