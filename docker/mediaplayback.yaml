@@ -79,11 +79,6 @@ volumes:
       device: "/mnt/X.A.N.A./media/music"
 
   plex:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/plex"
 
 networks:
   dockerproxy:
