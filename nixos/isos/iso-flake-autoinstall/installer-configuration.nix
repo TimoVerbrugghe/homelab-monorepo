@@ -50,7 +50,8 @@ in
   isoImage.isoBaseName = "nixos-flake-auto-installer";
 
   # Using lib.mkForce because isoName is already defined in the minimal ISO nix file
-  isoImage.isoName = lib.mkForce "${flake}-${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
+  isoImage.isoName = lib.mkForce "${flake}-nixos-auto-installer.iso";
+  image.baseName = lib.mkForce "${flake}-nixos-auto-installer";
   isoImage.makeEfiBootable = true;
   isoImage.makeUsbBootable = true;
   isoImage.volumeID = "NIXOS_ISO";
