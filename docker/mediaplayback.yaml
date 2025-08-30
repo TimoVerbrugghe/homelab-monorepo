@@ -62,21 +62,21 @@ volumes:
   movies:
     driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/movies"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,rw"
+      device: ":/mnt/X.A.N.A./media/movies"
   tvshows:
     driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/tvshows"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,rw"
+      device: ":/mnt/X.A.N.A./media/tvshows"
   music:
     driver: local
     driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/music"
+      type: "nfs"
+      o: "addr=nfs.local.timo.be,rw"
+      device: ":/mnt/X.A.N.A./media/music"
 
   plex:
 
