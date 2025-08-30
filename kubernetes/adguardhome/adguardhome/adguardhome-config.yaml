@@ -364,6 +364,8 @@ filtering:
       answer: 10.10.10.83
     - domain: azurenixbuilder.azure.timo.be
       answer: 4.223.119.74
+    - domain: aelita.local.timo.be
+      answer: 10.10.10.3
   safe_fs_patterns:
     - /opt/adguardhome/work/data/userfilters/*
   safebrowsing_cache_size: 1048576
