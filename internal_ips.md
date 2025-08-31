@@ -1,4 +1,4 @@
-## List of internal IPs of my homelab ##
+# List of internal IPs of my homelab
 
 | IP Address    | Device                                      |
 |---------------|---------------------------------------------|
