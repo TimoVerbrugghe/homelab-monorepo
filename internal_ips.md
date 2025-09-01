@@ -8,7 +8,7 @@
 | 10.10.10.4    | Forest Sector                               |
 | 10.10.10.5    | Mountain Sector                             |
 | 10.10.10.6    | Ice Sector                                  |
-| 10.10.10.7    | Yumi                                        |
+| 10.10.10.7    | Yumi (Kubernetes Worker Node)               |
 | 10.10.10.8    | Ulrich                                      |
 | 10.10.10.9    | Odd                                         |
 | 10.10.10.10   | Zigbee SLZB-06 PoE Coordinator              |
@@ -53,7 +53,7 @@
 | 10.10.10.75   | Shelly Guest Bathroom                       |
 | 10.10.10.76   | Shelly Garden Shed Ceiling                  |
 | 10.10.10.77   | Shelly Jasmijn Office Ceiling Light         |
-| 10.10.10.78   | Ecowitt Gateway                            |
+| 10.10.10.78   | Ecowitt Gateway                             |
 | 10.10.10.79   | Shelly Lounge Light                         |
 | 10.10.10.81   | Shelly Bathroom Ceiling                     |
 | 10.10.10.82   | Shelly Bedroom Blinds                       |
