@@ -3,7 +3,7 @@ template_name = "ubuntu-cloud"
 vm_storage = "local-btrfs"
 vm_networkbridge = "vmbr0"
 gateway = "10.10.10.1"
-nameserver = "10.10.10.20 10.10.10.21 10.10.10.22"
+nameserver = "10.10.10.35 10.10.10.21 10.10.10.22"
 
 vm_configs = [ {
     vm_cores = 4

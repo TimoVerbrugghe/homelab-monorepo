@@ -207,13 +207,13 @@
             password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
     - Adguardhome (Kubernetes):
         icon: adguard-home.svg
-        description: "10.10.10.20"
+        description: "10.10.10.35"
         href: https://adguardhome.timo.be
         namespace: adguardhome
         app: adguardhome
         widget:
             type: adguard
-            url: http://10.10.10.20
+            url: http://10.10.10.35
             username: "{{HOMEPAGE_VAR_ADGUARDHOME_USERNAME}}"
             password: "{{HOMEPAGE_VAR_ADGUARDHOME_PASSWORD}}"
     - Traefik:

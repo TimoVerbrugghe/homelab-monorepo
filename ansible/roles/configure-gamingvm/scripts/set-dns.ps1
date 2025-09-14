@@ -1,1 +1,1 @@
-Set-DNSClientServerAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -ServerAddresses 10.10.10.20,10.10.10.21,10.10.10.22
+Set-DNSClientServerAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -ServerAddresses 10.10.10.35,10.10.10.21,10.10.10.22

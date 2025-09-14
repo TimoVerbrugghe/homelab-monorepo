@@ -17,7 +17,6 @@
 | 10.10.10.13   |                                             |
 | 10.10.10.14   |                                             |
 | 10.10.10.15   | GamingServer                                |
-| 10.10.10.20   | Adguardhome (Kubernetes)                    |
 | 10.10.10.21   | Adguardhome (Ulrich)                        |
 | 10.10.10.22   | Adguardhome (Odd)                           |
 | 10.10.10.28   | Home Assistant                              |
@@ -26,6 +25,7 @@
 | 10.10.10.32   | Skidbladnir (Kubernetes Node)               |
 | 10.10.10.33   | Kubernetes API                              |
 | 10.10.10.34   | Traefik (in Kubernetes)                     |
+| 10.10.10.35   | Adguardhome (Kubernetes)                    |
 | 10.10.10.36   | Adguardhome (home assistant connection)     |
 | 10.10.10.37   | NetbootXYZ PXE Server                       |
 | 10.10.10.38   | iVentoy PXE Server                          |

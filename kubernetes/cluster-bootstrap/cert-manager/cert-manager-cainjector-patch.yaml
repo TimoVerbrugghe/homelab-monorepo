@@ -1,0 +1,9 @@
+# Add autoupdate through keel for cert-manager-cainjector
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cert-manager-cainjector
+  annotations:
+    keel.sh/policy: all
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"

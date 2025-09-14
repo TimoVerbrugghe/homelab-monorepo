@@ -9,7 +9,7 @@ spec:
     app: adguardhome
   loadBalancerClass: kube-vip.io/kube-vip-class
   type: LoadBalancer
-  loadBalancerIP: 10.10.10.20
+  loadBalancerIP: 10.10.10.35
   ports:
   - name: http
     protocol: TCP

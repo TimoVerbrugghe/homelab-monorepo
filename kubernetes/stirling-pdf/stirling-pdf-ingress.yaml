@@ -3,7 +3,7 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: stirlingpdf-traefik
-  namespace: utilities
+  namespace: stirlingpdf
   annotations: 
     kubernetes.io/ingress.class: traefik
 spec:
@@ -23,7 +23,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: stirlingpdf-tailscale
-  namespace: utilities
+  namespace: stirlingpdf
 spec:
   defaultBackend:
     service:

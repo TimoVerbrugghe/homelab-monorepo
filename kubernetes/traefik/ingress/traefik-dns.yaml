@@ -5,7 +5,7 @@ metadata:
   name: dns1-svc
   namespace: traefik
 spec:
-  externalName: 10.10.10.20 # Can also be an IP address
+  externalName: 10.10.10.35 # Can also be an IP address
   type: ExternalName
 ---
 apiVersion: v1

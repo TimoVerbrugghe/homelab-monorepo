@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: stirlingpdf
-  namespace: utilities
+  namespace: stirlingpdf
   annotations:
     keel.sh/policy: force
     keel.sh/trigger: poll            

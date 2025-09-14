@@ -18,19 +18,19 @@ secretGenerator:
         reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager, traefik"
 
 resources:
+  - https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
   - cert-manager-namespace.yaml
 
-helmCharts:
-  # Cert-manager for certificate management (Let's Encrypt)
-  ## WARNING - If you would ever delete this Helm release, there are webhookconfigurations that will remain in the cluster since the helm chart doesn't delete it - https://github.com/cert-manager/cert-manager/issues/3195#issuecomment-1452780684
-  ## kubectl get validatingwebhookconfiguration.admissionregistration.k8s.io
-  ## kubectl delete validatingwebhookconfiguration.admissionregistration.k8s.io/<Junk Object>
-  ## kubectl get mutatingwebhookconfiguration.admissionregistration.k8s.io
-  ## kubectl delete mutatingwebhookconfiguration.admissionregistration.k8s.io/<Junk Object>
-  
-  - name: cert-manager
-    repo: https://charts.jetstack.io
-    includeCRDs: true
-    releaseName: cert-manager
-    namespace: cert-manager
-    valuesFile: cert-manager-values.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: cert-manager
+    path: cert-manager-patch.yaml
+  - target:
+      kind: Deployment
+      name: cert-manager-webhook
+    path: cert-manager-webhook-patch.yaml
+  - target:
+      kind: Deployment
+      name: cert-manager-cainjector
+    path: cert-manager-cainjector-patch.yaml

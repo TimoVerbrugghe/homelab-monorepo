@@ -4,3 +4,4 @@ resources:
   - stirling-pdf.yaml
   - stirling-pdf-service.yaml
   - stirling-pdf-ingress.yaml
+  - stirling-pdf-namespace.yaml

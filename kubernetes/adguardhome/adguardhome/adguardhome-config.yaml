@@ -285,7 +285,7 @@ filtering:
     - domain: sunshine.local.timo.be
       answer: 10.10.10.15
     - domain: dns.local.timo.be
-      answer: 10.10.10.20
+      answer: 10.10.10.35
     - domain: adguardhome-ulrich.local.timo.be
       answer: 10.10.10.21
     - domain: adguardhome-odd.local.timo.be

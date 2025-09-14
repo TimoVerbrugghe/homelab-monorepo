@@ -1,0 +1,9 @@
+# Add autoupdate through keel for cert-manager-webhook
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cert-manager-webhook
+  annotations:
+    keel.sh/policy: all
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"

@@ -11,15 +11,18 @@
     content: |
       APT::Periodic::Update-Package-Lists "1";
       APT::Periodic::Unattended-Upgrade "1";
+      APT::Periodic::AutocleanInterval "7";
 
       Unattended-Upgrade::Origins-Pattern {
-          "origin=Debian,label=Debian";
-          "origin=Debian,label=Debian-Security"
-          "origin=Proxmox,label=Proxmox Debian Repository";
-          "origin=Proxmox,label=Proxmox Ceph Debian Repository";
-          "origin=Tailscale,label=Tailscale"
+          "origin=Debian,codename=${distro_codename}";
+          "origin=Debian,codename=${distro_codename}-security";
+          "origin=Debian,codename=${distro_codename}-updates";
+          "origin=Proxmox";
+          "origin=Ceph";
+          "origin=Tailscale";
       };
 
+      Unattended-Upgrade::AutoFixInterruptedDpkg "true";
       Unattended-Upgrade::MinimalSteps "false";
       Unattended-Upgrade::Automatic-Reboot "true";
       Unattended-Upgrade::Automatic-Reboot-Time "05:00";
@@ -30,3 +33,77 @@
 
       Unattended-Upgrade::Mail "timo@hotmail.be";
       Unattended-Upgrade::MailReport "only-on-error";
+      
+- name: Install postfix and required packages (necessary so that unattended-upgrades can send email reports)
+  ansible.builtin.apt:
+    name:
+      - postfix
+      - libsasl2-modules
+      - ca-certificates
+      - mailutils
+    state: present
+
+- name: Remove any existing relayhost definitions in postfix main.cf
+  ansible.builtin.lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: '^\s*relayhost\s*='
+    state: absent
+    backup: true
+
+- name: Ensure postfix main.cf has Gmail relay configuration block
+  ansible.builtin.blockinfile:
+    path: /etc/postfix/main.cf
+    marker: "# {mark} ANSIBLE MANAGED GMAIL RELAY"
+    block: |
+      relayhost = [smtp.gmail.com]:587
+      smtp_use_tls = yes
+      smtp_tls_security_level = encrypt
+      smtp_tls_note_starttls_offer = yes
+      smtp_sasl_auth_enable = yes
+      smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+      smtp_sasl_security_options = noanonymous
+      smtp_sasl_tls_security_options = noanonymous
+      smtp_header_checks = regexp:/etc/postfix/header_checks
+
+- name: Create sasl_passwd with Gmail credentials
+  ansible.builtin.copy:
+    dest: /etc/postfix/sasl_passwd
+    content: "[smtp.gmail.com]:587 {{ gmail_smtp_user }}:{{ gmail_smtp_password }}\n"
+    owner: root
+    group: root
+    mode: "0600"
+  no_log: true
+
+- name: Generate sasl_passwd.db
+  ansible.builtin.command: postmap /etc/postfix/sasl_passwd
+  args:
+    creates: /etc/postfix/sasl_passwd.db
+
+- name: Restrict permissions for sasl_passwd.db
+  ansible.builtin.file:
+    path: /etc/postfix/sasl_passwd.db
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Optional header_checks file to remove sensitive headers
+  ansible.builtin.copy:
+    dest: /etc/postfix/header_checks
+    content: |
+      /^Received:/           IGNORE
+      /^X-Originating-IP:/   IGNORE
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Compile header_checks
+  ansible.builtin.command: postmap /etc/postfix/header_checks
+  args:
+    creates: /etc/postfix/header_checks.db
+  when: ansible_facts['os_family'] is defined
+
+- name: Ensure postfix service enabled and running
+  ansible.builtin.service:
+    name: postfix
+    state: started
+    enabled: true

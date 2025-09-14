@@ -3,7 +3,7 @@
 {
   # Adding default DNS servers
   networking.nameservers = [
-    "10.10.10.20"
+    "10.10.10.35"
     "10.10.10.21"
     "10.10.10.22"
   ];
@@ -12,6 +12,6 @@
   services.resolved = {
     enable = true;
     domains = [ "~." ];
-    fallbackDns = [ "10.10.10.20" "10.10.10.21" "10.10.10.22" ];
+    fallbackDns = [ "10.10.10.35" "10.10.10.21" "10.10.10.22" ];
   };
 }

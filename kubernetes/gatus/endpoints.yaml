@@ -181,7 +181,7 @@ endpoints:
     <<: [*defaults-http, *defaults-nochecktls]
 
   - name: "Adguardhome (Kubernetes)"
-    url: "10.10.10.20"
+    url: "10.10.10.35"
     group: Networking
     <<: [*defaults-dns, *defaults-alerts]
 

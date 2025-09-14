@@ -18,3 +18,7 @@ swap_size: 8G
 swap_swappiness: 10
 
 tailscale_authkey_proxmox: 
+
+# Postfix settings for proxmox host
+gmail_smtp_user: 
+gmail_smtp_password: 

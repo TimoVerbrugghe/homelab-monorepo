@@ -33,11 +33,11 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
             limits:
-              memory: "512Mi"
-              cpu: "500m"
-            requests:
               memory: "256Mi"
               cpu: "250m"
+            requests:
+              memory: "128Mi"
+              cpu: "125m"
           env:
             # Only putting log in stdout, not in a log file so that I can mount configmap without using subpath, which allows instant updating of configfiles
             - name: LOG_TARGETS

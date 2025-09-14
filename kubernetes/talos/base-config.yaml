@@ -1,38 +1,34 @@
 version: v1alpha1
 machine:
-    certSANs:
-        - 10.10.10.33
-        - kubernetes.local.timo.be
-    kubelet:
-      # Required for metrics-server, which is required by homepage to use its kubernetes widget
-      extraArgs:
-        rotate-server-certificates: true
-      extraConfig:
-          nodeStatusUpdateFrequency: 4s
-          featureGates:
-              GracefulNodeShutdown: true
-      nodeIP:
-        # The `validSubnets` field configures the networks to pick kubelet node IP from.
-        validSubnets:
-          - 10.10.10.0/24
-    
-    sysctls:
-      vm.nr_hugepages: "1024"
-    
-    network:
-      nameservers:
-        - 10.10.10.20
-        - 10.10.10.21
-        - 10.10.10.22
+  certSANs:
+      - 10.10.10.33
+      - kubernetes.local.timo.be
+  kubelet:
+    # Required for metrics-server, which is required by homepage to use its kubernetes widget
+    extraArgs:
+      rotate-server-certificates: true
+    extraConfig:
+        nodeStatusUpdateFrequency: 4s
+        featureGates:
+            GracefulNodeShutdown: true
+  
+  sysctls:
+    vm.nr_hugepages: "1024"
+  
+  network:
+    nameservers:      
+      - 10.10.10.21
+      - 10.10.10.22
+      - 10.10.10.35
 
-    install:
-      disk: /dev/sda
+  install:
+    disk: /dev/sda
 
-      # Image with several extensions & kernel args - see talos-image.yaml
-      # curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
-      image: factory.talos.dev/installer/327abb36ea5ad03a9a7f1f4d2e23c5876b1f7f0661d175c88417f13607d59360:v1.10.7
-      extraKernelArgs:
-        - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
+    # Image with several extensions & kernel args - see talos-image.yaml
+    # curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
+    image: factory.talos.dev/installer/327abb36ea5ad03a9a7f1f4d2e23c5876b1f7f0661d175c88417f13607d59360:v1.11.1
+    extraKernelArgs:
+      - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
 
 cluster:
   controlPlane:
