@@ -44,11 +44,13 @@ Resolution:
 3. Re-check node health in Talos; status will report healthy once the serving certificate is issued.
 
 Quick checks:
+
 ```bash
 kubectl get csr
 ```
 
 Deploy:
+
 ```bash
 kubectl apply -k kubernetes/metrics-server/
 ```
