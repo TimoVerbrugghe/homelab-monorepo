@@ -28,6 +28,29 @@ talosctl gen config --with-secrets secrets.yaml --output-types talosconfig -o ta
 # Applying config to the first controlplane node & then bootstrapping cluster
 talosctl apply-config --insecure -n 10.10.10.30 --file controlplane-william.yaml
 talosctl bootstrap -n 10.10.10.30 -e 10.10.10.30 --talosconfig talosconfig
+
+# Get kubeconfig file
+talosctl kubeconfig --nodes 10.10.10.30 -e 10.10.10.30 --talosconfig ./talosconfig
+```
+
+## Warning: Kubelet TLS CSR During Bootstrap
+
+During the initial bootstrap the first control plane node may appear unhealthy in Talos with a kubelet TLS error (see https://talos.dev/diagnostic/kubelet-csr). This happens because rotate-server-certificates is enabled, but the kubelet-serving-cert-approver is not yet running, so the kubelet-serving CSR remains Pending.
+
+Resolution:
+
+1. Deploy the metrics-server (the kubelet-serving-cert-approver is included alongside it in the metrics-server folder).
+2. Wait a few seconds for the controller to approve the pending CSR.
+3. Re-check node health in Talos; status will report healthy once the serving certificate is issued.
+
+Quick checks:
+```bash
+kubectl get csr
+```
+
+Deploy:
+```bash
+kubectl apply -k kubernetes/metrics-server/
 ```
 
 ## Adding Additional Nodes

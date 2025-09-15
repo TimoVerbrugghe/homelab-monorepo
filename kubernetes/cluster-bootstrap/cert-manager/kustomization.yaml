@@ -19,7 +19,6 @@ secretGenerator:
 
 resources:
   - https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
-  - cert-manager-namespace.yaml
 
 patches:
   - target:

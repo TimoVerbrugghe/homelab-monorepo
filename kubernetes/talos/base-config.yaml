@@ -8,9 +8,9 @@ machine:
     extraArgs:
       rotate-server-certificates: true
     extraConfig:
-        nodeStatusUpdateFrequency: 4s
-        featureGates:
-            GracefulNodeShutdown: true
+      nodeStatusUpdateFrequency: 4s
+      featureGates:
+          GracefulNodeShutdown: true
   
   sysctls:
     vm.nr_hugepages: "1024"

@@ -258,7 +258,7 @@ endpoints:
     <<: [*defaults-http, *defaults-alerts]
 
   - name: "Keel (Kubernetes)"
-    url: "http://keel.utilities.svc.cluster.local:9300"
+    url: "http://keel.keel.svc.cluster.local:9300"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
@@ -268,7 +268,7 @@ endpoints:
   #   <<: [*defaults-http, *defaults-alerts]
 
   - name: "Stirling-PDF"
-    url: "http://stirlingpdf.utilities.svc.cluster.local:8080"
+    url: "http://stirlingpdf.stirlingpdf.svc.cluster.local:8080"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 

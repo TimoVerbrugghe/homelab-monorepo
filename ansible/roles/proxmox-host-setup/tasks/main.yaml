@@ -1,38 +1,63 @@
-# - name: Update apt cache
-#   ansible.builtin.apt:
-#     update_cache: yes
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
 
 - name: Setup automatic upgrades
   ansible.builtin.include_tasks: automatic-upgrades.yaml
 
-# - name: Setup iGPU passthrough
-#   ansible.builtin.include_tasks: proxmox-igpu-passthrough.yaml
+- name: Setup iGPU passthrough
+  ansible.builtin.include_tasks: proxmox-igpu-passthrough.yaml
 
-# - name: Install & Authenticate tailscale
-#   ansible.builtin.include_tasks: tailscale.yaml
+- name: Install & Authenticate tailscale
+  ansible.builtin.include_tasks: tailscale.yaml
 
-# - name: CPU, ZFS optimizations
-#   ansible.builtin.include_tasks: optimizations.yaml
+- name: CPU, ZFS optimizations
+  ansible.builtin.include_tasks: optimizations.yaml
 
-# - name: Update initramfs
-#   ansible.builtin.command: 
-#     cmd: update-initramfs -u -k all
+# - name: Configure Proxmox notifications (email + matchers)
+#   ansible.builtin.blockinfile:
+#     path: /etc/pve/notifications.cfg
+#     create: true
+#     owner: root
+#     group: www-data
+#     mode: '0640'
+#     marker: "# {mark} ANSIBLE MANAGED NOTIFICATION BLOCK"
+#     block: |
+#
+#       matcher: AllWarningsErrors
+#               comment Will send mail when a warning or error occurs except for replication errors
+#               match-field exact:type=fencing,vzdump,package-updates,system-mail
+#               match-severity warning,error,unknown
+#               mode all
+#               target Email
 
-# - name: Run update-grub
-#   ansible.builtin.command: 
-#     cmd: update-grub
-#   when: zfs | default(true) | bool == false
+#       matcher: ReplicationErrors
+#               comment Will notify on errors with replications, except when they happen during the night
+#               match-calendar 7:00-23:59
+#               match-field exact:type=replication
+#               match-severity warning,error,unknown
+#               mode all
+#               target Email
 
-# - name: Run proxmox-boot-tool (only on systems running systemd-boot, default with zfs)
-#   ansible.builtin.command: 
-#     cmd: proxmox-boot-tool refresh
-#   when: zfs
+- name: Update initramfs
+  ansible.builtin.command: 
+    cmd: update-initramfs -u -k all
 
-# - name: Reboot
-#   ansible.builtin.reboot:
-#     reboot_timeout: 60
-#   ignore_errors: true
+- name: Run update-grub
+  ansible.builtin.command: 
+    cmd: update-grub
+  when: zfs | default(true) | bool == false
 
-# - name: Wait 20 seconds to make sure proxmox API is running for potential other playbooks
-#   ansible.builtin.pause:
-#     seconds: 20
+- name: Run proxmox-boot-tool (only on systems running systemd-boot, default with zfs)
+  ansible.builtin.command: 
+    cmd: proxmox-boot-tool refresh
+  when: zfs
+
+- name: Reboot
+  ansible.builtin.reboot:
+    reboot_timeout: 60
+  ignore_errors: true
+
+- name: Wait 20 seconds to make sure proxmox API is running for potential other playbooks
+  ansible.builtin.pause:
+    seconds: 20
