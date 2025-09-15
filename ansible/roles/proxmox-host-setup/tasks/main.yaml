@@ -14,30 +14,9 @@
 - name: CPU, ZFS optimizations
   ansible.builtin.include_tasks: optimizations.yaml
 
-# - name: Configure Proxmox notifications (email + matchers)
-#   ansible.builtin.blockinfile:
-#     path: /etc/pve/notifications.cfg
-#     create: true
-#     owner: root
-#     group: www-data
-#     mode: '0640'
-#     marker: "# {mark} ANSIBLE MANAGED NOTIFICATION BLOCK"
-#     block: |
-#
-#       matcher: AllWarningsErrors
-#               comment Will send mail when a warning or error occurs except for replication errors
-#               match-field exact:type=fencing,vzdump,package-updates,system-mail
-#               match-severity warning,error,unknown
-#               mode all
-#               target Email
-
-#       matcher: ReplicationErrors
-#               comment Will notify on errors with replications, except when they happen during the night
-#               match-calendar 7:00-23:59
-#               match-field exact:type=replication
-#               match-severity warning,error,unknown
-#               mode all
-#               target Email
+# Mostly adding this to note somewhere I setup these proxmox notifications, would recommend they are setup through the GUI
+# - name: Add Proxmox Notifications
+#   ansible.builtin.include_tasks: notifications.yaml
 
 - name: Update initramfs
   ansible.builtin.command: 

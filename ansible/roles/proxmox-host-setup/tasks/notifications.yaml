@@ -1,0 +1,61 @@
+## Add Pushover notifications with the following headers, message & secrets
+# Headers: Content-Type: application/json
+
+# Message: 
+# {
+#   "token": "{{ secrets.apikey }}",
+#   "user": "{{ secrets.userkey }}",
+#   "title": "{{ title }}",
+#   "message": "{{ escape message }}",
+#   "priority": "0",
+#   "timestamp": "{{ timestamp }}"
+# }
+
+# Secrets: userkey, apikey
+
+- name: Configure Proxmox notifications (email + matchers)
+  ansible.builtin.blockinfile:
+    path: /etc/pve/notifications.cfg
+    create: true
+    owner: root
+    group: www-data
+    mode: '0640'
+    marker: "# {mark} ANSIBLE MANAGED NOTIFICATION BLOCK"
+    block: |
+      matcher: AllWarningsErrors
+              comment Will send mail when a warning or error occurs except for replication errors
+              match-field exact:type=fencing,vzdump,package-updates,system-mail
+              match-severity warning,error,unknown
+              mode all
+              target Pushover
+
+      matcher: ReplicationErrors
+              comment Will notify on errors with replications, except when they happen during the night
+              match-calendar 7:00-23:59
+              match-field exact:type=replication
+              match-severity warning,error,unknown
+              mode all
+              target Pushover
+
+      webhook: Pushover
+              body ewogICJ0b2tlbiI6ICJ7eyBzZWNyZXRzLmFwaWtleSB9fSIsCiAgInVzZXIiOiAie3sgc2VjcmV0cy51c2Vya2V5IH19IiwKICAidGl0bGUiOiAie3sgdGl0bGUgfX0iLAogICJtZXNzYWdlIjogInt7IGVzY2FwZSBtZXNzYWdlIH19IiwKICAicHJpb3JpdHkiOiAiMCIsCiAgInRpbWVzdGFtcCI6ICJ7eyB0aW1lc3RhbXAgfX0iCn0=
+              header name=Content-Type,value=YXBwbGljYXRpb24vanNvbg==
+              method post
+              url https://api.pushover.net/1/messages.json
+
+- name: Ensure Proxmox notification secrets (smtp + webhook)
+  ansible.builtin.blockinfile:
+    path: /etc/pve/priv/notifications.cfg
+    create: true
+    owner: root
+    group: www-data
+    mode: '0640'
+    marker: "# {mark} ANSIBLE MANAGED NOTIFICATION SECRETS"
+    block: |
+      smtp: Email
+              password {{ proxmox_smtp_password }}
+
+      webhook: Pushover
+              secret name=apikey,value={{ proxmox_pushover_apikey }}
+              secret name=userkey,value={{ proxmox_pushover_userkey }}
+  no_log: true

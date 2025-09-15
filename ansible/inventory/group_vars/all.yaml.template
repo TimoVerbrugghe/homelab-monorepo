@@ -22,3 +22,7 @@ tailscale_authkey_proxmox:
 # Postfix settings for proxmox host
 gmail_smtp_user: 
 gmail_smtp_password: 
+
+proxmox_smtp_password:
+proxmox_pushover_apikey:
+proxmox_pushover_userkey:
