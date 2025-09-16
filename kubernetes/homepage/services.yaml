@@ -230,7 +230,7 @@
         namespace: pxeboot
         app: netbootxyz
     - iVentoy:
-        icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/iventoy.png
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/iventoy.svg
         href: https://iventoy.timo.be
         namespace: pxeboot
         app: iventoy
@@ -251,7 +251,7 @@
         server: thefactory
         container: filezilla
     - Double Commander:
-        icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/doublecommander.svg
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/double-commander.svg
         href: https://doublecommander.timo.be
         server: thefactory
         container: doublecommander
@@ -263,7 +263,7 @@
         namespace: bitwarden
         app: bitwarden
     - Paperless-ai:
-        icon: https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/refs/heads/master/kubernetes/homepage/icons/paperlessai.ico
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/webp/paperless-ai.webp
         href: https://paperlessai.timo.be
         server: thefactory
         container: paperless-ai
