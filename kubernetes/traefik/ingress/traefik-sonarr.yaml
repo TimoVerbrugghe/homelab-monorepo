@@ -1,7 +1,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: sonarr
+  name: yamtrack
   namespace: traefik
   annotations: 
     kubernetes.io/ingress.class: traefik
@@ -9,20 +9,39 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`sonarr.kubernetes.timo.be`) || Host(`sonarr.timo.be`) || Host(`sonarrtest.timo.be`)
+    - match: Host(`yamtrack.kubernetes.timo.be`) || Host(`yamtrack.timo.be`)
       kind: Rule
       services:
-        - name: sonarr-svc
-          port: 14000
+        - name: yamtrack-svc
+          port: 14006
           serversTransport: serverstransport
       middlewares:
         - name: auth
           namespace: traefik
 ---
+# API Endpoint (only in local network) so that plex & other services in same local network can reach it
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: yamtrack-api
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`yamtrackapi.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: yamtrack-svc
+          port: 14006
+          serversTransport: serverstransport
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sonarr-svc
+  name: yamtrack-svc
   namespace: traefik
 spec:
   externalName: 10.10.10.2 # Can also be an IP address

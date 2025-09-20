@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sonarr
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`sonarr.kubernetes.timo.be`) || Host(`sonarr.timo.be`) || Host(`sonarrtest.timo.be`)
+      kind: Rule
+      services:
+        - name: sonarr-svc
+          port: 14000
+          serversTransport: serverstransport
+      middlewares:
+        - name: auth
+          namespace: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr-svc
+  namespace: traefik
+spec:
+  externalName: 10.10.10.2 # Can also be an IP address
+  type: ExternalName

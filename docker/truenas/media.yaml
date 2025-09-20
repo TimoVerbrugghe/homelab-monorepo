@@ -215,6 +215,7 @@ services:
       - TZ=Europe/Berlin
       - SECRET=longstring
       - REDIS_URL=redis://yamtrack-redis:6379
+      - URLS=URLS=https://yamtrack.kubernetes.timo.be,https://yamtrack.timo.be,http://yamtrackapi.kubernetes.timo.be
     volumes:
       - yamtrack-db:/yamtrack/db
     ports:
