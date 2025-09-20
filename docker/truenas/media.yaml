@@ -275,13 +275,13 @@ volumes:
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/FranzHopper/appdata/yamtrack/db"
+      device: "/mnt/FranzHopper/appdata/yamtrack/yamtrack-db"
   yamtrack-redis:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/FranzHopper/appdata/yamtrack/redis"
+      device: "/mnt/FranzHopper/appdata/yamtrack/yamtrack-redis"
 
   movies:
     driver: local
