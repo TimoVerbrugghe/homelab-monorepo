@@ -203,6 +203,32 @@ services:
     environment:
       - TZ=Europe/Brussels
 
+  yamtrack:
+    container_name: yamtrack
+    image: ghcr.io/fuzzygrim/yamtrack
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    depends_on:
+      - yamtrack-redis
+    environment:
+      - TZ=Europe/Berlin
+      - SECRET=longstring
+      - REDIS_URL=redis://yamtrack-redis:6379
+    volumes:
+      - yamtrack-db:/yamtrack/db
+    ports:
+      - 14006:8000
+
+  yamtrack-redis:
+    container_name: yamtrack-redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - yamtrack-redis:/data
+
 networks:
   dockerproxy:
     external: true
@@ -244,7 +270,19 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/recyclarr"
-    
+  yamtrack-db:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/yamtrack/db"
+  yamtrack-redis:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/yamtrack/redis"
+
   movies:
     driver: local
     driver_opts:
