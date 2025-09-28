@@ -39,10 +39,10 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "256Mi"
+            memory: "512Mi"
             cpu: "250m"
           limits:
-            memory: "512Mi"
+            memory: "1024Mi"
             cpu: "500m"
         volumeMounts:
           - mountPath: /opt/adguardhome/work
@@ -66,12 +66,10 @@ spec:
             name: adguardhome-config
         - name: adguardhome-config-cache
           emptyDir:
-            sizeLimit: 100Mi
-            medium: Memory
+            sizeLimit: 500Mi
         - name: adguardhome-work-cache
           emptyDir:
             sizeLimit: 500Mi
-            medium: Memory
         - name: adguardhome-certs
           secret:
             secretName: wildcard-timo-be-production-tls
