@@ -16,6 +16,7 @@ configMapGenerator:
       # Needed even though I don't use them since homepage otherwise will try to copy empty files to a read-only configmap mount
       - custom.css=custom.css
       - custom.js=custom.js
+      - proxmox.yaml=proxmox.yaml
     options:
       labels:
         app.kubernetes.io/name: homepage

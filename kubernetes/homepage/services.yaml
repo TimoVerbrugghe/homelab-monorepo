@@ -55,7 +55,7 @@
     - Plex:
         icon: plex.svg
         href: https://app.plex.tv/desktop
-        server: thefactory
+        server: aelita
         container: plex
         widget:
             type: plex
@@ -270,7 +270,7 @@
     - Keel:
         icon: mdi-update
         href: https://keel.timo.be
-        namespace: utilities
+        namespace: keel
         app: keel
     - Scanservjs:
         icon: scanservjs.webp
@@ -280,7 +280,7 @@
     - Stirling-PDF:
         icon: stirling-pdf.svg
         href: https://stirlingpdf.timo.be
-        namespace: utilities
+        namespace: stirlingpdf
         app: stirlingpdf
     - Gatus:
         icon: gatus.svg
