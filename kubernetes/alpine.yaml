@@ -38,17 +38,11 @@ spec:
             limits:
               cpu: "200m"
               memory: "128Mi"
-      #     volumeMounts:
-      #       - name: data
-      #         mountPath: /data
-      #       - name: mnt
-      #         mountPath: /mnt
-      # volumes:
-      #   - name: data
-      #     hostPath:
-      #       path: /var/mnt/portainer
-      #       type: Directory
-      #   - name: mnt
-      #     nfs:
-      #       server: nfs.local.timo.be
-      #       path: /mnt/FranzHopper/appdata/portainer
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          hostPath:
+            path: /var/mnt/portainer
+            type: Directory
