@@ -76,6 +76,7 @@ volumes:
       device: ":/mnt/X.A.N.A./media/music"
 
   plex:
+  jellyfin:
 
 networks:
   dockerproxy:

@@ -2,20 +2,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-secretGenerator:
-  - name: portainer-backup-secret
-    type: Opaque
-    namespace: portainer
-    envs:
-      - portainer-backup-secret.env
-
-generatorOptions:
-  disableNameSuffixHash: true
-
 resources:
-  - portainer-server.yaml
-  - portainer-server-ingress.yaml
-  - portainer-server-service.yaml
-  - portainer-server-backup.yaml
-  - portainer-server-serviceaccount.yaml
+  - portainer.yaml
+  - portainer-ingress.yaml
+  - portainer-service.yaml
+  - portainer-backup.yaml
+  - portainer-serviceaccount.yaml
   - namespace.yaml

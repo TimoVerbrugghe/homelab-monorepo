@@ -16,8 +16,9 @@ name: portainer
 provisioning:
   diskSelector:
     match: "!system_disk"
-  minSize: 5GB
-  maxSize: 5GB
+  minSize: 10GB
+  maxSize: 10GB
+  grow: true
 ---
 # Local storage for bitwarden
 apiVersion: v1alpha1

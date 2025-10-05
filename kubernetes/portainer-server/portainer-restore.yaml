@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: portainer-restore
+  namespace: portainer
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        kubernetes.io/hostname: yumi
+      volumes:
+        - name: portainer-data
+          hostPath:
+            path: /var/mnt/portainer
+        - name: nfs-backup
+          nfs:
+            server: nfs.local.timo.be
+            path: /mnt/FranzHopper/appdata/portainer
+      containers:
+        - name: restore
+          image: ghcr.io/timoverbrugghe/k8s-restore:latest
+          volumeMounts:
+            - name: portainer-data
+              mountPath: /appdata
+            - name: nfs-backup
+              mountPath: /backup
