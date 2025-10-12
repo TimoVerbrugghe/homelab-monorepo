@@ -4,6 +4,7 @@ services:
     restart: always
     ports:
       - 8080:8080
+      - 6042:6042
     volumes:
       - nsp:/nsp
       - config:/root/.java/.userPrefs/NS-USBloader
