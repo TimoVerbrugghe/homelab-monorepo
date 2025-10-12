@@ -26,7 +26,7 @@ Before running the Docker container, make sure you have the following installed:
 3. Run the Docker container:
 
     ```shell
-    docker run -d -p 8080:8080 -v /path/to/nsp/files:/nsp -v /path/to/config:/root/.java/.userPrefs/NS-USBloader ghcr.io/timoverbrugghe/ns-usbloader
+    docker run -d -p 8080:8080 -p 6042:6042 -v /path/to/nsp/files:/nsp -v /path/to/config:/root/.java/.userPrefs/NS-USBloader ghcr.io/timoverbrugghe/ns-usbloader
     ```
 
 4. Access ns-usbloader in your web browser:
@@ -45,6 +45,7 @@ services:
     image: ghcr.io/timoverbrugghe/ns-usbloader
     ports:
       - 8080:8080
+      - 6042:6042
     volumes:
       - /path/to/nsp/files:/nsp
       - /path/to/config:/root/.java/.userPrefs/NS-USBloader

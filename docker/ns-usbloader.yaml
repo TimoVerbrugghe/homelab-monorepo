@@ -1,0 +1,23 @@
+services:
+  ns-usbloader:
+    image: ghcr.io/timoverbrugghe/ns-usbloader
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - nsp:/nsp
+      - config:/root/.java/.userPrefs/NS-USBloader
+
+volumes:
+  config:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/ns-usbloader"
+  nsp:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/games/roms"
