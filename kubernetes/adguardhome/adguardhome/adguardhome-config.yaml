@@ -206,6 +206,7 @@ user_rules:
   - '@@||drive.bydauto.be^$important'
   - '@@||my.koelnmesse.io^$important'
   - '@@||cwwk.net^$important'
+  - '@@||nswpedia.com^$important'
 dhcp:
   enabled: false
   interface_name: ""
