@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: scrutiny
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`scrutiny.kubernetes.timo.be`) || Host(`scrutiny.timo.be`)
+      kind: Rule
+      services:
+        - name: scrutiny-svc
+          port: 31054
+          serversTransport: serverstransport
+      middlewares:
+        - name: auth
+          namespace: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scrutiny-svc
+  namespace: traefik
+spec:
+  externalName: thefactory.local.timo.be # Can also be an IP address
+  type: ExternalName
