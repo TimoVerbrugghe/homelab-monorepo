@@ -14,11 +14,6 @@ services:
       - downloads:/downloads
     ports:
       - 13001:3000
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "filezilla"
-      tsdproxy.container_port: 3000
-      tsdproxy.ephemeral: false
 
   doublecommander:
     image: lscr.io/linuxserver/doublecommander:latest
@@ -38,11 +33,6 @@ services:
     restart: always
     ports:
       - 13002:3000
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "doublecommander"
-      tsdproxy.container_port: 3000
-      tsdproxy.ephemeral: false
 
 volumes:
   filezilla:

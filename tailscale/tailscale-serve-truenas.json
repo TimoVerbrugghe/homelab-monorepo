@@ -1,0 +1,308 @@
+{
+  "Services": {
+    "svc:scrutiny": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "scrutiny.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:31054"
+            }
+          }
+        }
+      }
+    },
+    "svc:romm": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "romm.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:17000"
+            }
+          }
+        }
+      }
+    },
+    "svc:yamtrack": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "yamtrack.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:14006"
+            }
+          }
+        }
+      }
+    },
+    "svc:huntarr": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "huntarr.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:14005"
+            }
+          }
+        }
+      }
+    },
+    "svc:prowlarr": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "prowlarr.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:14004"
+            }
+          }
+        }
+      }
+    },
+    "svc:request": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "request.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:14003"
+            }
+          }
+        }
+      }
+    },
+    "svc:bazarr": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "bazarr.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:14002"
+            }
+          }
+        }
+      }
+    },
+    "svc:radarr": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "radarr.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:14001"
+            }
+          }
+        }
+      }
+    },
+    "svc:sonarr": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "sonarr.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:14000"
+            }
+          }
+        }
+      }
+    },
+    "svc:doublecommander": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "doublecommander.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:13002"
+            }
+          }
+        }
+      }
+    },
+    "svc:filezilla": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "filezilla.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:13001"
+            }
+          }
+        }
+      }
+    },
+    "svc:spotdl": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "spotdl.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:12005"
+            }
+          }
+        }
+      }
+    },
+    "svc:ariang": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "ariang.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:12003"
+            }
+          }
+        }
+      }
+    },
+    "svc:metube": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "metube.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:12002"
+            }
+          }
+        }
+      }
+    },
+    "svc:jdownloader2": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "jdownloader2.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:12001"
+            }
+          }
+        }
+      }
+    },
+    "svc:qbittorrent": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "qbittorrent.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:12000"
+            }
+          }
+        }
+      }
+    },
+    "svc:paperless-ai": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "paperless-ai.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:11005"
+            }
+          }
+        }
+      }
+    },
+    "svc:paperless": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "paperless.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:11004"
+            }
+          }
+        }
+      }
+    },
+    "svc:nextcloud-aio": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "nextcloud-aio.pony-godzilla.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:11001"
+            }
+          }
+        }
+      }
+    }
+  }
+}

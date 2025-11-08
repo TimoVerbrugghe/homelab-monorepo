@@ -1,0 +1,7 @@
+# A proxyGroup needs to be defined to route to Tailscale Services (instead of creating a tailscale machine for a service)
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: tailscale-services
+spec:
+  type: ingress

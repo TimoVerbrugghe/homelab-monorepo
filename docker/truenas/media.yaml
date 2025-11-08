@@ -20,11 +20,6 @@ services:
       retries: 60
     ports:
       - 14000:8989
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "sonarr"
-      tsdproxy.container_port: 8989
-      tsdproxy.ephemeral: false
 
   radarr:
     container_name: radarr
@@ -47,11 +42,6 @@ services:
       retries: 60
     ports:
       - 14001:7878
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "radarr"
-      tsdproxy.container_port: 7878
-      tsdproxy.ephemeral: false
 
   bazarr:
     container_name: bazarr
@@ -79,11 +69,6 @@ services:
       retries: 60
     ports:
       - 14002:6767
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.container_port: 6767
-      tsdproxy.name: "bazarr"
-      tsdproxy.ephemeral: false
 
   overseerr:
     container_name: overseerr
@@ -103,11 +88,6 @@ services:
       retries: 60
     ports:
       - 14003:5055
-    labels:
-      tsdproxy.container_port: 5055
-      tsdproxy.enable: true
-      tsdproxy.name: "request"
-      tsdproxy.ephemeral: false
 
   prowlarr:
     container_name: prowlarr
@@ -128,11 +108,6 @@ services:
       retries: 60
     ports:
       - 14004:9696
-    labels:
-      tsdproxy.container_port: 9696
-      tsdproxy.enable: true
-      tsdproxy.name: "prowlarr"
-      tsdproxy.ephemeral: false
   
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr

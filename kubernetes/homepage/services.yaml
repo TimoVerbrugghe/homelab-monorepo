@@ -272,11 +272,6 @@
         href: https://keel.timo.be
         namespace: keel
         app: keel
-    - Scanservjs:
-        icon: scanservjs.webp
-        href: https://scanservjs.timo.be
-        server: thefactory
-        container: scanservjs
     - Stirling-PDF:
         icon: stirling-pdf.svg
         href: https://stirlingpdf.timo.be

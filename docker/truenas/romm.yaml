@@ -37,11 +37,6 @@ services:
       romm-db:
         condition: service_healthy
         restart: true
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "romm"
-      tsdproxy.container_port: 8080
-      tsdproxy.ephemeral: false
 
   romm-db:
     image: mariadb:latest

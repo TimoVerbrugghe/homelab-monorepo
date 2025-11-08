@@ -27,6 +27,8 @@ metadata:
   namespace: traefik
   annotations:
     tailscale.com/hostname: "traefik"
+    # Instead of exposing as a machine, expose it as a Tailscale Service
+    tailscale.com/proxy-group: tailscale-services
 spec:
   selector:
     app.kubernetes.io/name: traefik

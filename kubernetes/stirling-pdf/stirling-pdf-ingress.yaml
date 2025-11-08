@@ -24,6 +24,9 @@ kind: Ingress
 metadata:
   name: stirlingpdf-tailscale
   namespace: stirlingpdf
+  annotations:
+    # Instead of exposing as a machine, expose it as a Tailscale Service
+    tailscale.com/proxy-group: tailscale-services
 spec:
   defaultBackend:
     service:

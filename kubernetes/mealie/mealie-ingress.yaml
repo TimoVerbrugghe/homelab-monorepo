@@ -21,6 +21,9 @@ kind: Ingress
 metadata:
   name: mealie-tailscale
   namespace: mealie
+  annotations:
+    # Instead of exposing as a machine, expose it as a Tailscale Service
+    tailscale.com/proxy-group: tailscale-services
 spec:
   defaultBackend:
     service:

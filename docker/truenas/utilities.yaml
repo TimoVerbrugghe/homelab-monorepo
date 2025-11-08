@@ -1,23 +1,4 @@
 services:
-  scanservjs:
-    image: sbs20/scanservjs:latest
-    container_name: scanservjs
-    restart: always
-    networks:
-      - dockerproxy
-    volumes:
-      - scanservjs-scans:/app/data/output
-      - scanservjs-config:/app/config
-    devices: 
-      - /dev/bus/usb:/dev/bus/usb
-    ports:
-      - 11006:8080
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.container_port: 8080
-      tsdproxy.name: "scan"
-      tsdproxy.ephemeral: false
-
   tinshop:
     container_name: tinshop
     image: ghcr.io/ajmandourah/tinshop-ng:latest
@@ -36,18 +17,6 @@ services:
       - switchkeys:/switchkeys
 
 volumes:
-  scanservjs-scans:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/scanservjs-scans"
-  scanservjs-config:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/scanservjs-config"
   tinshop:
     driver: local
     driver_opts:

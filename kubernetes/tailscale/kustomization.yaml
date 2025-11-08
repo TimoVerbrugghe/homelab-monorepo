@@ -7,6 +7,7 @@ generatorOptions:
 
 resources:
   - https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/cmd/k8s-operator/deploy/manifests/operator.yaml
+  - tailscale-proxygroup.yaml
 
 secretGenerator:
   - name: operator-oauth

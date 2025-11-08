@@ -29,6 +29,9 @@ kind: Ingress
 metadata:
   name: homepage-tailscale
   namespace: homepage
+  annotations:
+    # Instead of exposing as a machine, expose it as a Tailscale Service
+    tailscale.com/proxy-group: tailscale-services
 spec:
   defaultBackend:
     service:

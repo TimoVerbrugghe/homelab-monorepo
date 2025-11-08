@@ -262,11 +262,6 @@ endpoints:
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
-  # - name: "Scanservjs"
-  #   url: "https://scanservjs.timo.be"
-  #   group: Utilities
-  #   <<: [*defaults-http, *defaults-alerts]
-
   - name: "Stirling-PDF"
     url: "http://stirlingpdf.stirlingpdf.svc.cluster.local:8080"
     group: Utilities

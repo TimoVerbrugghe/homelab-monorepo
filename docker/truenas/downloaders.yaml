@@ -15,11 +15,6 @@ services:
       - downloads:/downloads
     ports:
       - 12000:8080
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "qbittorrent"
-      tsdproxy.container_port: 8080
-      tsdproxy.ephemeral: false
 
   jdownloader2:
     image: jlesage/jdownloader-2
@@ -35,11 +30,6 @@ services:
       - downloads:/output
     ports:
       - 12001:5800
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "jdownloader2"
-      tsdproxy.container_port: 5800
-      tsdproxy.ephemeral: false
 
   metube:
     image: ghcr.io/alexta69/metube
@@ -60,11 +50,6 @@ services:
       - /dev/shm:/tmp
     ports:
       - 12002:8081
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "metube"
-      tsdproxy.container_port: 8081
-      tsdproxy.ephemeral: false
 
   ariang:
     image: hurlenko/aria2-ariang
@@ -84,11 +69,6 @@ services:
     ports:
       - 12003:8080
       - 12004:6800
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "ariang"
-      tsdproxy.container_port: 8080
-      tsdproxy.ephemeral: false
 
   # Using separate container & appdata folder for spotdl web which does not use user auth (since this is difficult with spotdl in docker container)
   spotdl-web:
@@ -107,11 +87,6 @@ services:
     restart: always
     networks:
       - dockerproxy
-    labels:
-      tsdproxy.enable: true
-      tsdproxy.name: "spotdl"
-      tsdproxy.container_port: 8800
-      tsdproxy.ephemeral: false
 
 volumes:
   qbittorrent:
