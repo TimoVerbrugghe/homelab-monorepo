@@ -25,7 +25,7 @@ machine:
 
     # Image with several extensions & kernel args - see talos-image.yaml
     # curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
-    image: factory.talos.dev/installer/327abb36ea5ad03a9a7f1f4d2e23c5876b1f7f0661d175c88417f13607d59360:v1.11.3
+    image: factory.talos.dev/installer/327abb36ea5ad03a9a7f1f4d2e23c5876b1f7f0661d175c88417f13607d59360:v1.11.5
     extraKernelArgs:
       - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
 
