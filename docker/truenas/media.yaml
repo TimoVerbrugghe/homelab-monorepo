@@ -88,6 +88,10 @@ services:
       retries: 60
     ports:
       - 14003:5055
+    dns:
+      - 10.10.10.21
+      - 10.10.10.22
+      - 10.10.10.35
 
   prowlarr:
     container_name: prowlarr
