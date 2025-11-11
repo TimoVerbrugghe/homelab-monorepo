@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: movies-pv
+  namespace: mediaplayback
+spec:
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: nfs.local.timo.be
+    path: /mnt/X.A.N.A./media/movies
+  mountOptions:
+    - vers=4.2
+    - relatime
+    - sec=sys
+    - hard
+    - rw
+    - nolock
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tvshows-pv
+  namespace: mediaplayback
+spec:
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: nfs.local.timo.be
+    path: /mnt/X.A.N.A./media/tvshows
+  mountOptions:
+    - vers=4.2
+    - relatime
+    - sec=sys
+    - hard
+    - rw
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: music-pv
+  namespace: mediaplayback
+spec:
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: nfs.local.timo.be
+    path: /mnt/X.A.N.A./media/music
+  mountOptions:
+    - vers=4.2
+    - relatime
+    - sec=sys
+    - hard
+    - rw
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: movies-pvc
+  namespace: mediaplayback
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: movies-pv
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tvshows-pvc
+  namespace: mediaplayback
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: tvshows-pv
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: music-pvc
+  namespace: mediaplayback
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: music-pv

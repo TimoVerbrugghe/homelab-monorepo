@@ -1,0 +1,12 @@
+# Apply all these resources with `kubectl apply -k .` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generatorOptions:
+ disableNameSuffixHash: true
+
+resources:
+  - namespace.yaml
+  - plex
+  - jellyfin
+  - media-storage.yaml

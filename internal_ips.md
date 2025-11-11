@@ -29,6 +29,8 @@
 | 10.10.10.36   | Adguardhome (home assistant connection)     |
 | 10.10.10.37   | NetbootXYZ PXE Server                       |
 | 10.10.10.38   | iVentoy PXE Server                          |
+| 10.10.10.39   | Plex (Kubernetes)                           |
+| 10.10.10.40   | Jellyfin (Kubernetes)                       |
 | 10.10.10.50   | Shelly Plug Freezer                         |
 | 10.10.10.52   | Shelly Plug Server Rack                     |
 | 10.10.10.53   | Shelly Plug Living Room 1                   |

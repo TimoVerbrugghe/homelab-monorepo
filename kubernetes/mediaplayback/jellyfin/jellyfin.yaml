@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  namespace: mediaplayback
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+      - name: jellyfin
+        image: ghcr.io/jellyfin/jellyfin:latest
+        env:
+        - name: TZ
+          value: "Europe/Brussels"
+        volumeMounts:
+        - name: jellyfin-config
+          mountPath: /config
+        - name: cache
+          mountPath: /cache
+        - name: movies
+          mountPath: /movies
+        - name: tvshows
+          mountPath: /tv
+        - name: shm
+          mountPath: /dev/shm
+        - name: dri
+          mountPath: /dev/dri
+        securityContext:
+          privileged: true
+      volumes:
+      - name: jellyfin-config
+        persistentVolumeClaim:
+          claimName: jellyfin-pvc
+      - name: cache
+        emptyDir: {}
+      - name: movies
+        persistentVolumeClaim:
+          claimName: movies-pvc
+      - name: tvshows
+        persistentVolumeClaim:
+          claimName: tvshows-pvc
+      - name: shm
+        hostPath:
+          path: /dev/shm
+      - name: dri
+        hostPath:
+          path: /dev/dri

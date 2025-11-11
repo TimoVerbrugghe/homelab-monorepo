@@ -8,3 +8,4 @@ customization:
       - siderolabs/qemu-guest-agent
       - siderolabs/util-linux-tools
       - siderolabs/intel-ucode
+      - siderolabs/iscsi-tools

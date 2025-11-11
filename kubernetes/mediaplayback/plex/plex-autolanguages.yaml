@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex-autolanguages
+  namespace: mediaplayback
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex-autolanguages
+  template:
+    metadata:
+      labels:
+        app: plex-autolanguages
+    spec:
+      containers:
+      - name: plex-autolanguages
+        image: remirigal/plex-auto-languages:latest
+        env:
+        - name: PLEX_URL
+          value: http://plex.mediaplayback.svc.cluster.local:32400
+        - name: PLEX_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: plex-secrets
+              key: plex_token
+        - name: TZ
+          value: "Europe/Brussels"

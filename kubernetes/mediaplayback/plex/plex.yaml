@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+      - name: plex
+        image: plexinc/pms-docker
+        env:
+        - name: PLEX_UID
+          value: "3000"
+        - name: PLEX_GID
+          value: "3000"
+        - name: TZ
+          value: "Europe/Brussels"
+        - name: PLEX_CLAIM
+          valueFrom:
+            secretKeyRef:
+              name: plex-secrets
+              key: plex_claim_token
+        volumeMounts:
+        - name: movies
+          mountPath: /movies
+        - name: tvshows
+          mountPath: /tv
+        - name: plex-config
+          mountPath: /config
+        - name: shm
+          mountPath: /dev/shm
+        - name: music
+          mountPath: /music
+        - name: dri
+          mountPath: /dev/dri
+      volumes:
+      - name: movies
+        persistentVolumeClaim:
+          claimName: movies-pvc
+      - name: tvshows
+        persistentVolumeClaim:
+          claimName: tvshows-pvc
+      - name: plex-config
+        persistentVolumeClaim:
+          claimName: plex-pvc
+      - name: shm
+        hostPath:
+          path: /dev/shm
+      - name: music
+        persistentVolumeClaim:
+          claimName: music-pvc
+      - name: dri
+        hostPath:
+          path: /dev/dri

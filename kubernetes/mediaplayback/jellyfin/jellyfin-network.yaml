@@ -1,0 +1,73 @@
+---
+# Service to expose all of Jellyfin's relevant ports to the local network for DLNA/device discovery and playback
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin-kubevip
+  namespace: mediaplayback
+spec:
+  selector:
+    app: jellyfin
+  loadBalancerClass: kube-vip.io/kube-vip-class
+  type: LoadBalancer
+  loadBalancerIP: 10.10.10.40
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8096
+    targetPort: 8096
+  - name: clientdiscovery
+    protocol: UDP
+    port: 7359
+    targetPort: 7359
+---
+# Service to be used by Traefik and Tailscale Ingress to access Jellyfin Web UI
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+  namespace: mediaplayback
+spec:
+  ports:
+    - name: http
+      port: 8096
+      protocol: TCP
+      targetPort: 8096
+  selector:
+    app.kubernetes.io/name: jellyfin
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jellyfin
+  namespace: mediaplayback
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`jellyfin.kubernetes.timo.be`) || Host(`jellyfin.timo.be`)
+      kind: Rule
+      services:
+        - name: jellyfin
+          port: 8096
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyfin-tailscale
+  namespace: mediaplayback
+  annotations:
+    # Instead of exposing as a machine, expose it as a Tailscale Service
+    tailscale.com/proxy-group: tailscale-services
+spec:
+  defaultBackend:
+    service:
+      name: jellyfin
+      port:
+        number: 8096
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - jellyfin
