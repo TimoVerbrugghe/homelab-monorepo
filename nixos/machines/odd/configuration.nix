@@ -73,7 +73,7 @@ in
 			
       macvlan0 = {
 				ipv4.addresses =  [ 
-					{ address = "10.10.10.0"; prefixLength = 24; } 
+					{ address = "10.10.10.9"; prefixLength = 32; } 
 				];
 				ipv4.routes = [
 					{ address = "10.10.10.22"; prefixLength = 32; }
