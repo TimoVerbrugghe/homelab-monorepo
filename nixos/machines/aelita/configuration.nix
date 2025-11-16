@@ -82,7 +82,7 @@ in
 
   # Add iSCSI utilities to system packages
   environment.systemPackages = with pkgs; [
-    open-iscsi
+    openiscsi
   ];
 
   # Enable networking for iSCSI
