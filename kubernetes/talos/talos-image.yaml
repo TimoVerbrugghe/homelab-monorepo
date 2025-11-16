@@ -1,11 +1,12 @@
 # Generate a talos factory image id with 
 # curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
 customization:
-  extraKernelArgs:
-    - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
-  systemExtensions:
-    officialExtensions:
-      - siderolabs/qemu-guest-agent
-      - siderolabs/util-linux-tools
-      - siderolabs/intel-ucode
-      - siderolabs/iscsi-tools
+    extraKernelArgs:
+        - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
+    systemExtensions:
+        officialExtensions:
+            - siderolabs/i915
+            - siderolabs/intel-ucode
+            - siderolabs/iscsi-tools
+            - siderolabs/qemu-guest-agent
+            - siderolabs/util-linux-tools

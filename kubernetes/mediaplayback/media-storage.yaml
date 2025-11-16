@@ -4,6 +4,8 @@ metadata:
   name: movies-pv
   namespace: mediaplayback
 spec:
+  capacity:
+    storage: 100Ti
   accessModes:
     - ReadWriteMany
   nfs:
@@ -24,6 +26,8 @@ metadata:
   name: tvshows-pv
   namespace: mediaplayback
 spec:
+  capacity:
+    storage: 100Ti
   accessModes:
     - ReadWriteMany
   nfs:
@@ -43,6 +47,8 @@ metadata:
   name: music-pv
   namespace: mediaplayback
 spec:
+  capacity:
+    storage: 100Ti
   accessModes:
     - ReadWriteMany
   nfs:
@@ -64,6 +70,9 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Ti
   volumeName: movies-pv
 
 ---
@@ -75,6 +84,9 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Ti
   volumeName: tvshows-pv
 
 ---
@@ -86,4 +98,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Ti
   volumeName: music-pv

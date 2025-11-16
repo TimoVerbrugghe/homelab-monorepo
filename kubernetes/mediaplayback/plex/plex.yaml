@@ -3,6 +3,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: plex
+  namespace: mediaplayback
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
 spec:
   replicas: 1
   selector:
@@ -13,6 +19,17 @@ spec:
       labels:
         app: plex
     spec:
+      # Only schedule this pod on nodes william or manta that have a GPU
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - william
+                - manta
       containers:
       - name: plex
         image: plexinc/pms-docker
@@ -28,6 +45,13 @@ spec:
             secretKeyRef:
               name: plex-secrets
               key: plex_claim_token
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "8Gi"
+            cpu: "3000m"
         volumeMounts:
         - name: movies
           mountPath: /movies
@@ -35,11 +59,11 @@ spec:
           mountPath: /tv
         - name: plex-config
           mountPath: /config
-        - name: shm
+        - name: transcode-cache
           mountPath: /dev/shm
         - name: music
           mountPath: /music
-        - name: dri
+        - name: gpu
           mountPath: /dev/dri
       volumes:
       - name: movies
@@ -51,12 +75,13 @@ spec:
       - name: plex-config
         persistentVolumeClaim:
           claimName: plex-pvc
-      - name: shm
-        hostPath:
-          path: /dev/shm
+      - name: transcode-cache
+        emptyDir:
+          medium: Memory
+          sizeLimit: 6Gi
       - name: music
         persistentVolumeClaim:
           claimName: music-pvc
-      - name: dri
+      - name: gpu
         hostPath:
           path: /dev/dri

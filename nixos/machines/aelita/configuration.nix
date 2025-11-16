@@ -73,4 +73,18 @@ in
   
   # More ram for plex to transcode in
   boot.devShmSize = "70%"; 
+
+  # Enable iSCSI support
+  services.openiscsi = {
+    enable = true;
+    name = "${hostname}-initiator";
+  };
+
+  # Add iSCSI utilities to system packages
+  environment.systemPackages = with pkgs; [
+    open-iscsi
+  ];
+
+  # Enable networking for iSCSI
+  networking.firewall.allowedTCPPorts = [ 3260 ];
 }
