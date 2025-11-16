@@ -56,11 +56,12 @@ in
 
   networking = {
 
-		macvlans = {
+    macvlans = {
       macvlan0 = {
-			  interface = "eth0";
-			  mode = "bridge";
-		  };
+        interface = "eth0";
+        mode = "bridge";
+        macAddress = "02:42:0a:0a:0a:14";
+      };
     };
 
     usePredictableInterfaceNames = false;
@@ -71,16 +72,16 @@ in
       eth0 = {
         useDHCP = false;
       };
-			
+      
       macvlan0 = {
         useDHCP = false;
-				ipv4.addresses =  [ 
-					{ address = "${ipAddress}"; prefixLength = 24; }
-				];
+        ipv4.addresses =  [ 
+          { address = "${ipAddress}"; prefixLength = 24; }
+        ];
         ipv4.routes = [
-					{ address = "${adguardhomeIpAddress}"; prefixLength = 32; }
-				];
-			};
+          { address = "${adguardhomeIpAddress}"; prefixLength = 32; }
+        ];
+      };
     };
   };
 

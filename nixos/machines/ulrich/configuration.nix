@@ -59,6 +59,7 @@ in
       macvlan0 = {
 			  interface = "eth0";
 			  mode = "bridge";
+        macAddress = "02:42:0a:0a:0a:13";
 		  };
     };
 
