@@ -10,6 +10,7 @@ let
   username = "ulrich";
   hashedPassword = "$y$j9T$ImIzH0p/iMPnmB/75rC0e1$ufXQxWY9QTJa2k6z/26T/tGPUxYuRHDOi4FPdwSiMh1";
   ipAddress = "10.10.10.8";
+  adguardhomeIpAddress = "10.10.10.21";
 
 in 
 
@@ -76,7 +77,7 @@ in
 					{ address = "${ipAddress}"; prefixLength = 24; }
 				];
         ipv4.routes = [
-					{ address = "10.10.10.21"; prefixLength = 32; }
+					{ address = "${adguardhomeIpAddress}"; prefixLength = 32; }
 				];
 			};
     };
