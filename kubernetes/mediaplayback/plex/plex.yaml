@@ -19,18 +19,6 @@ spec:
       labels:
         app.kubernetes.io/name: plex
     spec:
-      # # Only schedule this pod on nodes william or manta that have a GPU
-      # affinity:
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       nodeSelectorTerms:
-      #       - matchExpressions:
-      #         - key: kubernetes.io/hostname
-      #           operator: In
-      #           values:
-      #           - william
-      #           - manta
-      
       # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem before Plex starts
       initContainers:
       - name: format-volume
@@ -66,6 +54,8 @@ spec:
             secretKeyRef:
               name: plex-secrets
               key: plex_claim_token
+        
+        # Only schedule on nodes that have an Intel GPU available
         resources:
           requests:
             memory: "1Gi"
@@ -75,6 +65,7 @@ spec:
             memory: "8Gi"
             cpu: "3000m"
             gpu.intel.com/i915: "1"
+            
         volumeMounts:
         - name: movies
           mountPath: /movies

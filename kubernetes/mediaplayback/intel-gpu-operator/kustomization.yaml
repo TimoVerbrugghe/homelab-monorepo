@@ -1,4 +1,6 @@
 # Apply all these resources with `kubectl apply -k .` from the directory containing this file
+# Intel GPU Operator so that Jellyfin and Plex can use Intel GPU hardware acceleration WITHOUT manually adding /dev/dri to the pods & without needing to run privileged containers
+
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 

@@ -19,18 +19,6 @@ spec:
       labels:
         app.kubernetes.io/name: jellyfin
     spec:
-      # Only schedule this pod on nodes william or manta that have a GPU
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                - william
-                - manta
-
       # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem before Jellyfin starts
       initContainers:
       - name: format-volume
@@ -58,6 +46,8 @@ spec:
         env:
         - name: TZ
           value: "Europe/Brussels"
+
+        # Only schedule on nodes that have an Intel GPU available
         resources:
           requests:
             memory: "512Mi"
@@ -67,6 +57,7 @@ spec:
             memory: "8Gi"
             cpu: "2000m"
             gpu.intel.com/i915: "1"
+            
         volumeMounts:
         - name: jellyfin-config
           mountPath: /config
