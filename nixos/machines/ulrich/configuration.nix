@@ -59,7 +59,6 @@ in
       macvlan0 = {
 			  interface = "eth0";
 			  mode = "bridge";
-        macAddress = "02:42:0a:0a:0a:13";
 		  };
     };
 
@@ -70,12 +69,15 @@ in
       # Keep eth0 without IP but allow it to be up for macvlan
       eth0 = {
         useDHCP = false;
+        ipv4.addresses =  [ 
+					{ address = "${ipAddress}"; prefixLength = 24; }
+				];
       };
 			
       macvlan0 = {
         useDHCP = false;
 				ipv4.addresses =  [ 
-					{ address = "${ipAddress}"; prefixLength = 24; }
+					{ address = "${ipAddress}"; prefixLength = 32; }
 				];
         ipv4.routes = [
 					{ address = "${adguardhomeIpAddress}"; prefixLength = 32; }
