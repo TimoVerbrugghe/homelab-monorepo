@@ -64,11 +64,11 @@ in
     usePredictableInterfaceNames = false;
     defaultGateway = "${config.vars.defaultGateway}";
     interfaces = {
-      eth0 = {
-        ipv4.addresses  = [
-          { address = "${ipAddress}"; prefixLength = 24; }
-        ];
-      };
+      # eth0 = {
+      #   ipv4.addresses  = [
+      #     { address = "${ipAddress}"; prefixLength = 24; }
+      #   ];
+      # };
 			
       macvlan0 = {
 				ipv4.addresses =  [ 
