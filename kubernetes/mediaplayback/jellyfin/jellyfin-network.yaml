@@ -7,7 +7,7 @@ metadata:
   namespace: mediaplayback
 spec:
   selector:
-    app: jellyfin
+    app.kubernetes.io/name: jellyfin
   loadBalancerClass: kube-vip.io/kube-vip-class
   type: LoadBalancer
   loadBalancerIP: 10.10.10.40

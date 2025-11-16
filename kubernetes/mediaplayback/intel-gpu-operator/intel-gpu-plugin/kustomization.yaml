@@ -1,0 +1,23 @@
+# Apply all these resources with `kubectl apply -k .` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generatorOptions:
+ disableNameSuffixHash: true
+
+resources:
+  - namespace.yaml
+  - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/gpu_plugin/overlays/nfd_labeled_nodes
+
+namespace: intel-gpu-plugin
+
+# Allow multiple pods to use the same GPU on the same node (up to 10 pods)
+patches:
+- target:
+    kind: DaemonSet
+    name: intel-gpu-plugin
+  patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/args
+      value:
+        - -shared-dev-num=10

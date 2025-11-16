@@ -13,23 +13,44 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: plex
+      app.kubernetes.io/name: plex
   template:
     metadata:
       labels:
-        app: plex
+        app.kubernetes.io/name: plex
     spec:
-      # Only schedule this pod on nodes william or manta that have a GPU
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                - william
-                - manta
+      # # Only schedule this pod on nodes william or manta that have a GPU
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #       - matchExpressions:
+      #         - key: kubernetes.io/hostname
+      #           operator: In
+      #           values:
+      #           - william
+      #           - manta
+      
+      # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem before Plex starts
+      initContainers:
+      - name: format-volume
+        image: busybox:1.35
+        command: ['sh', '-c']
+        args:
+        - |
+          if ! blkid /dev/sda; then
+            echo "Formatting volume with ext4..."
+            mkfs.ext4 /dev/sda
+          else
+            echo "Volume already formatted"
+          fi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: plex-config
+          mountPath: /dev/sda
+          subPath: ""
+
       containers:
       - name: plex
         image: plexinc/pms-docker
@@ -49,9 +70,11 @@ spec:
           requests:
             memory: "1Gi"
             cpu: "500m"
+            gpu.intel.com/i915: "1"
           limits:
             memory: "8Gi"
             cpu: "3000m"
+            gpu.intel.com/i915: "1"
         volumeMounts:
         - name: movies
           mountPath: /movies
@@ -63,8 +86,6 @@ spec:
           mountPath: /dev/shm
         - name: music
           mountPath: /music
-        - name: gpu
-          mountPath: /dev/dri
       volumes:
       - name: movies
         persistentVolumeClaim:
@@ -82,6 +103,3 @@ spec:
       - name: music
         persistentVolumeClaim:
           claimName: music-pvc
-      - name: gpu
-        hostPath:
-          path: /dev/dri

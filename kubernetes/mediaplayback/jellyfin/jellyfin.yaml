@@ -13,11 +13,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: jellyfin
+      app.kubernetes.io/name: jellyfin
   template:
     metadata:
       labels:
-        app: jellyfin
+        app.kubernetes.io/name: jellyfin
     spec:
       # Only schedule this pod on nodes william or manta that have a GPU
       affinity:
@@ -30,6 +30,27 @@ spec:
                 values:
                 - william
                 - manta
+
+      # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem before Jellyfin starts
+      initContainers:
+      - name: format-volume
+        image: busybox:1.35
+        command: ['sh', '-c']
+        args:
+        - |
+          if ! blkid /dev/sda; then
+            echo "Formatting volume with ext4..."
+            mkfs.ext4 /dev/sda
+          else
+            echo "Volume already formatted"
+          fi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: jellyfin-config
+          mountPath: /dev/sda
+          subPath: ""
+
       containers:
       - name: jellyfin
         image: ghcr.io/jellyfin/jellyfin:latest
@@ -41,9 +62,11 @@ spec:
           requests:
             memory: "512Mi"
             cpu: "250m"
+            gpu.intel.com/i915: "1"
           limits:
             memory: "8Gi"
             cpu: "2000m"
+            gpu.intel.com/i915: "1"
         volumeMounts:
         - name: jellyfin-config
           mountPath: /config
@@ -55,10 +78,6 @@ spec:
           mountPath: /tv
         - name: transcode-cache
           mountPath: /dev/shm
-        - name: gpu
-          mountPath: /dev/dri
-        securityContext:
-          privileged: true
       volumes:
       - name: jellyfin-config
         persistentVolumeClaim:
@@ -78,6 +97,3 @@ spec:
         emptyDir:
           medium: Memory
           sizeLimit: 6Gi
-      - name: gpu
-        hostPath:
-          path: /dev/dri

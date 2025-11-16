@@ -1,0 +1,26 @@
+# Apply all these resources with `kubectl apply -k .` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generatorOptions:
+ disableNameSuffixHash: true
+
+resources:
+  - intel-gpu-plugin
+  - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/nfd
+  - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/nfd/overlays/node-feature-rules
+  - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/operator/default
+
+patches:
+  - patch: |-
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: node-feature-discovery
+        labels:
+          pod-security.kubernetes.io/enforce: privileged
+          pod-security.kubernetes.io/audit: privileged
+          pod-security.kubernetes.io/warn: privileged
+    target:
+      kind: Namespace
+      name: node-feature-discovery

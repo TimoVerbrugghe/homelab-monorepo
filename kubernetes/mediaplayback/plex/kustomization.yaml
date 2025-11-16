@@ -7,6 +7,7 @@ generatorOptions:
 
 secretGenerator:
   - name: plex-secrets
+    namespace: mediaplayback
     envs:
       - plex-secrets.env
     type: Opaque
