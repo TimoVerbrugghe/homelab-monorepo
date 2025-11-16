@@ -66,23 +66,25 @@ in
     defaultGateway = "${config.vars.defaultGateway}";
     
     interfaces = {
-      # Keep eth0 without IP but allow it to be up for macvlan
+      # eth0 gets IP address that is NOT host-only (aka prefixLength 24) so it can connect to local network
       eth0 = {
         useDHCP = false;
         ipv4.addresses =  [ 
 					{ address = "${ipAddress}"; prefixLength = 24; }
 				];
       };
-			
+      
       macvlan0 = {
         useDHCP = false;
-				ipv4.addresses =  [ 
-					{ address = "${ipAddress}"; prefixLength = 32; }
-				];
+
+        # macvlan gets host-only IP address (aka prefixLength 32) because it's only used for host-container communication
+        ipv4.addresses =  [ 
+          { address = "${ipAddress}"; prefixLength = 32; }
+        ];
         ipv4.routes = [
-					{ address = "${adguardhomeIpAddress}"; prefixLength = 32; }
-				];
-			};
+          { address = "${adguardhomeIpAddress}"; prefixLength = 32; }
+        ];
+      };
     };
   };
 }
