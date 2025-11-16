@@ -63,18 +63,23 @@ in
 
     usePredictableInterfaceNames = false;
     defaultGateway = "${config.vars.defaultGateway}";
+    
+    # Disable DHCP on all interfaces to prevent conflicts
+    dhcpcd.enable = false;
+    networkmanager.enable = false;
+    
     interfaces = {
-      # eth0 = {
-      #   ipv4.addresses  = [
-      #     { address = "${ipAddress}"; prefixLength = 24; }
-      #   ];
-      # };
+      # Explicitly disable eth0 to prevent it from getting an IP
+      eth0 = {
+        useDHCP = false;
+      };
 			
       macvlan0 = {
+        useDHCP = false;
 				ipv4.addresses =  [ 
 					{ address = "10.10.10.8"; prefixLength = 32; } 
 				];
-				ipv4.routes = [
+        ipv4.routes = [
 					{ address = "10.10.10.21"; prefixLength = 32; }
 				];
 			};
