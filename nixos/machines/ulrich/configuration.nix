@@ -73,7 +73,7 @@ in
       macvlan0 = {
         useDHCP = false;
 				ipv4.addresses =  [ 
-					{ address = "10.10.10.8"; prefixLength = 24; } 
+					{ address = "${ipAddress}"; prefixLength = 24; }
 				];
         ipv4.routes = [
 					{ address = "10.10.10.21"; prefixLength = 32; }

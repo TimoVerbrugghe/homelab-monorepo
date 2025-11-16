@@ -64,18 +64,19 @@ in
 
     usePredictableInterfaceNames = false;
     defaultGateway = "${config.vars.defaultGateway}";
+
     interfaces = {
+      # Keep eth0 without IP but allow it to be up for macvlan
       eth0 = {
-        ipv4.addresses  = [
-          { address = "${ipAddress}"; prefixLength = 24; }
-        ];
+        useDHCP = false;
       };
 			
       macvlan0 = {
+        useDHCP = false;
 				ipv4.addresses =  [ 
-					{ address = "10.10.10.9"; prefixLength = 32; } 
+					{ address = "${ipAddress}"; prefixLength = 24; }
 				];
-				ipv4.routes = [
+        ipv4.routes = [
 					{ address = "10.10.10.22"; prefixLength = 32; }
 				];
 			};
