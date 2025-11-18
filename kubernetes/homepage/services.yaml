@@ -55,12 +55,23 @@
     - Plex:
         icon: plex.svg
         href: https://app.plex.tv/desktop
-        server: aelita
-        container: plex
+        namespace: mediaplayback
+        app: plex
         widget:
             type: plex
-            url: http://plex.local.timo.be:32400
+            url: http://plex.mediaplayback.svc.cluster.local:32400
             key: "{{HOMEPAGE_VAR_PLEX_KEY}}"
+    - Jellyfin:
+        icon: jellyfin.svg
+        href: https://jellyfin.timo.be
+        namespace: mediaplayback
+        app: jellyfin
+        widget:
+            type: jellyfin
+            url: http://jellyfin.mediaplayback.svc.cluster.local:8096
+            key: "{{HOMEPAGE_VAR_JELLYFIN_KEY}}"
+            enableBlocks: true
+            enableNowPlaying: true
     - Overseerr:
         icon: overseerr.svg
         href: https://request.timo.be
@@ -316,7 +327,7 @@
             type: portainer
             url: https://portainer.portainer.svc.cluster.local:9443
             key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
-            env: 3
+            env: 6
 
 - Storage:
     - TrueNAS:

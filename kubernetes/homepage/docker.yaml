@@ -6,10 +6,6 @@ odd:
   host: odd.local.timo.be
   port: 2375
 
-aelita:
-  host: aelita.local.timo.be
-  port: 2375
-
 thefactory:
   host: thefactory.local.timo.be
   port: 2375

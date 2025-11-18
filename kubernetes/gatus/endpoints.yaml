@@ -109,7 +109,12 @@ endpoints:
 
   # Media Group
   - name: "Plex"
-    url: "http://plex.local.timo.be:32400/identity"
+    url: "http://plex.mediaplayback.svc.cluster.local:32400/identity"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Jellyfin"
+    url: "http://jellyfin.mediaplayback.svc.cluster.local:8096"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
