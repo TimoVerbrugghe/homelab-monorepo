@@ -6,7 +6,7 @@ services:
 
   ### WATCHTOWER - AUTOMATIC UPDATES
   watchtower:
-    image: containrrr/watchtower
+    image: nickfedor/watchtower:latest
     container_name: watchtower
     restart: always
     volumes:
