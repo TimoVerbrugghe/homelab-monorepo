@@ -29,6 +29,7 @@ spec:
             value: "65532 65532"
       containers:
         - image: cloudflare/cloudflared:latest
+          imagePullPolicy: IfNotPresent
           name: cloudflared
           env:
             # Defines an environment variable for the tunnel token.

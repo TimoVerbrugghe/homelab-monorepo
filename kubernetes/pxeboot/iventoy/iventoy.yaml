@@ -23,6 +23,7 @@ spec:
       containers:
         - name: iventoy
           image: ziggyds/iventoy:latest
+          imagePullPolicy: IfNotPresent
           # Must run as root according to the iventoy documentation
           securityContext:
             privileged: true

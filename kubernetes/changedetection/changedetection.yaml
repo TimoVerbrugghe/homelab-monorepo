@@ -18,6 +18,7 @@ spec:
       containers:
       - name: changedetection
         image: ghcr.io/dgtlmoon/changedetection.io:latest
+        imagePullPolicy: IfNotPresent
         env:
         - name: BASE_URL
           value: "https://changedetection.timo.be"
@@ -58,6 +59,7 @@ spec:
       containers:
       - name: playwright-chrome
         image: browserless/chrome:latest
+        imagePullPolicy: IfNotPresent
         env:
         - name: SCREEN_WIDTH
           value: "1920"

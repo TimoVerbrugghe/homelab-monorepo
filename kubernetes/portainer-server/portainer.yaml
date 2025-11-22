@@ -39,7 +39,7 @@ spec:
       containers:
         - name: portainer
           image: portainer/portainer-ce:sts
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: data
               mountPath: /data              

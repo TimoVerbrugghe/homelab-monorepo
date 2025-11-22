@@ -23,6 +23,7 @@ spec:
       initContainers:
       - name: format-volume
         image: busybox:1.35
+        imagePullPolicy: IfNotPresent
         command: ['sh', '-c']
         args:
         - |
@@ -42,6 +43,7 @@ spec:
       containers:
       - name: plex
         image: plexinc/pms-docker
+        imagePullPolicy: IfNotPresent
         env:
         - name: PLEX_UID
           value: "3000"

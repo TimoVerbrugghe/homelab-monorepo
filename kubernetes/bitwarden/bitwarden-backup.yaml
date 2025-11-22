@@ -15,6 +15,7 @@ spec:
           containers:
             - name: backup
               image: ghcr.io/timoverbrugghe/k8s-backup:latest
+              imagePullPolicy: IfNotPresent
               env:
                 - name: BACKUP_NAME
                   value: "bitwarden"

@@ -21,6 +21,7 @@ spec:
       containers:
         - name: restore
           image: ghcr.io/timoverbrugghe/k8s-restore:latest
+          imagePullPolicy: IfNotPresent
           env:
             - name: PUID
               value: "3000"

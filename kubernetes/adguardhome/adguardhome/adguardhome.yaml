@@ -27,6 +27,7 @@ spec:
       containers:
       - name: adguardhome
         image: adguard/adguardhome:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 53 #dns
           name: dns
@@ -54,6 +55,7 @@ spec:
       initContainers:
       - name: init-adguardhome
         image: busybox:latest
+        imagePullPolicy: IfNotPresent
         command: ["sh", "-c", "cp /etc/adguard/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml"]
         volumeMounts:
           - mountPath: /etc/adguard

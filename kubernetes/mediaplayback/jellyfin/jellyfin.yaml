@@ -23,6 +23,7 @@ spec:
       initContainers:
       - name: format-volume
         image: busybox:1.35
+        imagePullPolicy: IfNotPresent
         command: ['sh', '-c']
         args:
         - |

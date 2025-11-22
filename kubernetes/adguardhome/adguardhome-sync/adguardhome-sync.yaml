@@ -21,6 +21,7 @@ spec:
       containers:
       - name: adguardhome-sync
         image: ghcr.io/bakito/adguardhome-sync:latest
+        imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -35,7 +36,6 @@ spec:
           requests:
             memory: "128Mi"
             cpu: "125m"
-        imagePullPolicy: IfNotPresent
         env:
         - name: LOG_LEVEL
           value: info

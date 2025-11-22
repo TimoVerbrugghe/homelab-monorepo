@@ -24,6 +24,7 @@ spec:
       containers:
       - name: stirlingpdf
         image: ghcr.io/stirling-tools/s-pdf:latest
+        imagePullPolicy: IfNotPresent
         env:
         - name: DOCKER_ENABLE_SECURITY
           value: "false"

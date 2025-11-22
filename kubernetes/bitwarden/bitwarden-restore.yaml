@@ -20,6 +20,7 @@ spec:
       containers:
         - name: restore
           image: ghcr.io/timoverbrugghe/k8s-restore:latest
+          imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: bitwarden-data
               mountPath: /appdata
