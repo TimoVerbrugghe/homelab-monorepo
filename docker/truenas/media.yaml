@@ -5,7 +5,7 @@ services:
     restart: always
     networks:
       - dockerproxy
-    environemnt:
+    environment:
       - TZ=Europe/Brussels
     volumes:
       - abs-config:/config
