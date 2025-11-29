@@ -1,4 +1,19 @@
 services:
+  audiobookshelf:
+    container_name: audiobookshelf
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - abs-config:/config
+      - abs-metadata:/metadata
+      - audiobooks:/audiobooks
+    ports:
+      - 14007:80
+
   sonarr:
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
@@ -214,6 +229,18 @@ networks:
     external: true
 
 volumes:
+  abs-config:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/audiobookshelf/abs-config"
+  abs-metadata:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/audiobookshelf/abs-metadata"
   sonarr:
     driver: local
     driver_opts:
@@ -287,6 +314,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/X.A.N.A./media/music"
+  audiobooks:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/audiobooks"
   huntarr:
     driver: local
     driver_opts:
