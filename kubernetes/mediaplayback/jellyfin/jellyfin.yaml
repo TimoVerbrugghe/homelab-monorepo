@@ -58,6 +58,36 @@ spec:
             memory: "8Gi"
             cpu: "2000m"
             gpu.intel.com/i915: "1"
+        
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8096
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+          successThreshold: 1
+        
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8096
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8096
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 5
+          successThreshold: 1
             
         volumeMounts:
         - name: jellyfin-config

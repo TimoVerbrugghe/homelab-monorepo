@@ -91,6 +91,17 @@ spec:
               value: "email"
             - name: ALLOW_PASSWORD_LOGIN
               value: "false"
+          
+          startupProbe:
+            httpGet:
+              path: /login
+              port: 9000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
+            successThreshold: 1
+          
           readinessProbe:
             httpGet:
               path: /login

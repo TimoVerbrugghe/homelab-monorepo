@@ -55,6 +55,17 @@ spec:
             - --metrics
             - 0.0.0.0:2000
             - run
+          
+          startupProbe:
+            httpGet:
+              path: /ready
+              port: 2000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 20
+            successThreshold: 1
+          
           livenessProbe:
             httpGet:
               # Cloudflared has a /ready endpoint which returns 200 if and only if

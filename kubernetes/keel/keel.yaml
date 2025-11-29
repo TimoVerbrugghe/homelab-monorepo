@@ -48,6 +48,17 @@ spec:
           value: "kube-system"
         ports:
           - containerPort: 9300
+        
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: 9300
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 20
+          successThreshold: 1
+        
         livenessProbe:
           httpGet:
             path: /healthz

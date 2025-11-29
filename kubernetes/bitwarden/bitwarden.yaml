@@ -33,6 +33,37 @@ spec:
             limits:
               cpu: "500m"
               memory: "512Mi"
+          
+          startupProbe:
+            httpGet:
+              path: /alive
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
+            successThreshold: 1
+          
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+            successThreshold: 1
+          
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          
           env:
             - name: DOMAIN
               valueFrom:

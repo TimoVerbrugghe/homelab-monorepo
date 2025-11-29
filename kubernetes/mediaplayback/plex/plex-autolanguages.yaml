@@ -25,6 +25,37 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "600m"
+        
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 9880
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 30
+          successThreshold: 1
+        
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9880
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+          successThreshold: 1
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9880
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        
         env:
         - name: PLEX_URL
           value: http://plex.mediaplayback.svc.cluster.local:32400
