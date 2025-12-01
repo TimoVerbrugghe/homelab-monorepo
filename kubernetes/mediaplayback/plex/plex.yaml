@@ -75,7 +75,7 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 10
           timeoutSeconds: 5
-          failureThreshold: 30
+          failureThreshold: 12
           successThreshold: 1
         
         readinessProbe:
@@ -89,13 +89,19 @@ spec:
           successThreshold: 1
         
         livenessProbe:
-          httpGet:
-            path: /identity
-            port: 32400
+          exec:
+            command:
+            - sh
+            - -c
+            - |
+              # Check if HTTP API is responding
+              curl -f -s -m 3 http://localhost:32400/identity > /dev/null || exit 1
+              # Check if config volume is accessible (write test in case iscsi fails)
+              touch /config/.healthcheck && rm /config/.healthcheck || exit 1
           initialDelaySeconds: 60
           periodSeconds: 30
-          timeoutSeconds: 5
-          failureThreshold: 5
+          timeoutSeconds: 10
+          failureThreshold: 3
           successThreshold: 1
             
         volumeMounts:
