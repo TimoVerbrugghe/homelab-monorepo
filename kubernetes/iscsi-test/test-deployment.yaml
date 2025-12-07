@@ -1,0 +1,72 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iscsi-test
+  namespace: iscsi-test
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: iscsi-test
+  template:
+    metadata:
+      labels:
+        app: iscsi-test
+    spec:
+      containers:
+      - name: test-container
+        image: alpine:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          #!/bin/sh
+          set -e
+          
+          echo "iSCSI Test Container Starting..."
+          echo "Mounted storage at /data"
+          
+          # Create initial test file
+          echo "Container started at $(date)" > /data/startup.log
+          
+          # Keep container running and periodically write to storage
+          while true; do
+            echo "$(date): Writing test data..."
+            echo "$(date): Storage test" >> /data/test.log
+            sleep 30
+          done
+        
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - |
+              # Test storage access - will fail with I/O errors if iSCSI is down
+              touch /data/.liveness_check || exit 1
+              rm -f /data/.liveness_check
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        
+        volumeMounts:
+        - name: iscsi-storage
+          mountPath: /data
+        
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+      
+      volumes:
+      - name: iscsi-storage
+        persistentVolumeClaim:
+          claimName: iscsi-test-pvc

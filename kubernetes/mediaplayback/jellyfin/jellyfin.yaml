@@ -11,6 +11,8 @@ metadata:
     keel.sh/pollSchedule: "@every 24h"
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: jellyfin
@@ -19,26 +21,35 @@ spec:
       labels:
         app.kubernetes.io/name: jellyfin
     spec:
-      # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem before Jellyfin starts
+      serviceAccountName: jellyfin-watcher
       initContainers:
-      - name: format-volume
-        image: busybox:1.35
+      # Simple validation - if this fails, the watcher pod will delete and recreate
+      - name: storage-validator
+        image: alpine:latest
         imagePullPolicy: IfNotPresent
         command: ['sh', '-c']
         args:
         - |
-          if ! blkid /dev/sda; then
-            echo "Formatting volume with ext4..."
-            mkfs.ext4 /dev/sda
-          else
-            echo "Volume already formatted"
+          set -e
+          echo "Validating storage accessibility..."
+          
+          # Simple write test - fail fast if storage isn't ready
+          # The watcher pod will handle cleanup and recreation
+          if ! echo "healthcheck" > /config/.healthcheck 2>&1; then
+            echo "ERROR: Cannot write to /config - storage not accessible"
+            exit 1
           fi
-        securityContext:
-          privileged: true
+          
+          if ! cat /config/.healthcheck > /dev/null 2>&1; then
+            echo "ERROR: Cannot read from /config - storage not healthy"
+            exit 1
+          fi
+          
+          rm -f /config/.healthcheck
+          echo "Storage validation passed"
         volumeMounts:
         - name: jellyfin-config
-          mountPath: /dev/sda
-          subPath: ""
+          mountPath: /config
 
       containers:
       - name: jellyfin
@@ -79,14 +90,15 @@ spec:
           failureThreshold: 3
           successThreshold: 1
         
+        # Jellyfin will not be reachable anymore on /health after iscsi disconnect, so no need for more complex livenessProbe (as is needed with Plex)
         livenessProbe:
           httpGet:
             path: /health
             port: 8096
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
           timeoutSeconds: 5
-          failureThreshold: 5
+          failureThreshold: 3
           successThreshold: 1
             
         volumeMounts:
@@ -100,7 +112,103 @@ spec:
           mountPath: /tv
         - name: transcode-cache
           mountPath: /dev/shm
+      
+      # Sidecar watcher: monitors Jellyfin for CrashLoopBackOff and I/O errors
+      - name: pod-watcher
+        image: alpine:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          #!/bin/sh
+          set -e
+          
+          # Install kubectl and jq
+          apk add --no-cache curl jq
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          mv kubectl /usr/local/bin/
+          
+          echo "Starting Jellyfin pod watcher sidecar..."
+          echo "Monitoring for: CrashLoopBackOff and I/O errors"
+          echo ""
+          
+          COOLDOWN_SECONDS=120  # 2 minutes cooldown after deletion
+          LAST_DELETE_TIME=0
+          RESTART_THRESHOLD=2
+          
+          while true; do
+            CURRENT_TIME=$(date +%s)
+            TIME_SINCE_DELETE=$((CURRENT_TIME - LAST_DELETE_TIME))
+            
+            # Get pod info
+            POD_NAME=$(cat /etc/podinfo/name)
+            POD_JSON=$(kubectl get pod -n mediaplayback "$POD_NAME" -o json 2>/dev/null || echo '{}')
+            
+            # Check for CrashLoopBackOff
+            CRASH_LOOP=$(echo "$POD_JSON" | jq -r '.status.containerStatuses[]? | select(.state.waiting.reason == "CrashLoopBackOff") | .name' | head -1)
+            INIT_CRASH_LOOP=$(echo "$POD_JSON" | jq -r '.status.initContainerStatuses[]? | select(.state.waiting.reason == "CrashLoopBackOff") | .name' | head -1)
+            
+            # Check restart count
+            RESTART_COUNT=$(echo "$POD_JSON" | jq -r '.status.containerStatuses[]? | select(.name == "jellyfin") | .restartCount' | head -1)
+            RESTART_COUNT=${RESTART_COUNT:-0}
+            
+            # Check for I/O errors if restarts are high
+            IO_ERROR_DETECTED=false
+            if [ "$RESTART_COUNT" -ge "$RESTART_THRESHOLD" ]; then
+              if kubectl logs -n mediaplayback "$POD_NAME" -c jellyfin --tail=20 2>/dev/null | grep -qiE "input/output error|i/o error|read-only file system"; then
+                IO_ERROR_DETECTED=true
+              fi
+            fi
+            
+            SHOULD_DELETE=false
+            DELETE_REASON=""
+            
+            if [ -n "$CRASH_LOOP" ] || [ -n "$INIT_CRASH_LOOP" ]; then
+              SHOULD_DELETE=true
+              DELETE_REASON="CrashLoopBackOff"
+            elif [ "$IO_ERROR_DETECTED" = true ]; then
+              SHOULD_DELETE=true
+              DELETE_REASON="I/O errors with $RESTART_COUNT restarts"
+            fi
+            
+            if [ "$SHOULD_DELETE" = true ]; then
+              if [ $TIME_SINCE_DELETE -lt $COOLDOWN_SECONDS ]; then
+                REMAINING=$((COOLDOWN_SECONDS - TIME_SINCE_DELETE))
+                echo "$(date '+%Y-%m-%d %H:%M:%S') - ⏳ Pod needs deletion ($DELETE_REASON), but cooldown active (${REMAINING}s remaining)"
+              else
+                echo "$(date '+%Y-%m-%d %H:%M:%S') - 🔴 Pod needs deletion! Reason: $DELETE_REASON"
+                kubectl delete pod -n mediaplayback "$POD_NAME" --grace-period=60 &
+                LAST_DELETE_TIME=$CURRENT_TIME
+                sleep 10
+              fi
+            fi
+            
+            sleep 30
+          done
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        volumeMounts:
+        - name: podinfo
+          mountPath: /etc/podinfo
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+      
       volumes:
+      - name: podinfo
+        downwardAPI:
+          items:
+          - path: "name"
+            fieldRef:
+              fieldPath: metadata.name
       - name: jellyfin-config
         persistentVolumeClaim:
           claimName: jellyfin-pvc

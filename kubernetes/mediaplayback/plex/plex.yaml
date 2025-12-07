@@ -11,6 +11,8 @@ metadata:
     keel.sh/pollSchedule: "@every 24h"
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: plex
@@ -19,26 +21,35 @@ spec:
       labels:
         app.kubernetes.io/name: plex
     spec:
-      # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem before Plex starts
+      serviceAccountName: plex-watcher
       initContainers:
-      - name: format-volume
-        image: busybox:1.35
+      # Simple validation - if this fails, the watcher pod will delete and recreate
+      - name: storage-validator
+        image: alpine:latest
         imagePullPolicy: IfNotPresent
         command: ['sh', '-c']
         args:
         - |
-          if ! blkid /dev/sda; then
-            echo "Formatting volume with ext4..."
-            mkfs.ext4 /dev/sda
-          else
-            echo "Volume already formatted"
+          set -e
+          echo "Validating storage accessibility..."
+          
+          # Simple write test - fail fast if storage isn't ready
+          # The watcher pod will handle cleanup and recreation
+          if ! echo "healthcheck" > /config/.healthcheck 2>&1; then
+            echo "ERROR: Cannot write to /config - storage not accessible"
+            exit 1
           fi
-        securityContext:
-          privileged: true
+          
+          if ! cat /config/.healthcheck > /dev/null 2>&1; then
+            echo "ERROR: Cannot read from /config - storage not healthy"
+            exit 1
+          fi
+          
+          rm -f /config/.healthcheck
+          echo "Storage validation passed"
         volumeMounts:
         - name: plex-config
-          mountPath: /dev/sda
-          subPath: ""
+          mountPath: /config
 
       containers:
       - name: plex
@@ -72,10 +83,10 @@ spec:
           httpGet:
             path: /identity
             port: 32400
-          initialDelaySeconds: 10
+          initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
-          failureThreshold: 12
+          failureThreshold: 10
           successThreshold: 1
         
         readinessProbe:
@@ -94,13 +105,14 @@ spec:
             - sh
             - -c
             - |
-              # Check if HTTP API is responding
-              curl -f -s -m 3 http://localhost:32400/identity > /dev/null || exit 1
-              # Check if config volume is accessible (write test in case iscsi fails)
-              touch /config/.healthcheck && rm /config/.healthcheck || exit 1
-          initialDelaySeconds: 60
-          periodSeconds: 30
-          timeoutSeconds: 10
+              # Check HTTP API
+              curl -f -s -m 3 http://localhost:32400/identity >/dev/null || exit 1
+              # Check storage access - this will fail with I/O errors if iSCSI is down
+              touch /config/.liveness_check || exit 1
+              rm -f /config/.liveness_check
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
           failureThreshold: 3
           successThreshold: 1
             
@@ -115,7 +127,76 @@ spec:
           mountPath: /dev/shm
         - name: music
           mountPath: /music
+      
+      # Sidecar watcher: monitors Plex logs for write access errors
+      - name: pod-watcher
+        image: alpine:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          #!/bin/sh
+          set -e
+          
+          # Install kubectl
+          apk add --no-cache curl
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          mv kubectl /usr/local/bin/
+          
+          echo "Starting Plex pod watcher sidecar..."
+          echo "Monitoring for: Read/write access is required"
+          echo ""
+          
+          COOLDOWN_SECONDS=120  # 2 minutes cooldown after deletion
+          LAST_DELETE_TIME=0
+          
+          while true; do
+            CURRENT_TIME=$(date +%s)
+            TIME_SINCE_DELETE=$((CURRENT_TIME - LAST_DELETE_TIME))
+            
+            # Get pod name from downward API
+            POD_NAME=$(cat /etc/podinfo/name)
+            
+            # Check recent logs for write access errors
+            if kubectl logs -n mediaplayback "$POD_NAME" -c plex --tail=50 2>/dev/null | grep -qF "Read/write access is required"; then
+              if [ $TIME_SINCE_DELETE -lt $COOLDOWN_SECONDS ]; then
+                REMAINING=$((COOLDOWN_SECONDS - TIME_SINCE_DELETE))
+                echo "$(date '+%Y-%m-%d %H:%M:%S') - 🔴 Write access error detected, but cooldown active (${REMAINING}s remaining)"
+              else
+                echo "$(date '+%Y-%m-%d %H:%M:%S') - 🔴 Write access error detected! Deleting pod to trigger recreation..."
+                kubectl delete pod -n mediaplayback "$POD_NAME" --grace-period=60 &
+                LAST_DELETE_TIME=$CURRENT_TIME
+                # Sleep to allow deletion to start
+                sleep 10
+              fi
+            fi
+            
+            sleep 30
+          done
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        volumeMounts:
+        - name: podinfo
+          mountPath: /etc/podinfo
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+      
       volumes:
+      - name: podinfo
+        downwardAPI:
+          items:
+          - path: "name"
+            fieldRef:
+              fieldPath: metadata.name
       - name: movies
         persistentVolumeClaim:
           claimName: movies-pvc
