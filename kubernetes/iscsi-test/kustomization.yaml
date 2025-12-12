@@ -7,5 +7,7 @@ generatorOptions:
 
 resources:
   - namespace.yaml
+  - rbac.yaml
   - storage.yaml
   - test-deployment.yaml
+  - pod-watcher-deployment.yaml

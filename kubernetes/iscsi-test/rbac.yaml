@@ -1,0 +1,35 @@
+---
+# ServiceAccount for test pod sidecar watcher
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: iscsi-test-watcher
+  namespace: iscsi-test
+
+---
+# Role with permissions to list, get and delete pods
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: iscsi-test-watcher
+  namespace: iscsi-test
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list", "get", "delete"]
+
+---
+# RoleBinding to grant the ServiceAccount the Role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: iscsi-test-watcher
+  namespace: iscsi-test
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: iscsi-test-watcher
+subjects:
+- kind: ServiceAccount
+  name: iscsi-test-watcher
+  namespace: iscsi-test

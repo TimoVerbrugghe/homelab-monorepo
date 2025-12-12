@@ -10,7 +10,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   iscsi:
-    targetPortal: odd.local.timo.be:3260
+    targetPortal: 10.10.10.9:3260
     iqn: iqn.2025-12.be.timo.local.odd:iscsi-test
     lun: 0
     fsType: ext4

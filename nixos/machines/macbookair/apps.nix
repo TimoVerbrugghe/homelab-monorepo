@@ -33,6 +33,7 @@
 
     # Install mas cli to get Mac App Store IDs for masApps
     brews = [
+      "baobab"
     ];
     casks = [
       # "tailscale" -> THIS CAUSES SEVERAL DISCONNECT ISSUES WHEN YOU INSTALL THIS PACKAGE THROUGH NIX, DO NOT INSTALL THROUGH THIS WAY (either install via the mac app store or manually download from tailscale website)

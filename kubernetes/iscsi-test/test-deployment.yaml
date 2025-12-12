@@ -16,6 +16,35 @@ spec:
       labels:
         app: iscsi-test
     spec:
+      initContainers:
+      # Validate storage is accessible before starting
+      - name: storage-validator
+        image: alpine:latest
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '-c']
+        args:
+        - |
+          set -e
+          echo "Validating iSCSI storage accessibility..."
+          
+          # Test write access
+          if ! echo "healthcheck" > /data/.healthcheck 2>&1; then
+            echo "ERROR: Cannot write to /data - storage not accessible"
+            exit 1
+          fi
+          
+          # Test read access
+          if ! cat /data/.healthcheck > /dev/null 2>&1; then
+            echo "ERROR: Cannot read from /data - storage not healthy"
+            exit 1
+          fi
+          
+          rm -f /data/.healthcheck
+          echo "Storage validation passed"
+        volumeMounts:
+        - name: iscsi-storage
+          mountPath: /data
+      
       containers:
       - name: test-container
         image: alpine:latest
@@ -36,18 +65,17 @@ spec:
           while true; do
             echo "$(date): Writing test data..."
             echo "$(date): Storage test" >> /data/test.log
-            sleep 30
+            sleep 1200
           done
         
         livenessProbe:
           exec:
             command:
+            - timeout
+            - "2"
             - sh
             - -c
-            - |
-              # Test storage access - will fail with I/O errors if iSCSI is down
-              touch /data/.liveness_check || exit 1
-              rm -f /data/.liveness_check
+            - touch /data/.liveness_check && rm -f /data/.liveness_check
           initialDelaySeconds: 10
           periodSeconds: 10
           timeoutSeconds: 5
