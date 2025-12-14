@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whisper-asr-webservice
+  namespace: whisper-asr-webservice
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll            
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whisper-asr-webservice
+      app.kubernetes.io/name: whisper-asr-webservice
+  template:
+    metadata:
+      labels:
+        app: whisper-asr-webservice
+        app.kubernetes.io/name: whisper-asr-webservice
+    spec:
+      containers:
+      - name: whisper-asr-webservice
+        image: onerahmet/openai-whisper-asr-webservice:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: ASR_MODEL
+          value: "base"
+        - name: ASR_ENGINE
+          value: "faster_whisper"
+        ports:
+          - containerPort: 9000
+            protocol: TCP
+            name: whisper
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "3500m"
+          requests:
+            memory: "1Gi"
+            cpu: "1000m"
+        
+        # startupProbe:
+        #   httpGet:
+        #     path: /docs
+        #     port: 9000
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        #   timeoutSeconds: 5
+        #   failureThreshold: 30
+        #   successThreshold: 1
+        
+        # readinessProbe:
+        #   httpGet:
+        #     path: /docs
+        #     port: 9000
+        #   initialDelaySeconds: 10
+        #   periodSeconds: 120
+        #   timeoutSeconds: 5
+        #   failureThreshold: 10
+        #   successThreshold: 1
+        
+        # livenessProbe:
+        #   httpGet:
+        #     path: /docs
+        #     port: 9000
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 120
+        #   timeoutSeconds: 5
+        #   failureThreshold: 10
+        #   successThreshold: 1

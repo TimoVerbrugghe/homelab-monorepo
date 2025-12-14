@@ -12,11 +12,12 @@
 | 10.10.10.8    | Ulrich                                      |
 | 10.10.10.9    | Odd                                         |
 | 10.10.10.10   | Zigbee SLZB-06 PoE Coordinator              |
-| 10.10.10.11   |                                             |
+| 10.10.10.11   | Unifi - 1st Floor AP                        |
 | 10.10.10.12   | PDU                                         |
-| 10.10.10.13   |                                             |
-| 10.10.10.14   |                                             |
-| 10.10.10.15   | GamingServer                                |
+| 10.10.10.13   | Unifi - Living AP                           |
+| 10.10.10.14   | Unifi - Guest Bedroom AP                    |
+| 10.10.10.15   | Unifi - Garden AP                           |
+| 10.10.10.16   | Unifi - 2nd Floor AP                        |
 | 10.10.10.21   | Adguardhome (Ulrich)                        |
 | 10.10.10.22   | Adguardhome (Odd)                           |
 | 10.10.10.28   | Home Assistant                              |
@@ -31,6 +32,15 @@
 | 10.10.10.38   | iVentoy PXE Server                          |
 | 10.10.10.39   | Plex (Kubernetes)                           |
 | 10.10.10.40   | Jellyfin (Kubernetes)                       |
+| 10.10.10.41   | Whisper ASR webservice                      |
+| 10.10.10.42   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.43   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.44   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.45   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.46   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.47   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.48   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.49   | Reserved by kubevip for kubernetes cluster  |
 | 10.10.10.50   | Shelly Plug Freezer                         |
 | 10.10.10.52   | Shelly Plug Server Rack                     |
 | 10.10.10.53   | Shelly Plug Living Room 1                   |

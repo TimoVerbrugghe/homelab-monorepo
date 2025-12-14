@@ -1,4 +1,4 @@
-# Apply all these resources with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the directory containing this file
+# Apply all these resources with `k apply -k .` from the directory containing this file
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
