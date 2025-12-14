@@ -29,6 +29,7 @@
   # ANY Mac App: you NEED to have purchased or downloaded the app before from the app store, this INCLUDES free apps as well!
   homebrew = {
     enable = true;
+    brewPrefix = "/opt/homebrew"; # Default for ARM Macs
 
     # Install mas cli to get Mac App Store IDs for masApps
     brews = [
