@@ -12,7 +12,8 @@ in
     [ 
       ./apps.nix
       ./system-settings.nix
-			./shell.nix    
+			./shell.nix
+      ./glib-schema-fix.nix
     ];
 
   networking.hostName = "${hostname}";
