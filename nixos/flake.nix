@@ -231,8 +231,8 @@
               # Install Homebrew under the default prefix
               enable = true;
 
-              # Apple Silicon Only: Also install Homebrew under the default Intel prefix for Rosetta 2
-              enableRosetta = true;
+              # Do not install homebrew as well under /usr/local (normally for compatability for intel software on ARM macs)
+              enableRosetta = false;
 
               # User owning the Homebrew prefix
               user = "timo";
