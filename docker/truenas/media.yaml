@@ -240,6 +240,23 @@ services:
     ports:
       - 14007:9191
 
+  ersatztv:
+    container_name: ersatztv
+    image: ghcr.io/ersatztv/ersatztv:latest
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - ersatztv:/config
+      - movies:/movies:ro
+      - tvshows:/tv:ro
+    tmpfs:
+      - /transcode
+    environment:
+      - TZ=Europe/Brussels
+    ports:
+      - 14008:8409
+
 networks:
   dockerproxy:
     external: true
@@ -348,3 +365,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/dispatcharr"
+  ersatztv:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/ersatztv"
