@@ -1,0 +1,31 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kptv-fast
+  namespace: mediaplayback
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`kptv.kubernetes.timo.be`) || Host(`kptv.timo.be`)
+      kind: Rule
+      services:
+        - name: kptv-fast
+          port: 7777
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kptv-fast
+  namespace: mediaplayback
+spec:
+  ports:
+    - name: http
+      port: 7777
+      protocol: TCP
+      targetPort: 7777
+  selector:
+    app.kubernetes.io/name: kptv-fast

@@ -10,3 +10,4 @@ resources:
   - plex
   - jellyfin
   - media-storage.yaml
+  - kptv-fast

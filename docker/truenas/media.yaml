@@ -224,6 +224,22 @@ services:
     volumes:
       - yamtrack-redis:/data
 
+  dispatcharr:
+    container_name: dispatcharr
+    image: ghcr.io/dispatcharr/dispatcharr:latest
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - dispatcharr:/data
+    environment:
+      - DISPATCHARR_ENV=aio
+      - REDIS_HOST=localhost
+      - CELERY_BROKER_URL=redis://localhost:6379/0
+      - DISPATCHARR_LOG_LEVEL=info
+    ports:
+      - 14007:9191
+
 networks:
   dockerproxy:
     external: true
@@ -326,3 +342,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/huntarr"
+  dispatcharr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/dispatcharr"

@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kptv-fast
+  namespace: mediaplayback
+  labels:
+    app.kubernetes.io/name: kptv-fast
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kptv-fast
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kptv-fast
+    spec:
+      containers:
+        - name: kptv-fast
+          image: ghcr.io/kpirnie/kptv-fast:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "2000m"
+              memory: "4Gi"
+          env:
+            - name: DEBUG
+              value: "false"
+            - name: CACHE_DURATION
+              value: "7200"
+            - name: WARM_CACHE_ON_STARTUP
+              value: "true"
+            - name: WARM_EPG_ON_STARTUP
+              value: "true"
+            - name: ENABLED_PROVIDERS
+              value: "all"
+            - name: GIT_COUNTRY
+              value: "us,be,nl"
+            - name: LG_COUNTRY
+              value: "us,be,nl"
+          
+          startupProbe:
+            httpGet:
+              path: /status
+              port: 7777
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
+            successThreshold: 1
+          
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 7777
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+            successThreshold: 1
+          
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 7777
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+          
+          ports:
+            - name: http
+              containerPort: 7777
+              protocol: TCP
