@@ -46,4 +46,10 @@
     ];
 
   };
+
+  # Apply kernel patch to fix rust issue with kernel 6.15.9 - https://github.com/NixOS/nixos-hardware/issues/1685
+  boot.kernelPatches = [{
+    name = "rust-1.91-fix";
+    patch = ../rust-fix.patch;
+  }];
 }
