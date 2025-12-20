@@ -13,3 +13,4 @@ resources:
   - ersatztv
   - media-storage.yaml
   - kptv-fast
+  - subgen

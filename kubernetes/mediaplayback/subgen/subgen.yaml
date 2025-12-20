@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subgen
+  namespace: mediaplayback
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll            
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subgen
+      app.kubernetes.io/name: subgen
+  template:
+    metadata:
+      labels:
+        app: subgen
+        app.kubernetes.io/name: subgen
+    spec:
+      containers:
+      - name: subgen
+        image: mccloud/subgen:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: WHISPER_MODEL
+          value: "base"
+        - name: WHISPER_THREADS
+          value: "4"
+        ports:
+          - containerPort: 9000
+            protocol: TCP
+            name: http
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "3500m"
+          requests:
+            memory: "1Gi"
+            cpu: "1000m"
+        
+        startupProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+          successThreshold: 1
+        
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 10
+          successThreshold: 1
+        
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 10
+          successThreshold: 1

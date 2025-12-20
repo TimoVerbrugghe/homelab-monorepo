@@ -1,19 +1,4 @@
 services:
-  audiobookshelf:
-    container_name: audiobookshelf
-    image: ghcr.io/advplyr/audiobookshelf:latest
-    restart: always
-    networks:
-      - dockerproxy
-    environment:
-      - TZ=Europe/Brussels
-    volumes:
-      - abs-config:/config
-      - abs-metadata:/metadata
-      - audiobooks:/audiobooks
-    ports:
-      - 14007:80
-
   sonarr:
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
@@ -224,6 +209,21 @@ services:
     volumes:
       - yamtrack-redis:/data
 
+  audiobookshelf:
+    container_name: audiobookshelf
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - abs-config:/config
+      - abs-metadata:/metadata
+      - audiobooks:/audiobooks
+    ports:
+      - 14007:80
+
   dispatcharr:
     container_name: dispatcharr
     image: ghcr.io/dispatcharr/dispatcharr:latest
@@ -238,7 +238,7 @@ services:
       - CELERY_BROKER_URL=redis://localhost:6379/0
       - DISPATCHARR_LOG_LEVEL=info
     ports:
-      - 14007:9191
+      - 14008:9191
 
 networks:
   dockerproxy:
