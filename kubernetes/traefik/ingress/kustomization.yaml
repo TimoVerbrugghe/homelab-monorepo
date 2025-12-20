@@ -10,7 +10,6 @@ resources:
   - traefik-sunshine.yaml
   
   # Custom Ingresses - TheFactory Utilities
-  - traefik-paperless.yaml
   - traefik-scan.yaml
 
   # Custom Ingresses - TheFactory Media

@@ -81,16 +81,6 @@
             type: overseerr
             url: http://thefactory.local.timo.be:14003
             key: "{{HOMEPAGE_VAR_OVERSEERR_KEY}}"
-    - RomM:
-        icon: romm.svg
-        href: https://romm.timo.be 
-        server: thefactory
-        container: romm
-        widget:
-            type: romm
-            url: http://thefactory.local.timo.be:17000
-            username: "{{HOMEPAGE_VAR_ROMM_USERNAME}}"
-            password: "{{HOMEPAGE_VAR_ROMM_PASSWORD}}"
     - Mealie:
         icon: mealie.svg
         href: https://mealie.timo.be
@@ -137,15 +127,6 @@
             type: prowlarr
             url: http://thefactory.local.timo.be:14004
             key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
-    - Paperless:
-        icon: paperless-ngx.svg
-        href: https://paperless.timo.be
-        server: thefactory
-        container: paperless-ngx
-        widget:
-            type: paperlessngx
-            url: http://thefactory.local.timo.be:11004
-            key: "{{HOMEPAGE_VAR_PAPERLESS_KEY}}"
 
 - Downloaders:
     - Qbittorrent:
@@ -273,11 +254,6 @@
         href: https://bitwarden.timo.be
         namespace: bitwarden
         app: bitwarden
-    - Paperless-ai:
-        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/webp/paperless-ai.webp
-        href: https://paperlessai.timo.be
-        server: thefactory
-        container: paperless-ai
     - Keel:
         icon: mdi-update
         href: https://keel.timo.be

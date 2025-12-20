@@ -123,11 +123,6 @@ endpoints:
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "RomM"
-    url: "http://thefactory.local.timo.be:17000"
-    group: Media
-    <<: [*defaults-http, *defaults-alerts]
-
   - name: "Mealie"
     url: "http://mealie.mealie.svc.cluster.local:9000"
     group: Media
@@ -150,11 +145,6 @@ endpoints:
 
   - name: "Prowlarr"
     url: "http://thefactory.local.timo.be:14004"
-    group: Media
-    <<: [*defaults-http, *defaults-alerts]
-
-  - name: "Paperless"
-    url: "http://thefactory.local.timo.be:11004"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
@@ -254,11 +244,6 @@ endpoints:
   # Utilities Group
   - name: "Bitwarden"
     url: "http://bitwarden.bitwarden.svc.cluster.local"
-    group: Utilities
-    <<: [*defaults-http, *defaults-alerts]
-
-  - name: "Paperless-ai"
-    url: "http://thefactory.local.timo.be:11005"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 

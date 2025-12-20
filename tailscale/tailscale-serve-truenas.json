@@ -16,22 +16,6 @@
         }
       }
     },
-    "svc:romm": {
-      "TCP": {
-        "443": {
-          "HTTPS": true
-        }
-      },
-      "Web": {
-        "romm.pony-godzilla.ts.net:443": {
-          "Handlers": {
-            "/": {
-              "Proxy": "http://localhost:17000"
-            }
-          }
-        }
-      }
-    },
     "svc:yamtrack": {
       "TCP": {
         "443": {
@@ -251,38 +235,6 @@
           "Handlers": {
             "/": {
               "Proxy": "http://localhost:12000"
-            }
-          }
-        }
-      }
-    },
-    "svc:paperless-ai": {
-      "TCP": {
-        "443": {
-          "HTTPS": true
-        }
-      },
-      "Web": {
-        "paperless-ai.pony-godzilla.ts.net:443": {
-          "Handlers": {
-            "/": {
-              "Proxy": "http://localhost:11005"
-            }
-          }
-        }
-      }
-    },
-    "svc:paperless": {
-      "TCP": {
-        "443": {
-          "HTTPS": true
-        }
-      },
-      "Web": {
-        "paperless.pony-godzilla.ts.net:443": {
-          "Handlers": {
-            "/": {
-              "Proxy": "http://localhost:11004"
             }
           }
         }
