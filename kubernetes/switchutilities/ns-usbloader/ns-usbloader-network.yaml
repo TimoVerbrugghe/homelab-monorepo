@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ns-usbloader-web
+  namespace: switchutilities
+spec:
+  selector:
+    app: ns-usbloader
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    name: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ns-usbloader-files
+  namespace: switchutilities
+spec:
+  selector:
+    app: ns-usbloader
+  loadBalancerClass: kube-vip.io/kube-vip-class
+  type: LoadBalancer
+  loadBalancerIP: 10.10.10.42
+  ports:
+  - protocol: TCP
+    port: 6042
+    targetPort: 6042
+    name: files
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ns-usbloader-web-traefik
+  namespace: switchutilities
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`nsusbloader.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: ns-usbloader-web
+          port: 8080
+      middlewares:
+        - name: auth
+          namespace: traefik

@@ -24,10 +24,10 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install ns-usbloader
-RUN wget https://github.com/developersu/ns-usbloader/releases/latest/download/ns-usbloader-7.1.jar && \
-    chmod +x ns-usbloader-7.1.jar && \
+RUN wget https://github.com/developersu/ns-usbloader/releases/latest/download/ns-usbloader-7.2.jar && \
+    chmod +x ns-usbloader-7.2.jar && \
     mkdir /usr/local/app && \
-    mv ns-usbloader-7.1.jar /usr/local/app/ns-usbloader.jar
+    mv ns-usbloader-7.2.jar /usr/local/app/ns-usbloader.jar
 
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

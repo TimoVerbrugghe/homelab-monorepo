@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ns-usbloader
+  namespace: switchutilities
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll            
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ns-usbloader
+      app.kubernetes.io/name: ns-usbloader
+  template:
+    metadata:
+      labels:
+        app: ns-usbloader
+        app.kubernetes.io/name: ns-usbloader
+    spec:
+      containers:
+      - name: ns-usbloader
+        image: ghcr.io/timoverbrugghe/ns-usbloader:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+        
+        startupProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 30
+          successThreshold: 1
+        
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+          successThreshold: 1
+        
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 6042
+          name: files
+        
+        volumeMounts:
+        - name: ns-usbloader-config
+          mountPath: /root/.java/.userPrefs/NS-USBloader/prefs.xml
+          subPath: prefs.xml
+          readOnly: true
+        - name: nsp
+          mountPath: /nsp
+      
+      volumes:
+      - name: ns-usbloader-config
+        configMap:
+          name: ns-usbloader-config
+      - name: nsp
+        persistentVolumeClaim:
+          claimName: games-roms-pvc

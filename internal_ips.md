@@ -33,7 +33,7 @@
 | 10.10.10.39   | Plex (Kubernetes)                           |
 | 10.10.10.40   | Jellyfin (Kubernetes)                       |
 | 10.10.10.41   | Whisper ASR webservice                      |
-| 10.10.10.42   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.42   | NS-USBloader                                |
 | 10.10.10.43   | Reserved by kubevip for kubernetes cluster  |
 | 10.10.10.44   | Reserved by kubevip for kubernetes cluster  |
 | 10.10.10.45   | Reserved by kubevip for kubernetes cluster  |
