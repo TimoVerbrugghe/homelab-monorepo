@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jellyfin
+  name: ersatztv
   namespace: mediaplayback
   annotations:
     keel.sh/policy: force
@@ -15,11 +15,11 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: jellyfin
+      app.kubernetes.io/name: ersatztv
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: jellyfin
+        app.kubernetes.io/name: ersatztv
     spec:
       serviceAccountName: pod-watcher
       initContainers:
@@ -48,12 +48,12 @@ spec:
           rm -f /config/.healthcheck
           echo "Storage validation passed"
         volumeMounts:
-        - name: jellyfin-config
+        - name: ersatztv-config
           mountPath: /config
 
       containers:
-      - name: jellyfin
-        image: ghcr.io/jellyfin/jellyfin:latest
+      - name: ersatztv
+        image: ghcr.io/ersatztv/ersatztv:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
@@ -66,14 +66,14 @@ spec:
             cpu: "250m"
             gpu.intel.com/i915: "1"
           limits:
-            memory: "8Gi"
+            memory: "4Gi"
             cpu: "2000m"
             gpu.intel.com/i915: "1"
         
         startupProbe:
           httpGet:
-            path: /health
-            port: 8096
+            path: /
+            port: 8409
           initialDelaySeconds: 10
           periodSeconds: 10
           timeoutSeconds: 5
@@ -82,38 +82,36 @@ spec:
         
         readinessProbe:
           httpGet:
-            path: /health
-            port: 8096
+            path: /
+            port: 8409
           initialDelaySeconds: 5
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
           successThreshold: 1
         
-        # Jellyfin will not be reachable anymore on /health after iscsi disconnect, so no need for more complex livenessProbe (as is needed with Plex)
         livenessProbe:
           httpGet:
-            path: /health
-            port: 8096
+            path: /
+            port: 8409
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
           successThreshold: 1
+        
+        ports:
+        - name: http
+          containerPort: 8409
+          protocol: TCP
             
         volumeMounts:
-        - name: jellyfin-config
+        - name: ersatztv-config
           mountPath: /config
-        - name: cache
-          mountPath: /cache
-        - name: movies
-          mountPath: /movies
-        - name: tvshows
-          mountPath: /tv
         - name: transcode-cache
-          mountPath: /dev/shm
+          mountPath: /transcode
       
-      # Sidecar watcher: monitors Jellyfin for CrashLoopBackOff and I/O errors
+      # Sidecar watcher: monitors ErsatzTV for CrashLoopBackOff and I/O errors
       - name: pod-watcher
         image: alpine:latest
         command:
@@ -129,7 +127,7 @@ spec:
           chmod +x kubectl
           mv kubectl /usr/local/bin/
           
-          echo "Starting Jellyfin pod watcher sidecar..."
+          echo "Starting ErsatzTV pod watcher sidecar..."
           echo "Monitoring for: CrashLoopBackOff and I/O errors"
           echo ""
           
@@ -150,13 +148,13 @@ spec:
             INIT_CRASH_LOOP=$(echo "$POD_JSON" | jq -r '.status.initContainerStatuses[]? | select(.state.waiting.reason == "CrashLoopBackOff") | .name' | head -1)
             
             # Check restart count
-            RESTART_COUNT=$(echo "$POD_JSON" | jq -r '.status.containerStatuses[]? | select(.name == "jellyfin") | .restartCount' | head -1)
+            RESTART_COUNT=$(echo "$POD_JSON" | jq -r '.status.containerStatuses[]? | select(.name == "ersatztv") | .restartCount' | head -1)
             RESTART_COUNT=${RESTART_COUNT:-0}
             
             # Check for I/O errors if restarts are high
             IO_ERROR_DETECTED=false
             if [ "$RESTART_COUNT" -ge "$RESTART_THRESHOLD" ]; then
-              if kubectl logs -n mediaplayback "$POD_NAME" -c jellyfin --tail=20 2>/dev/null | grep -qiE "input/output error|i/o error|read-only file system"; then
+              if kubectl logs -n mediaplayback "$POD_NAME" -c ersatztv --tail=20 2>/dev/null | grep -qiE "input/output error|i/o error|read-only file system"; then
                 IO_ERROR_DETECTED=true
               fi
             fi
@@ -209,20 +207,9 @@ spec:
           - path: "name"
             fieldRef:
               fieldPath: metadata.name
-      - name: jellyfin-config
+      - name: ersatztv-config
         persistentVolumeClaim:
-          claimName: jellyfin-pvc
-      - name: cache
-        emptyDir: {}
-      - name: movies
-        persistentVolumeClaim:
-          claimName: movies-pvc
-      - name: tvshows
-        persistentVolumeClaim:
-          claimName: tvshows-pvc
-      - name: music
-        persistentVolumeClaim:
-          claimName: music-pvc
+          claimName: ersatztv-pvc
       - name: transcode-cache
         emptyDir:
           medium: Memory

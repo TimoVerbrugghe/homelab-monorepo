@@ -21,7 +21,7 @@ spec:
       labels:
         app.kubernetes.io/name: plex
     spec:
-      serviceAccountName: plex-watcher
+      serviceAccountName: pod-watcher
       initContainers:
       # Simple validation - if this fails, the watcher pod will delete and recreate
       - name: storage-validator

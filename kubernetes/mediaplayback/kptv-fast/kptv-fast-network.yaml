@@ -10,7 +10,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`kptv.kubernetes.timo.be`) || Host(`kptv.timo.be`)
+    - match: Host(`kptv.kubernetes.timo.be`)
       kind: Rule
       services:
         - name: kptv-fast

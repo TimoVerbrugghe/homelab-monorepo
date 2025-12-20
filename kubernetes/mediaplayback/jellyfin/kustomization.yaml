@@ -6,7 +6,6 @@ generatorOptions:
  disableNameSuffixHash: true
 
 resources:
-  - rbac.yaml
   - jellyfin.yaml
   - jellyfin-storage.yaml
   - jellyfin-network.yaml

@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ersatztv-pv
+  namespace: mediaplayback
+spec:
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  iscsi:
+    targetPortal: 10.10.10.2:3260
+    iqn: iqn.2025-11.timo.be:ersatztv
+    lun: 0
+    fsType: ext4
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ersatztv-pvc
+  namespace: mediaplayback
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+  volumeName: ersatztv-pv

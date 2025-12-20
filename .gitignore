@@ -25,3 +25,4 @@ talosctl.exe
 test.yaml
 kubernetes/cluster-bootstrap/kustomize
 **/charts
+dhi-registry-secret.json

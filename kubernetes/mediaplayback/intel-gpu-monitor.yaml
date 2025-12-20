@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: intel-gpu-monitor
+  namespace: mediaplayback
+spec:
+  containers:
+  - name: monitor
+    image: ubuntu:22.04
+    command:
+    - /bin/bash
+    - -c
+    - |
+      apt-get update && apt-get install -y intel-gpu-tools
+      echo "Intel GPU monitor ready!"
+      echo "Run: kubectl exec -it intel-gpu-monitor -n mediaplayback -- intel_gpu_top"
+      sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        gpu.intel.com/i915: "1"
+      limits:
+        cpu: 500m
+        memory: 512Mi
+        gpu.intel.com/i915: "1"
+    volumeMounts:
+    - name: dev-dri
+      mountPath: /dev/dri
+  volumes:
+  - name: dev-dri
+    hostPath:
+      path: /dev/dri
+      type: Directory

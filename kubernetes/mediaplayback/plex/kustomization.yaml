@@ -16,7 +16,6 @@ secretGenerator:
         app.kubernetes.io/name: plex
 
 resources:
-  - rbac.yaml
   - plex.yaml
   - plex-storage.yaml
   - plex-autolanguages.yaml

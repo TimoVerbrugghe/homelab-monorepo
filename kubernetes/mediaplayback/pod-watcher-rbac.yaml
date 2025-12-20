@@ -1,9 +1,9 @@
 ---
-# ServiceAccount for Plex sidecar watcher
+# Shared ServiceAccount for pod watcher sidecars
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: plex-watcher
+  name: pod-watcher
   namespace: mediaplayback
 
 ---
@@ -11,7 +11,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: plex-watcher
+  name: pod-watcher
   namespace: mediaplayback
 rules:
 - apiGroups: [""]
@@ -26,13 +26,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: plex-watcher
+  name: pod-watcher
   namespace: mediaplayback
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: plex-watcher
+  name: pod-watcher
 subjects:
 - kind: ServiceAccount
-  name: plex-watcher
+  name: pod-watcher
   namespace: mediaplayback
