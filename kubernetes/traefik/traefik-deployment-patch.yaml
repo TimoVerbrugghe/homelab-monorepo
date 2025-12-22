@@ -4,6 +4,6 @@ kind: Deployment
 metadata:
   name: traefik
   annotations:
-    keel.sh/policy: patch
+    keel.sh/policy: major
     keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"

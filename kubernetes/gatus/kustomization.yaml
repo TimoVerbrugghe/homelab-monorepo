@@ -10,6 +10,7 @@ configMapGenerator:
       - endpoints.yaml
       - alerting.yaml
       - maintenance.yaml
+      - settings.yaml
     options:
       labels:
         app.kubernetes.io/name: gatus

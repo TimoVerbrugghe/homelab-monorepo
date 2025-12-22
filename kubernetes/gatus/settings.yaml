@@ -1,0 +1,5 @@
+web:
+  read-buffer-size: 131072 # 128 KiB since that's max supported by cloudflare
+ui:
+  header: "Timo's Homelab Status"
+  dark-mode: true

@@ -82,7 +82,6 @@ providers:
     enabled: true
     namespaces: []
     ingressClass: traefik
-    allowCrossNamespace: true
     allowExternalNameServices: true
     publishedService:
       enabled: true
