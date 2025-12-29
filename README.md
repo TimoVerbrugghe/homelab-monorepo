@@ -46,7 +46,7 @@ Built using Talos linux. Currently runs following services:
 - Keel
 - Homepage
 - Gatus
-- Stirling-PDF
+- BentoPDF
 - Webtop
 - Adguardhome-sync
 - Adguardhome

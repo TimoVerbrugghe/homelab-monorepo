@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: netbootxyz
-  namespace: pxeboot
+  namespace: utilities
   labels:
     app.kubernetes.io/name: netbootxyz
   annotations:

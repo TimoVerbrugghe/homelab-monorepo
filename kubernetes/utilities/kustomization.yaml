@@ -10,5 +10,6 @@ resources:
   - homepage
   - keel
   - mealie
+  - pxeboot
   - switchutilities
   # - changedetection

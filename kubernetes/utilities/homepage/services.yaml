@@ -88,7 +88,7 @@
         app: mealie
         widget:
             type: mealie
-            url: http://mealie.mealie.svc.cluster.local:9000
+            url: http://mealie.utilities.svc.cluster.local:9000
             key: "{{HOMEPAGE_VAR_MEALIE_KEY}}"
             version: 2
     - Sonarr:
@@ -219,12 +219,12 @@
     - Netbootxyz:
         icon: netboot.svg
         href: https://netbootxyz.timo.be
-        namespace: pxeboot
+        namespace: utilities
         app: netbootxyz
     - iVentoy:
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/iventoy.svg
         href: https://iventoy.timo.be
-        namespace: pxeboot
+        namespace: utilities
         app: iventoy
         
 - Filemanagement:
@@ -259,11 +259,11 @@
         href: https://keel.timo.be
         namespace: utilities
         app: keel
-    - Stirling-PDF:
-        icon: stirling-pdf.svg
-        href: https://stirlingpdf.timo.be
+    - BentoPDF:
+        icon: bentopdf.svg
+        href: https://bentopdf.timo.be
         namespace: utilities
-        app: stirlingpdf
+        app: bentopdf
     - Gatus:
         icon: gatus.svg
         href: https://gatus.timo.be
@@ -271,7 +271,7 @@
         app: gatus
         widget:
             type: gatus
-            url: http://gatus.gatus.svc.cluster.local:8080
+            url: http://gatus.utilities.svc.cluster.local:8080
 
 - Containers:
     - Ulrich:
