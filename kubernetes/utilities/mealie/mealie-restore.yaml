@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mealie-restore
+  namespace: utilities
+spec:
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: yumi
+      restartPolicy: Never
+      volumes:
+        - name: mealie-data
+          hostPath:
+            path: /var/mnt/mealie
+            type: Directory
+        - name: nfs-backup
+          nfs:
+            server: nfs.local.timo.be
+            path: /mnt/FranzHopper/appdata/mealie
+      containers:
+        - name: restore
+          image: ghcr.io/timoverbrugghe/k8s-restore:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PUID
+              value: "3000"
+            - name: PGID
+              value: "3000"
+          volumeMounts:
+            - name: mealie-data
+              mountPath: /appdata
+            - name: nfs-backup
+              mountPath: /backup

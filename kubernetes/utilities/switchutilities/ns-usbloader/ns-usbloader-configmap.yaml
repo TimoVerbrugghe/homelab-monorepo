@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ns-usbloader-config
+  namespace: utilities
+data:
+  prefs.xml: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <!DOCTYPE map SYSTEM "http://java.sun.com/dtd/preferences.dtd">       
+    <map>
+      <entry key="THEME" value="/res/app_dark.css"/>
+      <entry key="locale" value="en_US"/>
+      <entry key="NSIP" value="10.10.10.156"/>
+      <entry key="NETUSB" value="NET" />
+      <entry key="EXPERTMODE" value="true" />
+      <entry key="AUTOHOSTIP" value="false" />
+      <entry key="RANDHOSTPORT" value="false" />
+      <entry key="HOSTIP" value="10.10.10.42" />
+      <entry key="HOSTPORT" value="6042" />
+    </map>

@@ -1,0 +1,306 @@
+defaults-http: &defaults-http
+  interval: 30s
+  # Allow any HTTP code that is either information (100 series), success (200 series) or redirects (300 series)
+  # Also ensure connection is successful with no errors
+  conditions:
+    - "[CONNECTED] == true"
+    - "[STATUS] < 400"
+
+defaults-nochecktls: &defaults-nochecktls
+  # Skip TLS/SSL verification
+  client:
+    insecure: true
+
+defaults-dns: &defaults-dns
+  interval: 30s
+  conditions:
+    - "[DNS_RCODE] == NOERROR"
+    - "[BODY] == 10.10.10.1"
+  dns:
+    query-name: "unifi.local.timo.be"
+    query-type: "A"
+
+defaults-ping: &defaults-ping
+  interval: 30s
+  conditions:
+    - "[CONNECTED] == true"
+
+defaults-tcp: &defaults-tcp
+  interval: 30s
+  conditions:
+    - "[CONNECTED] == true"
+
+defaults-alerts: &defaults-alerts
+  alerts:
+    - type: pushover
+      failure-threshold: 10
+      success-threshold: 2
+      description: "Health check failed"
+      send-on-resolved: true
+
+endpoints:
+  # Hypervisor Group
+  - name: "Proxmox (Forest Sector)"
+    url: "https://forestsector.local.timo.be:8006"
+    group: Hypervisor
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Proxmox (Ice Sector)"
+    url: "https://icesector.local.timo.be:8006"
+    group: Hypervisor
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Proxmox (Mountain Sector)"
+    url: "https://mountainsector.local.timo.be:8006"
+    group: Hypervisor
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Proxmox (Forest Sector) - Ping"
+    url: "icmp://forestsector.local.timo.be"
+    group: Hypervisor
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Proxmox (Ice Sector) - Ping"
+    url: "icmp://icesector.local.timo.be"
+    group: Hypervisor
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Proxmox (Mountain Sector) - Ping"
+    url: "icmp://mountainsector.local.timo.be"
+    group: Hypervisor
+    <<: [*defaults-ping, *defaults-alerts]
+
+  # VM Group
+  - name: "Ulrich"
+    url: "icmp://ulrich.local.timo.be"
+    group: VM
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Odd"
+    url: "icmp://odd.local.timo.be"
+    group: VM
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Hass"
+    url: "icmp://hass.local.timo.be"
+    group: VM
+    <<: [*defaults-ping, *defaults-alerts]
+
+  # Sector Five Group
+  - name: "William"
+    url: "icmp://william.local.timo.be"
+    group: Sector Five
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Manta"
+    url: "icmp://manta.local.timo.be"
+    group: Sector Five
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Skidbladnir"
+    url: "icmp://skidbladnir.local.timo.be"
+    group: Sector Five
+    <<: [*defaults-ping, *defaults-alerts]
+
+  - name: "Yumi"
+    url: "icmp://yumi.local.timo.be"
+    group: Sector Five
+    <<: [*defaults-ping, *defaults-alerts]
+
+  # Media Group
+  - name: "Plex"
+    url: "http://plex.mediaplayback.svc.cluster.local:32400/identity"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Jellyfin"
+    url: "http://jellyfin.mediaplayback.svc.cluster.local:8096"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Overseerr"
+    url: "http://thefactory.local.timo.be:14003"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Mealie"
+    url: "http://mealie.utilities.svc.cluster.local:9000"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Sonarr"
+    url: "http://thefactory.local.timo.be:14000"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Radarr"
+    url: "http://thefactory.local.timo.be:14001"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Bazarr"
+    url: "http://thefactory.local.timo.be:14002"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Prowlarr"
+    url: "http://thefactory.local.timo.be:14004"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  # Downloaders Group
+  - name: "Qbittorrent"
+    url: "http://thefactory.local.timo.be:12000"
+    group: Downloaders
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Spotdl"
+    url: "http://thefactory.local.timo.be:12005"
+    group: Downloaders
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Ariang"
+    url: "http://thefactory.local.timo.be:12003"
+    group: Downloaders
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Metube"
+    url: "http://thefactory.local.timo.be:12002"
+    group: Downloaders
+    <<: [*defaults-http, *defaults-alerts]
+
+  # Networking Group
+  - name: "Unifi Controller"
+    url: "https://unifi.local.timo.be"
+    group: Networking
+    <<: [*defaults-http, *defaults-nochecktls]
+
+  - name: "Adguardhome (Kubernetes)"
+    url: "10.10.10.35"
+    group: Networking
+    <<: [*defaults-dns, *defaults-alerts]
+
+  - name: "Adguardhome (Ulrich)"
+    url: "10.10.10.21"
+    group: Networking
+    <<: [*defaults-dns, *defaults-alerts]
+
+  - name: "Adguardhome (Odd)"
+    url: "10.10.10.22"
+    group: Networking
+    <<: [*defaults-dns, *defaults-alerts]
+
+  - name: "Netbootxyz"
+    url: "http://netbootxyz.local.timo.be:3000"
+    group: Networking
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "iVentoy"
+    url: "http://iventoy.local.timo.be:26000"
+    group: Networking
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Cloudflare Tunnel (Kubernetes)"
+    url: "http://cloudflared-homelab.utilities.svc.cluster.local:2000/ready"
+    group: Networking
+    interval: 30s
+    # Cloudflared has a /ready endpoint which returns 200 if and only if it has an active connection to Cloudflare's network.
+    conditions:
+      - "[STATUS] == 200"
+    <<: [*defaults-alerts]
+
+  - name: "Cloudflare Tunnel (Kubernetes - For K8S services only)"
+    url: "http://cloudflared-kubernetes.utilities.svc.cluster.local:2000/ready"
+    group: Networking
+    interval: 30s
+    # Cloudflared has a /ready endpoint which returns 200 if and only if it has an active connection to Cloudflare's network.
+    conditions:
+      - "[STATUS] == 200"
+    <<: [*defaults-alerts]
+
+  # Filemanagement Group
+  - name: "Nextcloud"
+    url: "http://thefactory.local.timo.be:11000"
+    group: Filemanagement
+    # Nextcloud takes very long to update, so we increase failure-treshold specifically for this service
+    alerts:
+    - type: pushover
+      failure-threshold: 30
+      success-threshold: 2
+      description: "Health check failed"
+      send-on-resolved: true
+    <<: [*defaults-http]
+
+  - name: "Filezilla"
+    url: "http://thefactory.local.timo.be:13001"
+    group: Filemanagement
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Double Commander" 
+    url: "http://thefactory.local.timo.be:13002"
+    group: Filemanagement
+    <<: [*defaults-http, *defaults-alerts]
+
+  # Utilities Group
+  - name: "Bitwarden"
+    url: "http://bitwarden.utilities.svc.cluster.local"
+    group: Utilities
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Keel (Kubernetes)"
+    url: "http://keel.utilities.svc.cluster.local:9300"
+    group: Utilities
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "BentoPDF"
+    url: "http://bentopdf.utilities.svc.cluster.local:8080"
+    group: Utilities
+    <<: [*defaults-http, *defaults-alerts]
+
+  # Containers Group
+  - name: "Portainer"
+    url: "https://portainer.portainer.svc.cluster.local:9443"
+    group: Containers
+    <<: [*defaults-http, *defaults-nochecktls, *defaults-alerts]
+  
+  - name: "Portainer Agent (Ulrich)"
+    url: "tcp://ulrich.local.timo.be:9001"
+    group: Containers
+    <<: [*defaults-tcp, *defaults-alerts]
+
+  - name: "Portainer Agent (Odd)"
+    url: "tcp://odd.local.timo.be:9001"
+    group: Containers
+    <<: [*defaults-tcp, *defaults-alerts]
+
+  - name: "Portainer Agent (TheFactory)"
+    url: "tcp://thefactory.local.timo.be:9001"
+    group: Containers
+    <<: [*defaults-tcp, *defaults-alerts]
+
+  # Storage Group
+  - name: "TrueNAS Web UI"
+    url: "http://truenas.local.timo.be"
+    group: Storage
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "TrueNAS - Ping"
+    url: "icmp://truenas.local.timo.be"
+    group: Storage
+    <<: [*defaults-ping, *defaults-alerts]
+
+  # Home Automation Group
+  - name: "Home Assistant"
+    url: "http://hass.local.timo.be:8123"
+    group: "Home Automation"
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Zigbee2MQTT"
+    url: "http://hass.local.timo.be:8099"
+    group: "Home Automation"
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Scrypted"
+    url: "https://hass.local.timo.be:10443"
+    group: "Home Automation"
+    <<: [*defaults-http, *defaults-nochecktls, *defaults-alerts]

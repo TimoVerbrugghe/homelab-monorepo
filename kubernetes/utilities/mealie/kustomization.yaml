@@ -1,0 +1,22 @@
+# Apply all these resources with `kubectl apply -k .` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - mealie.yaml
+  - mealie-ingress.yaml
+  - mealie-service.yaml
+  - mealie-backup.yaml
+
+secretGenerator:
+  - name: mealie-secrets
+    namespace: utilities
+    envs:
+      - mealie-secrets.env
+    type: Opaque
+    options:
+      labels:
+        app.kubernetes.io/name: mealie
+
+generatorOptions:
+ disableNameSuffixHash: true

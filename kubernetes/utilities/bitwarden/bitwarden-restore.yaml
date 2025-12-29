@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bitwarden-restore
+  namespace: utilities
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        kubernetes.io/hostname: yumi
+      volumes:
+        - name: bitwarden-data
+          hostPath:
+            path: /var/mnt/bitwarden
+        - name: nfs-backup
+          nfs:
+            server: nfs.local.timo.be
+            path: /mnt/FranzHopper/appdata/bitwarden
+      containers:
+        - name: restore
+          image: ghcr.io/timoverbrugghe/k8s-restore:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: bitwarden-data
+              mountPath: /appdata
+            - name: nfs-backup
+              mountPath: /backup

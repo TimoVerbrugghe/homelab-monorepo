@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mealie-backup
+  namespace: utilities
+spec:
+  schedule: "0 2 * * *" # Runs daily at 2 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          nodeSelector:
+            kubernetes.io/hostname: yumi
+          containers:
+            - name: backup
+              image: ghcr.io/timoverbrugghe/k8s-backup:latest
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: BACKUP_NAME
+                  value: "mealie"
+              volumeMounts:
+                - name: mealie-data
+                  mountPath: /appdata
+                - name: nfs-backup
+                  mountPath: /backup
+          volumes:
+            - name: mealie-data
+              hostPath:
+                path: /var/mnt/mealie
+                type: Directory
+            - name: nfs-backup
+              nfs:
+                server: nfs.local.timo.be
+                path: /mnt/FranzHopper/appdata/mealie
