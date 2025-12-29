@@ -2,18 +2,18 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: stirlingpdf-traefik
-  namespace: stirlingpdf
+  name: bentopdf-traefik
+  namespace: bentopdf
   annotations: 
     kubernetes.io/ingress.class: traefik
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`stirlingpdf.kubernetes.timo.be`) || Host(`stirlingpdf.timo.be`)
+    - match: Host(`bentopdf.kubernetes.timo.be`) || Host(`bentopdf.timo.be`)
       kind: Rule
       services:
-        - name: stirlingpdf
+        - name: bentopdf
           port: 8080
       middlewares:
         - name: auth
@@ -22,18 +22,18 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: stirlingpdf-tailscale
-  namespace: stirlingpdf
+  name: bentopdf-tailscale
+  namespace: bentopdf
   annotations:
     # Instead of exposing as a machine, expose it as a Tailscale Service
     tailscale.com/proxy-group: tailscale-services
 spec:
   defaultBackend:
     service:
-      name: stirlingpdf
+      name: bentopdf
       port:
         number: 8080
   ingressClassName: tailscale
   tls:
     - hosts:
-        - stirlingpdf
+        - bentopdf

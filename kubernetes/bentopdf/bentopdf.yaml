@@ -2,8 +2,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stirlingpdf
-  namespace: stirlingpdf
+  name: bentopdf
+  namespace: bentopdf
   annotations:
     keel.sh/policy: force
     keel.sh/trigger: poll            
@@ -13,17 +13,17 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stirlingpdf
-      app.kubernetes.io/name: stirlingpdf
+      app: bentopdf
+      app.kubernetes.io/name: bentopdf
   template:
     metadata:
       labels:
-        app: stirlingpdf
-        app.kubernetes.io/name: stirlingpdf
+        app: bentopdf
+        app.kubernetes.io/name: bentopdf
     spec:
       containers:
-      - name: stirlingpdf
-        image: ghcr.io/stirling-tools/s-pdf:latest
+      - name: bentopdf
+        image: ghcr.io/alam00000/bentopdf:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: DOCKER_ENABLE_SECURITY
