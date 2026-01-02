@@ -278,6 +278,27 @@ services:
       timeout: 5s
       retries: 60
 
+  obzorarr:
+    container_name: obzorarr
+    image: ghcr.io/engels74/obzorarr-docker:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=Europe/Brussels
+      - UMASK=002
+    volumes:
+      - obzorarr:/config
+    ports:
+      - 14011:9117
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000 || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
 networks:
   dockerproxy:
     external: true
@@ -398,3 +419,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/wrapperr"
+  obzorarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/obzorarr"
