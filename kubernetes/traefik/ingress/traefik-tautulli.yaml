@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tautulli
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`tautulli.kubernetes.timo.be`) || Host(`tautulli.timo.be`)
+      kind: Rule
+      services:
+        - name: tautulli-svc
+          port: 14009
+      middlewares:
+        - name: auth
+          namespace: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tautulli-svc
+  namespace: traefik
+spec:
+  externalName: thefactory.local.timo.be # Can also be an IP address
+  type: ExternalName

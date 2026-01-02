@@ -1,0 +1,51 @@
+---
+# Service to be used by Traefik and Tailscale Ingress to access Wrapperr Web UI
+apiVersion: v1
+kind: Service
+metadata:
+  name: wrapperr
+  namespace: mediaplayback
+spec:
+  ports:
+    - name: http
+      port: 8282
+      protocol: TCP
+      targetPort: 8282
+  selector:
+    app.kubernetes.io/name: wrapperr
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: wrapperr
+  namespace: mediaplayback
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`wrapperr.kubernetes.timo.be`) || Host(`wrapperr.timo.be`)
+      kind: Rule
+      services:
+        - name: wrapperr
+          port: 8282
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wrapperr-tailscale
+  namespace: mediaplayback
+  annotations:
+    # Instead of exposing as a machine, expose it as a Tailscale Service
+    tailscale.com/proxy-group: tailscale-services
+spec:
+  defaultBackend:
+    service:
+      name: wrapperr
+      port:
+        number: 8282
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - wrapperr

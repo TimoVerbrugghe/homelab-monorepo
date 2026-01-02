@@ -6,12 +6,5 @@ generatorOptions:
  disableNameSuffixHash: true
 
 resources:
-  - namespace.yaml
-  - pod-watcher-rbac.yaml
-  - plex
-  - jellyfin
-  - ersatztv
-  - media-storage.yaml
-  - kptv-fast
-  - subgen
-  - wrapperr
+  - wrapperr.yaml
+  - wrapperr-network.yaml
