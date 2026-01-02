@@ -28,8 +28,10 @@ jobs:
         run: |
           if [ -f "kubernetes/${{ inputs.resource }}/kustomization.yaml" ]; then
             echo "kustomization_file=kubernetes/${{ inputs.resource }}/kustomization.yaml" >> $GITHUB_OUTPUT
+            echo "Kustomization file found"
           elif [ -f "kubernetes/${{ inputs.resource }}/kustomization.yml" ]; then
             echo "kustomization_file=kubernetes/${{ inputs.resource }}/kustomization.yml" >> $GITHUB_OUTPUT
+            echo "Kustomization file found"
           else
             echo "Error: No kustomization.yaml or kustomization.yml found in kubernetes/${{ inputs.resource }}/"
             exit 1
