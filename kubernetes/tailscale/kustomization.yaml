@@ -7,7 +7,9 @@ generatorOptions:
 
 resources:
   - https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/cmd/k8s-operator/deploy/manifests/operator.yaml
+  - https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/cmd/k8s-operator/deploy/manifests/authproxy-rbac.yaml
   - tailscale-proxygroup.yaml
+  - tailscale-clusterrolebinding.yaml
 
 secretGenerator:
   - name: operator-oauth
@@ -22,7 +24,7 @@ secretGenerator:
         reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "tailscale"
 
 patches:
-  # Add autoupdate through keel for tailscale-operator
+  # Add autoupdate through keel & enable apiserver proxy for tailscale-operator
   - target:
       kind: Deployment
       name: operator

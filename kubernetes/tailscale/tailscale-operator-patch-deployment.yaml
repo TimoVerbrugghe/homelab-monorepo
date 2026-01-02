@@ -1,4 +1,4 @@
-# Add autoupdate through keel for tailscale-operator
+# Add autoupdate through keel for tailscale-operator & enable apiserver proxy in noauth mode
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8,3 +8,14 @@ metadata:
     keel.sh/policy: all
     keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
+spec:
+  selector:
+    matchLabels:
+      app: operator
+  template:
+    spec:
+      containers:
+        - name: operator
+          env:
+            - name: APISERVER_PROXY
+              value: "true"

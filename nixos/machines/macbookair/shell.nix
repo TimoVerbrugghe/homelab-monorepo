@@ -34,6 +34,7 @@
     fzf = "fzf --preview 'bat --color=always {}'";
     z = "zoxide";
     ls = "eza --group-directories-first";
+    tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale";
     
     # Collecting nix garbage both before and after to rebuild to avoid MDM errors that get triggered due to duplicate installations of applications
     nixupdate = "sudo nix-collect-garbage -d && sudo darwin-rebuild switch --flake 'github:TimoVerbrugghe/homelab-monorepo?dir=nixos#Timos-Macbook-Air' --refresh --impure --no-write-lock-file && sudo nix-collect-garbage -d";
