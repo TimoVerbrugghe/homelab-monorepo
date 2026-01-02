@@ -239,6 +239,26 @@ services:
       - DISPATCHARR_LOG_LEVEL=info
     ports:
       - 14008:9191
+  
+  tautulli:
+    container_name: tautulli
+    image: tautulli/tautulli:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID:-3000}
+      - PGID=${PGID:-3000}
+      - TZ=Europe/Brussels
+    volumes:
+      - tautulli:/config
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8181 || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+    ports:
+      - 14009:8181
 
 networks:
   dockerproxy:
@@ -348,3 +368,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/dispatcharr"
+  tautulli:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tautulli"
