@@ -1,0 +1,51 @@
+name: Export Draw.io Diagrams
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'diagrams/**/*.drawio'
+  pull_request:
+    paths:
+      - 'diagrams/**/*.drawio'
+  workflow_dispatch:
+
+jobs:
+  export-diagrams:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Export Draw.io files to PNG and SVG
+        uses: rlespinasse/drawio-export-action@v2
+        with:
+          path: diagrams
+          format: png
+          transparent: false
+          output: .
+      
+      - name: Export Draw.io files to SVG
+        uses: rlespinasse/drawio-export-action@v2
+        with:
+          path: diagrams
+          format: svg
+          transparent: false
+          output: .
+
+      - name: Commit exported diagrams
+        if: github.event_name == 'push'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add diagrams/*.png diagrams/*.svg
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-export Draw.io diagrams to PNG and SVG"
+            git push
+          fi

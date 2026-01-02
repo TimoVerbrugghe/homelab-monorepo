@@ -1,0 +1,98 @@
+name: Lint YAML and JSON
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**.yaml'
+      - '**.yml'
+      - '**.json'
+  pull_request:
+    paths:
+      - '**.yaml'
+      - '**.yml'
+      - '**.json'
+  workflow_dispatch:
+
+jobs:
+  yaml-lint:
+    name: Lint YAML files
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Create yamllint config
+        run: |
+          cat > .yamllint.yaml << 'EOF'
+          extends: default
+          
+          rules:
+            line-length:
+              max: 200
+              level: warning
+            indentation:
+              spaces: 2
+              indent-sequences: true
+            comments:
+              min-spaces-from-content: 1
+            comments-indentation: {}
+            document-start: disable
+            truthy:
+              allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+          
+          ignore: |
+            .github/workflows/markdown-link-check-config.json
+            node_modules/
+            .venv/
+          EOF
+
+      - name: Lint YAML files
+        run: |
+          echo "Linting YAML files..."
+          yamllint -f colored . || exit 1
+
+  json-lint:
+    name: Lint JSON files
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install jsonlint
+        run: npm install -g jsonlint
+
+      - name: Lint JSON files
+        run: |
+          echo "Linting JSON files..."
+          find . -name "*.json" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.venv/*" \
+            -not -path "*/result/*" \
+            -exec echo "Checking: {}" \; \
+            -exec jsonlint -q {} \; || exit 1
+
+      - name: Validate JSON syntax
+        run: |
+          echo "Validating JSON syntax with jq..."
+          find . -name "*.json" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.venv/*" \
+            -not -path "*/result/*" \
+            -exec sh -c 'echo "Validating: $1" && jq empty "$1"' _ {} \; || exit 1

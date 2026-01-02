@@ -1,0 +1,71 @@
+name: Build NixOS ISOs
+
+on:
+  release:
+    types: [created, published]
+  push:
+    tags:
+      - 'v*'
+    paths:
+      - 'nixos/isos/**'
+  workflow_dispatch:
+    inputs:
+      iso_name:
+        description: 'ISO to build (e.g., iso-flake-autoinstall, iso-generic-autoinstall, surface-iso-install)'
+        required: false
+        type: string
+
+jobs:
+  build-isos:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    strategy:
+      matrix:
+        iso:
+          - iso-flake-autoinstall
+          - iso-generic-autoinstall
+          - surface-iso-install
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Build NixOS ISO
+        if: ${{ !github.event.inputs.iso_name || github.event.inputs.iso_name == matrix.iso }}
+        run: |
+          cd nixos/isos/${{ matrix.iso }}
+          nix build .#nixosConfigurations.${{ matrix.iso }}.config.system.build.isoImage -L
+          
+          # Find the generated ISO
+          ISO_PATH=$(find result/iso -name "*.iso" | head -n 1)
+          ISO_NAME=$(basename "$ISO_PATH")
+          
+          # Copy to a known location
+          cp "$ISO_PATH" "/tmp/$ISO_NAME"
+          echo "ISO_PATH=/tmp/$ISO_NAME" >> $GITHUB_ENV
+          echo "ISO_NAME=$ISO_NAME" >> $GITHUB_ENV
+
+      - name: Upload ISO as artifact
+        if: ${{ !github.event.inputs.iso_name || github.event.inputs.iso_name == matrix.iso }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.iso }}-iso
+          path: ${{ env.ISO_PATH }}
+          retention-days: 90
+
+      - name: Upload ISO to Release
+        if: github.event_name == 'release' && (!github.event.inputs.iso_name || github.event.inputs.iso_name == matrix.iso)
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ env.ISO_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,68 @@
+name: Check Broken Links
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**.md'
+  pull_request:
+    paths:
+      - '**.md'
+  schedule:
+    # Run weekly on Mondays at 08:00 UTC
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check links in markdown files
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        id: link-check
+        with:
+          use-quiet-mode: 'no'
+          use-verbose-mode: 'yes'
+          config-file: '.github/workflows/markdown-link-check-config.json'
+          folder-path: '.'
+          file-extension: '.md'
+        continue-on-error: true
+
+      - name: Create issue for broken links
+        if: failure() && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Create issue with broken links
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔗 Broken links found in markdown files',
+              body: `Automated link checker found broken links in the repository.
+              
+              Please review the [workflow run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for details.
+              
+              **Action Required:**
+              - Review the broken links listed in the workflow logs
+              - Update or remove the broken links
+              - Close this issue once all links are fixed
+              
+              This issue was automatically created by the Link Checker workflow.`,
+              labels: ['documentation', 'automated']
+            });
+
+      - name: Fail workflow if links are broken
+        if: steps.link-check.outcome == 'failure'
+        run: |
+          echo "::error::Broken links found in markdown files. Check the logs above for details."
+          exit 1

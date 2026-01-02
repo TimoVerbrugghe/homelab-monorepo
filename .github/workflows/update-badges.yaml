@@ -1,0 +1,87 @@
+name: Update README Badges
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-badges:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get repository statistics
+        id: stats
+        run: |
+          # Last updated date
+          LAST_UPDATED=$(date -u +"%Y-%m-%d")
+          echo "last_updated=$LAST_UPDATED" >> $GITHUB_OUTPUT
+          
+          # Count files by type
+          K8S_COUNT=$(find kubernetes -name "*.yaml" -o -name "*.yml" | wc -l | tr -d ' ')
+          DOCKER_COUNT=$(find docker -name "*.yaml" -o -name "docker-compose.yml" | wc -l | tr -d ' ')
+          ANSIBLE_COUNT=$(find ansible/playbooks -name "*.yaml" | wc -l | tr -d ' ')
+          NIXOS_COUNT=$(find nixos/machines -type d -mindepth 1 -maxdepth 1 | wc -l | tr -d ' ')
+          
+          echo "k8s_count=$K8S_COUNT" >> $GITHUB_OUTPUT
+          echo "docker_count=$DOCKER_COUNT" >> $GITHUB_OUTPUT
+          echo "ansible_count=$ANSIBLE_COUNT" >> $GITHUB_OUTPUT
+          echo "nixos_count=$NIXOS_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Generate badge URLs
+        id: badges
+        run: |
+          LAST_UPDATED="${{ steps.stats.outputs.last_updated }}"
+          K8S_COUNT="${{ steps.stats.outputs.k8s_count }}"
+          DOCKER_COUNT="${{ steps.stats.outputs.docker_count }}"
+          ANSIBLE_COUNT="${{ steps.stats.outputs.ansible_count }}"
+          NIXOS_COUNT="${{ steps.stats.outputs.nixos_count }}"
+          
+          # Create badge markdown
+          cat > badges.md << EOF
+          <!-- AUTO-GENERATED BADGES - DO NOT EDIT MANUALLY -->
+          ![Last Updated](https://img.shields.io/badge/last%20updated-${LAST_UPDATED}-blue)
+          ![Kubernetes Manifests](https://img.shields.io/badge/kubernetes%20manifests-${K8S_COUNT}-326CE5?logo=kubernetes&logoColor=white)
+          ![Docker Compose](https://img.shields.io/badge/docker%20compose-${DOCKER_COUNT}-2496ED?logo=docker&logoColor=white)
+          ![Ansible Playbooks](https://img.shields.io/badge/ansible%20playbooks-${ANSIBLE_COUNT}-EE0000?logo=ansible&logoColor=white)
+          ![NixOS Machines](https://img.shields.io/badge/nixos%20machines-${NIXOS_COUNT}-5277C3?logo=nixos&logoColor=white)
+          ![Repo Size](https://img.shields.io/github/repo-size/TimoVerbrugghe/homelab-monorepo)
+          ![License](https://img.shields.io/github/license/TimoVerbrugghe/homelab-monorepo)
+          <!-- END AUTO-GENERATED BADGES -->
+          EOF
+
+      - name: Update README with badges
+        run: |
+          # Check if README has badge section
+          if grep -q "<!-- AUTO-GENERATED BADGES - DO NOT EDIT MANUALLY -->" README.md; then
+            # Replace existing badges
+            sed -i '/<!-- AUTO-GENERATED BADGES - DO NOT EDIT MANUALLY -->/,/<!-- END AUTO-GENERATED BADGES -->/d' README.md
+          fi
+          
+          # Insert badges after the title (assuming # homelab-monorepo is the first line with content)
+          awk '/^# homelab-monorepo/ { print; print ""; system("cat badges.md"); next }1' README.md > README.tmp
+          mv README.tmp README.md
+          rm badges.md
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update README badges"
+            git push
+          fi

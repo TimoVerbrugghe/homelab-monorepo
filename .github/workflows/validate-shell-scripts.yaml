@@ -1,0 +1,77 @@
+name: Validate Shell Scripts
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**.sh'
+  pull_request:
+    paths:
+      - '**.sh'
+  workflow_dispatch:
+
+jobs:
+  shellcheck:
+    name: ShellCheck validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          severity: 'warning'
+          ignore_paths: 'node_modules result .venv'
+          ignore_names: ''
+        env:
+          SHELLCHECK_OPTS: -x -e SC1091
+
+      - name: Find and validate all shell scripts
+        run: |
+          echo "Finding all shell scripts..."
+          find . -name "*.sh" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.venv/*" \
+            -not -path "*/result/*" \
+            -exec echo "Found: {}" \;
+          
+          echo ""
+          echo "Validation complete. Check above for any issues."
+
+  syntax-check:
+    name: Bash syntax check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check bash syntax
+        run: |
+          echo "Checking bash syntax..."
+          EXIT_CODE=0
+          
+          while IFS= read -r -d '' script; do
+            echo "Checking: $script"
+            if bash -n "$script"; then
+              echo "✓ $script - OK"
+            else
+              echo "✗ $script - FAILED"
+              EXIT_CODE=1
+            fi
+          done < <(find . -name "*.sh" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.venv/*" \
+            -not -path "*/result/*" \
+            -print0)
+          
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "All scripts passed syntax check"
+          else
+            echo "Some scripts failed syntax check"
+            exit 1
+          fi
