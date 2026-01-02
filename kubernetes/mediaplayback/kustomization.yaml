@@ -7,7 +7,6 @@ generatorOptions:
 
 resources:
   - namespace.yaml
-  - pod-watcher-rbac.yaml
   - plex
   - jellyfin
   - ersatztv
