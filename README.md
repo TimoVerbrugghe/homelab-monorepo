@@ -1,5 +1,7 @@
 # homelab-monorepo
 
+[![View Architecture Diagram](https://img.shields.io/badge/View%20Diagram-draw.io-blue?style=for-the-badge)](https://app.diagrams.net/?url=https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/master/diagrams/homelab.drawio)
+
 This repository contains all my setup files while I'm learning Ansible, Kubernetes, NixOS & others.
 
 Heavily influenced by TechnoTim (<https://github.com/techno-tim>), Christian Lempa (<https://github.com/ChristianLempa/christianlempa>) & the Linux Unplugged team (<https://linuxunplugged.com/>).
@@ -37,26 +39,7 @@ I have the following machines & VMs with a brief overview of services they run. 
 
 ## Kubernetes cluster
 
-Built using Talos linux. Currently runs following services:
-
-- Traefik
-- Cert-manager (with Reflector to make sure certs are available in other namespaces)
-- Kube-VIP
-- Tailscale operator
-- Keel
-- Homepage
-- Gatus
-- BentoPDF
-- Webtop
-- Adguardhome-sync
-- Adguardhome
-- PXEBoot (netbootxyz & iVentoy)
-- Bitwarden
-- Portainer
-- Mealie
-- Plex
-- Jellyfin
-- Cloudflare Tunnel
+Built using Talos linux. Currently runs several services such as Traefik, Plex, Homepage, Gatus, Adguardhome, ... (check the kubernetes subfolder for all deployments).
 
 Several services are not running in this cluster and remain on separate NixOS VMs or TrueNAS with docker because:
 
