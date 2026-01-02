@@ -66,8 +66,8 @@
 
   # ISO Image options
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
-  isoImage.isoBaseName = "nixos-auto-installer";
-  isoImage.isoName = "${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
+  isoImage.isoBaseName = lib.mkForce "nixos-gamingserver-installer";
+  isoImage.isoName = lib.mkForce "${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
   isoImage.makeEfiBootable = true;
   isoImage.makeUsbBootable = true;
   isoImage.volumeID = "NIXOS_ISO";
