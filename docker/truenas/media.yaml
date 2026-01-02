@@ -292,7 +292,7 @@ services:
     volumes:
       - obzorarr:/config
     ports:
-      - 14011:9117
+      - 14011:3000
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:3000 || exit 1"]
       interval: 1s

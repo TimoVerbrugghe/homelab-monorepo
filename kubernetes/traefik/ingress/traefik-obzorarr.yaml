@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: obzorarr
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`obzorarr.kubernetes.timo.be`) || Host(`obzorarr.timo.be`)
+      kind: Rule
+      services:
+        - name: obzorarr-svc
+          port: 14011
+      middlewares:
+        - name: auth
+          namespace: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: obzorarr-svc
+  namespace: traefik
+spec:
+  externalName: thefactory.local.timo.be # Can also be an IP address
+  type: ExternalName
