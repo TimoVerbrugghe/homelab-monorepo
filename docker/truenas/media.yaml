@@ -268,6 +268,8 @@ services:
       - dockerproxy
     environment:
       - TZ=Europe/Brussels
+    volumes:
+      - wrapperr:/app/config
     ports:
       - 14010:8282
     healthcheck:

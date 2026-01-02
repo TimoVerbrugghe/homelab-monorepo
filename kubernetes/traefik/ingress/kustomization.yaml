@@ -16,6 +16,7 @@ resources:
   - traefik-yamtrack.yaml
   - traefik-dispatcharr.yaml
   - traefik-tautulli.yaml
+  - traefik-wrapperr.yaml
 
   # Custom Ingresses - TheFactory Downloaders
   - traefik-qbittorrent.yaml

@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: wrapperr
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`wrapperr.kubernetes.timo.be`) || Host(`wrapperr.timo.be`)
+      kind: Rule
+      services:
+        - name: wrapperr-svc
+          port: 14010
+      middlewares:
+        - name: auth
+          namespace: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wrapperr-svc
+  namespace: traefik
+spec:
+  externalName: thefactory.local.timo.be # Can also be an IP address
+  type: ExternalName
