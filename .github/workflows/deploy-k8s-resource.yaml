@@ -1,0 +1,67 @@
+name: Deploy Kubernetes Resource
+
+on:
+  workflow_dispatch:
+    inputs:
+      resource:
+        description: 'Resource to deploy (e.g., adguardhome, traefik, homeassistant-kubernetes)'
+        required: true
+        type: string
+      action:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - apply
+          - delete
+        default: apply
+      helm-installation:
+        description: 'Use Helm with Kustomize'
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: tag:k8s-deployer
+
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Apply with Kustomize (without Helm)
+        if: ${{ inputs.action == 'apply' && inputs.helm-installation == false }}
+        run: |
+          kubectl apply -k kubernetes/${{ inputs.resource }}
+
+      - name: Apply with Kustomize and Helm
+        if: ${{ inputs.action == 'apply' && inputs.helm-installation == true }}
+        run: |
+          kubectl kustomize --enable-helm kubernetes/${{ inputs.resource }} | kubectl apply -f -
+
+      - name: Delete with Kustomize (without Helm)
+        if: ${{ inputs.action == 'delete' && inputs.helm-installation == false }}
+        run: |
+          kubectl delete -k kubernetes/${{ inputs.resource }}
+
+      - name: Delete with Kustomize and Helm
+        if: ${{ inputs.action == 'delete' && inputs.helm-installation == true }}
+        run: |
+          kubectl kustomize --enable-helm kubernetes/${{ inputs.resource }} | kubectl delete -f -
+
+      - name: Verify operation
+        run: |
+          echo "${{ inputs.action }} completed for resource: ${{ inputs.resource }}"
+          kubectl get pods --all-namespaces
