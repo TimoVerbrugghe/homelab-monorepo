@@ -15,11 +15,6 @@ on:
           - apply
           - delete
         default: apply
-      helm-installation:
-        description: 'Use Helm with Kustomize'
-        required: true
-        type: boolean
-        default: false
 
 jobs:
   deploy:
@@ -27,6 +22,29 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Check for kustomization file
+        id: check-kustomization
+        run: |
+          if [ -f "kubernetes/${{ inputs.resource }}/kustomization.yaml" ]; then
+            echo "kustomization_file=kubernetes/${{ inputs.resource }}/kustomization.yaml" >> $GITHUB_OUTPUT
+          elif [ -f "kubernetes/${{ inputs.resource }}/kustomization.yml" ]; then
+            echo "kustomization_file=kubernetes/${{ inputs.resource }}/kustomization.yml" >> $GITHUB_OUTPUT
+          else
+            echo "Error: No kustomization.yaml or kustomization.yml found in kubernetes/${{ inputs.resource }}/"
+            exit 1
+          fi
+
+      - name: Detect Helm usage
+        id: detect-helm
+        run: |
+          if grep -q "helmCharts:" "${{ steps.check-kustomization.outputs.kustomization_file }}"; then
+            echo "uses_helm=true" >> $GITHUB_OUTPUT
+            echo "Detected Helm charts in kustomization file"
+          else
+            echo "uses_helm=false" >> $GITHUB_OUTPUT
+            echo "No Helm charts detected in kustomization file"
+          fi
 
       - name: Connect to Tailscale
         uses: tailscale/github-action@v2
@@ -42,22 +60,22 @@ jobs:
           chmod 600 $HOME/.kube/config
 
       - name: Apply with Kustomize (without Helm)
-        if: ${{ inputs.action == 'apply' && inputs.helm-installation == false }}
+        if: ${{ inputs.action == 'apply' && steps.detect-helm.outputs.uses_helm == 'false' }}
         run: |
           kubectl apply -k kubernetes/${{ inputs.resource }}
 
       - name: Apply with Kustomize and Helm
-        if: ${{ inputs.action == 'apply' && inputs.helm-installation == true }}
+        if: ${{ inputs.action == 'apply' && steps.detect-helm.outputs.uses_helm == 'true' }}
         run: |
           kubectl kustomize --enable-helm kubernetes/${{ inputs.resource }} | kubectl apply -f -
 
       - name: Delete with Kustomize (without Helm)
-        if: ${{ inputs.action == 'delete' && inputs.helm-installation == false }}
+        if: ${{ inputs.action == 'delete' && steps.detect-helm.outputs.uses_helm == 'false' }}
         run: |
           kubectl delete -k kubernetes/${{ inputs.resource }}
 
       - name: Delete with Kustomize and Helm
-        if: ${{ inputs.action == 'delete' && inputs.helm-installation == true }}
+        if: ${{ inputs.action == 'delete' && steps.detect-helm.outputs.uses_helm == 'true' }}
         run: |
           kubectl kustomize --enable-helm kubernetes/${{ inputs.resource }} | kubectl delete -f -
 
