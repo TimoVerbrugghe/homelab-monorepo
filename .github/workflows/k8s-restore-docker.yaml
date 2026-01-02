@@ -1,4 +1,4 @@
-name: Build and Publish k8s-restore Docker Image
+name: K8s-restore Docker Image
 
 on:
   workflow_dispatch:

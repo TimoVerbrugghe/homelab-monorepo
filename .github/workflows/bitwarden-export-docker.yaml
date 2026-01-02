@@ -1,4 +1,4 @@
-name: Build and Publish Bitwarden Export Docker Image
+name: Bitwarden export Docker Image
 
 on:
   workflow_dispatch:

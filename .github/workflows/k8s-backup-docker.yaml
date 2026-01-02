@@ -1,4 +1,4 @@
-name: Build and Publish k8s-backup Docker Image
+name: K8s-backup Docker Image
 
 on:
   workflow_dispatch:

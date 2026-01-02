@@ -1,4 +1,4 @@
-name: Build and Publish NS-USBLoader Docker Image
+name: NS-USBLoader Docker Image
 
 on:
   workflow_dispatch:
