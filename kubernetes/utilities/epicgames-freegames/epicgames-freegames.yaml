@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: epicgames-freegames
+  namespace: utilities
+  labels:
+    app.kubernetes.io/name: epicgames-freegames
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: epicgames-freegames
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: epicgames-freegames
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: yumi
+      containers:
+        - name: epicgames-freegames
+          image: ghcr.io/claabs/epicgames-freegames-node:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2048Mi"
+          env:
+            - name: EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: epicgames-freegames-secrets
+                  key: epic_email
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: epicgames-freegames-secrets
+                  key: base_url
+            - name: PUSHOVER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: epicgames-freegames-secrets
+                  key: pushover_token
+            - name: PUSHOVER_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: epicgames-freegames-secrets
+                  key: pushover_user_id
+
+            # Test pushover notifications
+            # - name: TEST_NOTIFIERS
+            #   value: "true"
+
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/app/config/config.json
+              subPath: config.json
+            - name: data-volume
+              mountPath: /usr/app/config
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: epicgames-freegames-config
+        - name: data-volume
+          emptyDir:
+            sizeLimit: 250Mi

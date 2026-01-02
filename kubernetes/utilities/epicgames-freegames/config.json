@@ -1,0 +1,9 @@
+{
+  "runOnStartup": true,
+  "cronSchedule": "0 0,6,12,18 * * *",
+  "logLevel": "info",
+  "searchStrategy": "all",
+  "notifyEula": false,
+  "timezone": "Europe/Brussels",
+  "skipVersionCheck": false
+}

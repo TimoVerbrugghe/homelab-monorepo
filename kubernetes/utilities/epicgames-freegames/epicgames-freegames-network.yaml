@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: epicgames-freegames
+  namespace: utilities
+  labels:
+    app.kubernetes.io/name: epicgames-freegames
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: epicgames-freegames
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: epicgames-freegames
+  namespace: utilities
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`epicgames.kubernetes.timo.be`) || Host(`epicgames.timo.be`)
+      kind: Rule
+      services:
+        - name: epicgames-freegames
+          port: 3000
+      middlewares:
+        - name: auth
+          namespace: traefik
