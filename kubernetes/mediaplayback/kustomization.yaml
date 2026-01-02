@@ -14,4 +14,3 @@ resources:
   - media-storage.yaml
   - kptv-fast
   - subgen
-  - wrapperr

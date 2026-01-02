@@ -260,6 +260,22 @@ services:
     ports:
       - 14009:8181
 
+  wrapperr:
+    container_name: wrapperr
+    image: ghcr.io/aunefyren/wrapperr:latest
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    ports:
+      - 14010:8282
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8282/ || exit 1"]
+      interval: 1s
+      timeout: 5s
+      retries: 60
+
 networks:
   dockerproxy:
     external: true
@@ -374,3 +390,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/tautulli"
+  wrapperr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/wrapperr"
