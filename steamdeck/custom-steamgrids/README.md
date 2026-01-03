@@ -1,6 +1,7 @@
 # Custom Steam Grids for Steam Deck
 
-This folder contains custom artwork for classic PC games installed on my Steam Deck (SteamOS). The artwork is similar to what you can find on [steamgriddb.com](https://www.steamgriddb.com/), but tailored for my collection.
+This folder contains custom artwork for classic PC games installed on my Steam Deck (SteamOS). The artwork is similar to what you can find on
+[steamgriddb.com](https://www.steamgriddb.com/), but tailored for my collection.
 
 ## Artwork Types
 

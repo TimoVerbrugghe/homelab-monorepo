@@ -1,7 +1,8 @@
 
 # Homelab Kubernetes Cluster on Talos Linux
 
-This folder contains the configuration and resources for managing my personal homelab's Kubernetes cluster, which is deployed on Talos Linux. Talos Linux is a secure, immutable, and minimal operating system designed specifically for running Kubernetes.
+This folder contains the configuration and resources for managing my personal homelab's Kubernetes cluster, which is deployed on Talos Linux.
+Talos Linux is a secure, immutable, and minimal operating system designed specifically for running Kubernetes.
 
 ## Installing Talos Linux
 

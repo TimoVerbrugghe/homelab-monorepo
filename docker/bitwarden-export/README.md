@@ -10,4 +10,6 @@ Docker container needs the following environment variables
 - `BW_CLIENTSECRET` (Client Secret that you get from the api key in your account settings on bitwarden)
 - `BW_SERVER` (URL to your bitwarden server)
 - `BW_PASSWORD` (Your bitwarden password)
-- (Optional) `BW_APPID` - This allows you to set a static application ID so that you don't get an email from bitwarden everytime you export (because without `APPID` set, a random one will be generated each time, which will trigger Bitwarden to send you an email that a new device has connected to your vault)
+- (Optional) `BW_APPID` - This allows you to set a static application ID so that you don't get an email from bitwarden everytime you export
+  (because without `APPID` set, a random one will be generated each time, which will trigger Bitwarden to send you an email that a new device
+  has connected to your vault)

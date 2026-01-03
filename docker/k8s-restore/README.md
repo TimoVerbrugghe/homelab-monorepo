@@ -1,6 +1,7 @@
 # k8s-restore Docker Container
 
-This container is designed for use in a Kubernetes cluster to automate the restoration of backups to a hostPath volume. It is primarily intended for homelab environments where deployments use local storage (hostPath) volumes.
+This container is designed for use in a Kubernetes cluster to automate the restoration of backups to a hostPath volume. It is primarily
+intended for homelab environments where deployments use local storage (hostPath) volumes.
 
 ## Purpose
 

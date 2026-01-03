@@ -31,7 +31,7 @@ Before running the Docker container, make sure you have the following installed:
 
 4. Access ns-usbloader in your web browser:
 
-    ```
+    ```text
     http://localhost:8080
     ```
 
@@ -58,7 +58,8 @@ docker-compose up -d
 ```
 
 You can access ns-usbloader in your web browser at `http://localhost:8080`.
-```
+
+```text
 
 ## Configure ns-usbloader
 
