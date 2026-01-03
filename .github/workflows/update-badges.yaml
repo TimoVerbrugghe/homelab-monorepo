@@ -24,10 +24,6 @@ jobs:
       - name: Get repository statistics
         id: stats
         run: |
-          # Last updated date
-          LAST_UPDATED=$(date -u +"%Y-%m-%d")
-          echo "last_updated=$LAST_UPDATED" >> $GITHUB_OUTPUT
-          
           # Count files by type
           K8S_COUNT=$(find kubernetes -name "*.yaml" -o -name "*.yml" | wc -l | tr -d ' ')
           DOCKER_COUNT=$(find docker -name "*.yaml" -o -name "docker-compose.yml" | wc -l | tr -d ' ')
@@ -42,7 +38,6 @@ jobs:
       - name: Generate badge URLs
         id: badges
         run: |
-          LAST_UPDATED="${{ steps.stats.outputs.last_updated }}"
           K8S_COUNT="${{ steps.stats.outputs.k8s_count }}"
           DOCKER_COUNT="${{ steps.stats.outputs.docker_count }}"
           ANSIBLE_COUNT="${{ steps.stats.outputs.ansible_count }}"
@@ -51,13 +46,11 @@ jobs:
           # Create badge markdown
           cat > badges.md << EOF
           <!-- AUTO-GENERATED BADGES - DO NOT EDIT MANUALLY -->
-          ![Last Updated](https://img.shields.io/badge/last%20updated-${LAST_UPDATED}-blue)
           ![Kubernetes Manifests](https://img.shields.io/badge/kubernetes%20manifests-${K8S_COUNT}-326CE5?logo=kubernetes&logoColor=white)
           ![Docker Compose](https://img.shields.io/badge/docker%20compose-${DOCKER_COUNT}-2496ED?logo=docker&logoColor=white)
           ![Ansible Playbooks](https://img.shields.io/badge/ansible%20playbooks-${ANSIBLE_COUNT}-EE0000?logo=ansible&logoColor=white)
           ![NixOS Machines](https://img.shields.io/badge/nixos%20machines-${NIXOS_COUNT}-5277C3?logo=nixos&logoColor=white)
           ![Repo Size](https://img.shields.io/github/repo-size/TimoVerbrugghe/homelab-monorepo)
-          ![License](https://img.shields.io/github/license/TimoVerbrugghe/homelab-monorepo)
           <!-- END AUTO-GENERATED BADGES -->
           EOF
 
