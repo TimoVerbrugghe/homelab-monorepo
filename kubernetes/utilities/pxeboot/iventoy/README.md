@@ -12,7 +12,7 @@ After deploying iVentoy, complete the following configuration steps:
 ## 2. Configure External Router (e.g., Unifi)
 
 - Enable **Network Booting** (PXE) on your router.
-- Set the **boot server IP address** to the IP defined in `iventoy-service` for kube-vip.
+- Set the **boot server IP address** to the IP defined in `iventoy-service` for `kube-vip`.
 - Set the **boot filename** to:  
 
     ```text

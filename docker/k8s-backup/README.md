@@ -5,7 +5,7 @@ This Docker container is designed for use in a homelab environment to automate b
 ## Overview
 
 - **Purpose:** Backup data from deployments using hostPath volumes.
-- **How it works:** The container will tar the entire contents of the `/appdata` directory (mounted from the host) and copy it to the `/backup` directory (which can be a remote location, such as an NFS server). It will give the tar file the name BACKUP_NAME-backup-currentdate.tar.gz (BACKUP_NAME is an environment variable that you can set)
+- **How it works:** The container will tar the entire contents of the `/appdata` directory (mounted from the host) and copy it to the `/backup` directory (which can be a remote location, such as an NFS server). It will give the tar file the name `BACKUP_NAME-backup-currentdate.tar.gz` (`BACKUP_NAME` is an environment variable that you can set)
 - **Deployment:** Intended to be run as a Kubernetes CronJob for scheduled, automated backups.
 
 ## Usage

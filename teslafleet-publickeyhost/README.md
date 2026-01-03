@@ -15,7 +15,7 @@ The purpose of this addon is to host a public key that can be accessed by Tesla 
 1. Add this repository to Home Assistant by clicking the button on the home page of this repo.
 2. Navigate to Settings -> Add-Ons -> Add-On Store. Click on Check For Updates.
 3. Find the "Tesla Fleet Public Key Host" addon under local add-ons and click "Install".
-4. Generate a public/private key pair using instructions on <https://www.home-assistant.io/integrations/tesla_fleet/> and put the public key (named com.tesla.3p.public-key.pem) in the /config folder.
+4. Generate a public/private key pair using instructions on <https://www.home-assistant.io/integrations/tesla_fleet/> and put the public key (named `com.tesla.3p.public-key.pem`) in the `/config` folder.
 
 ## Usage
 

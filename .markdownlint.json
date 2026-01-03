@@ -4,7 +4,7 @@
     "line_length": 200,
     "heading_line_length": 120,
     "code_block_line_length": 200,
-    "code_blocks": true,
+    "code_blocks": false,
     "tables": false,
     "headings": true,
     "strict": false,

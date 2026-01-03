@@ -4,7 +4,7 @@ This guide was written to explain how to install some specific older PC games th
 
 ## steamos-installed folder
 
-It might be that I have already installed these games in the past in /home/deck/Games/Games and zipped that folder onto my NAS. In that case, extract the zipped folder back to /home/deck/Games/Games and follow only the post-installation steps described below.
+It might be that I have already installed these games in the past in `/home/deck/Games/Games` and zipped that folder onto my NAS. In that case, extract the zipped folder back to `/home/deck/Games/Games` and follow only the post-installation steps described below.
 
 ## Default Installation Steps
 
@@ -123,7 +123,7 @@ This game requires installation via Lutris:
 
 ### Miel Monteur - Huis op Stelten
 
-This game requires specific installation steps in Steam since it does not like to be installed anywhere else but the C:\ drive.
+This game requires specific installation steps in Steam since it does not like to be installed anywhere else but the `C:\` drive.
 
 1. **Extract ISO**
     Extract the ISO (mielmonteur4) to
@@ -133,10 +133,10 @@ This game requires specific installation steps in Steam since it does not like t
     ```
 
 2. **Adding Game to Steam**
-    Open Steam (in desktop mode), go to Library, click "Add a Game" and "Add a Non-Steam Game". Click on Browse and locate "MielHuizen.exe" in the folder where you extracted the iso. Also add Proton experimental compatibility to the non-steam game.
+    Open Steam (in desktop mode), go to Library, click "Add a Game" and "Add a Non-Steam Game". Click on Browse and locate `MielHuizen.exe` in the folder where you extracted the iso. Also add Proton experimental compatibility to the non-steam game.
 
 3. **Install the Game**
-    Launch the non-Steam game, click on "Speel" and go through installation process of Miel Monteur & Quicktime. Leave the destination paths to default (C:\...).
+    Launch the non-Steam game, click on "Speel" and go through installation process of Miel Monteur & Quicktime. Leave the destination paths to default (`C:\...`).
 
 4. **Configure with Protontricks**  
     - Enable virtual desktop for 800x600 display as described above.

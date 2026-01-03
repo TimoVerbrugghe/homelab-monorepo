@@ -8,18 +8,6 @@
 ![Repo Size](https://img.shields.io/github/repo-size/TimoVerbrugghe/homelab-monorepo)
 <!-- END AUTO-GENERATED BADGES -->
 
-
-
-
-
-
-
-
-
-
-
-
-
 [![View Architecture Diagram](https://img.shields.io/badge/View%20Diagram-draw.io-blue?style=for-the-badge)](https://app.diagrams.net/?url=https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/master/diagrams/homelab.drawio)
 
 This repository contains all my setup files while I'm learning Ansible, Kubernetes, NixOS & others.
@@ -64,7 +52,9 @@ Built using Talos linux. Currently runs several services such as Traefik, Plex, 
 Several services are not running in this cluster and remain on separate NixOS VMs or TrueNAS with docker because:
 
 - I don't want to run hyperconverged storage solutions (Longhorn, OpenEBS, etc...) due to the amount of resources it takes & the complexity of the setup.
-- I encountered several issues with NFS-backed storage (even with NFSv4) and sqlite databases (f.e. with plex & bitwarden) so not an option to use NFS-backed storage in the cluster. For Plex & Jellyfin in the kubernetes cluster, I'm using iSCSI backed storage.
+- I encountered several issues with NFS-backed storage (even with NFSv4) and sqlite databases
+  (f.e. with plex & bitwarden) so not an option to use NFS-backed storage in the cluster. For
+  Plex & Jellyfin in the kubernetes cluster, I'm using iSCSI backed storage.
 - Services that I want HA and do need local storage (portainer, bitwarden, etc...) are running in the Yumi kubernetes node that is HA-enabled in proxmox & can be live migrated.
 
 ## Future Plans

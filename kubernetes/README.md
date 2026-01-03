@@ -11,19 +11,47 @@ Replace IP address below with the IP address of your first node
 talosctl gen secrets
 
 # Generating configs for the controlplane node william
-talosctl gen config --output controlplane-william.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @controlplane-config.yaml --config-patch @william-patch.yaml sectorfive https://10.10.10.30:6443
+talosctl gen config --output controlplane-william.yaml \
+  --output-types controlplane \
+  --with-secrets secrets.yaml \
+  --config-patch @base-config.yaml \
+  --config-patch @controlplane-config.yaml \
+  --config-patch @william-patch.yaml \
+  sectorfive https://10.10.10.30:6443
 
 # Generating configs for the controlplane node skidbladnir
-talosctl gen config --output controlplane-skidbladnir.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @controlplane-config.yaml --config-patch @skidbladnir-patch.yaml sectorfive https://10.10.10.30:6443
+talosctl gen config --output controlplane-skidbladnir.yaml \
+  --output-types controlplane \
+  --with-secrets secrets.yaml \
+  --config-patch @base-config.yaml \
+  --config-patch @controlplane-config.yaml \
+  --config-patch @skidbladnir-patch.yaml \
+  sectorfive https://10.10.10.30:6443
 
 # Generating configs for the controlplane node manta
-talosctl gen config --output controlplane-manta.yaml --output-types controlplane --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @controlplane-config.yaml --config-patch @manta-patch.yaml sectorfive https://10.10.10.30:6443
+talosctl gen config --output controlplane-manta.yaml \
+  --output-types controlplane \
+  --with-secrets secrets.yaml \
+  --config-patch @base-config.yaml \
+  --config-patch @controlplane-config.yaml \
+  --config-patch @manta-patch.yaml \
+  sectorfive https://10.10.10.30:6443
 
 # Generating configs for the worker node yumi
-talosctl gen config --output worker-yumi.yaml --output-types worker --with-secrets secrets.yaml --config-patch @base-config.yaml --config-patch @yumi-patch.yaml --config-patch @yumi-patch-localstorage.yaml sectorfive https://10.10.10.30:6443
+talosctl gen config --output worker-yumi.yaml \
+  --output-types worker \
+  --with-secrets secrets.yaml \
+  --config-patch @base-config.yaml \
+  --config-patch @yumi-patch.yaml \
+  --config-patch @yumi-patch-localstorage.yaml \
+  sectorfive https://10.10.10.30:6443
 
 # Generating talosconfig file
-talosctl gen config --with-secrets secrets.yaml --output-types talosconfig -o talosconfig sectorfive https://10.10.10.30:6443
+talosctl gen config \
+  --with-secrets secrets.yaml \
+  --output-types talosconfig \
+  -o talosconfig \
+  sectorfive https://10.10.10.30:6443
 
 # Applying config to the first controlplane node & then bootstrapping cluster
 talosctl apply-config --insecure -n 10.10.10.30 --file controlplane-william.yaml
@@ -35,7 +63,10 @@ talosctl kubeconfig --nodes 10.10.10.30 -e 10.10.10.30 --talosconfig ./talosconf
 
 ## Warning: Kubelet TLS CSR During Bootstrap
 
-During the initial bootstrap the first control plane node may appear unhealthy in Talos with a kubelet TLS error (see https://talos.dev/diagnostic/kubelet-csr). This happens because rotate-server-certificates is enabled, but the kubelet-serving-cert-approver is not yet running, so the kubelet-serving CSR remains Pending.
+During the initial bootstrap the first control plane node may appear unhealthy in Talos
+with a kubelet TLS error (see [kubelet-csr diagnostic](https://talos.dev/diagnostic/kubelet-csr)).
+This happens because `rotate-server-certificates` is enabled, but the
+`kubelet-serving-cert-approver` is not yet running, so the kubelet-serving CSR remains Pending.
 
 Resolution:
 
@@ -76,7 +107,8 @@ kubectl apply -k kubernetes/secrets/
 ### Bootstrap cluster
 
 ```bash
-kubectl kustomize --enable-helm kubernetes/cluster-bootstrap/ | kubectl apply -f -
+kubectl kustomize --enable-helm kubernetes/cluster-bootstrap/ | \
+  kubectl apply -f -
 ```
 
 ### Generate certificates
@@ -100,5 +132,6 @@ kubectl apply -k kubernetes/<resource>
 OR
 
 ```bash
-kubectl kustomize --enable-helm kubernetes/<resource>/ | kubectl apply -f -
+kubectl kustomize --enable-helm kubernetes/<resource>/ | \
+  kubectl apply -f -
 ```
