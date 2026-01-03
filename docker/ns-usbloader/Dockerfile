@@ -1,5 +1,5 @@
 # Use an official OpenJDK image with Debian
-FROM ubuntu:22.04
+FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C.UTF-8
