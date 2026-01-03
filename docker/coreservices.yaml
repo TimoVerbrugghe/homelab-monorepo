@@ -11,6 +11,8 @@ services:
     container_name: dockerproxy
     environment:
         - CONTAINERS=1 # Allow access to viewing containers
+        - SYSTEM=1
+        - INFO=1
         - POST=0 # Disallow any POST operations (effectively read-only)
     ports:
         - 2375:2375
