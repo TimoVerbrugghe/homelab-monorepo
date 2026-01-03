@@ -224,9 +224,6 @@
               # Do not install homebrew as well under /usr/local (normally for compatability for intel software on ARM macs)
               enableRosetta = false;
 
-              # Automigrate existing Homebrew installation
-              autoMigrate = true;
-
               # User owning the Homebrew prefix
               user = "timo";
 
@@ -240,9 +237,13 @@
               # Optional: Enable fully-declarative tap management
               # With mutableTaps disabled, taps can no longer be added imperatively with `brew tap`.
               mutableTaps = false;
-
             };
           }
+
+          ({config, ...}: {
+            homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
+          })
+
         ];
       };
     };
