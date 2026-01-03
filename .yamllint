@@ -1,0 +1,25 @@
+extends: default
+
+rules:
+  line-length:
+    max: 250
+    level: warning
+  indentation:
+    spaces: consistent
+    indent-sequences: whatever
+  comments:
+    require-starting-space: false
+  comments-indentation: disable
+  document-start: disable
+  new-line-at-end-of-file: disable
+  trailing-spaces: disable
+  empty-lines:
+    max: 4
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+
+ignore: |
+  .github/workflows/markdown-link-check-config.json
+  node_modules/
+  .venv/
+  result/
