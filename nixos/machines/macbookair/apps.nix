@@ -15,6 +15,7 @@
     ansible
     talosctl
     azure-cli
+    yamllint
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
