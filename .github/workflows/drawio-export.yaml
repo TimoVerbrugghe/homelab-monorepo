@@ -48,5 +48,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Auto-export Draw.io diagrams to PNG and SVG"
+            git pull --rebase origin master
             git push
           fi
