@@ -1,6 +1,6 @@
 # A nix configuration for an autoinstaller ISO (to be used in a VM)
 
-{ config, pkgs, nixpkgs, ... }:
+{ config, lib, pkgs, nixpkgs, ... }:
 
 {
   imports =
