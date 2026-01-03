@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
 
 bashio::log.info "Starting Tesla Fleet Public Key Host Addon..."
 
@@ -7,12 +8,12 @@ PUBLIC_KEY=/homeassistant_config/com.tesla.3p.public-key.pem
 PRIVATE_KEY=/homeassistant_config/tesla_fleet.key
 
 if [ ! -f "$PUBLIC_KEY" ]; then
-    bashio::log.error "Public key does not exist at "$PUBLIC_KEY". Please follow the steps to create a public/private key pair at https://www.home-assistant.io/integrations/tesla_fleet/"
+    bashio::log.error "Public key does not exist at $PUBLIC_KEY. Please follow the steps to create a public/private key pair at https://www.home-assistant.io/integrations/tesla_fleet/"
     exit 1
 fi
 
 if [ ! -f "$PRIVATE_KEY" ]; then
-    bashio::log.error "Private key does not exist at "$PRIVATE_KEY". Please follow the steps to create a public/private key pair at https://www.home-assistant.io/integrations/tesla_fleet/"
+    bashio::log.error "Private key does not exist at $PRIVATE_KEY. Please follow the steps to create a public/private key pair at https://www.home-assistant.io/integrations/tesla_fleet/"
     exit 1
 fi
 

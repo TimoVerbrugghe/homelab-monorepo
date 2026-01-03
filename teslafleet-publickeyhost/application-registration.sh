@@ -1,3 +1,4 @@
+#!/bin/bash
 CLIENT_ID=
 CLIENT_SECRET=
 AUDIENCE="https://fleet-api.prd.eu.vn.cloud.tesla.com"
