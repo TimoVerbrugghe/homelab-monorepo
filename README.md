@@ -1,14 +1,13 @@
 # homelab-monorepo
 
 <!-- AUTO-GENERATED BADGES - DO NOT EDIT MANUALLY -->
-![Last Updated](https://img.shields.io/badge/last%20updated-2026-01-02-blue)
 ![Kubernetes Manifests](https://img.shields.io/badge/kubernetes%20manifests-203-326CE5?logo=kubernetes&logoColor=white)
 ![Docker Compose](https://img.shields.io/badge/docker%20compose-16-2496ED?logo=docker&logoColor=white)
 ![Ansible Playbooks](https://img.shields.io/badge/ansible%20playbooks-13-EE0000?logo=ansible&logoColor=white)
 ![NixOS Machines](https://img.shields.io/badge/nixos%20machines-7-5277C3?logo=nixos&logoColor=white)
 ![Repo Size](https://img.shields.io/github/repo-size/TimoVerbrugghe/homelab-monorepo)
-![License](https://img.shields.io/github/license/TimoVerbrugghe/homelab-monorepo)
 <!-- END AUTO-GENERATED BADGES -->
+
 
 
 [![View Architecture Diagram](https://img.shields.io/badge/View%20Diagram-draw.io-blue?style=for-the-badge)](https://app.diagrams.net/?url=https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/master/diagrams/homelab.drawio)
