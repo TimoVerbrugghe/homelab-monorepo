@@ -40,7 +40,6 @@ jobs:
           output: .
 
       - name: Commit exported diagrams
-        if: github.event_name == 'push'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
