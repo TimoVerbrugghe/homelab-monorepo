@@ -224,6 +224,9 @@
               # Do not install homebrew as well under /usr/local (normally for compatability for intel software on ARM macs)
               enableRosetta = false;
 
+              # Automigrate existing Homebrew installation
+              autoMigrate = true;
+
               # User owning the Homebrew prefix
               user = "timo";
 
