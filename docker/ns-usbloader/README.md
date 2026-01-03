@@ -59,8 +59,6 @@ docker-compose up -d
 
 You can access ns-usbloader in your web browser at `http://localhost:8080`.
 
-```text
-
 ## Configure ns-usbloader
 
 Before installing games using ns-usbloader, you need to configure the port and IP settings. Follow these steps:
