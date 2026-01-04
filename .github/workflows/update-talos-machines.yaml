@@ -1,0 +1,74 @@
+name: Update Talos Machines
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-talos:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest Talos release
+        id: talos-version
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/siderolabs/talos/releases/latest | jq -r '.tag_name')
+          echo "version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          echo "Latest Talos version: $LATEST_VERSION"
+
+      - name: Extract schematic ID from base-config.yaml
+        id: schematic
+        run: |
+          SCHEMATIC_ID=$(grep -oP 'factory\.talos\.dev/installer/\K[^:]+' kubernetes/talos/base-config.yaml)
+          echo "id=$SCHEMATIC_ID" >> $GITHUB_OUTPUT
+          echo "Schematic ID: $SCHEMATIC_ID"
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          tags: tag:ci
+
+      - name: Install talosctl
+        run: |
+          curl -sL https://talos.dev/install | sh
+          sudo mv talosctl /usr/local/bin/
+
+    #   - name: Update Talos node 10.10.10.30
+    #     env:
+    #       IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
+    #     run: |
+    #       echo "Updating 10.10.10.30 to $IMAGE"
+    #       talosctl upgrade --nodes 10.10.10.30 --image $IMAGE --preserve --wait || echo "Failed to update 10.10.10.30"
+    #       sleep 30
+
+    #   - name: Update Talos node 10.10.10.31
+    #     env:
+    #       IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
+    #     run: |
+    #       echo "Updating 10.10.10.31 to $IMAGE"
+    #       talosctl upgrade --nodes 10.10.10.31 --image $IMAGE --preserve --wait || echo "Failed to update 10.10.10.31"
+    #       sleep 30
+
+    #   - name: Update Talos node 10.10.10.32
+    #     env:
+    #       IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
+    #     run: |
+    #       echo "Updating 10.10.10.32 to $IMAGE"
+    #       talosctl upgrade --nodes 10.10.10.32 --image $IMAGE --preserve --wait || echo "Failed to update 10.10.10.32"
+    #       sleep 30
+
+    #   - name: Update Talos node 10.10.10.7
+    #     env:
+    #       IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
+    #     run: |
+    #       echo "Updating 10.10.10.7 to $IMAGE"
+    #       talosctl upgrade --nodes 10.10.10.7 --image $IMAGE --preserve --wait || echo "Failed to update 10.10.10.7"
+
+    #   - name: Summary
+    #     run: |
+    #       echo "✅ Talos machines updated to ${{ steps.talos-version.outputs.version }}"
+    #       echo "Image: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}"
