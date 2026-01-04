@@ -29,6 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
+      ENDPOINT: 10.10.10.33
       WILLIAM: 10.10.10.30
       MANTA: 10.10.10.31
       SKIDBLADNIR: 10.10.10.32
@@ -78,9 +79,9 @@ jobs:
           IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
           TALOSCONFIG: ~/.talos/config
         run: |
-          talosctl version -n $WILLIAM
+          talosctl version -n $WILLIAM -e $ENDPOINT
           echo "Updating william ($WILLIAM) to $IMAGE"
-          talosctl upgrade --nodes $WILLIAM --image $IMAGE --wait || echo "Failed to update william"
+          talosctl upgrade --nodes $WILLIAM -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update william"
           sleep 30
 
       - name: Update Talos node manta
@@ -89,9 +90,9 @@ jobs:
           IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
           TALOSCONFIG: ~/.talos/config
         run: |
-          talosctl version -n $MANTA
+          talosctl version -n $MANTA -e $ENDPOINT
           echo "Updating manta ($MANTA) to $IMAGE"
-          talosctl upgrade --nodes $MANTA --image $IMAGE --wait || echo "Failed to update manta"
+          talosctl upgrade --nodes $MANTA -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update manta"
           sleep 30
 
       - name: Update Talos node skidbladnir
@@ -100,9 +101,9 @@ jobs:
           IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
           TALOSCONFIG: ~/.talos/config
         run: |
-          talosctl version -n $SKIDBLADNIR
+          talosctl version -n $SKIDBLADNIR -e $ENDPOINT
           echo "Updating skidbladnir ($SKIDBLADNIR) to $IMAGE"
-          talosctl upgrade --nodes $SKIDBLADNIR --image $IMAGE --wait || echo "Failed to update skidbladnir"
+          talosctl upgrade --nodes $SKIDBLADNIR -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update skidbladnir"
           sleep 30
 
       - name: Update Talos node yumi
@@ -111,9 +112,9 @@ jobs:
           IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
           TALOSCONFIG: ~/.talos/config
         run: |
-          talosctl version -n $YUMI
+          talosctl version -n $YUMI -e $ENDPOINT
           echo "Updating yumi ($YUMI) to $IMAGE"
-          talosctl upgrade --nodes $YUMI --image $IMAGE --wait || echo "Failed to update yumi"
+          talosctl upgrade --nodes $YUMI -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update yumi"
 
       - name: Summary
         run: |
