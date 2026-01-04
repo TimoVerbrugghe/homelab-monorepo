@@ -25,5 +25,9 @@ ignore: |
   .venv/
   result/
   kubernetes/**/charts/**/templates/
-  kubernetes/talos/*.yaml
+  kubernetes/talos/controlplane-*.yaml
+  kubernetes/talos/worker-*.yaml
+  kubernetes/talos/kubeconfig
+  kubernetes/talos/secrets.yaml
+  kubernetes/talos/talosconfig
   kubernetes/utilities/homepage/services.yaml

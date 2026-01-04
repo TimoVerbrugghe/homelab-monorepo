@@ -12,7 +12,7 @@ machine:
     extraConfig:
       nodeStatusUpdateFrequency: 4s
       featureGates:
-          GracefulNodeShutdown: true
+        GracefulNodeShutdown: true
   
   sysctls:
     vm.nr_hugepages: "1024"
