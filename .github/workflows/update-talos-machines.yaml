@@ -23,6 +23,11 @@ on:
         required: false
         type: boolean
         default: true
+      upgrade_kubernetes:
+        description: 'Upgrade Kubernetes'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   update-talos:
@@ -115,6 +120,14 @@ jobs:
           talosctl version -n $YUMI -e $ENDPOINT
           echo "Updating yumi ($YUMI) to $IMAGE"
           talosctl upgrade --nodes $YUMI -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update yumi"
+
+      - name: Upgrade Kubernetes
+        if: ${{ inputs.upgrade_kubernetes }}
+        env:
+          TALOSCONFIG: ~/.talos/config
+        run: |
+          echo "Upgrading Kubernetes to latest version on Talos cluster"
+          talosctl -e $ENDPOINT upgrade-k8s
 
       - name: Summary
         run: |
