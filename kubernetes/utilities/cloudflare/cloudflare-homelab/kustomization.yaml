@@ -10,8 +10,8 @@ secretGenerator:
     type: Opaque
 
 generatorOptions:
- disableNameSuffixHash: true
- 
+  disableNameSuffixHash: true
+
 resources:
   - cloudflare-tunnel.yaml
   - cloudflare-service.yaml

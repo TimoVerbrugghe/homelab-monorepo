@@ -26,7 +26,7 @@ secretGenerator:
         app.kubernetes.io/name: gatus
 
 generatorOptions:
- disableNameSuffixHash: true
+  disableNameSuffixHash: true
 
 resources:
   - gatus-serviceaccount.yaml

@@ -10,10 +10,10 @@ metadata:
   labels:
     app: traefik-forward-auth
   annotations:
-      keel.sh/policy: force
-      keel.sh/trigger: poll            
-      keel.sh/pollSchedule: "@every 24h"
-      keel.sh/match-tag: "true"
+    keel.sh/policy: force
+    keel.sh/trigger: poll            
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
 spec:
   replicas: 3
   selector:

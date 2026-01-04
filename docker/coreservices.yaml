@@ -10,12 +10,12 @@ services:
     image: ghcr.io/tecnativa/docker-socket-proxy:latest
     container_name: dockerproxy
     environment:
-        - CONTAINERS=1 # Allow access to viewing containers
-        - SYSTEM=1
-        - INFO=1
-        - POST=0 # Disallow any POST operations (effectively read-only)
+      - CONTAINERS=1 # Allow access to viewing containers
+      - SYSTEM=1
+      - INFO=1
+      - POST=0 # Disallow any POST operations (effectively read-only)
     ports:
-        - 2375:2375
+      - 2375:2375
     volumes:
-        - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
     restart: always

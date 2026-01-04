@@ -19,4 +19,4 @@ secretGenerator:
         app.kubernetes.io/name: mealie
 
 generatorOptions:
- disableNameSuffixHash: true
+  disableNameSuffixHash: true

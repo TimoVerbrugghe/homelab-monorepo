@@ -16,5 +16,5 @@ ports_description:
   8000/tcp: "The port on which the Tesla Fleet Public Key Host will be available."
 map:
   - type: homeassistant_config
-    read_only: False
+    read_only: false
     path: /homeassistant_config

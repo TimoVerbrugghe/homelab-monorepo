@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 generatorOptions:
- disableNameSuffixHash: true
+  disableNameSuffixHash: true
 
 resources:
   - namespace.yaml
@@ -13,11 +13,11 @@ namespace: intel-gpu-plugin
 
 # Allow multiple pods to use the same GPU on the same node (up to 10 pods)
 patches:
-- target:
-    kind: DaemonSet
-    name: intel-gpu-plugin
-  patch: |
-    - op: add
-      path: /spec/template/spec/containers/0/args
-      value:
-        - -shared-dev-num=10
+  - target:
+      kind: DaemonSet
+      name: intel-gpu-plugin
+    patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/args
+        value:
+          - -shared-dev-num=10

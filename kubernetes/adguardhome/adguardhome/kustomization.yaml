@@ -12,7 +12,7 @@ configMapGenerator:
         app.kubernetes.io/name: adguardhome
 
 generatorOptions:
- disableNameSuffixHash: true
+  disableNameSuffixHash: true
  
 resources:
   - adguardhome.yaml

@@ -33,7 +33,7 @@ secretGenerator:
         app.kubernetes.io/name: homepage
 
 generatorOptions:
- disableNameSuffixHash: true
+  disableNameSuffixHash: true
 
 resources:
   # Homepage - Based on installation instructions here https://gethomepage.dev/installation/k8s/

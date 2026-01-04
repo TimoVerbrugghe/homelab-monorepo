@@ -15,4 +15,4 @@ secretGenerator:
     type: Opaque
 
 generatorOptions:
- disableNameSuffixHash: true
+  disableNameSuffixHash: true

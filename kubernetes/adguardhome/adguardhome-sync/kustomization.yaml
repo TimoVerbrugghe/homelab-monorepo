@@ -15,7 +15,7 @@ secretGenerator:
         reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "adguardhome"
 
 generatorOptions:
- disableNameSuffixHash: true
+  disableNameSuffixHash: true
  
 resources:
   - adguardhome-sync.yaml

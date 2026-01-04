@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 generatorOptions:
- disableNameSuffixHash: true
+  disableNameSuffixHash: true
 
 resources:
   - https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/cmd/k8s-operator/deploy/manifests/operator.yaml
@@ -15,7 +15,7 @@ secretGenerator:
   - name: operator-oauth
     namespace: cert-manager
     envs:
-    - tailscale.env
+      - tailscale.env
     type: Opaque
     options:
       annotations:
