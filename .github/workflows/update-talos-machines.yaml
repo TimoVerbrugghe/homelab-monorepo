@@ -2,10 +2,37 @@ name: Update Talos Machines
 
 on:
   workflow_dispatch:
+    inputs:
+      update_william:
+        description: 'Update william'
+        required: false
+        type: boolean
+        default: true
+      update_manta:
+        description: 'Update manta'
+        required: false
+        type: boolean
+        default: true
+      update_skidbladnir:
+        description: 'Update skidbladnir'
+        required: false
+        type: boolean
+        default: true
+      update_yumi:
+        description: 'Update yumi'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   update-talos:
     runs-on: ubuntu-latest
+    
+    env:
+      WILLIAM: 10.10.10.30
+      MANTA: 10.10.10.31
+      SKIDBLADNIR: 10.10.10.32
+      YUMI: 10.10.10.7
     
     steps:
       - name: Checkout repository
@@ -25,6 +52,19 @@ jobs:
           echo "id=$SCHEMATIC_ID" >> $GITHUB_OUTPUT
           echo "Schematic ID: $SCHEMATIC_ID"
 
+      - name: Setup Talos config
+        run: |
+          mkdir -p ~/.talos
+          echo "${{ secrets.TALOSCONFIG }}" > ~/.talos/config
+          chmod 600 ~/.talos/config
+        env:
+          TALOSCONFIG: ~/.talos/config
+
+      - name: Install talosctl
+        run: |
+          curl -sL https://talos.dev/install | sh
+          talosctl --version --client
+
       - name: Connect to Tailscale
         uses: tailscale/github-action@v2
         with:
@@ -32,43 +72,47 @@ jobs:
           oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
           tags: tag:github-cicd
 
-      - name: Install talosctl
+      - name: Update Talos node william
+        if: ${{ inputs.update_william }}
+        env:
+          IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
+          TALOSCONFIG: ~/.talos/config
         run: |
-          curl -sL https://talos.dev/install | sh
-          sudo mv talosctl /usr/local/bin/
+          talosctl version -n $WILLIAM
+          echo "Updating william ($WILLIAM) to $IMAGE"
+          talosctl upgrade --nodes $WILLIAM --image $IMAGE --preserve --wait || echo "Failed to update william"
+          sleep 30
 
-    #   - name: Update Talos node 10.10.10.30
-    #     env:
-    #       IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
-    #     run: |
-    #       echo "Updating 10.10.10.30 to $IMAGE"
-    #       talosctl upgrade --nodes 10.10.10.30 --image $IMAGE --preserve --wait || echo "Failed to update 10.10.10.30"
-    #       sleep 30
+      - name: Update Talos node manta
+        if: ${{ inputs.update_manta }}
+        env:
+          IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
+          TALOSCONFIG: ~/.talos/config
+        run: |
+          echo "Updating manta ($MANTA) to $IMAGE"
+          talosctl upgrade --nodes $MANTA --image $IMAGE --preserve --wait || echo "Failed to update manta"
+          sleep 30
 
-    #   - name: Update Talos node 10.10.10.31
-    #     env:
-    #       IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
-    #     run: |
-    #       echo "Updating 10.10.10.31 to $IMAGE"
-    #       talosctl upgrade --nodes 10.10.10.31 --image $IMAGE --preserve --wait || echo "Failed to update 10.10.10.31"
-    #       sleep 30
+      - name: Update Talos node skidbladnir
+        if: ${{ inputs.update_skidbladnir }}
+        env:
+          IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
+          TALOSCONFIG: ~/.talos/config
+        run: |
+          echo "Updating skidbladnir ($SKIDBLADNIR) to $IMAGE"
+          talosctl upgrade --nodes $SKIDBLADNIR --image $IMAGE --preserve --wait || echo "Failed to update skidbladnir"
+          sleep 30
 
-    #   - name: Update Talos node 10.10.10.32
-    #     env:
-    #       IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
-    #     run: |
-    #       echo "Updating 10.10.10.32 to $IMAGE"
-    #       talosctl upgrade --nodes 10.10.10.32 --image $IMAGE --preserve --wait || echo "Failed to update 10.10.10.32"
-    #       sleep 30
+      - name: Update Talos node yumi
+        if: ${{ inputs.update_yumi }}
+        env:
+          IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
+          TALOSCONFIG: ~/.talos/config
+        run: |
+          echo "Updating yumi ($YUMI) to $IMAGE"
+          talosctl upgrade --nodes $YUMI --image $IMAGE --preserve --wait || echo "Failed to update yumi"
 
-    #   - name: Update Talos node 10.10.10.7
-    #     env:
-    #       IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
-    #     run: |
-    #       echo "Updating 10.10.10.7 to $IMAGE"
-    #       talosctl upgrade --nodes 10.10.10.7 --image $IMAGE --preserve --wait || echo "Failed to update 10.10.10.7"
-
-    #   - name: Summary
-    #     run: |
-    #       echo "✅ Talos machines updated to ${{ steps.talos-version.outputs.version }}"
-    #       echo "Image: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}"
+      - name: Summary
+        run: |
+          echo "✅ Talos machines updated to ${{ steps.talos-version.outputs.version }}"
+          echo "Image: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}"
