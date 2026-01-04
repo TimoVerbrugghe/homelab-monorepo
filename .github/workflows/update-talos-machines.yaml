@@ -78,15 +78,15 @@ jobs:
           oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
           tags: tag:github-cicd
 
-      - name: Update Talos node william
-        if: ${{ inputs.update_william }}
+      - name: Update Talos node skidbladnir
+        if: ${{ inputs.update_skidbladnir }}
         env:
           IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
           TALOSCONFIG: ~/.talos/config
         run: |
-          talosctl version -n $WILLIAM -e $ENDPOINT
-          echo "Updating william ($WILLIAM) to $IMAGE"
-          talosctl upgrade --nodes $WILLIAM -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update william"
+          talosctl version -n $SKIDBLADNIR -e $ENDPOINT
+          echo "Updating skidbladnir ($SKIDBLADNIR) to $IMAGE"
+          talosctl upgrade --nodes $SKIDBLADNIR -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update skidbladnir"
           sleep 30
 
       - name: Update Talos node manta
@@ -100,15 +100,15 @@ jobs:
           talosctl upgrade --nodes $MANTA -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update manta"
           sleep 30
 
-      - name: Update Talos node skidbladnir
-        if: ${{ inputs.update_skidbladnir }}
+      - name: Update Talos node william
+        if: ${{ inputs.update_william }}
         env:
           IMAGE: factory.talos.dev/installer/${{ steps.schematic.outputs.id }}:${{ steps.talos-version.outputs.version }}
           TALOSCONFIG: ~/.talos/config
         run: |
-          talosctl version -n $SKIDBLADNIR -e $ENDPOINT
-          echo "Updating skidbladnir ($SKIDBLADNIR) to $IMAGE"
-          talosctl upgrade --nodes $SKIDBLADNIR -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update skidbladnir"
+          talosctl version -n $WILLIAM -e $ENDPOINT
+          echo "Updating william ($WILLIAM) to $IMAGE"
+          talosctl upgrade --nodes $WILLIAM -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update william"
           sleep 30
 
       - name: Update Talos node yumi
@@ -127,7 +127,7 @@ jobs:
           TALOSCONFIG: ~/.talos/config
         run: |
           echo "Upgrading Kubernetes to latest version on Talos cluster"
-          talosctl -e $ENDPOINT upgrade-k8s
+          talosctl -e $ENDPOINT -n -$WILLIAM upgrade-k8s
 
       - name: Summary
         run: |
