@@ -41,6 +41,29 @@ log "Starting iSCSI deployment startup sequence..."
 log "Waiting for system to stabilize (30 seconds)..."
 sleep 30
 
+# Scale down each workload first (because we cannot scale these workloads down when shutting down truenas)
+log "Scaling down workloads with iSCSI volumes..."
+for workload in $WORKLOADS; do
+    if [ -n "$workload" ]; then
+        NAMESPACE=$(echo "$workload" | cut -d'/' -f1)
+        TYPE=$(echo "$workload" | cut -d'/' -f2)
+        NAME=$(echo "$workload" | cut -d'/' -f3)
+        
+        log "Scaling down $TYPE: $NAMESPACE/$NAME"
+        kubectl scale "$TYPE" "$NAME" -n "$NAMESPACE" --replicas=0
+        
+        if [ $? -eq 0 ]; then
+            log "Successfully scaled down $NAMESPACE/$NAME"
+        else
+            log "WARNING: Failed to scale down $NAMESPACE/$NAME"
+        fi
+    fi
+done
+
+# Wait before scaling up
+log "Waiting 30 seconds before scaling up..."
+sleep 30
+
 # Scale up each workload
 log "Scaling up workloads with iSCSI volumes..."
 for workload in $WORKLOADS; do
