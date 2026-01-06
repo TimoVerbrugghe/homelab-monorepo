@@ -6,6 +6,9 @@
 ![Docker Compose](https://img.shields.io/badge/docker%20compose-16-2496ED?logo=docker&logoColor=white)
 ![Ansible Playbooks](https://img.shields.io/badge/ansible%20playbooks-13-EE0000?logo=ansible&logoColor=white)
 ![NixOS Machines](https://img.shields.io/badge/nixos%20machines-7-5277C3?logo=nixos&logoColor=white)
+![Shell Scripts](https://img.shields.io/badge/shell%20scripts-17-4EAA25?logo=gnubash&logoColor=white)
+![GitHub Workflows](https://img.shields.io/badge/github%20workflows-13-2088FF?logo=githubactions&logoColor=white)
+![HA Addons](https://img.shields.io/badge/ha%20addons-1-41BDF5?logo=homeassistant&logoColor=white)
 ![Repo Size](https://img.shields.io/github/repo-size/TimoVerbrugghe/homelab-monorepo)
 <!-- END AUTO-GENERATED BADGES -->
 
