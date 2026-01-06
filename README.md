@@ -10,6 +10,7 @@
 <!-- END AUTO-GENERATED BADGES -->
 
 
+
 This repository contains all my setup files while I'm learning Ansible, Kubernetes, NixOS & others.
 
 Heavily influenced by TechnoTim (<https://github.com/techno-tim>), Christian Lempa (<https://github.com/ChristianLempa/christianlempa>) & the Linux Unplugged team (<https://linuxunplugged.com/>).
