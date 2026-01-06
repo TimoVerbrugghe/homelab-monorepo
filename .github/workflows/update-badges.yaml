@@ -60,6 +60,9 @@ jobs:
             sed -i '/<!-- AUTO-GENERATED BADGES - DO NOT EDIT MANUALLY -->/,/<!-- END AUTO-GENERATED BADGES -->/d' README.md
           fi
           
+          # Remove trailing newline from badges.md
+          printf '%s' "$(cat badges.md)" > badges.tmp && mv badges.tmp badges.md
+          
           # Insert badges after the title (assuming # homelab-monorepo is the first line with content)
           awk '/^# homelab-monorepo/ { print; print ""; system("cat badges.md"); next }1' README.md > README.tmp
           mv README.tmp README.md
