@@ -5,7 +5,7 @@ machine:
     - kubernetes.local.timo.be
   kubelet:
     # Fat image necessary for iscsi to work
-    image: ghcr.io/siderolabs/kubelet:v1.34.1-fat
+    image: ghcr.io/siderolabs/kubelet:v1.35.0-fat
     # Required for metrics-server, which is required by homepage to use its kubernetes widget
     extraArgs:
       rotate-server-certificates: true
@@ -27,9 +27,7 @@ machine:
 
     # Image with several extensions & kernel args - see talos-image.yaml
     # curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
-    image: factory.talos.dev/installer/4487efdc3abfe8fccc6170646936978beccd8bfd09ba893a5140a2de15f54296:v1.11.6
-    extraKernelArgs:
-      - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
+    image: factory.talos.dev/installer/451cf6f46f8d83ff633a62c31305b3ff2b3df0af14a0a9c81b9eda8d9456114e:v1.12.0
 
 cluster:
   controlPlane:

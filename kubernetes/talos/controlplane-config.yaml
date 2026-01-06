@@ -8,5 +8,5 @@ cluster:
       - 10.10.10.33
       - kubernetes.local.timo.be
     extraArgs:
-        default-not-ready-toleration-seconds: 120
-        default-unreachable-toleration-seconds: 120
+      default-not-ready-toleration-seconds: 120
+      default-unreachable-toleration-seconds: 120

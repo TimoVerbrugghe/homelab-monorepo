@@ -4,21 +4,27 @@ machine:
   certSANs:
     - 10.10.10.30
     - william.local.timo.be
-  network:
-    hostname: william
-    interfaces:
-      - deviceSelector:
-          physical: true # should select any hardware network device, if it's just one, that one will be selected
-        addresses: # Assigns static IP addresses to the interface.
-          - 10.10.10.30
-        routes:
-          - network: 0.0.0.0/0 # The route's network (destination).
-            gateway: 10.10.10.1 # The route's gateway (if empty, creates link scope route).
-        mtu: 1500 # The interface's MTU.
-        vip:
-          ip: 10.10.10.33 # Specifies the IP address to be used.
   kubelet:
     nodeIP:
       validSubnets:
-        - 10.10.10.30/24
-        - 10.10.10.33/24
+        - 10.10.10.0/24
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: william
+auto: off
+---
+apiVersion: v1alpha1
+kind: LinkConfig
+name: eth0
+up: true
+mtu: 1500
+addresses:
+  - address: 10.10.10.30/24
+routes:
+  - gateway: 10.10.10.1
+---
+apiVersion: v1alpha1
+kind: Layer2VIPConfig
+name: 10.10.10.33
+link: eth0

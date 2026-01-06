@@ -44,7 +44,6 @@
       "intune-company-portal"
       "bettertouchtool"
       "jabra-direct"
-      "background-music"
       "microsoft-teams" # Weird certificate issues when installing Teams via nixpkgs
       "handbrake-app"
       "visual-studio-code"

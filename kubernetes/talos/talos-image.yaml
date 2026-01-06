@@ -3,6 +3,8 @@
 customization:
     extraKernelArgs:
         - net.ifnames=0 # Disables predictable network interface names so that interface name is just eth0
+        - console=tty0 # Enabled console on serial port in Proxmox (since some talos VMs have iGPU assigned)
+        - console=ttyS0
     systemExtensions:
         officialExtensions:
             - siderolabs/i915
