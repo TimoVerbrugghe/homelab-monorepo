@@ -6,7 +6,7 @@
 
 set -e
 
-KUBECONFIG_PATH="/mnt/FranzHopper/secrets"
+KUBECONFIG_PATH="/mnt/FranzHopper/secrets/kubernetes"
 KUBECONFIG_FILE="$KUBECONFIG_PATH/kubeconfig"
 
 # Array of workloads to scale down (format: "namespace/type/name")
