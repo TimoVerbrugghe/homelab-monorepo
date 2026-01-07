@@ -19,7 +19,6 @@ services:
 
   dawarich_db:
     image: postgis/postgis:17-3.5-alpine
-    # image: imresamu/postgis:17-3.5-alpine # If you're on ARM architecture, use this image instead
     shm_size: 1G
     container_name: dawarich_db
     volumes:
@@ -54,7 +53,6 @@ services:
       - dockerproxy
     ports:
       - "${DAWARICH_APP_PORT:-3000}:3000"
-      # - "${PROMETHEUS_PORT:-9394}:9394" # Prometheus exporter, uncomment if needed
     stdin_open: true
     tty: true
     entrypoint: web-entrypoint.sh
@@ -69,8 +67,8 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-password}
       DATABASE_NAME: ${DATABASE_NAME:-dawarich_development}
       MIN_MINUTES_SPENT_IN_CITY: ${MIN_MINUTES_SPENT_IN_CITY:-60}
-      APPLICATION_HOSTS: ${APPLICATION_HOSTS:-localhost,::1,127.0.0.1}
-      TIME_ZONE: ${TIME_ZONE:-Europe/London}
+      APPLICATION_HOSTS: ${APPLICATION_HOSTS:-localhost,::1,127.0.0.1,thefactory.local.timo.be,dawarich.local.timo.be,dawarich.timo.be,dawarich.kubernetes.timo.be}
+      TIME_ZONE: ${TIME_ZONE:-Europe/Brussels}
       APPLICATION_PROTOCOL: ${APPLICATION_PROTOCOL:-http}
       PROMETHEUS_EXPORTER_ENABLED: ${PROMETHEUS_EXPORTER_ENABLED:-false}
       PROMETHEUS_EXPORTER_HOST: ${PROMETHEUS_EXPORTER_HOST:-0.0.0.0}
@@ -79,6 +77,7 @@ services:
       RAILS_LOG_TO_STDOUT: ${RAILS_LOG_TO_STDOUT:-true}
       SELF_HOSTED: ${SELF_HOSTED:-true}
       STORE_GEODATA: ${STORE_GEODATA:-true}
+      PHOTON_API_HOST: ${PHOTON_API_HOST:-photon:2322}
     labels:
       com.centurylinklabs.watchtower.enable: "false"
     logging:
@@ -161,6 +160,20 @@ services:
         condition: service_healthy
         restart: true
 
+  photon:
+      image: rtuszik/photon-docker:latest
+      container_name: photon
+      restart: unless-stopped
+      networks:
+        - dockerproxy
+      environment:
+          - UPDATE_STRATEGY=PARALLEL
+          - UPDATE_INTERVAL=720h # Check for updates every 30 days
+      volumes:
+          - photon:/photon/data
+      ports:
+          - 2322:2322
+
 networks:
   dockerproxy:
     external: true
@@ -196,3 +209,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/dawarich/storage"
+  photon:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/photon"
