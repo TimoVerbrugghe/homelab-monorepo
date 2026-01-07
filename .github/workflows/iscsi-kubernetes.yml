@@ -1,0 +1,69 @@
+name: iSCSI Kubernetes Scale
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Choose Scale Up or Scale Down"
+        required: true
+        type: choice
+        options:
+          - Scale Up
+          - Scale Down
+      workloads:
+        description: "Workloads to process (one per line: namespace/type/name/replicas)"
+        required: false
+        type: string
+        default: |
+          mediaplayback/deployment/plex/1
+          mediaplayback/deployment/jellyfin/1
+          mediaplayback/deployment/ersatztv/1
+
+jobs:
+  kubernetes-scale:
+    runs-on: ubuntu-latest
+    env:
+      WORKLOADS: ${{ inputs.workloads }}
+    
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          tags: tag:github-cicd
+
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Scale Down workloads
+        if: ${{ inputs.action == 'Scale Down' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r workload; do
+            [[ -z "$workload" ]] && continue
+            NAMESPACE=$(cut -d'/' -f1 <<< "$workload")
+            TYPE=$(cut -d'/' -f2 <<< "$workload")
+            NAME=$(cut -d'/' -f3 <<< "$workload")
+            echo "Scaling down $TYPE $NAMESPACE/$NAME"
+            kubectl scale "$TYPE" "$NAME" -n "$NAMESPACE" --replicas=0 || echo "WARNING: Failed to scale down $NAMESPACE/$NAME"
+          done <<< "$WORKLOADS"
+
+      - name: Scale Up workloads
+        if: ${{ inputs.action == 'Scale Up' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r workload; do
+            [[ -z "$workload" ]] && continue
+            NAMESPACE=$(cut -d'/' -f1 <<< "$workload")
+            TYPE=$(cut -d'/' -f2 <<< "$workload")
+            NAME=$(cut -d'/' -f3 <<< "$workload")
+            REPLICAS=$(cut -d'/' -f4 <<< "$workload")
+            echo "Scaling up $TYPE $NAMESPACE/$NAME to $REPLICAS"
+            kubectl scale "$TYPE" "$NAME" -n "$NAMESPACE" --replicas="$REPLICAS" || echo "WARNING: Failed to scale up $NAMESPACE/$NAME"
+          done <<< "$WORKLOADS"
