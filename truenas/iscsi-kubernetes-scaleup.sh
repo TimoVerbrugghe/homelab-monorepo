@@ -1,6 +1,7 @@
-∏#!/bin/sh
+#!/bin/sh
 
-set -euo pipefail
+set -e
+set -u
 
 TOKEN_FILE="/mnt/FranzHopper/secrets/githubtoken"
 REPO_OWNER="TimoVerbrugghe"

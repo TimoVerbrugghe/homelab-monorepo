@@ -1,11 +1,12 @@
 #!/bin/sh
 
-set -euo pipefail
+set -e
+set -u
 
 TOKEN_FILE="/mnt/FranzHopper/secrets/githubtoken"
 REPO_OWNER="TimoVerbrugghe"
 REPO_NAME="homelab-monorepo"
-WORKFLOW_FILE="iscsi-kubernetes.yml"
+WORKFLOW_FILE="iscsi-kubernetes.yaml"
 REF="master"
 WORKLOADS="mediaplayback/deployment/plex/1, mediaplayback/deployment/jellyfin/1, mediaplayback/deployment/ersatztv/1"
 
