@@ -25,7 +25,7 @@ services:
       - dawarich_db_data:/var/lib/postgresql/data
       - dawarich_shared:/var/shared
     networks:
-      - dawarich
+      - dockerproxy
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
@@ -126,7 +126,7 @@ services:
       DATABASE_USERNAME: ${DATABASE_USERNAME:-postgres}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-password}
       DATABASE_NAME: ${DATABASE_NAME:-dawarich_development}
-      APPLICATION_HOSTS: ${APPLICATION_HOSTS:-localhost,::1,127.0.0.1}
+      APPLICATION_HOSTS: ${APPLICATION_HOSTS:-localhost,::1,127.0.0.1,thefactory.local.timo.be,dawarich.local.timo.be,dawarich.timo.be,dawarich.kubernetes.timo.be}
       BACKGROUND_PROCESSING_CONCURRENCY: ${BACKGROUND_PROCESSING_CONCURRENCY:-10}
       APPLICATION_PROTOCOL: ${APPLICATION_PROTOCOL:-http}
       PROMETHEUS_EXPORTER_ENABLED: ${PROMETHEUS_EXPORTER_ENABLED:-false}
@@ -136,6 +136,7 @@ services:
       RAILS_LOG_TO_STDOUT: ${RAILS_LOG_TO_STDOUT:-true}
       SELF_HOSTED: ${SELF_HOSTED:-true}
       STORE_GEODATA: ${STORE_GEODATA:-true}
+      PHOTON_API_HOST: ${PHOTON_API_HOST:-photon:2322}
     labels:
       com.centurylinklabs.watchtower.enable: "false"
     logging:
@@ -171,8 +172,6 @@ services:
           - UPDATE_INTERVAL=720h # Check for updates every 30 days
       volumes:
           - photon:/photon/data
-      ports:
-          - 2322:2322
 
 networks:
   dockerproxy:
