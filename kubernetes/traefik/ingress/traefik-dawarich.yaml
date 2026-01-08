@@ -1,0 +1,25 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dawarich
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`dawarich.kubernetes.timo.be`) || Host(`dawarich.timo.be`)
+      kind: Rule
+      services:
+        - name: dawarich-svc
+          port: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dawarich-svc
+  namespace: traefik
+spec:
+  externalName: thefactory.local.timo.be # Can also be an IP address
+  type: ExternalName

@@ -6,6 +6,7 @@ resources:
   - traefik-dashboard.yaml
   - traefik-dns.yaml
   - traefik-proxmox.yaml
+  - traefik-dawarich.yaml
 
   # Custom Ingresses - TheFactory Media
   - traefik-sonarr.yaml
