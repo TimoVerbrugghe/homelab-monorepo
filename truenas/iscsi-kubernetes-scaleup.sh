@@ -16,6 +16,9 @@ if [ ! -f "$TOKEN_FILE" ]; then
 fi
 TOKEN=$(cat "$TOKEN_FILE")
 
+# Sleep 60 seconds to allow for system to continue booting (otherwise dns resolution may fail)
+sleep 60
+
 curl -X POST \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: Bearer $TOKEN" \
