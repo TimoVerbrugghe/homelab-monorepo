@@ -23,13 +23,66 @@ spec:
     spec:
       containers:
       - name: subgen
-        image: mccloud/subgen:latest
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/timoverbrugghe/subgen-azure-batch:latest
+        imagePullPolicy: Always
         env:
-        - name: WHISPER_MODEL
-          value: "base"
-        - name: WHISPER_THREADS
-          value: "4"
+        # Non-secret environment variables
+        - name: MEDIA_FOLDERS
+          value: "/tv,/movies,/music"
+        - name: SUBTITLE_LANGUAGE_NAMING_TYPE
+          value: "ISO_639_1"
+        - name: BAZARR_URL
+          value: "http://thefactory.local.timo.be:14002"
+        - name: PLEX_SERVER
+          value: "http://plex.local.timo.be:32400"
+        - name: DEFAULT_THEME
+          value: "dark"
+        - name: CONCURRENT_TRANSCRIPTIONS
+          value: "25"
+        - name: UVICORN_TIMEOUT_KEEP_ALIVE
+          value: "300"
+
+        # Secret environment variables
+        - name: AZURE_SPEECH_KEY
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: AZURE_SPEECH_KEY
+        - name: AZURE_SPEECH_REGION
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: AZURE_SPEECH_REGION
+        - name: AZURE_STORAGE_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: AZURE_STORAGE_CONNECTION_STRING
+        - name: AZURE_STORAGE_CONTAINER
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: AZURE_STORAGE_CONTAINER
+        - name: BAZARR_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: BAZARR_API_KEY
+        - name: PLEX_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: PLEX_TOKEN
+        - name: PUSHOVER_USER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: PUSHOVER_USER_KEY
+        - name: PUSHOVER_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: PUSHOVER_API_TOKEN
         ports:
           - containerPort: 9000
             protocol: TCP
@@ -41,13 +94,40 @@ spec:
           requests:
             memory: "1Gi"
             cpu: "1000m"
-        
+        volumeMounts:
+        - name: tv
+          mountPath: /tv
+        - name: movies
+          mountPath: /movies
+        - name: music
+          mountPath: /music
+        - name: transcode
+          mountPath: /transcode
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9000
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
         startupProbe:
           httpGet:
-            path: /
+            path: /health
             port: 9000
-          initialDelaySeconds: 30
+          initialDelaySeconds: 10
           periodSeconds: 10
-          timeoutSeconds: 5
+          timeoutSeconds: 10
           failureThreshold: 30
           successThreshold: 1
+      volumes:
+      - name: tv
+        persistentVolumeClaim:
+          claimName: tvshows-pvc
+      - name: movies
+        persistentVolumeClaim:
+          claimName: movies-pvc
+      - name: music
+        persistentVolumeClaim:
+          claimName: music-pvc
+      - name: transcode
+        emptyDir: {}

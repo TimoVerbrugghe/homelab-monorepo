@@ -1,0 +1,72 @@
+---
+# Service to expose subgen to the local network
+apiVersion: v1
+kind: Service
+metadata:
+  name: subgen-kubevip
+  namespace: mediaplayback
+spec:
+  selector:
+    app.kubernetes.io/name: subgen
+  loadBalancerClass: kube-vip.io/kube-vip-class
+  type: LoadBalancer
+  loadBalancerIP: 10.10.10.41
+  ports:
+  - name: http
+    protocol: TCP
+    port: 9000
+    targetPort: 9000
+---
+# Service to be used by Traefik and Tailscale Ingress to access subgen Web UI
+apiVersion: v1
+kind: Service
+metadata:
+  name: subgen
+  namespace: mediaplayback
+spec:
+  ports:
+    - name: http
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+  selector:
+    app.kubernetes.io/name: subgen
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: subgen
+  namespace: mediaplayback
+  annotations: 
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`subgen.kubernetes.timo.be`) || Host(`subgen.timo.be`)
+      kind: Rule
+      services:
+        - name: subgen
+          port: 9000
+      middlewares:
+        - name: auth
+          namespace: traefik
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: subgen-tailscale
+  namespace: mediaplayback
+  annotations:
+    # Instead of exposing as a machine, expose it as a Tailscale Service
+    tailscale.com/proxy-group: tailscale-services
+spec:
+  defaultBackend:
+    service:
+      name: subgen
+      port:
+        number: 9000
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - subgen
