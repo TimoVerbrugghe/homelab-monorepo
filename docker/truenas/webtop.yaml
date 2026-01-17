@@ -22,7 +22,7 @@ services:
       - seccomp:unconfined # optional, for better compatibility
 
 volumes:
-  webtop-chrome:
+  webtop:
     driver: local
     driver_opts:
       type: "none"
