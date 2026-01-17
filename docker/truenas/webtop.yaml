@@ -1,7 +1,7 @@
 services:
   webtop-chrome:
     image: lscr.io/linuxserver/webtop:latest
-    container_name: webtop-chrome
+    container_name: webtop
     restart: always
     networks:
       - dockerproxy
@@ -10,9 +10,9 @@ services:
       - PGID=${PGID:-3000}
       - TZ=Europe/Brussels
       - SUBFOLDER=/ # optional
-      - TITLE=Webtop Chrome # optional
+      - TITLE=Webtop # optional
     volumes:
-      - webtop-chrome:/config
+      - webtop:/config
       - downloads:/downloads
     ports:
       - 12006:3000
@@ -27,7 +27,7 @@ volumes:
     driver_opts:
       type: "none"
       o: "bind"
-      device: "/mnt/FranzHopper/appdata/webtop-chrome"
+      device: "/mnt/FranzHopper/appdata/webtop"
   downloads:
     driver: local
     driver_opts:
