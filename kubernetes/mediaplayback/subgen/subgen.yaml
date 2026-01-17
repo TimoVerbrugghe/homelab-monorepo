@@ -41,6 +41,8 @@ spec:
           value: "25"
         - name: UVICORN_TIMEOUT_KEEP_ALIVE
           value: "300"
+        - name: LANGUAGE_DETECTION_CANDIDATES
+          value: "en-US,nl-NL,es-ES,fr-FR"
 
         # Secret environment variables
         - name: AZURE_SPEECH_KEY
