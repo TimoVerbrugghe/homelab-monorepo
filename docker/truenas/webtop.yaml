@@ -1,0 +1,40 @@
+services:
+  webtop-chrome:
+    image: lscr.io/linuxserver/webtop:latest
+    container_name: webtop-chrome
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID:-3000}
+      - PGID=${PGID:-3000}
+      - TZ=Europe/Brussels
+      - SUBFOLDER=/ # optional
+      - TITLE=Webtop Chrome # optional
+    volumes:
+      - webtop-chrome:/config
+      - downloads:/downloads
+    ports:
+      - 12006:3000
+      - 12007:3001
+    shm_size: "1gb" # Increase shared memory for Chrome stability
+    security_opt:
+      - seccomp:unconfined # optional, for better compatibility
+
+volumes:
+  webtop-chrome:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/webtop-chrome"
+  downloads:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/downloads"
+
+networks:
+  dockerproxy:
+    external: true
