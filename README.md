@@ -8,7 +8,6 @@
 ![NixOS Machines](https://img.shields.io/badge/nixos%20machines-7-5277C3?logo=nixos&logoColor=white)
 ![Shell Scripts](https://img.shields.io/badge/shell%20scripts-17-4EAA25?logo=gnubash&logoColor=white)
 ![GitHub Workflows](https://img.shields.io/badge/github%20workflows-14-2088FF?logo=githubactions&logoColor=white)
-![HA Addons](https://img.shields.io/badge/ha%20addons-1-41BDF5?logo=homeassistant&logoColor=white)
 ![Repo Size](https://img.shields.io/github/repo-size/TimoVerbrugghe/homelab-monorepo)
 <!-- END AUTO-GENERATED BADGES -->
 
@@ -16,27 +15,15 @@ This repository contains all my setup files while I'm learning Ansible, Kubernet
 
 Heavily influenced by TechnoTim (<https://github.com/techno-tim>), Christian Lempa (<https://github.com/ChristianLempa/christianlempa>) & the Linux Unplugged team (<https://linuxunplugged.com/>).
 
-## Home Assistant Add-On
-
-This repository also serves as my personal home assistant add-on repo. Currently, I have the following addons:
-
-- [Tesla Fleet Public Key Hosting addon](./teslafleet-publickeyhost)
-
-[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https://github.com/TimoVerbrugghe/homelab-monorepo)
-
 ## GitHub Workflows Status
 
-![Bitwarden Export Docker](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/bitwarden-export-docker.yaml?branch=master&label=bitwarden-export-docker&logo=githubactions&logoColor=white)
 ![Build NixOS ISOs](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/build-nixos-isos.yaml?branch=master&label=build-nixos-isos&logo=githubactions&logoColor=white)
 ![Check Broken Links](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/check-broken-links.yaml?branch=master&label=check-broken-links&logo=githubactions&logoColor=white)
 ![Deploy K8s Resource](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/deploy-k8s-resource.yaml?branch=master&label=deploy-k8s-resource&logo=githubactions&logoColor=white)
 ![DrawIO Export](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/drawio-export.yaml?branch=master&label=drawio-export&logo=githubactions&logoColor=white)
 ![iSCSI Kubernetes](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/iscsi-kubernetes.yaml?branch=master&label=iscsi-kubernetes&logo=githubactions&logoColor=white)
-![K8s Backup Docker](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/k8s-backup-docker.yaml?branch=master&label=k8s-backup-docker&logo=githubactions&logoColor=white)
-![K8s Restore Docker](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/k8s-restore-docker.yaml?branch=master&label=k8s-restore-docker&logo=githubactions&logoColor=white)
 ![Lint Markdown](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/lint-markdown.yaml?branch=master&label=lint-markdown&logo=githubactions&logoColor=white)
 ![Lint YAML/JSON](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/lint-yaml-json.yaml?branch=master&label=lint-yaml-json&logo=githubactions&logoColor=white)
-![NS-USBLoader Docker](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/ns-usbloader-docker.yaml?branch=master&label=ns-usbloader-docker&logo=githubactions&logoColor=white)
 ![Update Badges](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/update-badges.yaml?branch=master&label=update-badges&logo=githubactions&logoColor=white)
 ![Update Talos Machines](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/update-talos-machines.yaml?branch=master&label=update-talos-machines&logo=githubactions&logoColor=white)
 ![Validate Shell Scripts](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/validate-shell-scripts.yaml?branch=master&label=validate-shell-scripts&logo=githubactions&logoColor=white)

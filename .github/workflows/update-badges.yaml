@@ -28,16 +28,13 @@ jobs:
           NIXOS_COUNT=$(find nixos/machines -type d -mindepth 1 -maxdepth 1 | wc -l | tr -d ' ')
           SHELL_COUNT=$(find . -name "*.sh" -type f | wc -l | tr -d ' ')
           WORKFLOW_COUNT=$(find .github/workflows -type f \( -name "*.yaml" -o -name "*.yml" \) | wc -l | tr -d ' ')
-          # Count HA addons (directories with run.sh containing bashio shebang)
-          HA_ADDON_COUNT=$(find . -name "run.sh" -type f -exec sh -c 'head -n1 "$1" | grep -q "#!/usr/bin/with-contenv bashio"' _ {} \; -print | wc -l | tr -d ' ')
-          
+  
           echo "k8s_count=$K8S_COUNT" >> $GITHUB_OUTPUT
           echo "docker_count=$DOCKER_COUNT" >> $GITHUB_OUTPUT
           echo "ansible_count=$ANSIBLE_COUNT" >> $GITHUB_OUTPUT
           echo "nixos_count=$NIXOS_COUNT" >> $GITHUB_OUTPUT
           echo "shell_count=$SHELL_COUNT" >> $GITHUB_OUTPUT
           echo "workflow_count=$WORKFLOW_COUNT" >> $GITHUB_OUTPUT
-          echo "ha_addon_count=$HA_ADDON_COUNT" >> $GITHUB_OUTPUT
 
       - name: Generate badge URLs
         id: badges
@@ -48,7 +45,6 @@ jobs:
           NIXOS_COUNT="${{ steps.stats.outputs.nixos_count }}"
           SHELL_COUNT="${{ steps.stats.outputs.shell_count }}"
           WORKFLOW_COUNT="${{ steps.stats.outputs.workflow_count }}"
-          HA_ADDON_COUNT="${{ steps.stats.outputs.ha_addon_count }}"
           
           # Create badge markdown
           cat > badges.md << EOF
@@ -60,7 +56,6 @@ jobs:
           ![NixOS Machines](https://img.shields.io/badge/nixos%20machines-${NIXOS_COUNT}-5277C3?logo=nixos&logoColor=white)
           ![Shell Scripts](https://img.shields.io/badge/shell%20scripts-${SHELL_COUNT}-4EAA25?logo=gnubash&logoColor=white)
           ![GitHub Workflows](https://img.shields.io/badge/github%20workflows-${WORKFLOW_COUNT}-2088FF?logo=githubactions&logoColor=white)
-          ![HA Addons](https://img.shields.io/badge/ha%20addons-${HA_ADDON_COUNT}-41BDF5?logo=homeassistant&logoColor=white)
           ![Repo Size](https://img.shields.io/github/repo-size/TimoVerbrugghe/homelab-monorepo)
           <!-- END AUTO-GENERATED BADGES -->
           EOF

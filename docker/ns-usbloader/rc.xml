@@ -1,9 +1,0 @@
-<openbox_config>
-    <applications>
-        <application class="*">
-            <decor>no</decor>
-            <position><x>0</x><y>0</y></position>
-            <fullscreen>yes</fullscreen>
-        </application>
-    </applications>
-</openbox_config>
