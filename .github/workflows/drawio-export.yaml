@@ -3,7 +3,7 @@ name: Export Draw.io Diagrams
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'diagrams/**/*.drawio'
   pull_request:
@@ -48,6 +48,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Auto-export Draw.io diagrams to PNG and SVG"
-            git pull --rebase origin master
+            git pull --rebase origin main
             git push
           fi

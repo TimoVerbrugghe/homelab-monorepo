@@ -3,7 +3,7 @@ name: Check Broken Links
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - '**.md'
   pull_request:
