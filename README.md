@@ -1,13 +1,13 @@
 # homelab-monorepo
 
 <!-- AUTO-GENERATED BADGES - DO NOT EDIT MANUALLY -->
-[![View Architecture Diagram](https://img.shields.io/badge/View%20Diagram-draw.io-blue?logo=diagramsdotnet&logoColor=white)](https://app.diagrams.net/?url=https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/master/diagrams/homelab.drawio)
-![Kubernetes Manifests](https://img.shields.io/badge/kubernetes%20manifests-203-326CE5?logo=kubernetes&logoColor=white)
+[![View Architecture Diagram](https://img.shields.io/badge/View%20Diagram-draw.io-blue?logo=diagramsdotnet&logoColor=white)](https://app.diagrams.net/?url=https://raw.githubusercontent.com/TimoVerbrugghe/homelab-monorepo/main/diagrams/homelab.drawio)
+![Kubernetes Manifests](https://img.shields.io/badge/kubernetes%20manifests-204-326CE5?logo=kubernetes&logoColor=white)
 ![Docker Compose](https://img.shields.io/badge/docker%20compose-18-2496ED?logo=docker&logoColor=white)
 ![Ansible Playbooks](https://img.shields.io/badge/ansible%20playbooks-13-EE0000?logo=ansible&logoColor=white)
 ![NixOS Machines](https://img.shields.io/badge/nixos%20machines-7-5277C3?logo=nixos&logoColor=white)
-![Shell Scripts](https://img.shields.io/badge/shell%20scripts-17-4EAA25?logo=gnubash&logoColor=white)
-![GitHub Workflows](https://img.shields.io/badge/github%20workflows-14-2088FF?logo=githubactions&logoColor=white)
+![Shell Scripts](https://img.shields.io/badge/shell%20scripts-12-4EAA25?logo=gnubash&logoColor=white)
+![GitHub Workflows](https://img.shields.io/badge/github%20workflows-10-2088FF?logo=githubactions&logoColor=white)
 ![Repo Size](https://img.shields.io/github/repo-size/TimoVerbrugghe/homelab-monorepo)
 <!-- END AUTO-GENERATED BADGES -->
 
