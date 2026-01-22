@@ -14,7 +14,6 @@ spec:
       services:
         - name: yamtrack-svc
           port: 14006
-          serversTransport: serverstransport
       middlewares:
         - name: auth
           namespace: traefik
@@ -36,7 +35,6 @@ spec:
       services:
         - name: yamtrack-svc
           port: 14006
-          serversTransport: serverstransport
 ---
 apiVersion: v1
 kind: Service

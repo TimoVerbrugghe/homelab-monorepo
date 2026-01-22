@@ -8,6 +8,7 @@ resources:
   - traefik-proxmox.yaml
   - traefik-dawarich.yaml
   - traefik-webtop.yaml
+  - traefik-scrutiny.yaml
 
   # Custom Ingresses - TheFactory Media
   - traefik-sonarr.yaml

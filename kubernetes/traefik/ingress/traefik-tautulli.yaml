@@ -9,7 +9,15 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`tautulli.kubernetes.timo.be`) || Host(`tautulli.timo.be`)
+    # API → no auth
+    - match: ( Host(`tautulli.timo.be`) || Host(`tautulli.kubernetes.timo.be`) ) && PathPrefix(`/api/v2`)
+      kind: Rule
+      services:
+        - name: tautulli-svc
+          port: 14009
+
+    # Everything else → auth
+    - match: ( Host(`tautulli.timo.be`) || Host(`tautulli.kubernetes.timo.be`) ) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: tautulli-svc
@@ -24,5 +32,21 @@ metadata:
   name: tautulli-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 14009
+      targetPort: 14009
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: tautulli-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: tautulli-svc
+addressType: IPv4
+ports:
+  - port: 14009
+endpoints:
+  - addresses:
+      - "10.10.10.2"

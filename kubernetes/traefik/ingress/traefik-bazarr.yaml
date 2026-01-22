@@ -9,7 +9,15 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`bazarr.kubernetes.timo.be`) || Host(`bazarr.timo.be`)
+    # API → no auth
+    - match: ( Host(`bazarr.timo.be`) || Host(`bazarr.kubernetes.timo.be`) ) && PathPrefix(`/api`)
+      kind: Rule
+      services:
+        - name: bazarr-svc
+          port: 14002
+
+    # Everything else → auth
+    - match: ( Host(`bazarr.timo.be`) || Host(`bazarr.kubernetes.timo.be`) ) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: bazarr-svc
@@ -24,5 +32,21 @@ metadata:
   name: bazarr-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 14002
+      targetPort: 14002
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: bazarr-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: bazarr-svc
+addressType: IPv4
+ports:
+  - port: 14002
+endpoints:
+  - addresses:
+      - "10.10.10.2"

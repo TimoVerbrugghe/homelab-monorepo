@@ -15,11 +15,9 @@ spec:
     stsSeconds: 15552000
     stsIncludeSubdomains: true
     stsPreload: true
-    customRequestHeaders:
-      X-Forwarded-Proto: https
     customFrameOptionsValue: SAMEORIGIN
     hostsProxyHeaders:
       - X-Forwarded-Host
     customResponseHeaders:
       X-Robots-Tag: "noindex,nofollow"
-      Permissions-Policy: "geolocation=(), microphone=(), camera=(), payment=(), usb=(), vr=()"
+      Permissions-Policy: "geolocation=(), microphone=(), camera=(), payment=(), usb=()"

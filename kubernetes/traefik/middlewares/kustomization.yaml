@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - ratelimit.yaml
   - secureheaders.yaml
-  - serverstransport.yaml
   - traefik-tls-cert.yaml

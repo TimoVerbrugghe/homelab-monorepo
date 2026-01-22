@@ -9,7 +9,22 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`radarr.kubernetes.timo.be`) || Host(`radarr.timo.be`)
+    # API → no auth
+    - match: ( Host(`radarr.timo.be`) || Host(`radarr.kubernetes.timo.be`) ) && PathPrefix(`/api`)
+      kind: Rule
+      services:
+        - name: radarr-svc
+          port: 14001
+
+    # SignalR → no auth
+    - match: ( Host(`radarr.timo.be`) || Host(`radarr.kubernetes.timo.be`) ) && PathPrefix(`/signalr`)
+      kind: Rule
+      services:
+        - name: radarr-svc
+          port: 14001
+
+    # Everything else → auth
+    - match: ( Host(`radarr.timo.be`) || Host(`radarr.kubernetes.timo.be`) ) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: radarr-svc
@@ -24,5 +39,21 @@ metadata:
   name: radarr-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 14001
+      targetPort: 14001
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: radarr-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: radarr-svc
+addressType: IPv4
+ports:
+  - port: 14001
+endpoints:
+  - addresses:
+      - "10.10.10.2"

@@ -1,11 +1,27 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: qbittorrent
+  name: qbittorrent-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 12000
+      targetPort: 12000
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: qbittorrent-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: qbittorrent-svc
+addressType: IPv4
+ports:
+  - port: 12000
+endpoints:
+  - addresses:
+      - "10.10.10.2"
 ---
 # Based on nginx configuration for reverse proxying on qbittorrent wiki: https://github.com/qbittorrent/qBittorrent/wiki/NGINX-Reverse-Proxy-for-Web-UI
 apiVersion: traefik.io/v1alpha1
@@ -31,10 +47,21 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`qbittorrent.kubernetes.timo.be`) || Host(`qbittorrent.timo.be`)
+    # API → no auth (qBittorrent uses its own API key auth)
+    - match: ( Host(`qbittorrent.timo.be`) || Host(`qbittorrent.kubernetes.timo.be`) ) && PathPrefix(`/api/v2`)
       kind: Rule
       services:
-        - name: qbittorrent
+        - name: qbittorrent-svc
+          port: 12000
+      middlewares:
+        - name: qbittorrent-headers
+          namespace: traefik
+
+    # Everything else → auth
+    - match: ( Host(`qbittorrent.timo.be`) || Host(`qbittorrent.kubernetes.timo.be`) ) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: qbittorrent-svc
           port: 12000
       middlewares:
         - name: auth

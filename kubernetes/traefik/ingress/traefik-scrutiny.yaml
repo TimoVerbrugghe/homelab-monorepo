@@ -14,7 +14,6 @@ spec:
       services:
         - name: scrutiny-svc
           port: 31054
-          serversTransport: serverstransport
       middlewares:
         - name: auth
           namespace: traefik

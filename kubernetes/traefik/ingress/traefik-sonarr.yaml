@@ -3,18 +3,33 @@ kind: IngressRoute
 metadata:
   name: sonarr
   namespace: traefik
-  annotations: 
+  annotations:
+    traefik.frontend.passHostHeader: "true"
     kubernetes.io/ingress.class: traefik
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`sonarr.kubernetes.timo.be`) || Host(`sonarr.timo.be`) || Host(`sonarrtest.timo.be`)
+    # API → no auth
+    - match: ( Host(`sonarr.timo.be`) || Host(`sonarr.kubernetes.timo.be`) )  && PathPrefix(`/api`)
       kind: Rule
       services:
         - name: sonarr-svc
           port: 14000
-          serversTransport: serverstransport
+
+    # SignalR → no auth
+    - match: ( Host(`sonarr.timo.be`) || Host(`sonarr.kubernetes.timo.be`) ) && PathPrefix(`/signalr`)
+      kind: Rule
+      services:
+        - name: sonarr-svc
+          port: 14000
+    
+    # Everything else → auth
+    - match: ( Host(`sonarr.timo.be`) || Host(`sonarr.kubernetes.timo.be`) ) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: sonarr-svc
+          port: 14000
       middlewares:
         - name: auth
           namespace: traefik
@@ -25,5 +40,21 @@ metadata:
   name: sonarr-svc
   namespace: traefik
 spec:
-  externalName: 10.10.10.2 # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 14000
+      targetPort: 14000
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: sonarr-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: sonarr-svc
+addressType: IPv4
+ports:
+  - port: 14000
+endpoints:
+  - addresses:
+      - "10.10.10.2"
