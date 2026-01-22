@@ -312,6 +312,7 @@
         siteMonitor: https://truenas.local.timo.be
         widget:
             type: truenas
+            version: 2 # Use new API version (after 26.04)
             url: http://truenas.local.timo.be
             key: "{{HOMEPAGE_VAR_TRUENAS_KEY}}"
             enablePools: true
