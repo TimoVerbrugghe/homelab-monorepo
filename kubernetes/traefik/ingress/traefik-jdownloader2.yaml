@@ -1,11 +1,27 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: jdownloader2
+  name: jdownloader2-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 12001
+      targetPort: 12001
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: jdownloader2-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: jdownloader2-svc
+addressType: IPv4
+ports:
+  - port: 12001
+endpoints:
+  - addresses:
+      - "10.10.10.2"
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -21,7 +37,7 @@ spec:
     - match: Host(`jdownloader2.kubernetes.timo.be`) || Host(`jdownloader2.timo.be`)
       kind: Rule
       services:
-        - name: jdownloader2
+        - name: jdownloader2-svc
           port: 12001
       middlewares:
         - name: auth

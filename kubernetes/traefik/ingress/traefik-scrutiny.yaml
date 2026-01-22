@@ -24,5 +24,21 @@ metadata:
   name: scrutiny-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 31054
+      targetPort: 31054
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: scrutiny-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: scrutiny-svc
+addressType: IPv4
+ports:
+  - port: 31054
+endpoints:
+  - addresses:
+      - "10.10.10.2"

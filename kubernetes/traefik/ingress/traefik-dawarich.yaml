@@ -21,5 +21,21 @@ metadata:
   name: dawarich-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: dawarich-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: dawarich-svc
+addressType: IPv4
+ports:
+  - port: 3000
+endpoints:
+  - addresses:
+      - "10.10.10.2"

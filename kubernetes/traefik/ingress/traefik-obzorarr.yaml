@@ -24,5 +24,21 @@ metadata:
   name: obzorarr-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 14011
+      targetPort: 14011
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: obzorarr-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: obzorarr-svc
+addressType: IPv4
+ports:
+  - port: 14011
+endpoints:
+  - addresses:
+      - "10.10.10.2"

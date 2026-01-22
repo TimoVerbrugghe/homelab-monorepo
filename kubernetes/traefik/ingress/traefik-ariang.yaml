@@ -1,20 +1,52 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ariang
+  name: ariang-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 12003
+      targetPort: 12003
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: ariang-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: ariang-svc
+addressType: IPv4
+ports:
+  - port: 12003
+endpoints:
+  - addresses:
+      - "10.10.10.2"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ariangrpc
+  name: ariangrpc-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 12004
+      targetPort: 12004
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: ariangrpc-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: ariangrpc-svc
+addressType: IPv4
+ports:
+  - port: 12004
+endpoints:
+  - addresses:
+      - "10.10.10.2"
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -30,7 +62,7 @@ spec:
     - match: Host(`ariang.kubernetes.timo.be`) || Host(`ariang.timo.be`)
       kind: Rule
       services:
-        - name: ariang
+        - name: ariang-svc
           port: 12003
       middlewares:
         - name: auth
@@ -50,7 +82,7 @@ spec:
     - match: (Host(`ariang.kubernetes.timo.be`) || Host(`ariang.timo.be`)) && PathPrefix(`/jsonrpc`)
       kind: Rule
       services:
-        - name: ariangrpc
+        - name: ariangrpc-svc
           port: 12004
       middlewares:
         - name: auth

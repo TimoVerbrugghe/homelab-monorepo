@@ -24,5 +24,21 @@ metadata:
   name: huntarr-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 14005
+      targetPort: 14005
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: huntarr-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: huntarr-svc
+addressType: IPv4
+ports:
+  - port: 14005
+endpoints:
+  - addresses:
+      - "10.10.10.2"

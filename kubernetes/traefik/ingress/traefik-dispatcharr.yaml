@@ -24,5 +24,21 @@ metadata:
   name: dispatcharr-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 14008
+      targetPort: 14008
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: dispatcharr-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: dispatcharr-svc
+addressType: IPv4
+ports:
+  - port: 14008
+endpoints:
+  - addresses:
+      - "10.10.10.2"

@@ -1,11 +1,27 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: metube
+  name: metube-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 12002
+      targetPort: 12002
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: metube-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: metube-svc
+addressType: IPv4
+ports:
+  - port: 12002
+endpoints:
+  - addresses:
+      - "10.10.10.2"
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -21,7 +37,7 @@ spec:
     - match: Host(`metube.kubernetes.timo.be`) || Host(`metube.timo.be`)
       kind: Rule
       services:
-        - name: metube
+        - name: metube-svc
           port: 12002
       middlewares:
         - name: auth

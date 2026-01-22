@@ -24,5 +24,21 @@ metadata:
   name: wrapperr-svc
   namespace: traefik
 spec:
-  externalName: thefactory.local.timo.be # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 14010
+      targetPort: 14010
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: wrapperr-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: wrapperr-svc
+addressType: IPv4
+ports:
+  - port: 14010
+endpoints:
+  - addresses:
+      - "10.10.10.2"

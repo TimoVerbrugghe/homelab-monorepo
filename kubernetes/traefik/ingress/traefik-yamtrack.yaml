@@ -42,5 +42,21 @@ metadata:
   name: yamtrack-svc
   namespace: traefik
 spec:
-  externalName: 10.10.10.2 # Can also be an IP address
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 14006
+      targetPort: 14006
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: yamtrack-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: yamtrack-svc
+addressType: IPv4
+ports:
+  - port: 14006
+endpoints:
+  - addresses:
+      - "10.10.10.2"

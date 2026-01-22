@@ -24,5 +24,21 @@ metadata:
   name: webtop-svc
   namespace: traefik
 spec:
-  externalName: truenas.local.timo.be
-  type: ExternalName
+  clusterIP: None
+  ports:
+    - port: 12006
+      targetPort: 12006
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: webtop-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: webtop-svc
+addressType: IPv4
+ports:
+  - port: 12006
+endpoints:
+  - addresses:
+      - "10.10.10.2"
