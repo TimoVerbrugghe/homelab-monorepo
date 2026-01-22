@@ -1,28 +1,20 @@
 ---
+# ExternalName service pointing to proxmox backends
+# Using ExternalName instead of headless services with EndpointSlices because:
+# - Traefik's healthCheck feature in TraefikService only works with ExternalName services
+# - This allows us to monitor backend availability and fail over to healthy instances
+# - The externalName is resolved by the cluster's DNS (AdGuardHome) to the correct IP
 apiVersion: v1
 kind: Service
 metadata:
   name: forestsector-svc
   namespace: traefik
 spec:
-  clusterIP: None
+  type: ExternalName
+  externalName: forestsector.local.timo.be
   ports:
     - port: 8006
       targetPort: 8006
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: forestsector-svc-1
-  namespace: traefik
-  labels:
-    kubernetes.io/service-name: forestsector-svc
-addressType: IPv4
-ports:
-  - port: 8006
-endpoints:
-  - addresses:
-      - "10.10.10.4"
 ---
 apiVersion: v1
 kind: Service
@@ -30,24 +22,11 @@ metadata:
   name: icesector-svc
   namespace: traefik
 spec:
-  clusterIP: None
+  type: ExternalName
+  externalName: icesector.local.timo.be
   ports:
     - port: 8006
       targetPort: 8006
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: icesector-svc-1
-  namespace: traefik
-  labels:
-    kubernetes.io/service-name: icesector-svc
-addressType: IPv4
-ports:
-  - port: 8006
-endpoints:
-  - addresses:
-      - "10.10.10.6"
 ---
 apiVersion: v1
 kind: Service
@@ -55,24 +34,11 @@ metadata:
   name: mountainsector-svc
   namespace: traefik
 spec:
-  clusterIP: None
+  type: ExternalName
+  externalName: mountainsector.local.timo.be
   ports:
     - port: 8006
       targetPort: 8006
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: mountainsector-svc-1
-  namespace: traefik
-  labels:
-    kubernetes.io/service-name: mountainsector-svc
-addressType: IPv4
-ports:
-  - port: 8006
-endpoints:
-  - addresses:
-      - "10.10.10.5"
 ---
 # Creating a TraefikService that allows me to loadbalance between the 3 proxmox servers with sticky sessions (necessary otherwise proxmox console does not work correctly)
 # Weighted round robin with same weights for each service to loadbalance equally between them
@@ -91,8 +57,8 @@ spec:
         weight: 1
         healthCheck:
           path: /
-          interval: 10
-          timeout: 3
+          interval: 10s
+          timeout: 3s
         sticky:
           cookie:
             name: lvl2
@@ -103,8 +69,8 @@ spec:
         scheme: https
         healthCheck:
           path: /
-          interval: 10
-          timeout: 3
+          interval: 10s
+          timeout: 3s
         sticky:
           cookie:
             name: lvl2
@@ -115,8 +81,8 @@ spec:
         scheme: https
         healthCheck:
           path: /
-          interval: 10
-          timeout: 3
+          interval: 10s
+          timeout: 3s
         sticky:
           cookie:
             name: lvl2
