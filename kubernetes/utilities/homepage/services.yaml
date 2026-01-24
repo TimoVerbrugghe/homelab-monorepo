@@ -127,6 +127,55 @@
             type: prowlarr
             url: http://thefactory.local.timo.be:14004
             key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
+    - Tautulli:
+        icon: tautulli.svg
+        href: https://tautulli.timo.be
+        server: thefactory
+        container: tautulli
+        widget:
+            type: tautulli
+            url: http://thefactory.local.timo.be:14009
+            key: "{{HOMEPAGE_VAR_TAUTULLI_KEY}}"
+    - Huntarr:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/huntarr.webp
+        href: https://huntarr.timo.be
+        server: thefactory
+        container: huntarr
+    - Yamtrack:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/yamtrack.svg
+        href: https://yamtrack.timo.be
+        server: thefactory
+        container: yamtrack
+    - Audiobookshelf:
+        icon: audiobookshelf.svg
+        href: https://audiobookshelf.timo.be
+        server: thefactory
+        container: audiobookshelf
+    - Dispatcharr:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/dispatcharr.svg
+        href: https://dispatcharr.timo.be
+        server: thefactory
+        container: dispatcharr
+    - Wrapperr:
+        icon: http://thefactory.local.timo.be:14010/assets/img/gift.svg
+        href: https://wrapperr.timo.be
+        server: thefactory
+        container: wrapperr
+    - Obzorarr:
+        icon: https://github.com/engels74/obzorarr/raw/main/src/lib/assets/obzorarr-icon.svg
+        href: https://obzorarr.timo.be
+        server: thefactory
+        container: obzorarr
+    - ErsatzTV:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/ersatztv.svg
+        href: https://ersatztv.timo.be
+        namespace: mediaplayback
+        app: ersatztv
+    - Subgen:
+        icon: https://raw.githubusercontent.com/TimoVerbrugghe/subgen-azure-batch/main/icon.png
+        href: https://subgen.timo.be
+        namespace: mediaplayback
+        app: subgen
 
 - Downloaders:
     - Qbittorrent:
@@ -139,16 +188,6 @@
             url: http://thefactory.local.timo.be:12000
             username: "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}"
             password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
-    # - Jdownloader:
-    #     icon: jdownloader.svg
-    #     href: https://jdownloader2.timo.be
-    #     server: thefactory
-    #     container: jdownloader
-    #     widget:
-    #         type: jdownloader
-    #         username: "{{HOMEPAGE_VAR_JDOWNLOADER_USERNAME}}"
-    #         password: "{{HOMEPAGE_VAR_JDOWNLOADER_PASSWORD}}"
-    #         client: Jdownloader@Docker
     - Spotdl:
         icon: spotify.svg
         href: https://spotdl.timo.be
@@ -164,6 +203,17 @@
         href: https://metube.timo.be
         server: thefactory
         container: metube
+    - JDownloader2:
+        icon: jdownloader.svg
+        href: https://jdownloader2.timo.be
+        server: thefactory
+        container: jdownloader2
+        widget:
+            type: jdownloader
+            url: http://thefactory.local.timo.be:12001
+            username: "{{HOMEPAGE_VAR_JDOWNLOADER_USERNAME}}"
+            password: "{{HOMEPAGE_VAR_JDOWNLOADER_PASSWORD}}"
+            client: Jdownloader@Docker
 
 - Networking:
     - Unifi:
@@ -272,6 +322,21 @@
         widget:
             type: gatus
             url: http://gatus.utilities.svc.cluster.local:8080
+    - Dawarich:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/dawarich.svg
+        href: https://dawarich.timo.be
+        server: thefactory
+        container: dawarich_app
+    - Webtop:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/webtop.webp
+        href: https://webtop.timo.be
+        server: thefactory
+        container: webtop
+    - NS-USBloader:
+        icon: https://raw.githubusercontent.com/developersu/ns-usbloader/master/screenshots/ApplicationLogo.svg
+        href: https://nsusbloader.timo.be
+        namespace: utilities
+        app: ns-usbloader
 
 - Containers:
     - Ulrich:
