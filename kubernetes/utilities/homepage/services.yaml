@@ -157,7 +157,7 @@
         server: thefactory
         container: dispatcharr
     - Wrapperr:
-        icon: http://thefactory.local.timo.be:14010/assets/img/gift.svg
+        icon: https://raw.githubusercontent.com/aunefyren/wrapperr/main/web/assets/logos/logo.svg
         href: https://wrapperr.timo.be
         server: thefactory
         container: wrapperr
@@ -204,16 +204,15 @@
         server: thefactory
         container: metube
     - JDownloader2:
-        icon: jdownloader.svg
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jdownloader.webp
         href: https://jdownloader2.timo.be
         server: thefactory
         container: jdownloader2
         widget:
             type: jdownloader
-            url: http://thefactory.local.timo.be:12001
             username: "{{HOMEPAGE_VAR_JDOWNLOADER_USERNAME}}"
             password: "{{HOMEPAGE_VAR_JDOWNLOADER_PASSWORD}}"
-            client: Jdownloader@Docker
+            client: JDownloader@Docker
 
 - Networking:
     - Unifi:
