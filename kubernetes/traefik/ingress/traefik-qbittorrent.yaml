@@ -22,6 +22,8 @@ ports:
 endpoints:
   - addresses:
       - "10.10.10.2"
+    conditions:
+      ready: true
 ---
 # Based on nginx configuration for reverse proxying on qbittorrent wiki: https://github.com/qbittorrent/qBittorrent/wiki/NGINX-Reverse-Proxy-for-Web-UI
 apiVersion: traefik.io/v1alpha1

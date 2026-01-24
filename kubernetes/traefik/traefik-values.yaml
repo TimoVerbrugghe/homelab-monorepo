@@ -50,9 +50,9 @@ ports:
         idleTimeout: 420s
     tls:
       enabled: true
-    middlewares:
-      - traefik-secureheaders@kubernetescrd
-      - traefik-ratelimit@kubernetescrd
+    # middlewares:
+    #   - traefik-secureheaders@kubernetescrd
+    #   - traefik-ratelimit@kubernetescrd
   metrics:
     port: 9100
     expose:

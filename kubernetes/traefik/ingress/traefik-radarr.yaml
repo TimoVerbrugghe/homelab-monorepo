@@ -57,3 +57,5 @@ ports:
 endpoints:
   - addresses:
       - "10.10.10.2"
+    conditions:
+      ready: true

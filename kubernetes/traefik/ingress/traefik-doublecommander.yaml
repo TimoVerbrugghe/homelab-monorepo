@@ -23,6 +23,8 @@ ports:
 endpoints:
   - addresses:
       - "10.10.10.2"
+    conditions:
+      ready: true
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute

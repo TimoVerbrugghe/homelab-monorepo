@@ -4,7 +4,6 @@ metadata:
   name: sonarr
   namespace: traefik
   annotations:
-    traefik.frontend.passHostHeader: "true"
     kubernetes.io/ingress.class: traefik
 spec:
   entryPoints:
@@ -58,3 +57,5 @@ ports:
 endpoints:
   - addresses:
       - "10.10.10.2"
+    conditions:
+      ready: true

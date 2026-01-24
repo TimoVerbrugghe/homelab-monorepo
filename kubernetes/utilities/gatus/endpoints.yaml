@@ -148,6 +148,56 @@ endpoints:
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
+  - name: "Tautulli"
+    url: "http://thefactory.local.timo.be:14009"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Huntarr"
+    url: "http://thefactory.local.timo.be:14005"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Yamtrack"
+    url: "http://thefactory.local.timo.be:14006"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Audiobookshelf"
+    url: "http://thefactory.local.timo.be:14007"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Dispatcharr"
+    url: "http://thefactory.local.timo.be:14008"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Wrapperr"
+    url: "http://thefactory.local.timo.be:14010"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Obzorarr"
+    url: "http://thefactory.local.timo.be:14011"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "ErsatzTV"
+    url: "http://ersatztv.mediaplayback.svc.cluster.local:8409"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "KPTV-Fast"
+    url: "http://kptv-fast.mediaplayback.svc.cluster.local:7777/status"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Subgen"
+    url: "http://subgen.mediaplayback.svc.cluster.local:9000"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
   # Downloaders Group
   - name: "Qbittorrent"
     url: "http://thefactory.local.timo.be:12000"
@@ -166,6 +216,11 @@ endpoints:
 
   - name: "Metube"
     url: "http://thefactory.local.timo.be:12002"
+    group: Downloaders
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "JDownloader2"
+    url: "http://thefactory.local.timo.be:12001"
     group: Downloaders
     <<: [*defaults-http, *defaults-alerts]
 
@@ -254,6 +309,21 @@ endpoints:
 
   - name: "BentoPDF"
     url: "http://bentopdf.utilities.svc.cluster.local:8080"
+    group: Utilities
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Dawarich"
+    url: "http://thefactory.local.timo.be:3000"
+    group: Utilities
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Webtop"
+    url: "http://thefactory.local.timo.be:12006"
+    group: Utilities
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "NS-USBloader"
+    url: "http://ns-usbloader-web.utilities.svc.cluster.local:8080"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
