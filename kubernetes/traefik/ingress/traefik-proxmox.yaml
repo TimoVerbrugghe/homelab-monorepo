@@ -58,7 +58,7 @@ spec:
         healthCheck:
           path: /
           interval: 10s
-          timeout: 3s
+          timeout: 10s
         sticky:
           cookie:
             name: lvl2
@@ -70,7 +70,7 @@ spec:
         healthCheck:
           path: /
           interval: 10s
-          timeout: 3s
+          timeout: 10s
         sticky:
           cookie:
             name: lvl2
@@ -82,7 +82,7 @@ spec:
         healthCheck:
           path: /
           interval: 10s
-          timeout: 3s
+          timeout: 10s
         sticky:
           cookie:
             name: lvl2
