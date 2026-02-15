@@ -70,9 +70,10 @@ services:
     ports:
       - 14002:6767
 
-  overseerr:
-    container_name: overseerr
-    image: sctx/overseerr:latest
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
+    container_name: seerr
     restart: always
     networks:
       - dockerproxy
@@ -82,10 +83,11 @@ services:
     volumes:
       - overseerr:/app/config
     healthcheck:
-      test: ["CMD-SHELL", "wget http://localhost:5055/api/v1/status -qO /dev/null || exit 1"]
-      interval: 1s
-      timeout: 5s
-      retries: 60
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
     ports:
       - 14003:5055
     dns:
@@ -330,7 +332,7 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/radarr"
-  overseerr:
+  seerr:
     driver: local
     driver_opts:
       type: "none"
