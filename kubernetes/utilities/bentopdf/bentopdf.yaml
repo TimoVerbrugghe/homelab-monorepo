@@ -24,7 +24,7 @@ spec:
       containers:
       - name: bentopdf
         image: ghcr.io/alam00000/bentopdf:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: DOCKER_ENABLE_SECURITY
           value: "false"

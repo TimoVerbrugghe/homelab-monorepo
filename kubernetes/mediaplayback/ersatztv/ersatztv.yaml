@@ -44,7 +44,7 @@ spec:
       containers:
       - name: ersatztv
         image: ghcr.io/ersatztv/ersatztv:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: TZ
           value: "Europe/Brussels"

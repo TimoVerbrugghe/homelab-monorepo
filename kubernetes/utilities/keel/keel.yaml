@@ -25,7 +25,7 @@ spec:
       containers:
       - name: keel
         image: keelhq/keel:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         command: ["/bin/keel"]
         env:
         - name: NAMESPACE

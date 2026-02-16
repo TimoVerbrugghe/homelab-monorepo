@@ -23,7 +23,7 @@ spec:
       containers:
         - name: kptv-fast
           image: ghcr.io/kpirnie/kptv-fast:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             requests:
               cpu: "100m"

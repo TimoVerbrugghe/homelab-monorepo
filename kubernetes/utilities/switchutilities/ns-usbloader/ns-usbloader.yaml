@@ -24,7 +24,7 @@ spec:
       containers:
       - name: ns-usbloader
         image: ghcr.io/timoverbrugghe/ns-usbloader:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         resources:
           limits:
             memory: "1Gi"

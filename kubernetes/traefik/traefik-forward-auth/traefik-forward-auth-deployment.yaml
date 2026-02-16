@@ -37,7 +37,7 @@ spec:
               - "ALL"
           seccompProfile:
             type: RuntimeDefault
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 4181
         resources:

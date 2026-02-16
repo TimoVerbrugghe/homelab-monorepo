@@ -27,7 +27,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - image: twinproduction/gatus:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: gatus
           env:
             - name: GATUS_CONFIG_PATH

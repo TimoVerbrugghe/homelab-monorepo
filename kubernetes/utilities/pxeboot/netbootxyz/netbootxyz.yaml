@@ -23,7 +23,7 @@ spec:
       containers:
         - name: netbootxyz
           image: ghcr.io/netbootxyz/netbootxyz:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: TFTPD_OPTS
               value: "--tftp-single-port"

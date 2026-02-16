@@ -24,7 +24,7 @@ spec:
       containers:
       - name: tinshop
         image: ghcr.io/ajmandourah/tinshop-ng:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         resources:
           limits:
             memory: "512Mi"

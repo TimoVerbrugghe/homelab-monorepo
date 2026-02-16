@@ -21,7 +21,7 @@ spec:
       containers:
       - name: adguardhome-sync
         image: ghcr.io/bakito/adguardhome-sync:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
