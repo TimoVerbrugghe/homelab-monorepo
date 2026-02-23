@@ -15,7 +15,6 @@ resources:
   - traefik-radarr.yaml
   - traefik-bazarr.yaml
   - traefik-prowlarr.yaml
-  - traefik-huntarr.yaml
   - traefik-yamtrack.yaml
   - traefik-dispatcharr.yaml
   - traefik-tautulli.yaml

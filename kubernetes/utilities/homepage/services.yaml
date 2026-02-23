@@ -136,11 +136,6 @@
             type: tautulli
             url: http://thefactory.local.timo.be:14009
             key: "{{HOMEPAGE_VAR_TAUTULLI_KEY}}"
-    - Huntarr:
-        icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/huntarr.webp
-        href: https://huntarr.timo.be
-        server: thefactory
-        container: huntarr
     - Yamtrack:
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/yamtrack.svg
         href: https://yamtrack.timo.be

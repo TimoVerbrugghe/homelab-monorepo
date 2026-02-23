@@ -32,22 +32,6 @@
         }
       }
     },
-    "svc:huntarr": {
-      "TCP": {
-        "443": {
-          "HTTPS": true
-        }
-      },
-      "Web": {
-        "huntarr.pony-godzilla.ts.net:443": {
-          "Handlers": {
-            "/": {
-              "Proxy": "http://localhost:14005"
-            }
-          }
-        }
-      }
-    },
     "svc:prowlarr": {
       "TCP": {
         "443": {

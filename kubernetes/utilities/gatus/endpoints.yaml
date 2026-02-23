@@ -153,11 +153,6 @@ endpoints:
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "Huntarr"
-    url: "http://thefactory.local.timo.be:14005"
-    group: Media
-    <<: [*defaults-http, *defaults-alerts]
-
   - name: "Yamtrack"
     url: "http://thefactory.local.timo.be:14006"
     group: Media
