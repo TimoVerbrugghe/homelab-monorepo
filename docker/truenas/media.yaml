@@ -378,12 +378,6 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/X.A.N.A./media/audiobooks"
-  huntarr:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/huntarr"
   dispatcharr:
     driver: local
     driver_opts:
