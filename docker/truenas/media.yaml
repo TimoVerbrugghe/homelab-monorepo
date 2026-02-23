@@ -166,20 +166,7 @@ services:
       - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
       - AGGRESSIVE_STRIKES=true      # Boolean              (Optional) default: false
-
-  huntarr:
-    image: huntarr/huntarr:latest
-    container_name: huntarr
-    restart: always
-    networks:
-      - dockerproxy
-    ports:
-      - 14005:9705
-    volumes:
-      - huntarr:/config
-    environment:
-      - TZ=Europe/Brussels
-
+      
   yamtrack:
     container_name: yamtrack
     image: ghcr.io/fuzzygrim/yamtrack
