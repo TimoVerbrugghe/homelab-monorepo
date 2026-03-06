@@ -184,7 +184,7 @@ endpoints:
     <<: [*defaults-http, *defaults-alerts]
 
   - name: "KPTV-Fast"
-    url: "http://kptv-fast.mediaplayback.svc.cluster.local:7777/status"
+    url: "http://kptv-fast.mediaplayback.svc.cluster.local:8080/status"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
