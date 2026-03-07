@@ -114,6 +114,9 @@ services:
       retries: 60
     ports:
       - 14004:9696
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
   
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
