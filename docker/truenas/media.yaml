@@ -130,11 +130,16 @@ services:
       - TZ=Europe/Brussels
       - CRON_SCHEDULE=@daily
 
-  byparr:
-    image: ghcr.io/thephaseless/byparr:latest
-    container_name: byparr
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
     restart: always
-    init: true
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_FILE=${LOG_FILE:-none}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/London
     networks:
       - dockerproxy
 
