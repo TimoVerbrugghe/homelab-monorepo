@@ -27,7 +27,8 @@ in
 
   systemd.services.cloudflareTunnel = lib.mkIf secretFileExists {
     wantedBy = ["multi-user.target"];
-    after = [ "network-online.target" "systemd-resolved.service" ];
+    wants = [ "network-online.target" ];
+    after = [ "network-online.target" ];
     serviceConfig = {
         ExecStart = "${pkgs.cloudflared}/bin/cloudflared tunnel --no-autoupdate run --token=${cloudflareTunnelToken}";
         Restart = "always";
