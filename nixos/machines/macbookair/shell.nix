@@ -19,6 +19,8 @@
     eza
     nmap
     jq
+    gh # GitHub CLI
+    terraform # Terraform CLI
   ];
 
   homebrew = {
