@@ -290,6 +290,24 @@ services:
       timeout: 5s
       retries: 60
 
+  houndarr:
+    image: ghcr.io/av1155/houndarr:latest
+    container_name: houndarr
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=Europe/Brussels
+      - UMASK=002
+      - HOUNDARR_SECURE_COOKIES=true
+      - HOUNDARR_TRUSTED_PROXIES=10.10.10.34
+    volumes:
+      - houndarr:/data
+    ports:
+      - 14012:8877
+
 networks:
   dockerproxy:
     external: true
@@ -410,3 +428,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/obzorarr"
+  houndarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/houndarr"
