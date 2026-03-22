@@ -10,8 +10,10 @@
   services.qemuGuest.enable = true;
   
   # Enable watchdog
-  systemd.watchdog.device = "/dev/watchdog";
-  systemd.watchdog.runtimeTime = "30s";
+  systemd.settings.Manager = {
+    RuntimeWatchdogSec = "30s";
+    WatchdogDevice = "/dev/watchdog";
+  };
 
   # Enable fstrim so that discarded blocks are recovered on the host
   services.fstrim.enable = true;
