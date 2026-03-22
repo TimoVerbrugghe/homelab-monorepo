@@ -28,15 +28,20 @@ in
 
   # Only configure tailscale if tailscale-authkey exists
   config = lib.mkIf secretFileExists {
-    services.tailscale.enable = true;
-    services.tailscale.extraUpFlags = [
-      "--ssh"
-    ];
-
-    # Tailscale Authkey
-    services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
-      ${tailscaleAuthKey}
-    '';
+    services.tailscale = {
+      enable = true;
+      authKeyFile = pkgs.writeText "tailscale_authkey" ''
+        ${tailscaleAuthKey}
+      '';
+      authKeyParameters = {
+        ephemeral = false;
+        preauthorized = true;
+      };
+      extraUpFlags = [
+        "--ssh"
+      ];
+      useRoutingFeatures = "both";
+    };
 
     systemd.services.tailscale-cert-renewal = {
       enable = true;

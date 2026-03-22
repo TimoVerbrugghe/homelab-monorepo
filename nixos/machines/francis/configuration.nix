@@ -297,17 +297,22 @@ in
   };
 
   ## Tailscale setup
-  services.tailscale.enable = true;
-  services.tailscale.useRoutingFeatures = "both";
-  services.tailscale.extraUpFlags = [
-    "--advertise-exit-node"
-    "--advertise-routes=192.168.0.0/24"
-  ];
-
-  # Tailscale Authkey
-  services.tailscale.authKeyFile = pkgs.writeText "tailscale_authkey" ''
-    ${config.tailscaleAuthKey}
-  '';
+  services.tailscale = {
+    enable = true;
+    authKeyFile = pkgs.writeText "tailscale_authkey" ''
+      ${config.tailscaleAuthKey}
+    '';
+    authKeyParameters = {
+      ephemeral = false;
+      preauthorized = true;
+    };
+    extraUpFlags = [
+      "--advertise-tags=tag:server"
+      "--advertise-exit-node"
+      "--advertise-routes=192.168.0.0/24"
+    ];
+    useRoutingFeatures = "both";
+  };
 
   systemd.services.tailscale-cert-renewal = {
     enable = true;
