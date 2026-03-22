@@ -39,6 +39,7 @@ in
       };
       extraUpFlags = [
         "--ssh"
+        "--advertise-tags=tag:vm"
       ];
       useRoutingFeatures = "both";
     };
