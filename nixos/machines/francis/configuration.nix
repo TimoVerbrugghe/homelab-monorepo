@@ -57,7 +57,7 @@ in
       ./hardware-configuration.nix
       
       # Include tailscale oauth secret file, you need to put this manually in your nixos install
-      /etc/nixos/tailscale-oauth-secret.nix
+      /etc/nixos/tailscale-oauth-secret
     ];
 
   system.stateVersion = "23.11";
