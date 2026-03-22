@@ -16,6 +16,7 @@
     talosctl
     azure-cli
     yamllint
+    butane
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
