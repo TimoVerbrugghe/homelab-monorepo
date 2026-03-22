@@ -24,6 +24,8 @@ let
 
   tailscaleDomain = "werewolf-castor.ts.net";
 
+  tailscaleOauthSecret = builtins.readFile /etc/nixos/tailscale-oauth-secret;
+
   portainerCompose = pkgs.writeText "portainer-docker-compose.yaml" ''
     version: '3.8'
 
@@ -56,8 +58,7 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       
-      # Include tailscale oauth secret file, you need to put this manually in your nixos install
-      /etc/nixos/tailscale-oauth-secret
+      # tailscale-oauth-secret is read via builtins.readFile in the let block above
     ];
 
   system.stateVersion = "23.11";
@@ -300,7 +301,7 @@ in
   services.tailscale = {
     enable = true;
     authKeyFile = pkgs.writeText "tailscale_oauth_secret" ''
-      ${config.tailscaleOauthSecret}
+      ${tailscaleOauthSecret}
     '';
     authKeyParameters = {
       ephemeral = false;
