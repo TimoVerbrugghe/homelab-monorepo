@@ -56,8 +56,8 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       
-      # Include tailscale authkey file, you need to put this manually in your nixos install
-      /etc/nixos/tailscale-authkey.nix
+      # Include tailscale oauth secret file, you need to put this manually in your nixos install
+      /etc/nixos/tailscale-oauth-secret.nix
     ];
 
   system.stateVersion = "23.11";
@@ -299,8 +299,8 @@ in
   ## Tailscale setup
   services.tailscale = {
     enable = true;
-    authKeyFile = pkgs.writeText "tailscale_authkey" ''
-      ${config.tailscaleAuthKey}
+    authKeyFile = pkgs.writeText "tailscale_oauth_secret" ''
+      ${config.tailscaleOauthSecret}
     '';
     authKeyParameters = {
       ephemeral = false;

@@ -6,14 +6,14 @@ with types;
 let
   cfg = config.services.tailscale;
 
-  # Path to tailscale authkey
-  secretFilePath = "/etc/nixos/tailscale-authkey";
+  # Path to tailscale oauth secret
+  secretFilePath = "/etc/nixos/tailscale-oauth-secret";
 
-  # Check if tailscale authkey file exists
+  # Check if tailscale oauth secret file exists
   secretFileExists = builtins.pathExists secretFilePath;
 
-  # Conditionally read tailscale authkey
-  tailscaleAuthKey = if secretFileExists
+  # Conditionally read tailscale oauth secret
+  tailscaleOauthSecret = if secretFileExists
                     then builtins.readFile secretFilePath
                     else null;
 in
@@ -30,8 +30,8 @@ in
   config = lib.mkIf secretFileExists {
     services.tailscale = {
       enable = true;
-      authKeyFile = pkgs.writeText "tailscale_authkey" ''
-        ${tailscaleAuthKey}
+      authKeyFile = pkgs.writeText "tailscale_oauth_secret" ''
+        ${tailscaleOauthSecret}
       '';
       authKeyParameters = {
         ephemeral = false;
