@@ -233,12 +233,35 @@ endpoints:
   - name: "Adguardhome (Ulrich)"
     url: "10.10.10.21"
     group: Networking
-    <<: [*defaults-dns, *defaults-alerts]
+    # DNS checks to this VM have shown intermittent UDP timeouts from the Kubernetes cluster.
+    # Increase only this endpoint's timeout to reduce false negatives from short packet-loss bursts.
+    client:
+      timeout: 20s
+    # Keep alerting signal meaningful: require a longer run of failures before notifying,
+    # while still resolving quickly after recovery.
+    alerts:
+      - type: pushover
+        failure-threshold: 20
+        success-threshold: 2
+        description: "Health check failed"
+        send-on-resolved: true
+    <<: [*defaults-dns]
 
   - name: "Adguardhome (Odd)"
     url: "10.10.10.22"
     group: Networking
-    <<: [*defaults-dns, *defaults-alerts]
+    # Apply the same resilience profile as Ulrich, because Gatus pod scheduling is dynamic
+    # and the same DNS path behavior may appear depending on node placement/routing at runtime.
+    client:
+      timeout: 20s
+    # Endpoint-specific thresholds to avoid noisy alerts from transient UDP dropouts.
+    alerts:
+      - type: pushover
+        failure-threshold: 20
+        success-threshold: 2
+        description: "Health check failed"
+        send-on-resolved: true
+    <<: [*defaults-dns]
 
   - name: "Netbootxyz"
     url: "http://netbootxyz.local.timo.be:3000"
