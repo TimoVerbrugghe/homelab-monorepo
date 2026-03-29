@@ -1,0 +1,68 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "ha-token",
+      "description": "Home Assistant long-lived access token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "portainer-token",
+      "description": "Portainer administrator API token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "tailscale-oauth-client-id",
+      "description": "Tailscale OAuth client ID",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "tailscale-oauth-client-secret",
+      "description": "Tailscale OAuth client secret",
+      "password": true
+    }
+  ],
+  "servers": {
+    "homeAssistant": {
+      "type": "http",
+      "url": "http://homeassistant.local:8123/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:ha-token}"
+      }
+    },
+    "kubernetes": {
+      "command": "npx",
+      "args": ["mcp-server-kubernetes"],
+    },
+    "tailscale": {
+      "command": "npx",
+      "args": [
+        "--package=@hexsleeves/tailscale-mcp-server",
+        "tailscale-mcp-server"
+      ],
+      "env": {
+        "TAILSCALE_OAUTH_CLIENT_ID": "${input:tailscale-oauth-client-id}",
+        "TAILSCALE_OAUTH_CLIENT_SECRET": "${input:tailscale-oauth-client-secret}",
+        "TAILSCALE_TAILNET": "pony-godzilla.ts.net"
+      }
+    },
+    "portainer": {
+      "type": "stdio",
+      "command": "container",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "ghcr.io/jmrplens/portainer-mcp-enhanced:latest",
+        "-server",
+        "https://portainer.timo.be",
+        "-token",
+        "${input:portainer-token}",
+        "-disable-version-check"
+      ]
+    }
+  }
+}

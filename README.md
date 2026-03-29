@@ -15,6 +15,40 @@ This repository contains all my setup files while I'm learning Ansible, Kubernet
 
 Heavily influenced by TechnoTim (<https://github.com/techno-tim>), Christian Lempa (<https://github.com/ChristianLempa/christianlempa>) & the Linux Unplugged team (<https://linuxunplugged.com/>).
 
+## MCP Servers (VS Code)
+
+This repository includes a local VS Code MCP configuration in `.vscode/mcp.json` with the following servers:
+
+- `homeAssistant`
+  - Type: HTTP MCP endpoint
+  - URL: `http://homeassistant.local:8123/api/mcp`
+  - Auth: Bearer token from secure input `ha-token`
+
+- `kubernetes`
+  - Type: stdio command server
+  - Command: `npx mcp-server-kubernetes`
+
+- `tailscale`
+  - Type: stdio command server
+  - Command: `npx --package=@hexsleeves/tailscale-mcp-server tailscale-mcp-server`
+  - Auth: OAuth client credentials from secure inputs `tailscale-oauth-client-id` and `tailscale-oauth-client-secret`
+  - Tailnet: `pony-godzilla.ts.net`
+
+- `portainer`
+  - Type: stdio command server (containerized)
+  - Image: `ghcr.io/jmrplens/portainer-mcp-enhanced:latest`
+  - Endpoint: `https://portainer.timo.be`
+  - Auth: API token from secure input `portainer-token`
+
+### Required MCP Inputs
+
+The following values are prompted securely when MCP starts:
+
+- `ha-token`
+- `portainer-token`
+- `tailscale-oauth-client-id`
+- `tailscale-oauth-client-secret`
+
 ## GitHub Workflows Status
 
 ![Build NixOS ISOs](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/build-nixos-isos.yaml?branch=master&label=build-nixos-isos&logo=githubactions&logoColor=white)

@@ -1,6 +1,9 @@
 **/.terraform*
 **/*.auto.tfvars
 **/.vscode
+!/.vscode/
+.vscode/*
+!.vscode/mcp.json
 **/terraform.tfstate*
 **/*auto.pkrvars.hcl
 **/downloaded_**
