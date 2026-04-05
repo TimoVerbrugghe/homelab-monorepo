@@ -9,7 +9,7 @@ services:
       - PUID=${PUID:-3000}
       - PGID=${PGID:-3000}
       - TZ=Europe/Brussels
-      - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
+      - DOCKER_MODS=ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest
     volumes:
       - qbittorrent:/config
       - downloads:/downloads
