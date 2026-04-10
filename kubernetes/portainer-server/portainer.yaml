@@ -28,6 +28,9 @@ spec:
         app.kubernetes.io/name: portainer
         app.kubernetes.io/instance: portainer
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       nodeSelector:
         kubernetes.io/hostname: yumi
       serviceAccountName: portainer-sa-clusteradmin
@@ -40,6 +43,10 @@ spec:
         - name: portainer
           image: portainer/portainer-ce:sts
           imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           volumeMounts:
             - name: data
               mountPath: /data              

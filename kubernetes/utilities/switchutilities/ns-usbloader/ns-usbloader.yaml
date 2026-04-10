@@ -21,10 +21,20 @@ spec:
         app: ns-usbloader
         app.kubernetes.io/name: ns-usbloader
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: ns-usbloader
         image: ghcr.io/timoverbrugghe/ns-usbloader:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 3000
+          runAsGroup: 3000
+          capabilities:
+            drop: ["ALL"]
         resources:
           limits:
             memory: "1Gi"
@@ -71,9 +81,8 @@ spec:
         
         volumeMounts:
         - name: ns-usbloader-config
-          mountPath: /root/.java/.userPrefs/NS-USBloader/prefs.xml
+          mountPath: /home/nsusbloader/.java/.userPrefs/NS-USBloader/prefs.xml
           subPath: prefs.xml
-          readOnly: true
         - name: nsp
           mountPath: /nsp
       

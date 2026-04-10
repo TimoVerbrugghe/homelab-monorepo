@@ -84,11 +84,11 @@
     - Mealie:
         icon: mealie.svg
         href: https://mealie.timo.be
-        namespace: utilities
+        namespace: utilities-priv
         app: mealie
         widget:
             type: mealie
-            url: http://mealie.utilities.svc.cluster.local:9000
+            url: http://mealie.utilities-priv.svc.cluster.local:9000
             key: "{{HOMEPAGE_VAR_MEALIE_KEY}}"
             version: 2
     - Sonarr:
@@ -263,12 +263,12 @@
     - Netbootxyz:
         icon: netboot.svg
         href: https://netbootxyz.timo.be
-        namespace: utilities
+        namespace: pxeboot
         app: netbootxyz
     - iVentoy:
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/iventoy.svg
         href: https://iventoy.timo.be
-        namespace: utilities
+        namespace: pxeboot
         app: iventoy
         
 - Filemanagement:
@@ -296,7 +296,7 @@
     - Bitwarden:
         icon: bitwarden.svg
         href: https://bitwarden.timo.be
-        namespace: utilities
+        namespace: utilities-priv
         app: bitwarden
     - Keel:
         icon: mdi-update
@@ -311,11 +311,11 @@
     - Gatus:
         icon: gatus.svg
         href: https://gatus.timo.be
-        namespace: utilities
+        namespace: utilities-priv
         app: gatus
         widget:
             type: gatus
-            url: http://gatus.utilities.svc.cluster.local:8080
+            url: http://gatus.utilities-priv.svc.cluster.local:8080
     - Dawarich:
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/dawarich.svg
         href: https://dawarich.timo.be

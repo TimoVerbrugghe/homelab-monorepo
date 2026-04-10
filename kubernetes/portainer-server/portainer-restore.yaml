@@ -6,6 +6,9 @@ metadata:
 spec:
   template:
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       restartPolicy: Never
       nodeSelector:
         kubernetes.io/hostname: yumi
@@ -21,6 +24,8 @@ spec:
         - name: restore
           image: ghcr.io/timoverbrugghe/k8s-restore:latest
           imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
           volumeMounts:
             - name: portainer-data
               mountPath: /appdata

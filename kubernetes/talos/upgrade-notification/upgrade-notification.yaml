@@ -14,9 +14,16 @@ spec:
     spec:
       template:
         spec:
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
           initContainers:
             - name: talos-version-check
               image: alpine:latest
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
               env:
                 - name: TALOS_NODE
                   value: "william.local.timo.be"
@@ -40,6 +47,10 @@ spec:
           containers:
             - name: notify
               image: alpine:latest
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
               env:
                 - name: PUSHOVER_USER_KEY
                   valueFrom:

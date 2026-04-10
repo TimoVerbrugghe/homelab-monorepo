@@ -20,12 +20,19 @@ spec:
       labels:
         app.kubernetes.io/name: epicgames-freegames
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       nodeSelector:
         kubernetes.io/hostname: yumi
       containers:
         - name: epicgames-freegames
           image: ghcr.io/claabs/epicgames-freegames-node:latest
           imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           resources:
             requests:
               cpu: "100m"

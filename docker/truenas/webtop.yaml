@@ -18,8 +18,6 @@ services:
       - 12006:3000
       - 12007:3001
     shm_size: "1gb" # Increase shared memory for Chrome stability
-    security_opt:
-      - seccomp:unconfined # optional, for better compatibility
 
 volumes:
   webtop:

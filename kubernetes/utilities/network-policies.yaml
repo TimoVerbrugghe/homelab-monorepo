@@ -1,0 +1,79 @@
+# NetworkPolicy for utilities namespace.
+# NOTE: Requires a NetworkPolicy-capable CNI (e.g. Cilium, Calico).
+# Flannel alone does NOT enforce these policies.
+---
+# Default: deny all ingress into the namespace.
+# Egress is unrestricted at namespace level; per-workload egress restrictions
+# can be layered on top once baseline ingress isolation is proven stable.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: utilities
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+---
+# Allow ingress from Traefik so IngressRoutes keep working.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-traefik
+  namespace: utilities
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: traefik
+---
+# Allow ingress from Tailscale operator so tailscale ingresses keep working.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-tailscale
+  namespace: utilities
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+---
+# Allow ingress from utilities-priv so Gatus can monitor services in this namespace.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-utilities-priv
+  namespace: utilities
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: utilities-priv
+---
+# Allow pods within the same namespace to reach each other
+# (e.g. Gatus monitoring Homepage, Keel watching deployments via kube-api).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: utilities
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector: {}

@@ -1,0 +1,78 @@
+# NetworkPolicy for utilities-priv namespace.
+# NOTE: Requires a NetworkPolicy-capable CNI (e.g. Cilium, Calico).
+# Flannel alone does NOT enforce these policies.
+---
+# Default: deny all ingress.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: utilities-priv
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+---
+# Allow ingress from Traefik (Bitwarden web UI, Mealie web UI).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-traefik
+  namespace: utilities-priv
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: traefik
+---
+# Allow ingress from Tailscale operator.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-tailscale
+  namespace: utilities-priv
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+---
+# Allow ingress from utilities namespace so Homepage and Gatus can reach
+# Bitwarden and Mealie service endpoints for widgets and health checks.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-utilities
+  namespace: utilities-priv
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: utilities
+---
+# Allow intra-namespace communication (e.g. Bitwarden export job → Bitwarden svc,
+# Changedetection → Playwright sidecar).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: utilities-priv
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector: {}

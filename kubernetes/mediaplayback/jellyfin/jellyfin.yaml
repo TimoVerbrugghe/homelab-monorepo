@@ -21,9 +21,13 @@ spec:
       labels:
         app.kubernetes.io/name: jellyfin
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        fsGroup: 3000
       # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem
       initContainers:
-      - name: format-volume
+      - name: prep-volume
         image: busybox:1.35
         command: ['sh', '-c']
         args:
@@ -39,12 +43,38 @@ spec:
         volumeMounts:
         - name: jellyfin-config
           mountPath: /dev/sda
-          subPath: "" 
+          subPath: ""
+
+      # ONE-TIME: Migrate /config ownership from to another jellyfin user (UID/GID 3000).
+      # This init container is only needed when changing runAsUser/runAsGroup on an existing
+      # jellyfin install. After confirming jellyfin is healthy and running as non-root,
+      # comment out this entire initContainer block.
+      # - name: chown-config
+      #   image: busybox:1.35
+      #   command: ['sh', '-c']
+      #   args:
+      #   - |
+      #     echo "Chowning /config to 3000:3000..."
+      #     chown -R 3000:3000 /config
+      #     echo "Done"
+      #   securityContext:
+      #     privileged: true
+      #   volumeMounts:
+      #   - name: jellyfin-config
+      #     mountPath: /config 
 
       containers:
       - name: jellyfin
         image: ghcr.io/jellyfin/jellyfin:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 3000
+          runAsGroup: 3000
+          capabilities:
+            drop:
+              - ALL
         env:
         - name: TZ
           value: "Europe/Brussels"

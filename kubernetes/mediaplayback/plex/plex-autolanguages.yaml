@@ -14,10 +14,21 @@ spec:
       labels:
         app: plex-autolanguages
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        fsGroup: 3000
       containers:
       - name: plex-autolanguages
         image: ghcr.io/journeydocker/plex-auto-languages:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 3000
+          runAsGroup: 3000
+          capabilities:
+            drop: ["ALL"]
         resources:
           requests:
             memory: "256Mi"
@@ -66,3 +77,9 @@ spec:
               key: plex_token
         - name: TZ
           value: "Europe/Brussels"
+        volumeMounts:
+        - name: config
+          mountPath: /config
+      volumes:
+      - name: config
+        emptyDir: {}

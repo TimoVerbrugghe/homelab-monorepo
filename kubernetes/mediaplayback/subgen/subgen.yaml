@@ -21,10 +21,20 @@ spec:
         app: subgen
         app.kubernetes.io/name: subgen
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: subgen
         image: ghcr.io/timoverbrugghe/subgen-azure-batch:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 3000
+          runAsGroup: 3000
+          capabilities:
+            drop: ["ALL"]
         env:
         # Non-secret environment variables
         - name: MEDIA_FOLDERS

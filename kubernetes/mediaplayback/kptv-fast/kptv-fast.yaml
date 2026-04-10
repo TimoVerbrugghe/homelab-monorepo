@@ -20,10 +20,20 @@ spec:
       labels:
         app.kubernetes.io/name: kptv-fast
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: kptv-fast
           image: ghcr.io/kpirnie/kptv-fast:latest
           imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 3000
+            runAsGroup: 3000
+            capabilities:
+              drop: ["ALL"]
           resources:
             requests:
               cpu: "100m"

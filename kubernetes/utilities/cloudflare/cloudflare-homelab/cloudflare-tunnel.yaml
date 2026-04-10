@@ -27,10 +27,17 @@ spec:
         # Allows ICMP traffic (ping, traceroute) to resources behind cloudflared.
           - name: net.ipv4.ping_group_range
             value: "65532 65532"
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - image: cloudflare/cloudflared:latest
           imagePullPolicy: Always
           name: cloudflared-homelab
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
           env:
             # Defines an environment variable for the tunnel token.
             - name: TUNNEL_TOKEN

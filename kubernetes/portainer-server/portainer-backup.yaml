@@ -9,6 +9,9 @@ spec:
     spec:
       template:
         spec:
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
           restartPolicy: OnFailure
           nodeSelector:
             kubernetes.io/hostname: yumi
@@ -16,6 +19,8 @@ spec:
             - name: backup
               image: ghcr.io/timoverbrugghe/k8s-backup:latest
               imagePullPolicy: Always
+              securityContext:
+                allowPrivilegeEscalation: false
               env:
                 - name: BACKUP_NAME
                   value: "portainer"

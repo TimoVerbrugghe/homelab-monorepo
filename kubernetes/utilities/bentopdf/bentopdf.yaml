@@ -21,10 +21,17 @@ spec:
         app: bentopdf
         app.kubernetes.io/name: bentopdf
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: bentopdf
         image: ghcr.io/alam00000/bentopdf:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         env:
         - name: DOCKER_ENABLE_SECURITY
           value: "false"

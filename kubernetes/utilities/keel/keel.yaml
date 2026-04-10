@@ -22,10 +22,18 @@ spec:
         app.kubernetes.io/name: keel
     spec:
       serviceAccountName: keel
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: keel
         image: keelhq/keel:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+          runAsNonRoot: true
         command: ["/bin/keel"]
         env:
         - name: NAMESPACE

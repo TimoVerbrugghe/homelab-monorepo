@@ -21,10 +21,17 @@ spec:
         app: tinshop
         app.kubernetes.io/name: tinshop
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: tinshop
         image: ghcr.io/ajmandourah/tinshop-ng:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         resources:
           limits:
             memory: "512Mi"

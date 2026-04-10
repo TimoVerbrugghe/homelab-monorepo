@@ -25,11 +25,21 @@ spec:
       labels:
         app: alpine
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       nodeSelector:
         kubernetes.io/hostname: yumi
       containers:
         - name: alpine
           image: alpine:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            capabilities:
+              drop: ["ALL"]
           command: ["sleep", "3600"]
           resources:
             requests:

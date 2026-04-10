@@ -1,0 +1,15 @@
+## `utilities` stays baseline for standard apps, while `utilities-priv` is isolated for workloads that
+## need elevated permissions (hostPath, NET_RAW ping checks, or other privileged pod features).
+## This split keeps day-to-day utilities least-privileged while containing high-risk workloads.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: utilities-priv
+
+resources:
+  - namespace.yaml
+  - network-policies.yaml
+  - bitwarden
+  - mealie
+  - gatus
+  # - changedetection

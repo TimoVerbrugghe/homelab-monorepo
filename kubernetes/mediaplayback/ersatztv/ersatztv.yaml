@@ -21,6 +21,9 @@ spec:
       labels:
         app.kubernetes.io/name: ersatztv
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem
       initContainers:
       - name: format-volume
@@ -45,6 +48,8 @@ spec:
       - name: ersatztv
         image: ghcr.io/ersatztv/ersatztv:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
         env:
         - name: TZ
           value: "Europe/Brussels"

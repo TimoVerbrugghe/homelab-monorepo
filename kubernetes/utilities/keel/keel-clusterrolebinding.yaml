@@ -1,5 +1,5 @@
-# This custom cluster role binding is required for Keel to work properly - otherwise several apps (including keel itself) cannot be autoupdate
-# You need to remove the existing clusterrolebinding that the keel helm chart creates and apply this one instead
+# This custom RBAC is required for Keel to work properly - otherwise several apps (including keel itself) cannot be autoupdated.
+# You need to remove the existing clusterrolebinding that the keel helm chart creates and apply this one instead:
 # kubectl delete clusterrolebinding keel
 ---
 # Custom service account that clusterrolebinding can link to
@@ -11,14 +11,43 @@ metadata:
   labels:
     app: keel
 ---
+# Minimal ClusterRole based on Keel upstream helm chart requirements
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keel
+  labels:
+    app: keel
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces", "pods", "replicationcontrollers", "services", "secrets", "configmaps"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/logs"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "daemonsets", "statefulsets"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["extensions"]
+    resources: ["deployments", "daemonsets"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: keel
+  labels:
+    app: keel
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: keel
 subjects:
   - kind: ServiceAccount
     name: keel

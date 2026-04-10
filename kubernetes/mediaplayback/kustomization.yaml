@@ -7,6 +7,7 @@ generatorOptions:
 
 resources:
   - namespace.yaml
+  - network-policies.yaml
   - plex
   - jellyfin
   - ersatztv

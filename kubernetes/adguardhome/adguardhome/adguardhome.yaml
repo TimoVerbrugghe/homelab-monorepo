@@ -24,10 +24,18 @@ spec:
         app: adguardhome
         app.kubernetes.io/name: adguardhome
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: adguardhome
         image: adguard/adguardhome:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+            add: ["NET_BIND_SERVICE"]
         ports:
         - containerPort: 53 #dns
           name: dns
@@ -56,6 +64,10 @@ spec:
       - name: init-adguardhome
         image: busybox:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         command: ["sh", "-c", "cp /etc/adguard/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml"]
         volumeMounts:
           - mountPath: /etc/adguard
