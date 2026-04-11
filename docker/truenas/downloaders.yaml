@@ -31,6 +31,12 @@ services:
     <<: [*hardening-defaults, *limits-heavy]
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
@@ -65,6 +71,11 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     image: ghcr.io/alexta69/metube
     container_name: metube
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
@@ -86,6 +97,13 @@ services:
     <<: [*hardening-defaults, *limits-light]
     image: hurlenko/aria2-ariang
     container_name: ariang
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+      - NET_BIND_SERVICE
     restart: always
     networks:
       - dockerproxy
