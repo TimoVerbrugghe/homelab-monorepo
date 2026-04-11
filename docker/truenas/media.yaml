@@ -322,6 +322,8 @@ services:
       - PGID=${PGID:-1000}
       - TZ=Europe/Brussels
       - UMASK=002
+      - PLEX_SERVER_URL=http://plex.local.timo.be:32400
+      - PLEX_TOKEN=${PLEX_TOKEN}
     volumes:
       - obzorarr:/config
     ports:
