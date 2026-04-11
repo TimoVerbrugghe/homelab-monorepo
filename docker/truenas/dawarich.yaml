@@ -36,6 +36,9 @@ services:
     <<: [*hardening-defaults, *limits-light]
     image: redis:7.4-alpine
     container_name: dawarich_redis
+    cap_add:
+      - SETUID
+      - SETGID
     command: redis-server
     networks:
       - dockerproxy
@@ -56,6 +59,10 @@ services:
     image: postgis/postgis:17-3.5-alpine
     shm_size: 1G
     container_name: dawarich_db
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
     volumes:
       - dawarich_db_data:/var/lib/postgresql/data
       - dawarich_shared:/var/shared
@@ -183,6 +190,8 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     image: rtuszik/photon-docker:latest
     container_name: photon
+    cap_add:
+      - DAC_OVERRIDE
     restart: unless-stopped
     networks:
       - dockerproxy
