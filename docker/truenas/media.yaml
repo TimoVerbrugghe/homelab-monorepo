@@ -322,10 +322,8 @@ services:
       - PGID=${PGID:-1000}
       - TZ=Europe/Brussels
       - UMASK=002
-      # - PLEX_SERVER_URL=${PLEX_SERVER_URL}
-      # - PLEX_TOKEN=${PLEX_TOKEN}
-    # volumes:
-    #   - obzorarr:/config
+    volumes:
+      - obzorarr:/config
     ports:
       - 14011:3000
     healthcheck:
@@ -467,12 +465,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/wrapperr"
-  # obzorarr:
-  #   driver: local
-  #   driver_opts:
-  #     type: "none"
-  #     o: "bind"
-  #     device: "/mnt/FranzHopper/appdata/obzorarr"
+  obzorarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/obzorarr"
   houndarr:
     driver: local
     driver_opts:
