@@ -10,7 +10,6 @@ x-hardening-defaults: &hardening-defaults
     options:
       max-size: "50m"
       max-file: "5"
-  read_only: true
 
 x-limits-medium: &limits-medium
   pids_limit: 512
@@ -28,8 +27,6 @@ services:
       - DAC_OVERRIDE
       - SETUID
       - SETGID
-    tmpfs:
-      - /run:rw,exec,nosuid,nodev,size=64m
     restart: always
     networks:
       - dockerproxy
@@ -53,8 +50,6 @@ services:
       - DAC_OVERRIDE
       - SETUID
       - SETGID
-    tmpfs:
-      - /run:rw,exec,nosuid,nodev,size=64m
     networks:
       - dockerproxy
     environment:
