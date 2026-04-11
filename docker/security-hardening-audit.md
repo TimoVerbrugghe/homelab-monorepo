@@ -34,8 +34,8 @@ It reflects the currently applied state.
 | metube | docker/truenas/downloaders.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (incompatible with ro rootfs) |
 | ariang | docker/truenas/downloaders.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5; read_only disabled (incompatible with ro rootfs) |
 | spotdl-web | docker/truenas/downloaders.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5; read_only disabled (incompatible with ro rootfs) |
-| filezilla | docker/truenas/filemanagement.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| doublecommander | docker/truenas/filemanagement.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| filezilla | docker/truenas/filemanagement.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (incompatible with ro rootfs) |
+| doublecommander | docker/truenas/filemanagement.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (incompatible with ro rootfs) |
 | sonarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | radarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | bazarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
