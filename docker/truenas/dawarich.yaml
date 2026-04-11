@@ -63,6 +63,8 @@ services:
       - CHOWN
       - FOWNER
       - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     volumes:
       - dawarich_db_data:/var/lib/postgresql/data
       - dawarich_shared:/var/shared
@@ -191,7 +193,10 @@ services:
     image: rtuszik/photon-docker:latest
     container_name: photon
     cap_add:
+      - CHOWN
       - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: unless-stopped
     networks:
       - dockerproxy
