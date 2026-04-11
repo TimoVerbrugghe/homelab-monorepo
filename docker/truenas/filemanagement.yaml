@@ -28,6 +28,8 @@ services:
       - DAC_OVERRIDE
       - SETUID
       - SETGID
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=64m
     restart: always
     networks:
       - dockerproxy
@@ -51,6 +53,8 @@ services:
       - DAC_OVERRIDE
       - SETUID
       - SETGID
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=64m
     networks:
       - dockerproxy
     environment:
