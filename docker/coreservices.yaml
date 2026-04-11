@@ -27,8 +27,6 @@ services:
     <<: [*hardening-defaults, *limits-light]
     image: nickfedor/watchtower:latest
     container_name: watchtower
-    tmpfs:
-      - /tmp:rw,noexec,nosuid,nodev,size=512m
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -46,4 +44,6 @@ services:
       - 2375:2375
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     restart: always
