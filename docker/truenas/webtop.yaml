@@ -21,6 +21,13 @@ services:
     <<: [*hardening-defaults, *limits-heavy]
     image: lscr.io/linuxserver/webtop:latest
     container_name: webtop
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+      - MKNOD
     restart: always
     networks:
       - dockerproxy
