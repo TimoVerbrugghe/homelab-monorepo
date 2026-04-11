@@ -1,6 +1,10 @@
 x-hardening-defaults: &hardening-defaults
   security_opt:
     - no-new-privileges=true
+  cap_drop:
+    - ALL
+  cap_add:
+    - NET_BIND_SERVICE
   tty: false
   stdin_open: false
   logging:
