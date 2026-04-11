@@ -10,6 +10,7 @@ x-hardening-defaults: &hardening-defaults
     options:
       max-size: "50m"
       max-file: "5"
+  read_only: true
 
 x-limits-light: &limits-light
   pids_limit: 512
@@ -123,7 +124,7 @@ services:
 
   # Using separate container & appdata folder for spotdl web which does not use user auth (since this is difficult with spotdl in docker container)
   spotdl-web:
-    <<: [*limits-light]
+    <<: [*hardening-defaults, *limits-light]
     container_name: spotdl-web
     image: spotdl/spotify-downloader
     command: web --host 0.0.0.0 --web-use-output-dir --keep-alive

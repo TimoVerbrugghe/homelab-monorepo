@@ -3,10 +3,6 @@ x-hardening-defaults: &hardening-defaults
     - no-new-privileges=true
   cap_drop:
     - ALL
-  cap_add:
-    - NET_BIND_SERVICE
-    - DAC_OVERRIDE
-    - DAC_READ_SEARCH
   tty: false
   stdin_open: false
   logging:
@@ -14,6 +10,7 @@ x-hardening-defaults: &hardening-defaults
     options:
       max-size: "50m"
       max-file: "5"
+  read_only: true
 
 x-limits-light: &limits-light
   pids_limit: 512
@@ -29,6 +26,10 @@ services:
   adguardhome:
     <<: [*hardening-defaults, *limits-medium]
     image: adguard/adguardhome
+    cap_add:
+      - NET_BIND_SERVICE
+      - DAC_OVERRIDE
+      - DAC_READ_SEARCH
     container_name: adguardhome
     read_only: true
     restart: always
