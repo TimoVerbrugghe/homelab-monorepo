@@ -28,7 +28,7 @@ It reflects the currently applied state.
 | dawarich_db | docker/truenas/dawarich.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/3g/2.0 |
 | dawarich_app | docker/truenas/dawarich.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/2g/2.0 |
 | dawarich_sidekiq | docker/truenas/dawarich.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/2g/2.0 |
-| photon | docker/truenas/dawarich.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| photon | docker/truenas/dawarich.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (startup writes under /photon/.cache) |
 | qbittorrent | docker/truenas/downloaders.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/2g/2.0 |
 | jdownloader2 | docker/truenas/downloaders.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | metube | docker/truenas/downloaders.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
@@ -62,4 +62,4 @@ It reflects the currently applied state.
 - Compose hardening is implemented with YAML anchors in each workload file for reuse and consistency.
 - `docker/recyclarr/recyclarr.yaml` remains out of scope because it is Recyclarr app config, not a Docker Compose workload file.
 - `cap_drop: ["ALL"]` has been applied to all stacks except `docker/truenas/media.yaml`.
-- `read_only: true` has been enabled for all stacks except `docker/truenas/media.yaml` in this pass.
+- `read_only: true` has been enabled for all stacks except `docker/truenas/media.yaml` and `photon` in this pass.

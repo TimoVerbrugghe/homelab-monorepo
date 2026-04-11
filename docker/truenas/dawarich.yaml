@@ -69,6 +69,8 @@ services:
     volumes:
       - dawarich_db_data:/var/lib/postgresql/data
       - dawarich_shared:/var/shared
+    tmpfs:
+      - /var/run/postgresql:rw,noexec,nosuid,nodev,size=32m
     networks:
       - dockerproxy
     environment:
@@ -193,6 +195,7 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     image: rtuszik/photon-docker:latest
     container_name: photon
+    read_only: false
     cap_add:
       - CHOWN
       - DAC_OVERRIDE
