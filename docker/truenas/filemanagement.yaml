@@ -21,6 +21,12 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     image: lscr.io/linuxserver/filezilla:latest
     container_name: filezilla
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
@@ -38,6 +44,12 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     image: lscr.io/linuxserver/doublecommander:latest
     container_name: doublecommander
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     networks:
       - dockerproxy
     environment:
