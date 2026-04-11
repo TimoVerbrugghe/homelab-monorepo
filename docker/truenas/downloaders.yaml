@@ -55,6 +55,12 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     image: jlesage/jdownloader-2
     container_name: jdownloader2
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
