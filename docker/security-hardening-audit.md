@@ -10,7 +10,7 @@ It reflects the currently applied state.
 | Kubernetes column | Docker Compose equivalent |
 | --- | --- |
 | `seccompProfile` | `security_opt: ["seccomp=default"]` |
-| `allowPrivEsc=false` | `security_opt: ["no-new-privileges:true"]` |
+| `allowPrivEsc=false` | `security_opt: ["no-new-privileges=true"]` |
 | `cap drop ALL` | `cap_drop: ["ALL"]` |
 | `runAsNonRoot` | `user: UID:GID` (non-zero / non-root) |
 | `readOnlyRootFilesystem` | `read_only: true` |
@@ -22,7 +22,7 @@ It reflects the currently applied state.
 
 | Workload | Compose file | seccomp configured | no-new-privileges | cap_drop ALL | non-root user | read_only rootfs | tty=false + stdin_open=false | resource limits set | logging (50m/5) | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| adguardhome | docker/adguardhome.yaml | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| adguardhome | docker/adguardhome.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only rootfs enabled |
 | watchtower | docker/coreservices.yaml | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | dockerproxy | docker/coreservices.yaml | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | dawarich_redis | docker/truenas/dawarich.yaml | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
@@ -62,4 +62,5 @@ It reflects the currently applied state.
 
 - Compose hardening is implemented with YAML anchors in each workload file for reuse and consistency.
 - `docker/recyclarr/recyclarr.yaml` remains out of scope because it is Recyclarr app config, not a Docker Compose workload file.
-- `cap_drop: ["ALL"]`, `read_only: true`, and broader non-root enforcement were not part of this apply step and are tracked separately.
+- `cap_drop: ["ALL"]` and broader non-root enforcement are tracked separately.
+- `read_only: true` has been enabled for `adguardhome` in this pass.

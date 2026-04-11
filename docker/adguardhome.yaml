@@ -1,7 +1,7 @@
 x-hardening-defaults: &hardening-defaults
   security_opt:
     - seccomp=default
-    - no-new-privileges:true
+    - no-new-privileges=true
   tty: false
   stdin_open: false
   logging:
@@ -25,6 +25,7 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     image: adguard/adguardhome
     container_name: adguardhome
+    read_only: true
     restart: always
     networks:
       dockervlan:
