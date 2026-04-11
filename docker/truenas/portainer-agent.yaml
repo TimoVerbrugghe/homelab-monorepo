@@ -2,7 +2,6 @@ name: portainer-agent
 
 x-hardening-defaults: &hardening-defaults
   security_opt:
-    - seccomp=default
     - no-new-privileges=true
   tty: false
   stdin_open: false
