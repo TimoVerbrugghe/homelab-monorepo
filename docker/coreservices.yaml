@@ -46,4 +46,5 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
     tmpfs:
       - /tmp:rw,noexec,nosuid,nodev,size=512m
+      - /run:rw,noexec,nosuid,nodev,size=64m
     restart: always
