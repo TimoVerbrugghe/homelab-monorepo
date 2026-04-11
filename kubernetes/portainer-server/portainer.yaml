@@ -39,10 +39,6 @@ spec:
           hostPath:
             path: /var/mnt/portainer
             type: Directory
-      dnsConfig:
-        nameservers:
-        - 8.8.8.8
-        - 8.8.4.4
       containers:
         - name: portainer
           image: portainer/portainer-ce:sts
@@ -92,4 +88,4 @@ spec:
               memory: "300Mi"
             limits:
               cpu: "1000m"
-              memory: "1000Mi"
+              memory: "2000Mi"

@@ -29,7 +29,7 @@ services:
       - SETUID
       - SETGID
     tmpfs:
-      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=64m
     restart: always
     networks:
       - dockerproxy
@@ -54,7 +54,7 @@ services:
       - SETUID
       - SETGID
     tmpfs:
-      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=64m
     networks:
       - dockerproxy
     environment:
