@@ -88,7 +88,6 @@ services:
       - DOWNLOAD_DIR=/downloads/metube
       # Enable to download subtitles (does not work with every video)
       - YTDL_OPTIONS={"writesubtitles":true,"writeautomaticsub":true,"subtitleslangs":["en","en-US","en-GB","en-orig","-live_chat"],"updatetime":false,"postprocessors":[{"key":"FFmpegEmbedSubtitle","already_have_subtitle":false},{"key":"FFmpegMetadata","add_chapters":true}]}
-      - LOGLEVEL=debug
     volumes:
       - downloads:/downloads
       - /dev/shm:/tmp
@@ -124,7 +123,7 @@ services:
 
   # Using separate container & appdata folder for spotdl web which does not use user auth (since this is difficult with spotdl in docker container)
   spotdl-web:
-    <<: [*hardening-defaults, *limits-light]
+    <<: [*limits-light]
     container_name: spotdl-web
     image: spotdl/spotify-downloader
     command: web --host 0.0.0.0 --web-use-output-dir --keep-alive
