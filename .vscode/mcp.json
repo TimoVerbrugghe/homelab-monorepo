@@ -58,7 +58,7 @@
         "-i",
         "ghcr.io/jmrplens/portainer-mcp-enhanced:latest",
         "-server",
-        "https://portainer.timo.be",
+        "https://portainer.kubernetes.timo.be",
         "-token",
         "${input:portainer-token}",
         "-disable-version-check"

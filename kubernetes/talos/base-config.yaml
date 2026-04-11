@@ -21,6 +21,7 @@ machine:
     nameservers:      
       - 10.10.10.21
       - 10.10.10.22
+      - 10.10.10.35
 
   install:
     disk: /dev/sda
