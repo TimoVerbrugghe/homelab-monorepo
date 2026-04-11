@@ -19,8 +19,11 @@ spec:
             - name: backup
               image: ghcr.io/timoverbrugghe/k8s-backup:latest
               imagePullPolicy: Always
+              stdin: false
+              tty: false
               securityContext:
                 allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
               env:
                 - name: BACKUP_NAME
                   value: "portainer"

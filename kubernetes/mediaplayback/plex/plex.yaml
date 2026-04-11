@@ -28,6 +28,8 @@ spec:
       initContainers:
       - name: format-volume
         image: busybox:1.35
+        stdin: false
+        tty: false
         command: ['sh', '-c']
         args:
         - |
@@ -48,6 +50,8 @@ spec:
       - name: plex
         image: plexinc/pms-docker
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
         env:

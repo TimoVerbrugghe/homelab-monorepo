@@ -31,11 +31,14 @@ spec:
       - name: adguardhome
         image: adguard/adguardhome:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
             drop: ["ALL"]
             add: ["NET_BIND_SERVICE"]
+          readOnlyRootFilesystem: true
         ports:
         - containerPort: 53 #dns
           name: dns
@@ -64,6 +67,8 @@ spec:
       - name: init-adguardhome
         image: busybox:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

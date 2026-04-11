@@ -1,5 +1,23 @@
+x-hardening-defaults: &hardening-defaults
+  security_opt:
+    - seccomp=default
+    - no-new-privileges:true
+  tty: false
+  stdin_open: false
+  logging:
+    driver: json-file
+    options:
+      max-size: "50m"
+      max-file: "5"
+
+x-limits-heavy: &limits-heavy
+  pids_limit: 512
+  mem_limit: 2g
+  cpus: 2.00
+
 services:
   webtop-chrome:
+    <<: [*hardening-defaults, *limits-heavy]
     image: lscr.io/linuxserver/webtop:latest
     container_name: webtop
     restart: always

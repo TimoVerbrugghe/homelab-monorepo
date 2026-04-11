@@ -18,12 +18,29 @@ spec:
           type: RuntimeDefault
       nodeSelector:
         kubernetes.io/hostname: yumi
+      initContainers:
+      - name: chown-changedetection-data
+        image: busybox:1.35
+        stdin: false
+        tty: false
+        command: ["sh", "-c", "chown -R 1000:1000 /datastore"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - name: changedetection-data
+            mountPath: /datastore
       containers:
       - name: changedetection
         image: ghcr.io/dgtlmoon/changedetection.io:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          readOnlyRootFilesystem: true
           capabilities:
             drop: ["ALL"]
         env:
@@ -101,8 +118,13 @@ spec:
       - name: playwright-chrome
         image: browserless/chrome:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 999
+          runAsGroup: 999
           capabilities:
             drop: ["ALL"]
         env:

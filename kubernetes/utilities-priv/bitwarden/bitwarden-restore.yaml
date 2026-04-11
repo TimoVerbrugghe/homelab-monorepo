@@ -24,6 +24,8 @@ spec:
         - name: restore
           image: ghcr.io/timoverbrugghe/k8s-restore:latest
           imagePullPolicy: Always
+          stdin: false
+          tty: false
           securityContext:
             allowPrivilegeEscalation: false
           volumeMounts:

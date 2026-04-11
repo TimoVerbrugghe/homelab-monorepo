@@ -33,11 +33,14 @@ spec:
         - image: cloudflare/cloudflared:latest
           imagePullPolicy: Always
           name: cloudflared-homelab
+          stdin: false
+          tty: false
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
             runAsNonRoot: true
+            readOnlyRootFilesystem: true
           env:
             # Defines an environment variable for the tunnel token.
             - name: TUNNEL_TOKEN

@@ -29,11 +29,14 @@ spec:
       - name: keel
         image: keelhq/keel:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
             drop: ["ALL"]
           runAsNonRoot: true
+          readOnlyRootFilesystem: true
         command: ["/bin/keel"]
         env:
         - name: NAMESPACE

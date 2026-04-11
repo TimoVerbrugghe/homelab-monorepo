@@ -1,5 +1,33 @@
+x-hardening-defaults: &hardening-defaults
+  security_opt:
+    - seccomp=default
+    - no-new-privileges:true
+  tty: false
+  stdin_open: false
+  logging:
+    driver: json-file
+    options:
+      max-size: "50m"
+      max-file: "5"
+
+x-limits-light: &limits-light
+  pids_limit: 512
+  mem_limit: 512m
+  cpus: 0.50
+
+x-limits-medium: &limits-medium
+  pids_limit: 512
+  mem_limit: 1g
+  cpus: 1.00
+
+x-limits-heavy: &limits-heavy
+  pids_limit: 512
+  mem_limit: 2g
+  cpus: 2.00
+
 services:
   sonarr:
+    <<: [*hardening-defaults, *limits-medium]
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
     restart: always
@@ -22,6 +50,7 @@ services:
       - 14000:8989
 
   radarr:
+    <<: [*hardening-defaults, *limits-medium]
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
     restart: always
@@ -44,6 +73,7 @@ services:
       - 14001:7878
 
   bazarr:
+    <<: [*hardening-defaults, *limits-medium]
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
     restart: always
@@ -71,6 +101,7 @@ services:
       - 14002:6767
 
   seerr:
+    <<: [*hardening-defaults, *limits-medium]
     image: ghcr.io/seerr-team/seerr:latest
     init: true
     container_name: seerr
@@ -96,6 +127,7 @@ services:
       - 10.10.10.35
 
   prowlarr:
+    <<: [*hardening-defaults, *limits-medium]
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
     restart: always
@@ -119,6 +151,7 @@ services:
       - 8.8.4.4
   
   recyclarr:
+    <<: [*hardening-defaults, *limits-light]
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
     user: ${PUID:-3000}:${PGID:-3000}
@@ -131,6 +164,7 @@ services:
       - CRON_SCHEDULE=@daily
 
   flaresolverr:
+    <<: [*hardening-defaults, *limits-medium]
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     restart: always
@@ -144,6 +178,7 @@ services:
       - dockerproxy
 
   swaparr-radarr:
+    <<: [*hardening-defaults, *limits-light]
     image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-radarr
     restart: always
@@ -159,6 +194,7 @@ services:
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3
 
   swaparr-sonarr: 
+    <<: [*hardening-defaults, *limits-light]
     image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-sonarr
     restart: always
@@ -174,6 +210,7 @@ services:
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3
 
   yamtrack:
+    <<: [*hardening-defaults, *limits-medium]
     container_name: yamtrack
     image: ghcr.io/fuzzygrim/yamtrack
     restart: unless-stopped
@@ -192,6 +229,7 @@ services:
       - 14006:8000
 
   yamtrack-redis:
+    <<: [*hardening-defaults, *limits-light]
     container_name: yamtrack-redis
     image: redis:7-alpine
     restart: unless-stopped
@@ -201,6 +239,7 @@ services:
       - yamtrack-redis:/data
 
   audiobookshelf:
+    <<: [*hardening-defaults, *limits-medium]
     container_name: audiobookshelf
     image: ghcr.io/advplyr/audiobookshelf:latest
     restart: always
@@ -216,6 +255,7 @@ services:
       - 14007:80
 
   dispatcharr:
+    <<: [*hardening-defaults, *limits-medium]
     container_name: dispatcharr
     image: ghcr.io/dispatcharr/dispatcharr:latest
     restart: unless-stopped
@@ -232,6 +272,7 @@ services:
       - 14008:9191
   
   tautulli:
+    <<: [*hardening-defaults, *limits-light]
     container_name: tautulli
     image: tautulli/tautulli:latest
     restart: always
@@ -252,6 +293,7 @@ services:
       - 14009:8181
 
   wrapperr:
+    <<: [*hardening-defaults, *limits-light]
     container_name: wrapperr
     image: ghcr.io/aunefyren/wrapperr:latest
     restart: always
@@ -270,6 +312,7 @@ services:
       retries: 60
 
   obzorarr:
+    <<: [*hardening-defaults, *limits-light]
     container_name: obzorarr
     image: ghcr.io/engels74/obzorarr-docker:latest
     restart: always
@@ -291,6 +334,7 @@ services:
       retries: 60
 
   houndarr:
+    <<: [*hardening-defaults, *limits-light]
     image: ghcr.io/av1155/houndarr:latest
     container_name: houndarr
     restart: unless-stopped

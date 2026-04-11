@@ -1,5 +1,23 @@
+x-hardening-defaults: &hardening-defaults
+  security_opt:
+    - seccomp=default
+    - no-new-privileges:true
+  tty: false
+  stdin_open: false
+  logging:
+    driver: json-file
+    options:
+      max-size: "50m"
+      max-file: "5"
+
+x-limits-medium: &limits-medium
+  pids_limit: 512
+  mem_limit: 1g
+  cpus: 1.00
+
 services:
   filezilla:
+    <<: [*hardening-defaults, *limits-medium]
     image: lscr.io/linuxserver/filezilla:latest
     container_name: filezilla
     restart: always
@@ -16,6 +34,7 @@ services:
       - 13001:3000
 
   doublecommander:
+    <<: [*hardening-defaults, *limits-medium]
     image: lscr.io/linuxserver/doublecommander:latest
     container_name: doublecommander
     networks:

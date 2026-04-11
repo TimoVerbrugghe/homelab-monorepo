@@ -12,17 +12,26 @@ spec:
           securityContext:
             seccompProfile:
               type: RuntimeDefault
+            fsGroup: 3000
           restartPolicy: OnFailure
           nodeSelector:
             kubernetes.io/hostname: yumi
           containers:
             - name: bitwarden-export
               image: ghcr.io/timoverbrugghe/bitwarden-export:latest # Replace with your container image
+              stdin: false
+              tty: false
               securityContext:
                 allowPrivilegeEscalation: false
+                runAsNonRoot: true
+                runAsUser: 3000
+                runAsGroup: 3000
+                capabilities:
+                  drop: ["ALL"]
+                readOnlyRootFilesystem: true
               env:
                 - name: BW_SERVER
-                  value: http://bitwarden.utilities-priv.svc.cluster.local
+                  value: https://bitwarden.kubernetes.timo.be
                 - name: BW_APPID
                   valueFrom:
                     secretKeyRef:
@@ -44,9 +53,13 @@ spec:
                       name: bitwarden-export-secret
                       key: BW_PASSWORD
               volumeMounts:
+                - name: config
+                  mountPath: /app/.config
                 - name: nfs-export
                   mountPath: /backup
           volumes:
+            - name: config
+              emptyDir: {}
             - name: nfs-export
               nfs:
                 server: nfs.local.timo.be

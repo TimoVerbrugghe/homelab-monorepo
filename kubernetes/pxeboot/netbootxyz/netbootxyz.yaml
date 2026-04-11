@@ -27,6 +27,9 @@ spec:
         - name: netbootxyz
           image: ghcr.io/netbootxyz/netbootxyz:latest
           imagePullPolicy: Always
+          stdin: false
+          tty: false
+          securityContext:
           env:
             - name: TFTPD_OPTS
               value: "--tftp-single-port"

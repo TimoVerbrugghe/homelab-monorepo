@@ -28,11 +28,14 @@ spec:
       - name: subgen
         image: ghcr.io/timoverbrugghe/subgen-azure-batch:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
           runAsUser: 3000
           runAsGroup: 3000
+          readOnlyRootFilesystem: true
           capabilities:
             drop: ["ALL"]
         env:

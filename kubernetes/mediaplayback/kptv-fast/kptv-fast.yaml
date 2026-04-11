@@ -27,11 +27,14 @@ spec:
         - name: kptv-fast
           image: ghcr.io/kpirnie/kptv-fast:latest
           imagePullPolicy: Always
+          stdin: false
+          tty: false
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
             runAsUser: 3000
             runAsGroup: 3000
+            readOnlyRootFilesystem: true
             capabilities:
               drop: ["ALL"]
           resources:

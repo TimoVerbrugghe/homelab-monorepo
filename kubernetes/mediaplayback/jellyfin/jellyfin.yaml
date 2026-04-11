@@ -29,6 +29,8 @@ spec:
       initContainers:
       - name: prep-volume
         image: busybox:1.35
+        stdin: false
+        tty: false
         command: ['sh', '-c']
         args:
         - |
@@ -67,11 +69,14 @@ spec:
       - name: jellyfin
         image: ghcr.io/jellyfin/jellyfin:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
           runAsUser: 3000
           runAsGroup: 3000
+          readOnlyRootFilesystem: true
           capabilities:
             drop:
               - ALL

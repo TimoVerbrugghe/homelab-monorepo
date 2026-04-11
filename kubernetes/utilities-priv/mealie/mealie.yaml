@@ -23,14 +23,41 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
+        fsGroup: 3000
       nodeSelector:
         kubernetes.io/hostname: yumi
+      # ONE-TIME: Migrate /app/data ownership to non-root user (UID/GID 3000).
+      # After the first successful start with non-root execution, comment out this initContainer.
+      initContainers:
+        - name: chown-mealie-data
+          image: busybox:1.35
+          stdin: false
+          tty: false
+          command: ['sh', '-c']
+          args:
+            - |
+              echo "Chowning /app/data to 3000:3000..."
+              chown -R 3000:3000 /app/data
+              echo "Done"
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: mealie-data
+              mountPath: /app/data
       containers:
         - name: mealie
           image: ghcr.io/mealie-recipes/mealie:latest
           imagePullPolicy: Always
+          stdin: false
+          tty: false
           securityContext:
             allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 3000
+            runAsGroup: 3000
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           resources:
             requests:
               cpu: "100m"

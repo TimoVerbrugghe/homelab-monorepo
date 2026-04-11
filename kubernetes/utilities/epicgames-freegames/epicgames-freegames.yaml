@@ -29,6 +29,8 @@ spec:
         - name: epicgames-freegames
           image: ghcr.io/claabs/epicgames-freegames-node:latest
           imagePullPolicy: Always
+          stdin: false
+          tty: false
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

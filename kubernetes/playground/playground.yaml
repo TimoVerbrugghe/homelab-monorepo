@@ -33,11 +33,14 @@ spec:
       containers:
         - name: alpine
           image: alpine:latest
+          stdin: false
+          tty: false
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
             runAsUser: 65532
             runAsGroup: 65532
+            readOnlyRootFilesystem: true
             capabilities:
               drop: ["ALL"]
           command: ["sleep", "3600"]

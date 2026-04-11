@@ -17,41 +17,22 @@ spec:
           securityContext:
             seccompProfile:
               type: RuntimeDefault
-          initContainers:
-            - name: talos-version-check
-              image: alpine:latest
+          containers:
+            - name: talos-upgrade-notification
+              image: ghcr.io/timoverbrugghe/talos-upgrade-notification:latest
+              stdin: false
+              tty: false
               securityContext:
                 allowPrivilegeEscalation: false
+                runAsNonRoot: true
+                readOnlyRootFilesystem: true
                 capabilities:
                   drop: ["ALL"]
               env:
                 - name: TALOS_NODE
-                  value: "william.local.timo.be"
+                  value: "william.local.timo.be" # Set this to the name of the node you want to monitor
                 - name: TALOS_ENDPOINT
-                  value: "william.local.timo.be"
-              command:
-                - /bin/sh
-                - -c
-                - |
-                  apk add --no-cache curl
-                  wget -O /usr/local/bin/talosctl https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-amd64
-                  chmod +x /usr/local/bin/talosctl
-                  talosctl version --nodes "$TALOS_NODE" --endpoints "$TALOS_ENDPOINT" --talosconfig /talosconfig/talosconfig --short > /shared/talos_version.txt
-              volumeMounts:
-                - name: talosconfig
-                  mountPath: /talosconfig
-                  readOnly: true
-                - name: shared-data
-                  mountPath: /shared
-                
-          containers:
-            - name: notify
-              image: alpine:latest
-              securityContext:
-                allowPrivilegeEscalation: false
-                capabilities:
-                  drop: ["ALL"]
-              env:
+                  value: "william.local.timo.be" # Set this to the API endpoint of the node
                 - name: PUSHOVER_USER_KEY
                   valueFrom:
                     secretKeyRef:
@@ -62,36 +43,17 @@ spec:
                     secretKeyRef:
                       name: pushover-secret
                       key: api_token
-              command:
-                - /bin/sh
-                - -c
-                - |
-                  apk add --no-cache curl
-
-                  # Get Current Talos version from the file
-                  CURRENT_TAG=$(grep 'Tag:' /shared/talos_version.txt | awk '{print $2}')
-
-                  # Get latest release tag from GitHub
-                  LATEST_TAG=$(curl -s https://api.github.com/repos/siderolabs/talos/releases/latest | grep '"tag_name":' | head -n 1 | awk -F '"' '{print $4}')
-                  
-                  # Compare and notify if different
-                  if [ "$CURRENT_TAG" != "$LATEST_TAG" ]; then
-                    curl -s \
-                      --form-string "token=$PUSHOVER_API_TOKEN" \
-                      --form-string "user=$PUSHOVER_USER_KEY" \
-                      --form-string "title=Talos upgrade available: $CURRENT_TAG → $LATEST_TAG" \
-                      --form-string "message=You can perform the upgrade using 't upgrade -n <node-name> --image <imagecode>:$LATEST_TAG'. You can also upgrade kubernetes version by performing 't upgrade-k8s'." \
-                      https://api.pushover.net/1/messages.json
-                  fi
-
               volumeMounts:
-                - name: shared-data
-                  mountPath: /shared
-
+                - name: talosconfig
+                  mountPath: /talosconfig
+                  readOnly: true
+                - name: tmp
+                  mountPath: /tmp
           restartPolicy: OnFailure
           volumes:
-          - name: talosconfig
-            secret:
-              secretName: talosconfig-secret
-          - name: shared-data
-            emptyDir: {}
+            - name: talosconfig
+              secret:
+                secretName: talosconfig-secret
+            - name: tmp
+              emptyDir:
+                sizeLimit: 512Mi

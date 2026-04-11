@@ -28,8 +28,14 @@ spec:
       - name: bentopdf
         image: ghcr.io/alam00000/bentopdf:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 101
+          runAsGroup: 101
+          readOnlyRootFilesystem: true
           capabilities:
             drop: ["ALL"]
         env:

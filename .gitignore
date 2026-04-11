@@ -30,3 +30,4 @@ kubernetes/cluster-bootstrap/kustomize
 **/charts
 dhi-registry-secret.json
 .venv/**
+kubernetes/security-hardening-non-utilities-audit.md

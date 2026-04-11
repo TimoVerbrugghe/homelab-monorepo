@@ -28,8 +28,14 @@ spec:
       - name: tinshop
         image: ghcr.io/ajmandourah/tinshop-ng:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          readOnlyRootFilesystem: true
           capabilities:
             drop: ["ALL"]
         resources:
