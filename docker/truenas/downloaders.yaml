@@ -10,7 +10,6 @@ x-hardening-defaults: &hardening-defaults
     options:
       max-size: "50m"
       max-file: "5"
-  read_only: true
 
 x-limits-light: &limits-light
   pids_limit: 512

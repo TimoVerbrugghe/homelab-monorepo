@@ -92,6 +92,7 @@ services:
     <<: [*hardening-defaults, *limits-heavy]
     image: freikin/dawarich:latest
     container_name: dawarich_app
+    read_only: false
     volumes:
       - dawarich_public:/var/app/public
       - dawarich_watched:/var/app/tmp/imports/watched
@@ -144,6 +145,7 @@ services:
     <<: [*hardening-defaults, *limits-heavy]
     image: freikin/dawarich:latest
     container_name: dawarich_sidekiq
+    read_only: false
     volumes:
       - dawarich_public:/var/app/public
       - dawarich_watched:/var/app/tmp/imports/watched
