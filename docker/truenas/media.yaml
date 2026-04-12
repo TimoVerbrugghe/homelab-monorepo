@@ -390,6 +390,8 @@ services:
       - CHOWN
       - FOWNER
       - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: unless-stopped
     networks:
       - dockerproxy
