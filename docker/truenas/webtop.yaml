@@ -10,7 +10,6 @@ x-hardening-defaults: &hardening-defaults
     options:
       max-size: "50m"
       max-file: "5"
-  read_only: true
 
 x-limits-heavy: &limits-heavy
   pids_limit: 512
@@ -41,9 +40,6 @@ services:
     volumes:
       - webtop:/config
       - downloads:/downloads
-    tmpfs:
-      - /tmp:rw,noexec,nosuid,nodev,size=512m
-      - /run:rw,exec,nosuid,nodev,size=64m
     ports:
       - 12006:3000
       - 12007:3001
