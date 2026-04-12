@@ -41,6 +41,9 @@ services:
     volumes:
       - webtop:/config
       - downloads:/downloads
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+      - /run:rw,noexec,nosuid,nodev,size=64m
     ports:
       - 12006:3000
       - 12007:3001

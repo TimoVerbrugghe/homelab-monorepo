@@ -53,7 +53,7 @@ It reflects the currently applied state.
 | wrapperr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | obzorarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | houndarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| nextcloud-aio-mastercontainer | docker/truenas/nextcloud-aio.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| nextcloud-aio-mastercontainer | docker/truenas/nextcloud-aio.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | portainer-agent | docker/truenas/portainer-agent.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | webtop-chrome | docker/truenas/webtop.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/2g/2.0 |
 
