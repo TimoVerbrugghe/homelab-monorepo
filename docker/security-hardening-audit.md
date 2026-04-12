@@ -48,10 +48,10 @@ It reflects the currently applied state.
 | yamtrack | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | yamtrack-redis | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | audiobookshelf | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| dispatcharr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| dispatcharr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (service override) |
 | tautulli | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | wrapperr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| obzorarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
+| obzorarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5; read_only disabled (service override) |
 | houndarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | nextcloud-aio-mastercontainer | docker/truenas/nextcloud-aio.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | portainer-agent | docker/truenas/portainer-agent.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |

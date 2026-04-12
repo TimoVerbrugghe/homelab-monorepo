@@ -32,6 +32,9 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
       - FOWNER
@@ -61,6 +64,9 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
       - FOWNER
@@ -90,6 +96,9 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
       - FOWNER
@@ -150,6 +159,9 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
       - FOWNER
@@ -180,6 +192,9 @@ services:
     <<: [*hardening-defaults, *limits-light]
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     user: ${PUID:-3000}:${PGID:-3000}
     networks:
       - dockerproxy
@@ -239,6 +254,9 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: yamtrack
     image: ghcr.io/fuzzygrim/yamtrack
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
       - FOWNER
@@ -293,6 +311,7 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: dispatcharr
     image: ghcr.io/dispatcharr/dispatcharr:latest
+    read_only: false
     cap_add:
       - CHOWN
       - FOWNER
@@ -362,6 +381,10 @@ services:
     <<: [*hardening-defaults, *limits-light]
     container_name: obzorarr
     image: ghcr.io/engels74/obzorarr-docker:latest
+    read_only: false
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - SETUID
       - SETGID
