@@ -36,30 +36,30 @@ It reflects the currently applied state.
 | spotdl-web | docker/truenas/downloaders.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5; read_only disabled (incompatible with ro rootfs) |
 | filezilla | docker/truenas/filemanagement.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (incompatible with ro rootfs) |
 | doublecommander | docker/truenas/filemanagement.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (incompatible with ro rootfs) |
-| sonarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| radarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| bazarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| seerr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| prowlarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| recyclarr | docker/truenas/media.yaml | ✅ | ❌ | ✅ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| flaresolverr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| swaparr-radarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| swaparr-sonarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| yamtrack | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| yamtrack-redis | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| audiobookshelf | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| dispatcharr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| tautulli | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| wrapperr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| obzorarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| houndarr | docker/truenas/media.yaml | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
+| sonarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| radarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| bazarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| seerr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| prowlarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| recyclarr | docker/truenas/media.yaml | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
+| flaresolverr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| swaparr-radarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
+| swaparr-sonarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
+| yamtrack | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| yamtrack-redis | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
+| audiobookshelf | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| dispatcharr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| tautulli | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
+| wrapperr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
+| obzorarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
+| houndarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | nextcloud-aio-mastercontainer | docker/truenas/nextcloud-aio.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | portainer-agent | docker/truenas/portainer-agent.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
-| webtop-chrome | docker/truenas/webtop.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/2g/2.0 |
+| webtop-chrome | docker/truenas/webtop.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/2g/2.0 |
 
 ## Notes
 
 - Compose hardening is implemented with YAML anchors in each workload file for reuse and consistency.
 - `docker/recyclarr/recyclarr.yaml` remains out of scope because it is Recyclarr app config, not a Docker Compose workload file.
-- `cap_drop: ["ALL"]` has been applied to all stacks except `docker/truenas/media.yaml`.
+- `cap_drop: ["ALL"]` has been applied to all audited stacks.
 - `read_only: true` has been enabled for all stacks except `docker/truenas/media.yaml` and `photon` in this pass.

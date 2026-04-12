@@ -1,6 +1,8 @@
 x-hardening-defaults: &hardening-defaults
   security_opt:
     - no-new-privileges=true
+  cap_drop:
+    - ALL
   tty: false
   stdin_open: false
   logging:
@@ -29,6 +31,12 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
@@ -52,6 +60,12 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
@@ -75,6 +89,12 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
@@ -129,6 +149,12 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
