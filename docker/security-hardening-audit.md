@@ -42,10 +42,10 @@ It reflects the currently applied state.
 | seerr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | prowlarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | recyclarr | docker/truenas/media.yaml | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| flaresolverr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| flaresolverr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (service override) |
 | swaparr-radarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | swaparr-sonarr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
-| yamtrack | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
+| yamtrack | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (service override) |
 | yamtrack-redis | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/512m/0.5 |
 | audiobookshelf | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | limits=512/1g/1.0 |
 | dispatcharr | docker/truenas/media.yaml | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | limits=512/1g/1.0; read_only disabled (service override) |

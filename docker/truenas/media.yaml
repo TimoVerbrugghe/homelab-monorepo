@@ -33,7 +33,7 @@ services:
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
     tmpfs:
-      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /run:rw,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -65,7 +65,7 @@ services:
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
     tmpfs:
-      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /run:rw,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -97,7 +97,7 @@ services:
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
     tmpfs:
-      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /run:rw,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -160,7 +160,7 @@ services:
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
     tmpfs:
-      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /run:rw,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -208,6 +208,7 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
+    read_only: false
     restart: always
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
@@ -254,6 +255,7 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: yamtrack
     image: ghcr.io/fuzzygrim/yamtrack
+    read_only: false
     tmpfs:
       - /run:rw,noexec,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
@@ -383,7 +385,7 @@ services:
     image: ghcr.io/engels74/obzorarr-docker:latest
     read_only: false
     tmpfs:
-      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /run:rw,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - SETUID
