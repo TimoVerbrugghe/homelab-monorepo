@@ -238,6 +238,12 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: yamtrack
     image: ghcr.io/fuzzygrim/yamtrack
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: unless-stopped
     networks:
       - dockerproxy
@@ -257,6 +263,9 @@ services:
     <<: [*hardening-defaults, *limits-light]
     container_name: yamtrack-redis
     image: redis:7-alpine
+    cap_add:
+      - SETUID
+      - SETGID
     restart: unless-stopped
     networks:
       - dockerproxy
@@ -283,6 +292,12 @@ services:
     <<: [*hardening-defaults, *limits-medium]
     container_name: dispatcharr
     image: ghcr.io/dispatcharr/dispatcharr:latest
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: unless-stopped
     networks:
       - dockerproxy
@@ -300,6 +315,12 @@ services:
     <<: [*hardening-defaults, *limits-light]
     container_name: tautulli
     image: tautulli/tautulli:latest
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
@@ -340,6 +361,9 @@ services:
     <<: [*hardening-defaults, *limits-light]
     container_name: obzorarr
     image: ghcr.io/engels74/obzorarr-docker:latest
+    cap_add:
+      - SETUID
+      - SETGID
     restart: always
     networks:
       - dockerproxy
@@ -362,6 +386,10 @@ services:
     <<: [*hardening-defaults, *limits-light]
     image: ghcr.io/av1155/houndarr:latest
     container_name: houndarr
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
     restart: unless-stopped
     networks:
       - dockerproxy
