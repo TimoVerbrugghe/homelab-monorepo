@@ -33,7 +33,7 @@ services:
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
     tmpfs:
-      - /run:rw,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -65,7 +65,7 @@ services:
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
     tmpfs:
-      - /run:rw,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -97,7 +97,7 @@ services:
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
     tmpfs:
-      - /run:rw,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -160,7 +160,7 @@ services:
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
     tmpfs:
-      - /run:rw,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -193,7 +193,7 @@ services:
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
     tmpfs:
-      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     user: ${PUID:-3000}:${PGID:-3000}
     networks:
@@ -257,7 +257,7 @@ services:
     image: ghcr.io/fuzzygrim/yamtrack
     read_only: false
     tmpfs:
-      - /run:rw,noexec,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -385,7 +385,7 @@ services:
     image: ghcr.io/engels74/obzorarr-docker:latest
     read_only: false
     tmpfs:
-      - /run:rw,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - SETUID
