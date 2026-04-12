@@ -223,6 +223,8 @@ services:
     <<: [*hardening-defaults, *limits-light]
     image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-radarr
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     restart: always
     networks:
       - dockerproxy
@@ -239,6 +241,8 @@ services:
     <<: [*hardening-defaults, *limits-light]
     image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-sonarr
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
     restart: always
     networks:
       - dockerproxy
