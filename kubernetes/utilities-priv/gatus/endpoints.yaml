@@ -334,12 +334,7 @@ endpoints:
     url: "http://thefactory.local.timo.be:3000"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
-
-  - name: "Webtop"
-    url: "http://thefactory.local.timo.be:12006"
-    group: Utilities
-    <<: [*defaults-http, *defaults-alerts]
-
+    
   - name: "NS-USBloader"
     url: "http://ns-usbloader-web.utilities.svc.cluster.local:8080"
     group: Utilities
