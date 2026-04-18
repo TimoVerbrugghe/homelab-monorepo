@@ -161,11 +161,11 @@
         href: https://obzorarr.timo.be
         server: thefactory
         container: obzorarr
-    - ErsatzTV:
-        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/ersatztv.svg
-        href: https://ersatztv.timo.be
+    - Tunarr:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/tunarr.webp
+        href: https://tunarr.timo.be
         namespace: mediaplayback
-        app: ersatztv
+        app: tunarr
     - Subgen:
         icon: https://raw.githubusercontent.com/TimoVerbrugghe/subgen-azure-batch/main/icon.png
         href: https://subgen.timo.be

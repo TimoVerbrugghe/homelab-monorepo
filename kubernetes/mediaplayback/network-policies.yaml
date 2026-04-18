@@ -13,7 +13,7 @@ spec:
   policyTypes:
     - Ingress
 ---
-# Allow ingress from Traefik (Plex, Jellyfin, ErsatzTV web UIs).
+# Allow ingress from Traefik (Plex, Jellyfin, ... web UIs).
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

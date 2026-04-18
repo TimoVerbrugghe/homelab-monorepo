@@ -178,8 +178,8 @@ endpoints:
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "ErsatzTV"
-    url: "http://ersatztv.mediaplayback.svc.cluster.local:8409"
+  - name: "Tunarr"
+    url: "http://tunarr.mediaplayback.svc.cluster.local:8409"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 

@@ -8,7 +8,7 @@ REPO_OWNER="TimoVerbrugghe"
 REPO_NAME="homelab-monorepo"
 WORKFLOW_FILE="iscsi-kubernetes.yaml"
 REF="master"
-WORKLOADS="mediaplayback/deployment/plex/1, mediaplayback/deployment/jellyfin/1, mediaplayback/deployment/ersatztv/1"
+WORKLOADS="mediaplayback/deployment/plex/1, mediaplayback/deployment/jellyfin/1, mediaplayback/deployment/tunarr/1"
 
 if [ ! -f "$TOKEN_FILE" ]; then
   echo "ERROR: GitHub token file not found at $TOKEN_FILE" >&2
