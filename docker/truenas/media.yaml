@@ -356,7 +356,7 @@ services:
   obzorarr:
     <<: [*hardening-defaults, *limits-light]
     container_name: obzorarr
-    image: ghcr.io/engels74/obzorarr-docker:latest
+    image: ghcr.io/engels74/obzorarr-docker:nightly
     read_only: false
     tmpfs:
       - /run:rw,exec,nosuid,nodev,size=64m
