@@ -20,6 +20,9 @@ spec:
       labels:
         app.kubernetes.io/name: iventoy
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: iventoy
           image: ziggyds/iventoy:latest
@@ -29,6 +32,9 @@ spec:
           # Must run as root according to the iventoy documentation
           securityContext:
             privileged: true
+            capabilities:
+              drop: ["ALL"]
+              add: ["NET_BIND_SERVICE", "NET_ADMIN", "NET_RAW", "SYS_ADMIN", "SETUID", "SETGID"]
           env:
             - name: AUTO_START_PXE
               value: "true"

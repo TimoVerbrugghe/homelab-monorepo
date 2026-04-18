@@ -15,11 +15,11 @@ This audit covers all hardened workload manifests, including `kubernetes/utiliti
 | subgen | mediaplayback | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Existing transcode `emptyDir` kept |
 | kptv-fast | mediaplayback | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | |
 | plex-autolanguages | mediaplayback | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Existing `/config` emptyDir kept |
-| plex | mediaplayback | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | Existing memory-backed `/dev/shm` preserved |
+| plex | mediaplayback | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | Existing memory-backed `/dev/shm` preserved; non-root + readOnly rootfs incompatible with current image startup |
 | jellyfin | mediaplayback | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Existing memory-backed `/dev/shm` preserved; commented one-time init unchanged |
 | adguardhome | adguardhome | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | Drops ALL + adds NET_BIND_SERVICE |
-| netbootxyz | pxeboot | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | Existing memory-backed config/assets volumes kept; current image needs writable root filesystem |
-| iventoy | pxeboot | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | privileged=true by design (PXE/TFTP); current image needs writable root filesystem |
+| netbootxyz | pxeboot | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | Existing memory-backed config/assets volumes kept; current image needs writable root filesystem |
+| iventoy | pxeboot | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | privileged=true by design (PXE/TFTP); allowPrivilegeEscalation cannot be false while privileged=true; current image needs writable root filesystem |
 | keel | utilities | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | |
 | homepage | utilities | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | |
 | cloudflared-homelab | utilities | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | |
@@ -29,12 +29,12 @@ This audit covers all hardened workload manifests, including `kubernetes/utiliti
 | epicgames-freegames | utilities | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | runAsNonRoot/readOnlyRootFilesystem remain incompatible |
 | ns-usbloader | utilities | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | |
 | bitwarden | utilities-priv | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Commented one-time chown init left untouched |
-| bitwarden-backup | utilities-priv | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ | CronJob; cap drop removed for functionality |
+| bitwarden-backup | utilities-priv | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | CronJob hardened with non-root + drop ALL |
 | bitwarden-export | utilities-priv | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Existing writable config `emptyDir` kept |
-| bitwarden-restore | utilities-priv | ✅ | ✅ | ❌ | ❌ | ❓ | ✅ | ❌ | Manual restore job kept in git only; not deployed |
+| bitwarden-restore | utilities-priv | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Manual restore job kept in git only; not deployed |
 | mealie | utilities-priv | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | One-time chown init retained |
-| mealie-backup | utilities-priv | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ | CronJob; cap drop removed for functionality |
-| mealie-restore | utilities-priv | ✅ | ✅ | ❌ | ❌ | ❓ | ✅ | ❌ | Manual restore job kept in git only; not deployed |
+| mealie-backup | utilities-priv | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | CronJob hardened with non-root + drop ALL |
+| mealie-restore | utilities-priv | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Manual restore job kept in git only; not deployed |
 | gatus | utilities-priv | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | NET_RAW explicitly added |
 | changedetection | utilities-priv | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Existing data volume kept |
 | playwright-chrome | utilities-priv | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | Chrome still excludes readOnlyRootFilesystem |
@@ -56,9 +56,10 @@ This audit covers all hardened workload manifests, including `kubernetes/utiliti
 ### Existing workload-specific caveats preserved
 
 - `epicgames-freegames` still cannot use `runAsNonRoot` or `readOnlyRootFilesystem` with the current image behavior.
-- `plex` still cannot use `capabilities.drop: ["ALL"]` with the current image behavior.
+- `plex` still cannot use `runAsNonRoot` or `readOnlyRootFilesystem` with the current image behavior.
 - `bitwarden-restore` and `mealie-restore` remain manual restore job manifests kept in git and not intended for deployment by default.
 - `netbootxyz` and `iventoy` required `readOnlyRootFilesystem` to be reverted after rollout verification exposed startup writes in the current images.
+- `iventoy` cannot set `allowPrivilegeEscalation: false` while `privileged: true` is required by current image behavior.
 - `jellyfin` retains its commented one-time ownership migration init container.
 
 ## Deferred overlays

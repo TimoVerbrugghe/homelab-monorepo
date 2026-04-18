@@ -54,6 +54,9 @@ spec:
         tty: false
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+            add: ["CHOWN", "FOWNER", "DAC_OVERRIDE", "SETUID", "SETGID"]
         env:
         - name: PLEX_UID
           value: "3000"

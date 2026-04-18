@@ -26,7 +26,7 @@ spec:
         fsGroup: 3000
       nodeSelector:
         kubernetes.io/hostname: yumi
-      # ONE-TIME: Migrate /data ownership to non-root user (UID/GID 3000).
+      # ONE-TIME: Migrate /data ownership to non-root user (UID/GID 3000) + making the folder writeable so that restore container works
       # After the first successful start with non-root execution, comment out this initContainer.
       # initContainers:
       #   - name: chown-bitwarden-data
@@ -36,6 +36,7 @@ spec:
       #       - |
       #         echo "Chowning /data to 3000:3000..."
       #         chown -R 3000:3000 /data
+      #         chmod g+w /data
       #         echo "Done"
       #     securityContext:
       #       privileged: true

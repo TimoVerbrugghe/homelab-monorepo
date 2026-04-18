@@ -7,6 +7,10 @@ spec:
   template:
     spec:
       securityContext:
+        runAsNonRoot: true
+        runAsUser: 3000
+        runAsGroup: 3000
+        fsGroup: 3000
         seccompProfile:
           type: RuntimeDefault
       restartPolicy: Never
@@ -28,6 +32,9 @@ spec:
           tty: false
           securityContext:
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           volumeMounts:
             - name: bitwarden-data
               mountPath: /appdata

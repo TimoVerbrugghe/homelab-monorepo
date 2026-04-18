@@ -38,6 +38,7 @@ spec:
             - |
               echo "Chowning /app/data to 3000:3000..."
               chown -R 3000:3000 /app/data
+              chmod g+w /data
               echo "Done"
           securityContext:
             privileged: true

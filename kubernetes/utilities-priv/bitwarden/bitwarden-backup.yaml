@@ -9,10 +9,14 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: OnFailure
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 3000
+            runAsGroup: 3000
+            fsGroup: 3000
             seccompProfile:
               type: RuntimeDefault
-          restartPolicy: OnFailure
           nodeSelector:
             kubernetes.io/hostname: yumi
           containers:
@@ -24,6 +28,8 @@ spec:
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
               env:
                 - name: BACKUP_NAME
                   value: "bitwarden"
