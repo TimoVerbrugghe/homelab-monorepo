@@ -11,10 +11,10 @@ on:
           - Scale Up
           - Scale Down
       workloads:
-        description: "Workloads to process (comma separated: namespace/type/name/replicas)"
+        description: "Optional manual override (comma separated: namespace/type/name/replicas). Leave empty for auto-discovery of iSCSI deployments."
         required: false
         type: string
-        default: "mediaplayback/deployment/plex/1, mediaplayback/deployment/jellyfin/1, mediaplayback/deployment/tunarr/1"
+        default: ""
 
 jobs:
   kubernetes-scale:
@@ -36,33 +36,151 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
-      - name: Scale Down workloads
-        if: ${{ inputs.action == 'Scale Down' }}
+      # Only runs when a manual workloads input is provided. If workloads is empty, discovery step below is used instead.
+      - name: Prepare manual workload override
+        id: prepare-manual-workloads
+        if: ${{ inputs.workloads != '' }}
         shell: bash
         run: |
           set -euo pipefail
+
           WORKLOAD_LIST=$(echo "$WORKLOADS" | tr ',' '\n' | sed 's/^ *//;s/ *$//; /^[[:space:]]*$/d')
+          {
+            echo "workload_list<<EOF"
+            echo "$WORKLOAD_LIST"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # Runs when no manual workloads input is provided, discovers iSCSI workloads by inspecting all deployments and their volumes.
+      - name: Discover iSCSI workloads from cluster
+        id: discover-iscsi-workloads
+        if: ${{ inputs.workloads == '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          discover_iscsi_workloads() {
+            kubectl get deployments -A -o json | jq -r '.items[] | [.metadata.namespace, .metadata.name] | @tsv' |
+              while IFS=$'\t' read -r namespace deployment; do
+                [[ -z "$namespace" || -z "$deployment" ]] && continue
+                has_iscsi="false"
+
+                # Detect direct iSCSI volumes in pod spec.
+                direct_iscsi=$(kubectl get deployment "$deployment" -n "$namespace" -o json | jq -r 'any(.spec.template.spec.volumes[]?; has("iscsi"))')
+                if [[ "$direct_iscsi" == "true" ]]; then
+                  has_iscsi="true"
+                fi
+
+                # Detect PVC-backed volumes that resolve to iSCSI PVs.
+                if [[ "$has_iscsi" != "true" ]]; then
+                  while IFS= read -r pvc; do
+                    [[ -z "$pvc" ]] && continue
+                    pv_name=$(kubectl get pvc "$pvc" -n "$namespace" -o jsonpath='{.spec.volumeName}' 2>/dev/null || true)
+                    [[ -z "$pv_name" ]] && continue
+
+                    pv_is_iscsi=$(kubectl get pv "$pv_name" -o json 2>/dev/null | jq -r '
+                      if (.spec.iscsi != null) then
+                        "true"
+                      elif (.spec.csi != null and ((.spec.csi.driver // "") | ascii_downcase | contains("iscsi"))) then
+                        "true"
+                      else
+                        "false"
+                      end
+                    ')
+
+                    if [[ "$pv_is_iscsi" == "true" ]]; then
+                      has_iscsi="true"
+                      break
+                    fi
+                  done < <(kubectl get deployment "$deployment" -n "$namespace" -o json | jq -r '.spec.template.spec.volumes[]? | select(has("persistentVolumeClaim")) | .persistentVolumeClaim.claimName')
+                fi
+
+                if [[ "$has_iscsi" == "true" ]]; then
+                  echo "$namespace/deployment/$deployment"
+                fi
+              done
+          }
+
+          WORKLOAD_LIST=$(discover_iscsi_workloads)
+          {
+            echo "workload_list<<EOF"
+            echo "$WORKLOAD_LIST"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Show selected workloads
+        env:
+          WORKLOAD_LIST: ${{ steps.prepare-manual-workloads.outputs.workload_list || steps.discover-iscsi-workloads.outputs.workload_list }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$WORKLOAD_LIST" ]]; then
+            echo "No workloads selected"
+            exit 0
+          fi
+
+          echo "Selected workloads:"
+          echo "$WORKLOAD_LIST"
+
+      - name: Scale Down selected workloads
+        if: ${{ inputs.action == 'Scale Down' }}
+        env:
+          WORKLOAD_LIST: ${{ steps.prepare-manual-workloads.outputs.workload_list || steps.discover-iscsi-workloads.outputs.workload_list }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$WORKLOAD_LIST" ]]; then
+            echo "No workloads found to scale down"
+            exit 0
+          fi
+
           while IFS= read -r workload; do
             [[ -z "$workload" ]] && continue
             NAMESPACE=$(cut -d'/' -f1 <<< "$workload")
             TYPE=$(cut -d'/' -f2 <<< "$workload")
             NAME=$(cut -d'/' -f3 <<< "$workload")
+
+            CURRENT_REPLICAS=$(kubectl get "$TYPE" "$NAME" -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "1")
+            [[ -z "$CURRENT_REPLICAS" ]] && CURRENT_REPLICAS="1"
+
+            kubectl annotate "$TYPE" "$NAME" -n "$NAMESPACE" homelab.io/iscsi-original-replicas="$CURRENT_REPLICAS" --overwrite >/dev/null || true
             echo "Scaling down $TYPE $NAMESPACE/$NAME"
             kubectl scale "$TYPE" "$NAME" -n "$NAMESPACE" --replicas=0 || echo "WARNING: Failed to scale down $NAMESPACE/$NAME"
           done <<< "$WORKLOAD_LIST"
 
-      - name: Scale Up workloads
+      - name: Scale Up selected workloads
         if: ${{ inputs.action == 'Scale Up' }}
+        env:
+          WORKLOAD_LIST: ${{ steps.prepare-manual-workloads.outputs.workload_list || steps.discover-iscsi-workloads.outputs.workload_list }}
         shell: bash
         run: |
           set -euo pipefail
-          WORKLOAD_LIST=$(echo "$WORKLOADS" | tr ',' '\n' | sed 's/^ *//;s/ *$//; /^[[:space:]]*$/d')
+
+          if [[ -z "$WORKLOAD_LIST" ]]; then
+            echo "No workloads found to scale up"
+            exit 0
+          fi
+
           while IFS= read -r workload; do
             [[ -z "$workload" ]] && continue
             NAMESPACE=$(cut -d'/' -f1 <<< "$workload")
             TYPE=$(cut -d'/' -f2 <<< "$workload")
             NAME=$(cut -d'/' -f3 <<< "$workload")
-            REPLICAS=$(cut -d'/' -f4 <<< "$workload")
+
+            if [[ "${{ inputs.workloads != '' }}" == "true" ]]; then
+              REPLICAS=$(cut -d'/' -f4 <<< "$workload")
+              if [[ ! "$REPLICAS" =~ ^[0-9]+$ ]] || [[ "$REPLICAS" -le 0 ]]; then
+                REPLICAS=1
+              fi
+            else
+              REPLICAS=$(kubectl get "$TYPE" "$NAME" -n "$NAMESPACE" -o jsonpath='{.metadata.annotations.homelab\.io/iscsi-original-replicas}' 2>/dev/null || true)
+              if [[ ! "$REPLICAS" =~ ^[0-9]+$ ]] || [[ "$REPLICAS" -le 0 ]]; then
+                REPLICAS=1
+              fi
+            fi
+
             echo "Scaling up $TYPE $NAMESPACE/$NAME to $REPLICAS"
             kubectl scale "$TYPE" "$NAME" -n "$NAMESPACE" --replicas="$REPLICAS" || echo "WARNING: Failed to scale up $NAMESPACE/$NAME"
           done <<< "$WORKLOAD_LIST"
