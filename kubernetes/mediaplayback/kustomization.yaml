@@ -10,7 +10,6 @@ resources:
   - network-policies.yaml
   - plex
   - jellyfin
-  - ersatztv
   - tunarr
   - media-storage.yaml
   - kptv-fast

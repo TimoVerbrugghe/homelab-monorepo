@@ -24,7 +24,7 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
-        fsGroup: 1000
+        # fsGroup: 1000
       # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem
       initContainers:
       - name: format-volume
