@@ -362,6 +362,7 @@ services:
       - /run:rw,exec,nosuid,nodev,size=64m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
+      - CHOWN
       - SETUID
       - SETGID
     restart: always
