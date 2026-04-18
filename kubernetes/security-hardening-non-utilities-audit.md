@@ -17,6 +17,7 @@ This audit covers all hardened workload manifests, including `kubernetes/utiliti
 | plex-autolanguages | mediaplayback | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Existing `/config` emptyDir kept |
 | plex | mediaplayback | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | Existing memory-backed `/dev/shm` preserved; non-root + readOnly rootfs incompatible with current image startup |
 | jellyfin | mediaplayback | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | Existing memory-backed `/dev/shm` preserved; commented one-time init unchanged |
+| tunarr | mediaplayback | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | Runs as root (UID 0) due to meilisearch binary permissions in image; media libraries mounted read-only; dedicated `/tmp` emptyDir (4Gi) for temp work |
 | adguardhome | adguardhome | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | Drops ALL + adds NET_BIND_SERVICE |
 | netbootxyz | pxeboot | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | Existing memory-backed config/assets volumes kept; current image needs writable root filesystem |
 | iventoy | pxeboot | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | privileged=true by design (PXE/TFTP); allowPrivilegeEscalation cannot be false while privileged=true; current image needs writable root filesystem |

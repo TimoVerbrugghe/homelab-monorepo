@@ -6,12 +6,6 @@ generatorOptions:
   disableNameSuffixHash: true
 
 resources:
-  - namespace.yaml
-  - network-policies.yaml
-  - plex
-  - jellyfin
-  - ersatztv
-  - tunarr
-  - media-storage.yaml
-  - kptv-fast
-  - subgen
+  - tunarr.yaml
+  - tunarr-storage.yaml
+  - tunarr-network.yaml

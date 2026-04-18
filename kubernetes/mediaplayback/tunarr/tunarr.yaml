@@ -1,0 +1,141 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tunarr
+  namespace: mediaplayback
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tunarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tunarr
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        fsGroup: 1000
+      # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem
+      initContainers:
+      - name: format-volume
+        image: busybox:1.35
+        stdin: false
+        tty: false
+        command: ['sh', '-c']
+        args:
+        - |
+          if ! blkid /dev/sda; then
+            echo "Formatting volume with ext4..."
+            mkfs.ext4 /dev/sda
+          else
+            echo "Volume already formatted"
+          fi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: tunarr-config
+          mountPath: /dev/sda
+          subPath: ""
+
+      containers:
+      - name: tunarr
+        image: ghcr.io/chrisbenincasa/tunarr:latest
+        imagePullPolicy: Always
+        stdin: false
+        tty: false
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+          runAsGroup: 0
+        env:
+        - name: HOME
+          value: "/tmp"
+        - name: XDG_CACHE_HOME
+          value: "/tmp/.cache"
+        - name: TZ
+          value: "Europe/Brussels"
+        - name: TUNARR_DATABASE_PATH
+          value: "/config/tunarr"
+        - name: TUNARR_SERVER_TRUST_PROXY
+          value: "true"
+
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+            gpu.intel.com/i915: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "3000m"
+            gpu.intel.com/i915: "1"
+
+        startupProbe:
+          httpGet:
+            path: /api/system/health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+          successThreshold: 1
+
+        readinessProbe:
+          httpGet:
+            path: /api/system/health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+
+        livenessProbe:
+          httpGet:
+            path: /api/system/health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+
+        volumeMounts:
+        - name: tunarr-config
+          mountPath: /config/tunarr
+        - name: movies
+          mountPath: /movies
+          readOnly: true
+        - name: tvshows
+          mountPath: /tv
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+
+      volumes:
+      - name: tunarr-config
+        persistentVolumeClaim:
+          claimName: tunarr-pvc
+      - name: movies
+        persistentVolumeClaim:
+          claimName: movies-pvc
+      - name: tvshows
+        persistentVolumeClaim:
+          claimName: tvshows-pvc
+      - name: tmp
+        emptyDir:
+          sizeLimit: 4Gi
