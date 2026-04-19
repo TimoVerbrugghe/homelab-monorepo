@@ -5,9 +5,12 @@ resources:
   - namespace.yaml
   - network-policies.yaml
   - bentopdf
+  - bitwarden
+  # - changedetection
   - cloudflare
+  - gatus
   - homepage
   - keel
+  - mealie
   - switchutilities
   - epicgames-freegames
-  # - changedetection

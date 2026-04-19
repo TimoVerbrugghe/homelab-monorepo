@@ -266,7 +266,7 @@
         namespace: pxeboot
         app: netbootxyz
     - Bootimus:
-        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/booty.svg
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/netboot-xyz.webp
         href: https://bootimus.timo.be
         namespace: pxeboot
         app: bootimus

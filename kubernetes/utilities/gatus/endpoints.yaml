@@ -179,7 +179,7 @@ endpoints:
     <<: [*defaults-http, *defaults-alerts]
 
   - name: "Tunarr"
-    url: "http://tunarr.mediaplayback.svc.cluster.local:8409"
+    url: "http://tunarr.mediaplayback.svc.cluster.local:8000"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
@@ -264,12 +264,12 @@ endpoints:
     <<: [*defaults-dns]
 
   - name: "Netbootxyz"
-    url: "http://netbootxyz.local.timo.be:3000"
+    url: "http://netbootxyz-kubevip.pxeboot.svc.cluster.local:3000"
     group: Networking
     <<: [*defaults-http, *defaults-alerts]
 
   - name: "Bootimus"
-    url: "http://bootimus.local.timo.be:8081"
+    url: "http://bootimus-kubevip.pxeboot.svc.cluster.local:8081"
     group: Networking
     <<: [*defaults-http, *defaults-alerts]
 
