@@ -13,7 +13,7 @@ spec:
   policyTypes:
     - Ingress
 ---
-# Allow ingress from Traefik (iVentoy and netboot.xyz web UIs).
+# Allow ingress from Traefik for PXE web UIs.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -46,7 +46,7 @@ spec:
               kubernetes.io/metadata.name: tailscale
 ---
 # Allow ingress from utilities namespace so Homepage and Gatus can reach
-# iVentoy and netboot.xyz for widgets and health checks.
+# PXE services for widgets and health checks.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

@@ -277,10 +277,10 @@ filtering:
       answer: 10.10.10.10
     - domain: netbootxyz.local.timo.be
       answer: 10.10.10.37
+    - domain: bootimus.local.timo.be
+      answer: 10.10.10.43
     - domain: pdu.local.timo.be
       answer: 10.10.10.12
-    - domain: iventoy.local.timo.be
-      answer: 10.10.10.38
     - domain: gamingserver.local.timo.be
       answer: 10.10.10.15
     - domain: sunshine.local.timo.be

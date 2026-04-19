@@ -268,8 +268,8 @@ endpoints:
     group: Networking
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "iVentoy"
-    url: "http://iventoy.local.timo.be:26000"
+  - name: "Bootimus"
+    url: "http://bootimus.local.timo.be:8081"
     group: Networking
     <<: [*defaults-http, *defaults-alerts]
 

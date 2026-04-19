@@ -2,19 +2,19 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: iventoy-traefik
+  name: bootimus-traefik
   namespace: pxeboot
-  annotations: 
+  annotations:
     kubernetes.io/ingress.class: traefik
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`iventoy.kubernetes.timo.be`) || Host(`iventoy.timo.be`)
+    - match: Host(`bootimus.kubernetes.timo.be`) || Host(`bootimus.timo.be`)
       kind: Rule
       services:
-        - name: iventoy-traefik
-          port: 26000
+        - name: bootimus-traefik
+          port: 8081
       middlewares:
         - name: auth
           namespace: traefik

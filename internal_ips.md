@@ -29,12 +29,11 @@
 | 10.10.10.35   | Adguardhome (Kubernetes)                    |
 | 10.10.10.36   | Adguardhome (home assistant connection)     |
 | 10.10.10.37   | NetbootXYZ PXE Server                       |
-| 10.10.10.38   | iVentoy PXE Server                          |
 | 10.10.10.39   | Plex (Kubernetes)                           |
 | 10.10.10.40   | Jellyfin (Kubernetes)                       |
 | 10.10.10.41   | Subgen                                      |
 | 10.10.10.42   | NS-USBloader                                |
-| 10.10.10.43   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.43   | Bootimus PXE Server                         |
 | 10.10.10.44   | Reserved by kubevip for kubernetes cluster  |
 | 10.10.10.45   | Reserved by kubevip for kubernetes cluster  |
 | 10.10.10.46   | Reserved by kubevip for kubernetes cluster  |

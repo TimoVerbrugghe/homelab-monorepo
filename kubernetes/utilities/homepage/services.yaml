@@ -265,11 +265,11 @@
         href: https://netbootxyz.timo.be
         namespace: pxeboot
         app: netbootxyz
-    - iVentoy:
-        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/iventoy.svg
-        href: https://iventoy.timo.be
+    - Bootimus:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/booty.svg
+        href: https://bootimus.timo.be
         namespace: pxeboot
-        app: iventoy
+        app: bootimus
         
 - Filemanagement:
     - Nextcloud:

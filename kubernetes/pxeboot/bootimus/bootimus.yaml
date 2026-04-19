@@ -1,78 +1,75 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: iventoy
+  name: bootimus
   namespace: pxeboot
   labels:
-    app.kubernetes.io/name: iventoy
+    app.kubernetes.io/name: bootimus
   annotations:
     keel.sh/policy: force
     keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
     keel.sh/match-tag: "true"
-spec: 
+spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: iventoy
+      app.kubernetes.io/name: bootimus
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: iventoy
+        app.kubernetes.io/name: bootimus
     spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: iventoy
-          image: ziggyds/iventoy:latest
+        - name: bootimus
+          image: garybowers/bootimus:latest
           imagePullPolicy: Always
-          stdin: false
-          tty: false
-          # Must run as root according to the iventoy documentation
           securityContext:
-            privileged: true
             capabilities:
               drop: ["ALL"]
-              add: ["NET_BIND_SERVICE", "NET_ADMIN", "NET_RAW", "SYS_ADMIN", "SETUID", "SETGID"]
+              add: ["NET_BIND_SERVICE"]
           env:
-            - name: AUTO_START_PXE
+            - name: BOOTIMUS_DATA_DIR
+              value: /data
+            - name: BOOTIMUS_TFTP_SINGLE_PORT
               value: "true"
+            - name: BOOTIMUS_SERVER_ADDR
+              value: "10.10.10.43"
           ports:
-            - containerPort: 16000
-              protocol: TCP
-              name: pxe
             - containerPort: 69
               protocol: UDP
               name: tftp
-            - containerPort: 26000
+            - containerPort: 8080
+              protocol: TCP
+              name: http
+            - containerPort: 8081
               protocol: TCP
               name: webui
-            - containerPort: 10809
-              protocol: TCP
-              name: nbd
           resources:
             requests:
-              cpu: 250m
-              memory: 256Mi
+              cpu: 100m
+              memory: 128Mi
             limits:
               cpu: 500m
               memory: 512Mi
-          
+
           startupProbe:
             httpGet:
               path: /
-              port: 26000
+              port: 8081
             initialDelaySeconds: 10
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 30
             successThreshold: 1
-          
+
           livenessProbe:
             httpGet:
               path: /
-              port: 26000
+              port: 8081
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 3
@@ -80,16 +77,16 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: 26000
+              port: 8081
             initialDelaySeconds: 5
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 3
           volumeMounts:
             - name: iso
-              mountPath: /app/iso
+              mountPath: /data/isos
       volumes:
         - name: iso
           nfs:
             server: nfs.local.timo.be
-            path: /mnt/FranzHopper/isos
+            path: /mnt/FranzHopper/isos/template/iso
