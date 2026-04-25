@@ -334,6 +334,11 @@ endpoints:
     url: "http://thefactory.local.timo.be:3000"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
+
+  - name: "PDU"
+    url: "icmp://pdu.local.timo.be"
+    group: Utilities
+    <<: [*defaults-ping, *defaults-alerts]
     
   - name: "NS-USBloader"
     url: "http://ns-usbloader-web.utilities.svc.cluster.local:8080"
