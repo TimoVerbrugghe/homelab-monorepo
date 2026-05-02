@@ -67,16 +67,9 @@
       "Microsoft To Do" = 1274495053;
       "Home Assistant" = 1099568401;
       "Microsoft Copilot" = 6738511300;
-      "Microsoft Universal Print" = 6450432292;
-      "Keynote" = 409183694;
-      "Numbers" = 409203825;
-      "Pages" = 409201541;
-      "iMovie" = 408981434;
-      "GarageBand" = 682658836;
       "Whatsapp" = 310633997;
       "Bitwarden"= 1352778147;
       "Tailscale" = 1475387142;
-      "Slack" = 803453959;
       "LocalSend" = 1661733229;
       "Hidden Bar" = 1452453066;
 
