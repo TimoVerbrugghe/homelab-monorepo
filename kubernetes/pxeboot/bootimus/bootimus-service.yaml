@@ -11,6 +11,10 @@ spec:
   type: LoadBalancer
   loadBalancerIP: 10.10.10.43
   ports:
+  - name: smb
+    protocol: TCP
+    port: 445
+    targetPort: smb
   - name: tftp
     protocol: UDP
     port: 69

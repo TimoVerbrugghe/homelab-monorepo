@@ -38,7 +38,12 @@ spec:
               value: "true"
             - name: BOOTIMUS_SERVER_ADDR
               value: "10.10.10.43"
+            - name: BOOTIMUS_WINDOWS_SMB_ENABLED
+              value: "true"
           ports:
+            - containerPort: 445
+              protocol: TCP
+              name: smb
             - containerPort: 69
               protocol: UDP
               name: tftp
