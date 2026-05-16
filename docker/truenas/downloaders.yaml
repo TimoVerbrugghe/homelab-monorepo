@@ -125,7 +125,8 @@ services:
   spotdl-web:
     <<: [*hardening-defaults, *limits-light]
     container_name: spotdl-web
-    image: spotdl/spotify-downloader
+    # Temporary switching to pinned version due to issue - https://github.com/spotDL/spotify-downloader/issues/2676
+    image: spotdl/spotify-downloader:v4.4.3
     command: web --host 0.0.0.0 --web-use-output-dir --keep-alive
     environment:
       - PUID=${PUID:-3000} #CHANGE_TO_YOUR_UID
