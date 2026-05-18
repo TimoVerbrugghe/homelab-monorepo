@@ -12,7 +12,7 @@ metadata:
   name: kube-vip-ds
   namespace: kube-system
   annotations:
-    keel.sh/policy: all
+    keel.sh/policy: major
     keel.sh/trigger: poll            
     keel.sh/pollSchedule: "@every 24h"
 spec:
