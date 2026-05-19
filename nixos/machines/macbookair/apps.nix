@@ -17,6 +17,7 @@
     azure-cli
     yamllint
     butane
+    socat
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.

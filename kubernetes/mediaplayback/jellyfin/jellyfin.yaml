@@ -83,6 +83,8 @@ spec:
         env:
         - name: TZ
           value: "Europe/Brussels"
+        - name: JELLYFIN_PublishedServerUrl
+          value: "http://jellyfin.local.timo.be"
 
         # Only schedule on nodes that have an Intel GPU available
         resources:
