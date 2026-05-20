@@ -1,0 +1,140 @@
+---
+# Shared host-network UDP relay for service discovery protocols.
+# Add more relay definitions in relays.json without creating additional pods.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: discovery-relay
+  namespace: mediaplayback
+data:
+  relays.json: |
+    [
+      {
+        "name": "jellyfin",
+        "listen_port": 7359,
+        "upstream_host": "10.10.10.40",
+        "upstream_port": 7359,
+        "mode": "broadcast"
+      },
+      {
+        "name": "plex-gdm",
+        "listen_port": 32414,
+        "upstream_host": "10.10.10.39",
+        "upstream_port": 32414,
+        "mode": "multicast",
+        "multicast_group": "239.0.0.250"
+      }
+    ]
+  relay.py: |
+    import json
+    import socket
+    import struct
+    import sys
+    from select import select
+
+
+    def build_listener(entry):
+      sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+      sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+      sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+      sock.bind(("0.0.0.0", int(entry["listen_port"])))
+
+      if entry.get("mode") == "multicast":
+        group = entry["multicast_group"]
+        mreq = struct.pack("4s4s", socket.inet_aton(group), socket.inet_aton("0.0.0.0"))
+        sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+
+      return sock
+
+
+    def log(event, **kwargs):
+      payload = {"event": event}
+      payload.update(kwargs)
+      print(json.dumps(payload), flush=True)
+
+
+    def load_config(path="/app/relays.json"):
+      with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+      if not isinstance(data, list) or not data:
+        raise ValueError("relays.json must be a non-empty list")
+
+      required = {"name", "listen_port", "upstream_host", "upstream_port", "mode"}
+      for item in data:
+        missing = required - set(item.keys())
+        if missing:
+          raise ValueError(f"relay '{item}' missing keys: {sorted(missing)}")
+        if item["mode"] == "multicast" and "multicast_group" not in item:
+          raise ValueError(f"relay '{item['name']}' requires multicast_group")
+
+      return data
+
+
+    def main():
+      try:
+        relays = load_config()
+      except Exception as exc:
+        log("config_error", error=str(exc))
+        return 1
+
+      listeners = {}
+      sockets = []
+
+      try:
+        for relay in relays:
+          sock = build_listener(relay)
+          sockets.append(sock)
+          listeners[sock.fileno()] = (sock, relay)
+          started = {
+            "name": relay["name"],
+            "listen_port": relay["listen_port"],
+            "upstream": f"{relay['upstream_host']}:{relay['upstream_port']}",
+            "mode": relay["mode"],
+          }
+          if relay["mode"] == "multicast":
+            started["multicast_group"] = relay["multicast_group"]
+          log("relay_started", **started)
+      except Exception as exc:
+        log("listener_error", error=str(exc))
+        for sock in sockets:
+          sock.close()
+        return 1
+
+      while True:
+        readable, _, _ = select(sockets, [], [], 1.0)
+        for sock in readable:
+          _, relay = listeners[sock.fileno()]
+          data, client_addr = sock.recvfrom(8192)
+          log(
+            "request_received",
+            relay=relay["name"],
+            client=f"{client_addr[0]}:{client_addr[1]}",
+            bytes=len(data),
+          )
+
+          upstream = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+          upstream.settimeout(2.0)
+          try:
+            upstream.sendto(data, (relay["upstream_host"], int(relay["upstream_port"])))
+            response, upstream_addr = upstream.recvfrom(8192)
+            sock.sendto(response, client_addr)
+            log(
+              "response_relayed",
+              relay=relay["name"],
+              upstream=f"{upstream_addr[0]}:{upstream_addr[1]}",
+              client=f"{client_addr[0]}:{client_addr[1]}",
+              bytes=len(response),
+            )
+          except socket.timeout:
+            log(
+              "upstream_timeout",
+              relay=relay["name"],
+              client=f"{client_addr[0]}:{client_addr[1]}",
+            )
+          finally:
+            upstream.close()
+
+
+    if __name__ == "__main__":
+      sys.exit(main())

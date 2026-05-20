@@ -8,6 +8,7 @@ generatorOptions:
 resources:
   - namespace.yaml
   - network-policies.yaml
+  - discovery-relay
   - plex
   - jellyfin
   - tunarr

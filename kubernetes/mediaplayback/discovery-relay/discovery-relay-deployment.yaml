@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-relay
+  namespace: mediaplayback
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: discovery-relay
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: discovery-relay
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      restartPolicy: Always
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: relay
+        image: python:3.13-alpine
+        imagePullPolicy: Always
+        command: ["python", "/app/relay.py"]
+        ports:
+        - name: udp-jellyfin
+          containerPort: 7359
+          hostPort: 7359
+          protocol: UDP
+        - name: udp-plex-gdm
+          containerPort: 32414
+          hostPort: 32414
+          protocol: UDP
+        volumeMounts:
+        - name: relay-config
+          mountPath: /app
+          readOnly: true
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65532
+          runAsGroup: 65532
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 20m
+            memory: 48Mi
+          limits:
+            cpu: 150m
+            memory: 128Mi
+      volumes:
+      - name: relay-config
+        configMap:
+          name: discovery-relay
+          defaultMode: 0555
