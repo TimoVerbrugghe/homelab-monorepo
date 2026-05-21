@@ -81,14 +81,20 @@ spec:
           name: http
         - containerPort: 6042
           name: files
-        
+
         volumeMounts:
         - name: ns-usbloader-config
           mountPath: /home/nsusbloader/.java/.userPrefs/NS-USBloader/prefs.xml
           subPath: prefs.xml
         - name: nsp
           mountPath: /nsp
-      
+        - name: tmp
+          mountPath: /tmp
+        - name: openjfx
+          mountPath: /home/nsusbloader/.openjfx
+        - name: cache
+          mountPath: /home/nsusbloader/.cache
+
       volumes:
       - name: ns-usbloader-config
         configMap:
@@ -96,3 +102,9 @@ spec:
       - name: nsp
         persistentVolumeClaim:
           claimName: games-roms-pvc
+      - name: tmp
+        emptyDir: {}
+      - name: openjfx
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}

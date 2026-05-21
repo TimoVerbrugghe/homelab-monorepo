@@ -28,6 +28,9 @@ spec:
       - name: tinshop
         image: ghcr.io/ajmandourah/tinshop-ng:latest
         imagePullPolicy: Always
+        # Tinshop opens "stats.db" using a relative path; with readOnlyRootFilesystem
+        # this must resolve to writable /data (emptyDir) instead of /stats.db on rootfs.
+        workingDir: /data
         stdin: false
         tty: false
         securityContext:
@@ -40,10 +43,10 @@ spec:
             drop: ["ALL"]
         resources:
           limits:
-            memory: "512Mi"
+            memory: "1Gi"
             cpu: "500m"
           requests:
-            memory: "256Mi"
+            memory: "512Mi"
             cpu: "250m"
         
         startupProbe:

@@ -303,11 +303,6 @@
         href: https://keel.timo.be
         namespace: utilities
         app: keel
-    - BentoPDF:
-        icon: bentopdf.svg
-        href: https://bentopdf.timo.be
-        namespace: utilities
-        app: bentopdf
     - Gatus:
         icon: gatus.svg
         href: https://gatus.timo.be

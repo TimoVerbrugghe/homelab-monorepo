@@ -325,11 +325,6 @@ endpoints:
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "BentoPDF"
-    url: "http://bentopdf.utilities.svc.cluster.local:8080"
-    group: Utilities
-    <<: [*defaults-http, *defaults-alerts]
-
   - name: "Dawarich"
     url: "http://thefactory.local.timo.be:3000"
     group: Utilities
@@ -342,6 +337,11 @@ endpoints:
     
   - name: "NS-USBloader"
     url: "http://ns-usbloader-web.utilities.svc.cluster.local:8080"
+    group: Utilities
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Tinshop"
+    url: "http://tinshop.utilities.svc.cluster.local:3000"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 

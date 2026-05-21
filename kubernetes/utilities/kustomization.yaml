@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - network-policies.yaml
-  - bentopdf
   - bitwarden
   # - changedetection
   - cloudflare
