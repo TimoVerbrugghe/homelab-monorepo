@@ -162,7 +162,7 @@ services:
   
   recyclarr:
     <<: [*hardening-defaults, *limits-light]
-    image: ghcr.io/recyclarr/recyclarr
+    image: ghcr.io/recyclarr/recyclarr:8
     container_name: recyclarr
     tmpfs:
       - /run:rw,exec,nosuid,nodev,size=64m
