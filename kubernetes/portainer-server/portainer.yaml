@@ -43,6 +43,8 @@ spec:
         - name: portainer
           image: portainer/portainer-ce:sts
           imagePullPolicy: Always
+          stdin: false
+          tty: false
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

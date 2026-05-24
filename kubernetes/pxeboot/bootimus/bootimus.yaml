@@ -27,10 +27,14 @@ spec:
         - name: bootimus
           image: garybowers/bootimus:latest
           imagePullPolicy: Always
+          stdin: false
+          tty: false
           securityContext:
             capabilities:
               drop: ["ALL"]
               add: ["NET_BIND_SERVICE"]
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
           env:
             - name: BOOTIMUS_DATA_DIR
               value: /data
@@ -60,7 +64,6 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-
           startupProbe:
             httpGet:
               path: /
@@ -70,7 +73,6 @@ spec:
             timeoutSeconds: 3
             failureThreshold: 30
             successThreshold: 1
-
           livenessProbe:
             httpGet:
               path: /
@@ -90,8 +92,20 @@ spec:
           volumeMounts:
             - name: iso
               mountPath: /data/isos
+            - name: tmp
+              mountPath: /tmp
+            - name: var-tmp
+              mountPath: /var/tmp
       volumes:
         - name: iso
           nfs:
             server: nfs.local.timo.be
             path: /mnt/FranzHopper/isos/template/iso
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
+        - name: var-tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi

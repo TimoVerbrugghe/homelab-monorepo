@@ -1,0 +1,50 @@
+name: Feature / Improvement Request
+description: Suggest a new service, configuration improvement, or enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing an idea. The homelab is always evolving!
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the homelab would this affect?
+      options:
+        - Kubernetes — new service
+        - Kubernetes — existing service improvement
+        - NixOS / Nix flake
+        - Ansible
+        - Docker Compose
+        - GitHub Actions
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature or improvement
+      description: What would you like to add or change, and why?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Are there other ways to solve this?
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Links to docs, related issues, upstream projects, etc.
+    validations:
+      required: false

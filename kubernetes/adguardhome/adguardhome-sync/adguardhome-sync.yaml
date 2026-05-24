@@ -22,8 +22,12 @@ spec:
       - name: adguardhome-sync
         image: ghcr.io/bakito/adguardhome-sync:latest
         imagePullPolicy: Always
+        stdin: false
+        tty: false
         securityContext:
           allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
           capabilities:
             drop:
               - "ALL"
@@ -119,3 +123,11 @@ spec:
           value: "*/1 * * * *" # run every 1 minute
         - name: RUN_ON_START
           value: "true"
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir:
+          medium: Memory
+          sizeLimit: 64Mi

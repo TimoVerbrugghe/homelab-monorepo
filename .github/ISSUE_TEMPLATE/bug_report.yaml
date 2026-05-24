@@ -1,0 +1,68 @@
+name: Bug Report
+description: Report something that is broken or not working as expected
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in as much detail as possible.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the homelab is affected?
+      options:
+        - Kubernetes manifests
+        - NixOS / Nix flake
+        - Ansible playbooks
+        - Docker Compose
+        - GitHub Actions workflow
+        - Shell scripts
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: service
+    attributes:
+      label: Service / component
+      description: Which specific service or file is affected? (e.g. `kubernetes/adguardhome`, `nixos/machines/odd`)
+      placeholder: kubernetes/traefik
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the problem clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Apply manifest with `kubectl apply -k kubernetes/...`
+        2. Check pod status
+        3. See error
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or output
+      render: shell
+    validations:
+      required: false

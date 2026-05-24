@@ -100,3 +100,16 @@ Several services are not running in this cluster and remain on separate NixOS VM
 ## Future Plans
 
 - Nothing right now. Feel free to suggest other things I might want to do in this setup!
+
+## Contributing
+
+Suggestions, ideas, and improvements are welcome! See [AGENTS.md](AGENTS.md) for the full guide on how this repo is structured and how to make changes.
+
+Quick checklist before opening a PR:
+
+- YAML passes `yamllint`
+- Shell scripts pass `shellcheck`
+- Kubernetes manifests include the hardening baseline (see `.github/instructions/kubernetes-deployment-best-practices.instructions.md`)
+- No `:latest` image tags
+- No secrets or credentials committed — use `.env.template` patterns
+- Maintenance matrix reviewed (see `.github/copilot-instructions.md`)
