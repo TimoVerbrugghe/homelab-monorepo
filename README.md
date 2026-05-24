@@ -7,7 +7,7 @@
 ![Ansible Playbooks](https://img.shields.io/badge/ansible%20playbooks-13-EE0000?logo=ansible&logoColor=white)
 ![NixOS Machines](https://img.shields.io/badge/nixos%20machines-6-5277C3?logo=nixos&logoColor=white)
 ![Shell Scripts](https://img.shields.io/badge/shell%20scripts-9-4EAA25?logo=gnubash&logoColor=white)
-![GitHub Workflows](https://img.shields.io/badge/github%20workflows-11-2088FF?logo=githubactions&logoColor=white)
+![GitHub Workflows](https://img.shields.io/badge/github%20workflows-12-2088FF?logo=githubactions&logoColor=white)
 ![Repo Size](https://img.shields.io/github/repo-size/TimoVerbrugghe/homelab-monorepo)
 <!-- END AUTO-GENERATED BADGES -->
 
@@ -27,6 +27,10 @@ This repository includes a local VS Code MCP configuration in `.vscode/mcp.json`
 - `kubernetes`
   - Type: stdio command server
   - Command: `npx mcp-server-kubernetes`
+
+- `siderolabs-docs`
+  - Type: HTTP MCP endpoint
+  - URL: `https://docs.siderolabs.com/mcp`
 
 - `tailscale`
   - Type: stdio command server
@@ -58,6 +62,7 @@ The following values are prompted securely when MCP starts:
 ![iSCSI Kubernetes](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/iscsi-kubernetes.yaml?branch=master&label=iscsi-kubernetes&logo=githubactions&logoColor=white)
 ![Lint Markdown](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/lint-markdown.yaml?branch=master&label=lint-markdown&logo=githubactions&logoColor=white)
 ![Lint YAML/JSON](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/lint-yaml-json.yaml?branch=master&label=lint-yaml-json&logo=githubactions&logoColor=white)
+![Sync External Skills](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/sync-external-skills.yaml?branch=master&label=sync-external-skills&logo=githubactions&logoColor=white)
 ![Update Badges](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/update-badges.yaml?branch=master&label=update-badges&logo=githubactions&logoColor=white)
 ![Update Talos Machines](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/update-talos-machines.yaml?branch=master&label=update-talos-machines&logo=githubactions&logoColor=white)
 ![Validate Shell Scripts](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/validate-shell-scripts.yaml?branch=master&label=validate-shell-scripts&logo=githubactions&logoColor=white)

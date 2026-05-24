@@ -35,7 +35,11 @@
     },
     "kubernetes": {
       "command": "npx",
-      "args": ["mcp-server-kubernetes"],
+      "args": ["mcp-server-kubernetes"]
+    },
+    "siderolabs-docs": {
+      "type": "http",
+      "url": "https://docs.siderolabs.com/mcp"
     },
     "tailscale": {
       "command": "npx",
