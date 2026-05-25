@@ -179,8 +179,7 @@ Skills can include additional files that Copilot accesses on-demand:
 
 ### Directory Structure Example
 
-```
-.github/skills/my-skill/
+```text
 ├── SKILL.md              # Required: Main instructions
 ├── LICENSE.txt           # Recommended: License terms (Apache 2.0 typical)
 ├── scripts/              # Optional: Executable automation
@@ -198,16 +197,20 @@ Skills can include additional files that Copilot accesses on-demand:
     └── config.template   # Config template the AI agent fills in
 ```
 
-> **LICENSE.txt**: When creating a skill, download the Apache 2.0 license text from https://www.apache.org/licenses/LICENSE-2.0.txt and save as `LICENSE.txt`. Update the copyright year and owner in the appendix section.
+> **LICENSE.txt**: When creating a skill, download the Apache 2.0 license text from
+> <https://www.apache.org/licenses/LICENSE-2.0.txt> and save as `LICENSE.txt`.
+> Update the copyright year and owner in the appendix section.
 
 ### Assets vs Templates: Key Distinction
 
 **Assets** are static resources **consumed unchanged** in the output:
+
 - A `logo.png` that gets embedded into a generated document
 - A `report-template.html` copied as output format
 - A `custom-font.ttf` applied to text rendering
 
 **Templates** are starter code/scaffolds that **the AI agent actively modifies**:
+
 - A `scaffold.py` where the AI agent inserts logic
 - A `config.template` where the AI agent fills in values based on user requirements
 - A `hello-world/` project directory that the AI agent extends with new features
@@ -233,7 +236,7 @@ Use the [scaffold](./templates/scaffold.py) as a starting point.
 Skills use three-level loading for efficiency:
 
 | Level | What Loads | When |
-|-------|------------|------|
+| ------- | ------------ | ------ |
 | 1. Discovery | `name` and `description` only | Always (lightweight metadata) |
 | 2. Instructions | Full `SKILL.md` body | When request matches description |
 | 3. Resources | Scripts, examples, docs | Only when Copilot references them |
