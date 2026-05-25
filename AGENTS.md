@@ -220,6 +220,7 @@ provide it before generating any manifests.
 | Workflow file | Trigger | Purpose |
 | -------------- | --------- | --------- |
 | `build-nixos-isos.yaml` | tag push `v*`, release | Build NixOS ISOs and attach to release |
+| `dependabot-auto-merge.yaml` | `pull_request` from dependabot | Auto-approve and squash-merge Dependabot PRs |
 | `check-broken-links.yaml` | push/PR on `*.md` | Check markdown links |
 | `deploy-k8s-resource.yaml` | `workflow_dispatch` | Apply/delete a Kubernetes service |
 | `drawio-export.yaml` | push on `*.drawio` | Export draw.io diagrams to PNG |
