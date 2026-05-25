@@ -182,9 +182,6 @@
             <!-- Set TimeZone -->
             <TimeZone>Romance Standard Time</TimeZone>
 
-            <!-- Disable installing built-in Teams in Windows 11 -->
-            <ConfigureChatAutoInstall>false</ConfigureChatAutoInstall>
-
             <!-- Disable windows features -->
             <WindowsFeatures>
                 <ShowInternetExplorer>false</ShowInternetExplorer>
