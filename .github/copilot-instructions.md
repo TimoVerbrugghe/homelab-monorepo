@@ -124,10 +124,12 @@ labels:
 - One logical stack per file (e.g. `media.yaml`, `downloaders.yaml`).
 - Services that require secrets use a companion `<stack>.env.template` — **never commit actual `.env` files**.
 - The `.env.template` file lists all required variables with empty values or example values:
+
   ```env
   VARIABLE_NAME=
   OTHER_VAR=example_value_here
   ```
+
 - Always specify `restart: unless-stopped` (or `restart: always` for critical services).
 - Pin image versions — no `:latest` tags.
 - Networks: use named networks with `driver: bridge`; avoid `network_mode: host` unless required (e.g. multicast relay).
@@ -175,7 +177,7 @@ labels:
 When you change a file in column A, you must also review/update the files in column B.
 
 | Changed file / area | Also check / update |
-|--------------------|---------------------|
+| -------------------- | --------------------- |
 | `kubernetes/<service>/` manifests | `kubernetes/<service>/kustomization.yaml` (resource list); `AGENTS.md` CI table if a new workflow is added |
 | Add a new Kubernetes service directory | `kubernetes/README.md`; `AGENTS.md` (CI workflows table if applicable) |
 | `nixos/flake.nix` inputs | `nixos/flake.lock` (run `nix flake update`); per-machine configs if module API changed |

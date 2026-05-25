@@ -9,9 +9,12 @@ Instructions for creating effective and portable Agent Skills that enhance GitHu
 
 ## What Are Agent Skills?
 
-Agent Skills are self-contained folders with instructions and bundled resources that teach AI agents specialized capabilities. Unlike custom instructions (which define coding standards), skills enable task-specific workflows that can include scripts, examples, templates, and reference data.
+Agent Skills are self-contained folders with instructions and bundled resources that teach AI agents specialized capabilities.
+Unlike custom instructions (which define coding standards), skills enable task-specific workflows that can include scripts, examples,
+templates, and reference data.
 
 Key characteristics:
+
 - **Portable**: Works across VS Code, Copilot CLI, and Copilot coding agent
 - **Progressive loading**: Only loaded when relevant to the user's request
 - **Resource-bundled**: Can include scripts, templates, examples alongside instructions
@@ -22,7 +25,7 @@ Key characteristics:
 Skills are stored in specific locations:
 
 | Location | Scope | Recommendation |
-|----------|-------|----------------|
+| ---------- | ------- | ---------------- |
 | `.github/skills/<skill-name>/` | Project/repository | Recommended for project skills |
 | `.claude/skills/<skill-name>/` | Project/repository | Legacy, for backward compatibility |
 | `~/.github/skills/<skill-name>/` | Personal (user-wide) | Recommended for personal skills |
