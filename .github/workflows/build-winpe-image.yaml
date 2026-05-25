@@ -19,7 +19,7 @@ jobs:
     permissions:
       contents: read
     outputs:
-      iso-name: ${{ steps.build.outputs.iso-name }}
+      win11-download-url: ${{ steps.fido.outputs.url }}
 
     steps:
       - name: Checkout repository
@@ -70,7 +70,22 @@ jobs:
         shell: pwsh
         run: |
           .\windows\create-winpe-image-ci.ps1
-          echo "iso-name=WinPE_amd64.iso" >> $env:GITHUB_OUTPUT
+
+      - name: Get Windows 11 download URL via Fido
+        id: fido
+        shell: pwsh
+        run: |
+          $ProgressPreference = 'SilentlyContinue'
+          Invoke-WebRequest -Uri "https://github.com/pbatard/Fido/raw/master/Fido.ps1" -OutFile Fido.ps1
+          Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+          $lines = & .\Fido.ps1 -Win 11 -Rel Latest -Arch x64 -Lang "English International" `
+            -Ed "Windows 11 Home/Pro/Edu" -GUI $false
+          $url = ($lines | Where-Object { $_ -match '^https://' } | Select-Object -Last 1).Trim()
+          if (-not $url) {
+            throw "Failed to get a valid Windows 11 download URL from Fido. Output: $($lines -join "`n")"
+          }
+          Write-Output "Got Windows 11 download URL."
+          "url=$url" >> $env:GITHUB_OUTPUT
 
       - name: Upload WinPE ISO as artifact
         uses: actions/upload-artifact@v4
@@ -80,7 +95,7 @@ jobs:
           retention-days: 7
 
   upload:
-    name: Upload WinPE to TheFactory
+    name: Upload files to TheFactory
     runs-on: ubuntu-latest
     needs: build
     permissions:
@@ -93,11 +108,20 @@ jobs:
           name: winpe-iso
           path: ./artifact
 
-      - name: Extract WinPE ISO contents
+      - name: Download virtio-win ISO
         run: |
-          sudo apt-get install -y p7zip-full
-          mkdir -p ./winpe-extract
-          7z x ./artifact/WinPE_amd64.iso -o./winpe-extract/
+          echo "Downloading latest stable virtio-win ISO..."
+          curl -fL -o ./virtio-win.iso \
+            "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+          echo "virtio-win ISO downloaded: $(du -h ./virtio-win.iso | cut -f1)"
+
+      - name: Download Windows 11 ISO
+        env:
+          WIN11_URL: ${{ needs.build.outputs.win11-download-url }}
+        run: |
+          echo "Downloading Windows 11 ISO..."
+          curl -fL -o ./Windows11.iso "$WIN11_URL"
+          echo "Windows 11 ISO downloaded: $(du -h ./Windows11.iso | cut -f1)"
 
       - name: Set up SSH key
         run: |
@@ -119,13 +143,73 @@ jobs:
         run: |
           ssh-keyscan "$THEFACTORY_HOST" >> ~/.ssh/known_hosts
 
-      - name: Upload WinPE files to TheFactory via rsync
+      - name: Upload WinPE ISO to TheFactory
         env:
           THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
           THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
         run: |
-          rsync -avz --delete ./winpe-extract/ \
-            "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/appdata/netbootxyz/winpe/"
+          rsync -av --info=progress2 ./artifact/WinPE_amd64.iso \
+            "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/WinPE.iso"
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" \
+            "chown windowsinstall:windowsinstall /mnt/FranzHopper/windowsinstall/WinPE.iso"
+
+      - name: Upload virtio-win ISO to TheFactory
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
+        run: |
+          rsync -av --info=progress2 ./virtio-win.iso \
+            "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/virtio-win.iso"
+
+      - name: Extract virtio-win ISO on TheFactory via Docker
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
+        run: |
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" 'bash -s' << 'ENDSSH'
+          set -euo pipefail
+          BASE=/mnt/FranzHopper/windowsinstall
+          if [ -d "$BASE/virtio" ]; then
+            echo "Backing up existing virtio/ directory..."
+            mv "$BASE/virtio" "$BASE/virtio-bak"
+          fi
+          echo "Extracting virtio-win ISO via Docker..."
+          docker run --rm \
+            -v "$BASE:/work" \
+            alpine sh -c "apk add --no-cache p7zip && 7z x /work/virtio-win.iso -o/work/virtio/ -y"
+          echo "Removing backup..."
+          rm -rf "$BASE/virtio-bak"
+          echo "virtio extraction complete."
+          ENDSSH
+
+      - name: Upload Windows 11 ISO to TheFactory
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
+        run: |
+          rsync -av --info=progress2 ./Windows11.iso \
+            "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/Windows11.iso"
+
+      - name: Extract Windows 11 ISO on TheFactory via Docker
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
+        run: |
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" 'bash -s' << 'ENDSSH'
+          set -euo pipefail
+          BASE=/mnt/FranzHopper/windowsinstall
+          if [ -d "$BASE/Windows11" ]; then
+            echo "Backing up existing Windows11/ directory..."
+            mv "$BASE/Windows11" "$BASE/Windows11-bak"
+          fi
+          echo "Extracting Windows 11 ISO via Docker..."
+          docker run --rm \
+            -v "$BASE:/work" \
+            alpine sh -c "apk add --no-cache p7zip && 7z x /work/Windows11.iso -o/work/Windows11/ -y"
+          echo "Removing backup..."
+          rm -rf "$BASE/Windows11-bak"
+          echo "Windows 11 extraction complete."
+          ENDSSH
 
   notify:
     name: Send Pushover notification
@@ -143,7 +227,7 @@ jobs:
           UPLOAD_RESULT="${{ needs.upload.result }}"
           if [ "$BUILD_RESULT" = "success" ] && [ "$UPLOAD_RESULT" = "success" ]; then
             echo "title=WinPE Build Complete" >> "$GITHUB_OUTPUT"
-            echo "message=WinPE image with latest virtio-win drivers built and uploaded to TheFactory (/mnt/FranzHopper/appdata/netbootxyz/winpe/)" >> "$GITHUB_OUTPUT"
+            echo "message=WinPE ISO, Windows 11 ISO and virtio drivers updated on TheFactory (/mnt/FranzHopper/windowsinstall/)" >> "$GITHUB_OUTPUT"
             echo "priority=0" >> "$GITHUB_OUTPUT"
           elif [ "$BUILD_RESULT" != "success" ]; then
             echo "title=WinPE Build Failed" >> "$GITHUB_OUTPUT"
@@ -170,3 +254,4 @@ jobs:
             --form-string "message=$MESSAGE" \
             --form-string "priority=$PRIORITY" \
             https://api.pushover.net/1/messages.json
+
