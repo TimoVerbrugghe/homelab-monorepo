@@ -12,6 +12,7 @@ Create production-ready Kubernetes manifests that prioritize security, reliabili
 ## Labeling Conventions
 
 **Required Labels** (Kubernetes recommended):
+
 - `app.kubernetes.io/name`: Application name
 - `app.kubernetes.io/instance`: Instance identifier
 - `app.kubernetes.io/version`: Version
@@ -20,11 +21,13 @@ Create production-ready Kubernetes manifests that prioritize security, reliabili
 - `app.kubernetes.io/managed-by`: Management tool
 
 **Additional Labels**:
+
 - `environment`: Environment name
 - `team`: Owning team
 - `cost-center`: For billing
 
 **Useful Annotations**:
+
 - Documentation and ownership
 - Monitoring: `prometheus.io/scrape`, `prometheus.io/port`, `prometheus.io/path`
 - Change tracking: git commit, deployment date
@@ -32,12 +35,14 @@ Create production-ready Kubernetes manifests that prioritize security, reliabili
 ## SecurityContext Defaults
 
 **Pod-level**:
+
 - `runAsNonRoot: true`
 - `runAsUser` and `runAsGroup`: Specific IDs
 - `fsGroup`: File system group
 - `seccompProfile.type: RuntimeDefault`
 
 **Container-level**:
+
 - `allowPrivilegeEscalation: false`
 - `readOnlyRootFilesystem: true` (with tmpfs mounts for writable dirs)
 - `capabilities.drop: [ALL]` (add only what's needed)
@@ -45,6 +50,7 @@ Create production-ready Kubernetes manifests that prioritize security, reliabili
 ## Pod Security Standards
 
 Use Pod Security Admission:
+
 - **Restricted** (recommended for production): Enforces security hardening
 - **Baseline**: Minimal security requirements
 - Apply at namespace level
@@ -52,10 +58,12 @@ Use Pod Security Admission:
 ## Resource Requests and Limits
 
 **Always define**:
+
 - Requests: Guaranteed minimum (scheduling)
 - Limits: Maximum allowed (prevents exhaustion)
 
 **QoS Classes**:
+
 - **Guaranteed**: requests == limits (best for critical apps)
 - **Burstable**: requests < limits (flexible resource use)
 - **BestEffort**: No resources defined (avoid in production)
@@ -71,10 +79,12 @@ Configure appropriate delays, periods, timeouts, and thresholds for each.
 ## Rollout Strategies
 
 **Deployment Strategy**:
+
 - `RollingUpdate` with `maxSurge` and `maxUnavailable`
 - Set `maxUnavailable: 0` for zero-downtime
 
 **High Availability**:
+
 - Minimum 2-3 replicas
 - Pod Disruption Budget (PDB)
 - Anti-affinity rules (spread across nodes/zones)
@@ -83,26 +93,31 @@ Configure appropriate delays, periods, timeouts, and thresholds for each.
 ## Validation Commands
 
 **Pre-deployment**:
+
 - `kubectl apply --dry-run=client -f manifest.yaml`
 - `kubectl apply --dry-run=server -f manifest.yaml`
 - `kubeconform -strict manifest.yaml` (schema validation)
 - `helm template ./chart | kubeconform -strict` (for Helm)
 
 **Policy Validation**:
+
 - OPA Conftest, Kyverno, or Datree
 
 ## Rollout & Rollback
 
 **Deploy**:
+
 - `kubectl apply -f manifest.yaml`
 - `kubectl rollout status deployment/NAME`
 
 **Rollback**:
+
 - `kubectl rollout undo deployment/NAME`
 - `kubectl rollout undo deployment/NAME --to-revision=N`
 - `kubectl rollout history deployment/NAME`
 
 **Restart**:
+
 - `kubectl rollout restart deployment/NAME`
 
 ## Manifest Checklist

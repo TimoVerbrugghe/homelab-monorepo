@@ -9,9 +9,12 @@ Instructions for creating effective and portable Agent Skills that enhance GitHu
 
 ## What Are Agent Skills?
 
-Agent Skills are self-contained folders with instructions and bundled resources that teach AI agents specialized capabilities. Unlike custom instructions (which define coding standards), skills enable task-specific workflows that can include scripts, examples, templates, and reference data.
+Agent Skills are self-contained folders with instructions and bundled resources that teach AI agents specialized capabilities.
+Unlike custom instructions (which define coding standards), skills enable task-specific workflows that can include scripts, examples,
+templates, and reference data.
 
 Key characteristics:
+
 - **Portable**: Works across VS Code, Copilot CLI, and Copilot coding agent
 - **Progressive loading**: Only loaded when relevant to the user's request
 - **Resource-bundled**: Can include scripts, templates, examples alongside instructions
@@ -22,7 +25,7 @@ Key characteristics:
 Skills are stored in specific locations:
 
 | Location | Scope | Recommendation |
-|----------|-------|----------------|
+| ---------- | ------- | ---------------- |
 | `.github/skills/<skill-name>/` | Project/repository | Recommended for project skills |
 | `.claude/skills/<skill-name>/` | Project/repository | Legacy, for backward compatibility |
 | `~/.github/skills/<skill-name>/` | Personal (user-wide) | Recommended for personal skills |
@@ -43,31 +46,37 @@ license: Complete terms in LICENSE.txt
 ```
 
 | Field | Required | Constraints |
-|-------|----------|-------------|
+| ------- | ---------- | ------------- |
 | `name` | Yes | Lowercase, hyphens for spaces, max 64 characters (e.g., `webapp-testing`) |
 | `description` | Yes | 10–1024 characters, clear capabilities AND use cases, wrapped in single quotes |
 | `license` | No | Reference to LICENSE.txt (e.g., `Complete terms in LICENSE.txt`) or SPDX identifier |
 
 ### Description Best Practices
 
-**CRITICAL**: The `description` field is the PRIMARY mechanism for automatic skill discovery. Copilot reads ONLY the `name` and `description` to decide whether to load a skill. If your description is vague, the skill will never be activated.
+**CRITICAL**: The `description` field is the PRIMARY mechanism for automatic skill discovery.
+Copilot reads ONLY the `name` and `description` to decide whether to load a skill.
+If your description is vague, the skill will never be activated.
 
 **What to include in description:**
+
 1. **WHAT** the skill does (capabilities)
 2. **WHEN** to use it (specific triggers, scenarios, file types, or user requests)
 3. **Keywords** that users might mention in their prompts
 
 **Good description:**
+
 ```yaml
 description: 'Toolkit for testing local web applications using Playwright. Use when asked to verify frontend functionality, debug UI behavior, capture browser screenshots, check for visual regressions, or view browser console logs. Supports Chrome, Firefox, and WebKit browsers.'
 ```
 
 **Poor description:**
+
 ```yaml
 description: 'Web testing helpers'
 ```
 
 The poor description fails because:
+
 - No specific triggers (when should Copilot load this?)
 - No keywords (what user prompts would match?)
 - No capabilities (what can it actually do?)
@@ -77,7 +86,7 @@ The poor description fails because:
 The body contains detailed instructions that Copilot loads AFTER the skill is activated. Recommended sections:
 
 | Section | Purpose |
-|---------|---------|
+| --------- | --------- |
 | `# Title` | Brief overview of what this skill enables |
 | `## When to Use This Skill` | List of scenarios (reinforces description triggers) |
 | `## Prerequisites` | Required tools, dependencies, environment setup (if applicable) |
@@ -86,7 +95,9 @@ The body contains detailed instructions that Copilot loads AFTER the skill is ac
 | `## Troubleshooting` | Reactive fixes for known issues ("if you see X, try Y") |
 | `## References` | Links to bundled docs or external resources |
 
-Not every skill needs every section. Skip `## Prerequisites` if there are no external dependencies. Skip `## Step-by-Step Workflows` if the skill is purely advisory. Include `## Gotchas` whenever the skill involves external tools, APIs, or platform-specific behavior.
+Not every skill needs every section. Skip `## Prerequisites` if there are no external dependencies.
+Skip `## Step-by-Step Workflows` if the skill is purely advisory.
+Include `## Gotchas` whenever the skill involves external tools, APIs, or platform-specific behavior.
 
 For content quality principles (what to include and what to leave out), see [Writing High-Impact Skills](#writing-high-impact-skills) below.
 
@@ -113,7 +124,9 @@ For content quality principles (what to include and what to leave out), see [Wri
 - At least one browser engine installed: `npx playwright install chromium`
 ```
 
-**`## Step-by-Step Workflows`** — Numbered steps for repeatable procedures where sequence matters (build, deploy, environment setup). Describe WHAT to accomplish at each stage, not hardcoded file paths or line numbers — steps should be adaptable to different project structures. For complex workflows (>5 steps), split into `references/` files and link to them.
+**`## Step-by-Step Workflows`** — Numbered steps for repeatable procedures where sequence matters (build, deploy, environment setup).
+Describe WHAT to accomplish at each stage, not hardcoded file paths or line numbers — steps should be adaptable to different project
+structures. For complex workflows (>5 steps), split into `references/` files and link to them.
 
 ```markdown
 ## Step-by-Step Workflows
@@ -158,7 +171,7 @@ Skills can include additional files that Copilot accesses on-demand:
 ### Supported Resource Types
 
 | Folder | Purpose | Loaded into Context? | Example Files |
-|--------|---------|---------------------|---------------|
+| -------- | --------- | --------------------- | --------------- |
 | `scripts/` | Executable automation that performs specific operations | When executed | `helper.py`, `validate.sh`, `build.ts` |
 | `references/` | Documentation the AI agent reads to inform decisions | Yes, when referenced | `api_reference.md`, `schema.md`, `workflow_guide.md` |
 | `assets/` | **Static files used AS-IS** in output (not modified by the AI agent) | No | `logo.png`, `brand-template.pptx`, `custom-font.ttf` |
@@ -166,8 +179,7 @@ Skills can include additional files that Copilot accesses on-demand:
 
 ### Directory Structure Example
 
-```
-.github/skills/my-skill/
+```text
 ├── SKILL.md              # Required: Main instructions
 ├── LICENSE.txt           # Recommended: License terms (Apache 2.0 typical)
 ├── scripts/              # Optional: Executable automation
@@ -185,16 +197,20 @@ Skills can include additional files that Copilot accesses on-demand:
     └── config.template   # Config template the AI agent fills in
 ```
 
-> **LICENSE.txt**: When creating a skill, download the Apache 2.0 license text from https://www.apache.org/licenses/LICENSE-2.0.txt and save as `LICENSE.txt`. Update the copyright year and owner in the appendix section.
+> **LICENSE.txt**: When creating a skill, download the Apache 2.0 license text from
+> <https://www.apache.org/licenses/LICENSE-2.0.txt> and save as `LICENSE.txt`.
+> Update the copyright year and owner in the appendix section.
 
 ### Assets vs Templates: Key Distinction
 
 **Assets** are static resources **consumed unchanged** in the output:
+
 - A `logo.png` that gets embedded into a generated document
 - A `report-template.html` copied as output format
 - A `custom-font.ttf` applied to text rendering
 
 **Templates** are starter code/scaffolds that **the AI agent actively modifies**:
+
 - A `scaffold.py` where the AI agent inserts logic
 - A `config.template` where the AI agent fills in values based on user requirements
 - A `hello-world/` project directory that the AI agent extends with new features
@@ -220,12 +236,13 @@ Use the [scaffold](./templates/scaffold.py) as a starting point.
 Skills use three-level loading for efficiency:
 
 | Level | What Loads | When |
-|-------|------------|------|
+| ------- | ------------ | ------ |
 | 1. Discovery | `name` and `description` only | Always (lightweight metadata) |
 | 2. Instructions | Full `SKILL.md` body | When request matches description |
 | 3. Resources | Scripts, examples, docs | Only when Copilot references them |
 
 This means:
+
 - Install many skills without consuming context
 - Only relevant content loads per task
 - Resources don't load until explicitly needed
@@ -252,6 +269,7 @@ When including scripts, prefer cross-platform languages:
 | Bash/Shell | Simple automation tasks |
 
 Best practices:
+
 - Include help/usage documentation (`--help` flag)
 - Handle errors gracefully with clear messages
 - Avoid storing credentials or secrets
@@ -260,6 +278,7 @@ Best practices:
 ### When to Bundle Scripts
 
 Include scripts in your skill when:
+
 - The same code would be rewritten repeatedly by the agent
 - Deterministic reliability is critical (e.g., file manipulation, API calls)
 - Complex logic benefits from being pre-tested rather than generated each time

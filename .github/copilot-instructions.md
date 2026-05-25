@@ -1,6 +1,7 @@
 # Copilot Instructions — Homelab Monorepo
 
-This repository is a personal homelab configuration monorepo. It contains **no compiled application code** — everything is infrastructure-as-code: Kubernetes manifests (Kustomize), NixOS flake configs, Ansible playbooks, Docker Compose stacks, and shell scripts.
+This repository is a personal homelab configuration monorepo. It contains **no compiled application code** — everything is infrastructure-as-code:
+Kubernetes manifests (Kustomize), NixOS flake configs, Ansible playbooks, Docker Compose stacks, and shell scripts.
 
 ---
 
@@ -29,6 +30,7 @@ The cluster uses **Kustomize** — plain manifests with `kustomization.yaml` fil
 Every Deployment, StatefulSet, DaemonSet, Job, and CronJob must include:
 
 **Pod securityContext:**
+
 ```yaml
 securityContext:
   seccompProfile:
@@ -39,6 +41,7 @@ securityContext:
 ```
 
 **Container securityContext:**
+
 ```yaml
 securityContext:
   allowPrivilegeEscalation: false
@@ -51,6 +54,7 @@ tty: false
 ```
 
 **Resources (required on every container):**
+
 ```yaml
 resources:
   requests:
@@ -62,6 +66,7 @@ resources:
 ```
 
 **Probes (required on Deployments):**
+
 ```yaml
 livenessProbe:
   httpGet:
@@ -78,6 +83,7 @@ readinessProbe:
 ```
 
 When `readOnlyRootFilesystem: true` is set, add emptyDir mounts for any paths the container writes to:
+
 ```yaml
 volumeMounts:
   - name: tmp
@@ -88,11 +94,13 @@ volumes:
       medium: Memory
 ```
 
-**Exception policy:** If an image cannot satisfy the full baseline, explicitly override only the failing fields and add an inline comment explaining why (e.g. `# image runs as root, no non-root user available`). Keep exceptions as narrow as possible.
+**Exception policy:** If an image cannot satisfy the full baseline, explicitly override only the failing fields and add an inline comment
+explaining why (e.g. `# image runs as root, no non-root user available`). Keep exceptions as narrow as possible.
 
 ### Labels
 
 All resources must have consistent labels:
+
 ```yaml
 labels:
   app.kubernetes.io/name: <service-name>
@@ -116,10 +124,12 @@ labels:
 - One logical stack per file (e.g. `media.yaml`, `downloaders.yaml`).
 - Services that require secrets use a companion `<stack>.env.template` — **never commit actual `.env` files**.
 - The `.env.template` file lists all required variables with empty values or example values:
+
   ```env
   VARIABLE_NAME=
   OTHER_VAR=example_value_here
   ```
+
 - Always specify `restart: unless-stopped` (or `restart: always` for critical services).
 - Pin image versions — no `:latest` tags.
 - Networks: use named networks with `driver: bridge`; avoid `network_mode: host` unless required (e.g. multicast relay).
@@ -167,7 +177,7 @@ labels:
 When you change a file in column A, you must also review/update the files in column B.
 
 | Changed file / area | Also check / update |
-|--------------------|---------------------|
+| -------------------- | --------------------- |
 | `kubernetes/<service>/` manifests | `kubernetes/<service>/kustomization.yaml` (resource list); `AGENTS.md` CI table if a new workflow is added |
 | Add a new Kubernetes service directory | `kubernetes/README.md`; `AGENTS.md` (CI workflows table if applicable) |
 | `nixos/flake.nix` inputs | `nixos/flake.lock` (run `nix flake update`); per-machine configs if module API changed |
