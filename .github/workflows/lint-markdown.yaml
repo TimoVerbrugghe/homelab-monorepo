@@ -25,7 +25,6 @@ jobs:
         with:
           globs: |
             **/*.md
-            !.github/**/*.md
             !node_modules
             !.venv
             !result
