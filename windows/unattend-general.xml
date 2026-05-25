@@ -2,13 +2,116 @@
 
 <!--
     General unattend for Windows 11 Pro (stock install on disk 0, UEFI).
-    VirtIO drivers are baked into the WinPE image - no SMB driver share needed.
+    VirtIO drivers are baked into WinPE (so Setup can boot and see the disk),
+    but DriverPaths below is still needed to inject them into the installed OS.
     Common sense settings: locale, disk layout, OOBE bypass, privacy tweaks.
 -->
 
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <!-- Settings to apply during Windows Setup -->
     <settings pass="windowsPE">
+        <!--
+            DriverPaths injects these drivers into the target Windows installation.
+            Baking them into WinPE only helps WinPE boot - the installed OS needs
+            its own copy, which Windows Setup pulls from these paths during setup.
+            Virtio drivers must be present on the windowsinstall SMB share.
+        -->
+        <component name="Microsoft-Windows-PnpCustomizationsWinPE" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+            <DriverPaths>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="1">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\NetKVM\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <!-- Balloon driver skipped - known to cause performance issues -->
+                <PathAndCredentials wcm:action="add" wcm:keyValue="3">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\pvpanic\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="4">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\qemufwcfg\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="5">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\qemupciserial\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="7">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\sriov\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="8">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viofs\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="9">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viogpudo\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="10">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\vioinput\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="11">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viomem\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="12">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viorng\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="13">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\vioscsi\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="14">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\vioserial\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="15">
+                    <Path>\\10.10.10.2\windowsinstall\virtio\viostor\w11\amd64</Path>
+                    <Credentials>
+                        <Username>windowsinstall</Username>
+                        <Password>windowsinstall</Password>
+                    </Credentials>
+                </PathAndCredentials>
+            </DriverPaths>
+        </component>
         <!-- Keyboard & Language settings during windows Setup -->
         <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SetupUILanguage>
