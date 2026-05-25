@@ -58,6 +58,7 @@ Before creating or modifying workflows:
 - Use `dependabot` or Renovate to automate SHA updates when new action versions are released
 
 **Secrets**:
+
 - Access via environment variables only
 - Never log or expose in outputs
 - Use environment-specific secrets for production
@@ -66,6 +67,7 @@ Before creating or modifying workflows:
 ## OIDC Authentication
 
 Eliminate long-lived credentials:
+
 - **AWS**: Configure IAM role with trust policy for GitHub OIDC provider
 - **Azure**: Use workload identity federation
 - **GCP**: Use workload identity provider

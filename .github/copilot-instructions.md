@@ -1,6 +1,7 @@
 # Copilot Instructions — Homelab Monorepo
 
-This repository is a personal homelab configuration monorepo. It contains **no compiled application code** — everything is infrastructure-as-code: Kubernetes manifests (Kustomize), NixOS flake configs, Ansible playbooks, Docker Compose stacks, and shell scripts.
+This repository is a personal homelab configuration monorepo. It contains **no compiled application code** — everything is infrastructure-as-code:
+Kubernetes manifests (Kustomize), NixOS flake configs, Ansible playbooks, Docker Compose stacks, and shell scripts.
 
 ---
 
@@ -29,6 +30,7 @@ The cluster uses **Kustomize** — plain manifests with `kustomization.yaml` fil
 Every Deployment, StatefulSet, DaemonSet, Job, and CronJob must include:
 
 **Pod securityContext:**
+
 ```yaml
 securityContext:
   seccompProfile:
@@ -39,6 +41,7 @@ securityContext:
 ```
 
 **Container securityContext:**
+
 ```yaml
 securityContext:
   allowPrivilegeEscalation: false
@@ -51,6 +54,7 @@ tty: false
 ```
 
 **Resources (required on every container):**
+
 ```yaml
 resources:
   requests:
@@ -62,6 +66,7 @@ resources:
 ```
 
 **Probes (required on Deployments):**
+
 ```yaml
 livenessProbe:
   httpGet:
@@ -78,6 +83,7 @@ readinessProbe:
 ```
 
 When `readOnlyRootFilesystem: true` is set, add emptyDir mounts for any paths the container writes to:
+
 ```yaml
 volumeMounts:
   - name: tmp
@@ -88,11 +94,13 @@ volumes:
       medium: Memory
 ```
 
-**Exception policy:** If an image cannot satisfy the full baseline, explicitly override only the failing fields and add an inline comment explaining why (e.g. `# image runs as root, no non-root user available`). Keep exceptions as narrow as possible.
+**Exception policy:** If an image cannot satisfy the full baseline, explicitly override only the failing fields and add an inline comment
+explaining why (e.g. `# image runs as root, no non-root user available`). Keep exceptions as narrow as possible.
 
 ### Labels
 
 All resources must have consistent labels:
+
 ```yaml
 labels:
   app.kubernetes.io/name: <service-name>
