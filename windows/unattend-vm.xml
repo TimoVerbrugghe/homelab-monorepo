@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Unattend for Windows 11 Pro on a physical machine (or any non-KVM install).
+    General unattend for Windows 11 Pro (stock install on disk 0, UEFI).
     VirtIO drivers are baked into WinPE (so Setup can boot and see the disk),
     but DriverPaths below is still needed to inject them into the installed OS.
     Common sense settings: locale, disk layout, OOBE bypass, privacy tweaks.
-    No VMModeOptimizations - safe to use on bare metal.
 -->
 
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -220,6 +219,31 @@
 
     <!-- Settings to apply for this specific deployment -->
     <settings pass="specialize">
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <!-- Disable cloud content (tiktok, whatsapp, etc...) -->
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /t REG_DWORD /d 1 /f</Path>
+                    <Order>1</Order>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableConsumerAccountStateContent /t REG_DWORD /d 1 /f</Path>
+                    <Order>2</Order>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableSoftLanding /t REG_DWORD /d 1 /f</Path>
+                    <Order>3</Order>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableCloudOptimizedContent /t REG_DWORD /d 1 /f</Path>
+                    <Order>4</Order>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
         <!-- Set Keyboard & Language Settings -->
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <!-- English (0409) with Belgian Period Azerty keyboard (00000813) -->
@@ -240,9 +264,8 @@
             <CEIPEnabled>0</CEIPEnabled>
         </component>
 
-        <!-- Auto-generate a unique computer name -->
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ComputerName>*</ComputerName>
+            <ComputerName>WindowsVM</ComputerName>
         </component>
     </settings>
 
@@ -259,7 +282,7 @@
             <WindowsFeatures>
                 <ShowInternetExplorer>false</ShowInternetExplorer>
             </WindowsFeatures>
-
+            
             <!-- Disable Out-of-box-experience settings -->
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
@@ -269,6 +292,11 @@
                 <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
                 <NetworkLocation>Home</NetworkLocation>
                 <ProtectYourPC>3</ProtectYourPC>
+                <VMModeOptimizations>
+                    <SkipWinREInitialization>true</SkipWinREInitialization>
+                    <SkipNotifyUILanguageChange>true</SkipNotifyUILanguageChange>
+                    <SkipAdministratorProfileRemoval>false</SkipAdministratorProfileRemoval>
+                </VMModeOptimizations>
                 <SkipMachineOOBE>true</SkipMachineOOBE>
                 <SkipUserOOBE>true</SkipUserOOBE>
             </OOBE>
@@ -289,6 +317,64 @@
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
+
+            <!-- Disable cloud/promoted content on first logon -->
+            <FirstLogonCommands>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v OemPreInstalledAppsEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>1</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v ContentDeliveryAllowed /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>2</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v PreInstalledAppsEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>3</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v PreInstalledAppsEverEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>4</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SilentInstalledAppsEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>5</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SystemPaneSuggestionsEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>6</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SoftLandingEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>7</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SubscribedContent-338389Enabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>8</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Description>Disable consumer features</Description>
+                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SubscribedContent-88000326Enabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>9</Order>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+            </FirstLogonCommands>
         </component>
     </settings>
 </unattend>
