@@ -1,15 +1,5 @@
 # yaml-language-server: $schema=https://schemas.recyclarr.dev/v8/config-schema.json
-###################################################################################################
-# Recyclarr Configuration Template: WEB-2160p (V4)                                                #
-# Updated: 2025-05-25                                                                             #
-# Documentation: https://recyclarr.dev                                                            #
-# Note: If you are using multiple profiles in a single instance, please read the following        #
-# documentation about file merging:                                                               #
-# https://recyclarr.dev/wiki/yaml/config-examples/#merge-single-instance                          #
-# This config file is for use with Sonarr V4 only                                                 #
-###################################################################################################
 
-# Instance Definition: https://recyclarr.dev/wiki/yaml/config-reference/basic/
 sonarr:
   web-2160p-v4:
     base_url: http://sonarr:8989
@@ -30,7 +20,7 @@ sonarr:
         allowed: true
         until_quality: WEB 2160p
         until_score: 10000
-      min_format_score: 0
+      min_format_score: 10
       quality_sort: top
       qualities:
         - name: Bluray-2160p Remux
@@ -156,16 +146,6 @@ sonarr:
         assign_scores_to:
           - name: Ultra-HD
 
-###################################################################################################
-# Recyclarr Configuration Template: Remux + WEB 2160p                                             #
-# Updated: 2025-05-25                                                                             #
-# Documentation: https://recyclarr.dev                                                            #
-# Note: If you are using multiple profiles in a single instance, please read the following        #
-# documentation about file merging:                                                               #
-# https://recyclarr.dev/wiki/yaml/config-examples/#merge-single-instance                          #
-###################################################################################################
-
-# Instance Definition: https://recyclarr.dev/wiki/yaml/config-reference/basic/
 radarr:
   remux-web-2160p:
     base_url: http://radarr:7878
@@ -185,7 +165,7 @@ radarr:
         allowed: true
         until_quality: Remux-2160p
         until_score: 10000
-      min_format_score: 0
+      min_format_score: 10
       quality_sort: top
       qualities:
         - name: Remux-2160p
