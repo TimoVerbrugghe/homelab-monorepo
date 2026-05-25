@@ -66,6 +66,7 @@ The following values are prompted securely when MCP starts:
 ![Update Badges](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/update-badges.yaml?branch=master&label=update-badges&logo=githubactions&logoColor=white)
 ![Update Talos Machines](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/update-talos-machines.yaml?branch=master&label=update-talos-machines&logo=githubactions&logoColor=white)
 ![Validate Shell Scripts](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/validate-shell-scripts.yaml?branch=master&label=validate-shell-scripts&logo=githubactions&logoColor=white)
+![Build WinPE Image](https://img.shields.io/github/actions/workflow/status/TimoVerbrugghe/homelab-monorepo/build-winpe-image.yaml?branch=master&label=build-winpe-image&logo=githubactions&logoColor=white)
 
 ## My Homelab
 
