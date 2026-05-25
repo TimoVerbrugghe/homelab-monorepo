@@ -14,13 +14,8 @@ sonarr:
     base_url: http://sonarr:8989
     api_key: !secret sonarr_api_key
 
-    include:
-      # Comment out any of the following includes to disable them
-      - template: sonarr-quality-definition-series
-      # Choose between the standard or alternative quality profile setup (choose one only)
-      # - template: sonarr-v4-quality-profile-web-2160p
-      # - template: sonarr-v4-quality-profile-web-2160p-alternative
-      # - template: sonarr-v4-custom-formats-web-2160p
+    quality_definition:
+      type: series
 
 
     # Quality Profiles: https://recyclarr.dev/wiki/yaml/config-reference/quality-profiles/ 
@@ -146,11 +141,8 @@ radarr:
     base_url: http://radarr:7878
     api_key: !secret radarr_api_key
 
-    include:
-      # Comment out any of the following includes to disable them
-      - template: radarr-quality-definition-movie
-      # - template: radarr-quality-profile-remux-web-2160p
-      # - template: radarr-custom-formats-remux-web-2160p
+    quality_definition:
+      type: movie
 
     # Quality Profiles: https://recyclarr.dev/wiki/yaml/config-reference/quality-profiles/ 
     # Using my own defined quality profile (base template used from https://github.com/recyclarr/config-templates/blob/master/radarr/includes/quality-profiles/radarr-quality-profile-remux-web-2160p.yml)
