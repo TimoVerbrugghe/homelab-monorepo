@@ -40,6 +40,7 @@ Download the right Talos Linux image for your operating system from the [Image f
 ## Integration
 
 Talos Linux and Omni integrate with:
+
 - **Kubernetes**: Native Kubernetes API with RBAC, audit logging, and service accounts
 - **Container Registries**: Docker Hub, Quay, GitHub Container Registry, private registries
 - **Identity Providers**: SAML (Okta, Entra ID, Workspace One), OIDC (Tailscale), Keycloak
@@ -52,19 +53,19 @@ Talos Linux and Omni integrate with:
 
 ## Install Talos and Omni CLI tools
 
-### Install via Homebrew (Recommended for macOS and Linux):
+### Install via Homebrew (Recommended for macOS and Linux)
 
 ```bash
 brew install siderolabs/tap/sidero-tools
 ```
 
-### Install talosctl with curl:
+### Install talosctl with curl
 
 ```bash
 curl -sL https://talos.dev/install | sh
 ```
 
-### Install omnictl with curl:
+### Install omnictl with curl
 
 ```bash
 curl -sL https://talos.dev/install-omnictl | sh
@@ -91,7 +92,8 @@ curl -sL https://talos.dev/install-omnictl | sh
 5. Sync declared state to Omni: `omnictl cluster template sync -f <template.yaml>`
 6. Fetch kubeconfig: `omnictl kubeconfig -c <cluster-name>`
 7. Download talosconfig: `omnictl talosconfig --cluster <cluster-name>`
-8. Merge `talosconfig` and `kubeconfig` configuration: 
+8. Merge `talosconfig` and `kubeconfig` configuration:
+
   ```bash
      # Merge Talos configuration
       talosctl config merge $HOME/Downloads/talosconfig.yaml
@@ -100,6 +102,7 @@ curl -sL https://talos.dev/install-omnictl | sh
      export KUBECONFIG=~/.kube/config:$HOME/Downloads/talos-default-kubeconfig.yaml
      kubectl config view --flatten > ~/.kube/config
   ```
+
 9. Verify nodes:  `kubectl get nodes`
 
 ## CLI reference
@@ -125,9 +128,11 @@ Here are some omnictl commands and their uses:
 ## Local configuration file locations
 
 ### talosctl
+
 - `~/.talos/config`
 
 ### omnictl
+
 - Linux: `~/.talos/omni/config`
 - macOS: `~/Library/Application Support/omni/config`
 - Windows: `%USERPROFILE%\.talos\omni\config`
@@ -174,6 +179,7 @@ Here are some omnictl commands and their uses:
 - Reproducible machine configuration for consistent deployments
 
 ### Upgrade Talos Linux Cluster
+
 1. Use `talosctl upgrade` to initiate upgrade
 2. Specify target Talos version
 3. Upgrade rolls through nodes automatically
@@ -182,6 +188,7 @@ Here are some omnictl commands and their uses:
 6. Verify cluster health after upgrade
 
 ### Backup and Restore Etcd
+
 1. Create etcd backup with `talosctl etcd backup`
 2. Store backup securely off-cluster
 3. In case of disaster, restore from backup
@@ -189,6 +196,7 @@ Here are some omnictl commands and their uses:
 5. Verify cluster functionality after restoration
 
 ### Networking Configuration
+
 - Configure static IP addresses, DHCP, or dynamic network settings
 - Set up network interfaces with bonds, bridges, and VLANs
 - Configure WireGuard VPN for secure inter-node communication
@@ -199,6 +207,7 @@ Here are some omnictl commands and their uses:
 - Support for multihoming and corporate proxies
 
 ### Cluster Scaling and Workload Management
+
 - Scale clusters up by adding new machines to control plane or worker roles
 - Scale clusters down by removing machines
 - Deploy workloads using standard Kubernetes manifests
@@ -207,6 +216,7 @@ Here are some omnictl commands and their uses:
 - Cluster autoscaling with Karpenter or Kubernetes Cluster Autoscaler
 
 ### Security and Access Control
+
 - Role-based access control (RBAC) for Talos API
 - Certificate authority rotation and management
 - Machine configuration OAuth for secure access
@@ -217,6 +227,7 @@ Here are some omnictl commands and their uses:
 - Break-glass emergency access for disaster recovery
 
 ### Storage and Disk Management
+
 - Configure disk layouts (system, user, resource partitions)
 - Disk encryption with LUKS
 - Swap configuration
@@ -224,6 +235,7 @@ Here are some omnictl commands and their uses:
 - Disk management with layout templates and resource allocation
 
 ### Container Runtime and Image Management
+
 - Containerd configuration and management
 - Image cache and pull-through cache for faster deployments
 - Registry mirror configuration with authentication and TLS
@@ -232,6 +244,7 @@ Here are some omnictl commands and their uses:
 - Support for custom kernel modules and GPU drivers
 
 ### Hardware and GPU Support
+
 - NVIDIA GPU support (proprietary and open-source drivers)
 - NVIDIA Fabric Manager for multi-GPU systems
 - AMD GPU support
@@ -240,6 +253,7 @@ Here are some omnictl commands and their uses:
 - Hardware-specific platform configuration
 
 ### System Extensions and Customization
+
 - Build custom system extensions as container images
 - Install system extensions during cluster creation or runtime
 - Kernel module compilation and installation
@@ -248,6 +262,7 @@ Here are some omnictl commands and their uses:
 - OCI base specification support for extension development
 
 ### Cluster Operations and Maintenance
+
 - Etcd backup and restore for disaster recovery
 - Etcd maintenance and defragmentation
 - Watchdog timer configuration for automatic recovery
@@ -257,6 +272,7 @@ Here are some omnictl commands and their uses:
 - Support bundle generation for troubleshooting
 
 ### Omni Cluster Management
+
 - Create and manage clusters from registered machines
 - Cluster templates for declarative infrastructure-as-code
 - Machine registration from bare metal (ISO, PXE), cloud (AWS, Azure, GCP, Hetzner), or manual provisioning
@@ -269,6 +285,7 @@ Here are some omnictl commands and their uses:
 - Support bundle generation
 
 ### Authentication and Authorization
+
 - SAML integration with Okta, Unifi Identity Enterprise, Workspace One, Entra ID, Oracle Cloud
 - OIDC login with Tailscale
 - Access Control Lists (ACLs) for fine-grained permissions
@@ -277,6 +294,7 @@ Here are some omnictl commands and their uses:
 - Keycloak integration for self-hosted deployments
 
 ### High Availability and Disaster Recovery
+
 - 3-node control plane for HA clusters
 - Etcd consensus-based fault tolerance
 - Automatic etcd backups with configurable intervals
@@ -284,6 +302,7 @@ Here are some omnictl commands and their uses:
 - KubeSpan for hybrid cluster resilience
 
 ### Configure Network for Hybrid Cluster with KubeSpan
+
 1. Enable KubeSpan in machine configuration
 2. Configure WireGuard settings (private key, listen port)
 3. Add peer configurations with public keys and endpoints
@@ -292,6 +311,7 @@ Here are some omnictl commands and their uses:
 6. Cluster spans edge, datacenter, and cloud seamlessly
 
 ### Build Custom Talos Image with System Extensions
+
 1. Define system extensions as container images
 2. Create schematic with extension references
 3. Use Image Factory to generate custom image
@@ -302,6 +322,7 @@ Here are some omnictl commands and their uses:
 ## Context
 
 **Talos Linux Philosophy**: Talos is designed with a single purpose - running Kubernetes. It removes unnecessary complexity by:
+
 - Using API-driven configuration instead of SSH/files
 - Maintaining immutable root filesystem
 - Minimizing installed packages
@@ -309,6 +330,7 @@ Here are some omnictl commands and their uses:
 - Supporting declarative, reproducible deployments
 
 **Deployment Models**:
+
 - Standalone Talos clusters managed via talosctl
 - Omni SaaS for managed multi-cluster deployments
 - Self-hosted Omni for air-gapped or on-premises environments

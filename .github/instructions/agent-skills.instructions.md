@@ -242,6 +242,7 @@ Skills use three-level loading for efficiency:
 | 3. Resources | Scripts, examples, docs | Only when Copilot references them |
 
 This means:
+
 - Install many skills without consuming context
 - Only relevant content loads per task
 - Resources don't load until explicitly needed
@@ -268,6 +269,7 @@ When including scripts, prefer cross-platform languages:
 | Bash/Shell | Simple automation tasks |
 
 Best practices:
+
 - Include help/usage documentation (`--help` flag)
 - Handle errors gracefully with clear messages
 - Avoid storing credentials or secrets
@@ -276,6 +278,7 @@ Best practices:
 ### When to Bundle Scripts
 
 Include scripts in your skill when:
+
 - The same code would be rewritten repeatedly by the agent
 - Deterministic reliability is critical (e.g., file manipulation, API calls)
 - Complex logic benefits from being pre-tested rather than generated each time

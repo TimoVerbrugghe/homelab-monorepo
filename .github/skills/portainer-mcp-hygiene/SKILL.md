@@ -20,6 +20,7 @@ kubernetes_proxy(path="/api/v1/pods", select="items[].{name:metadata.name,ns:met
 ```
 
 JMESPath syntax notes that matter for these surfaces:
+
 - List shape: start with `[]` to map over array elements.
 - Wrapped list (Kubernetes `{items: [...]}`): start with `items[]`.
 - Single object: `{field1:path.to.value,field2:other.path}` — no leading `[]`.
@@ -71,11 +72,13 @@ These are the lightweight "summary" tools. Prefer them over `EndpointList` + pro
 A few high-frequency questions and the projection that gets them in one call:
 
 **"How many running containers in each environment?"**
+
 ```
 EndpointList(select="[].{name:Name,type:Type,running:Snapshots[0].RunningContainerCount,total:Snapshots[0].ContainerCount}")
 ```
 
 **"List containers in environment N."**
+
 ```
 docker_proxy(environment_id=N, path="/containers/json",
              select="[].{id:Id,name:Names[0],state:State,image:Image,status:Status}")
@@ -83,11 +86,13 @@ docker_proxy(environment_id=N, path="/containers/json",
 
 **"Which images are in use, grouped by name?"**
 Fetch with projection, group client-side:
+
 ```
 docker_proxy(environment_id=N, path="/containers/json", select="[].Image")
 ```
 
 **"One-line pod summary in environment N."**
+
 ```
 kubernetes_proxy(environment_id=N, path="/api/v1/pods",
                  select="items[].{name:metadata.name,ns:metadata.namespace,phase:status.phase,node:spec.nodeName}")
@@ -98,6 +103,7 @@ Project readiness fields, then filter in the response. (JMESPath can also filter
 
 **"Inspect deployment X in namespace Y."**
 A single-object fetch. Project out `metadata.managedFields` and `status.conditions` if you only need the spec; keep them if the user is asking about reconciliation:
+
 ```
 kubernetes_proxy(environment_id=N, path="/apis/apps/v1/namespaces/Y/deployments/X",
                  select="{name:metadata.name,replicas:spec.replicas,ready:status.readyReplicas,image:spec.template.spec.containers[0].image}")
@@ -108,18 +114,22 @@ kubernetes_proxy(environment_id=N, path="/apis/apps/v1/namespaces/Y/deployments/
 A handful of `docker_proxy` and `kubernetes_proxy` paths return plain text or streamed data rather than JSON. `select` is a no-op on these (the proxy detects non-JSON and passes the body through unchanged), but the response-size cap still fires, and `_select_wrapper` will raise a JSON parse error if you do pass `select`. **Narrow the upstream query parameters instead.**
 
 **Container logs** — `/containers/{id}/logs`:
+
 - Set `tail` to limit lines (`tail=100` for the last hundred).
 - Set `since` to limit time range (Unix timestamp).
 - Always pass `stdout=true` and/or `stderr=true` — without them the daemon returns nothing.
 - Don't set `follow=true` — it streams indefinitely and will burn your context.
 
 **Container stats** — `/containers/{id}/stats`:
+
 - Always pass `stream=false` to get a single snapshot. The streaming form is unbounded.
 
 **Container exec output** — chunked stream.
+
 - If you need command output, prefer `docker_proxy` against `/containers/{id}/top` for process listing, or run the command another way. Exec attach over HTTP returns multiplexed binary frames and won't render usefully through the cap.
 
 **Image pulls / archives / build context** — binary or streamed.
+
 - Don't fetch these through the proxy for inspection. Use the specific Portainer endpoints (`endpointDockerhubStatus`, `ServiceImageStatus`, `dockerImagesList`) which return parseable JSON summaries.
 
 If the cap fires on a non-JSON endpoint, the truncation hint will suggest `select` — ignore that suggestion in this case and retry with narrower upstream parameters.
@@ -136,7 +146,7 @@ Projecting isn't always right:
 
 ## Reading the truncation hint
 
-When you do hit the cap, the response ends with a bracketed `[truncated: ... Retry with a JMESPath `select` ...]` message that includes a concrete example. Your next move should almost always be: retry the *same* call with a `select` projection — not pivot to reading the spilled file with `jq`, not paginate by guessing offsets, not call a different tool. The server-side projection is cheaper (no re-fetch from Portainer if the data was already cached upstream, and far fewer tokens shipped back).
+When you do hit the cap, the response ends with a bracketed `[truncated: ... Retry with a JMESPath`select`...]` message that includes a concrete example. Your next move should almost always be: retry the *same* call with a `select` projection — not pivot to reading the spilled file with `jq`, not paginate by guessing offsets, not call a different tool. The server-side projection is cheaper (no re-fetch from Portainer if the data was already cached upstream, and far fewer tokens shipped back).
 
 The exception is non-JSON endpoints (see above) — there, ignore the `select` suggestion and re-shape the upstream query instead.
 
