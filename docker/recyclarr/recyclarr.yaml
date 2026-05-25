@@ -19,7 +19,7 @@ sonarr:
       upgrade:
         allowed: true
         until_quality: WEB 2160p
-        until_score: 10000
+        until_score: 2500
       min_format_score: 10
       quality_sort: top
       qualities:
@@ -164,7 +164,7 @@ radarr:
       upgrade:
         allowed: true
         until_quality: Remux-2160p
-        until_score: 10000
+        until_score: 2500
       min_format_score: 10
       quality_sort: top
       qualities:
