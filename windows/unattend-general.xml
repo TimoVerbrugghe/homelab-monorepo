@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- This is a general unattend file with common sense settings and will install Windows on the first disk (disk 0) -->
+<!--
+    Unattend for Windows 11 Pro on a physical machine (or any non-KVM install).
+    VirtIO drivers are baked into WinPE (so Setup can boot and see the disk),
+    but DriverPaths below is still needed to inject them into the installed OS.
+    Common sense settings: locale, privacy tweaks. No disk layout (let the user
+    or Windows Setup handle partitioning). No VMModeOptimizations.
+-->
 
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <!-- Settings to apply during Windows Setup -->
     <settings pass="windowsPE">
+        <!--
+            DriverPaths injects these drivers into the target Windows installation.
+            Baking them into WinPE only helps WinPE boot - the installed OS needs
+            its own copy, which Windows Setup pulls from these paths during setup.
+            Virtio drivers must be present on the windowsinstall SMB share.
+        -->
         <component name="Microsoft-Windows-PnpCustomizationsWinPE" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
-            <!--
-            This makes the VirtIO drivers available to Windows, assuming that
-            the VirtIO driver disk at https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
-            was extracted to the windowsinstall smb share.
-            -->
             <DriverPaths>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="1">
                     <Path>\\10.10.10.2\windowsinstall\virtio\NetKVM\w11\amd64</Path>
@@ -19,14 +26,7 @@
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <!-- Not installing the balloon driver - known to cause performance issues              
-                <PathAndCredentials wcm:action="add" wcm:keyValue="2">
-                    <Path>\\10.10.10.2\windowsinstall\virtio\Balloon\w11\amd64</Path>
-                    <Credentials>
-                        <Username>windowsinstall</Username>
-                        <Password>windowsinstall</Password>
-                    </Credentials>
-                </PathAndCredentials> -->
+                <!-- Balloon driver skipped - known to cause performance issues -->
                 <PathAndCredentials wcm:action="add" wcm:keyValue="3">
                     <Path>\\10.10.10.2\windowsinstall\virtio\pvpanic\w11\amd64</Path>
                     <Credentials>
@@ -43,13 +43,6 @@
                 </PathAndCredentials>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="5">
                     <Path>\\10.10.10.2\windowsinstall\virtio\qemupciserial\w11\amd64</Path>
-                    <Credentials>
-                        <Username>windowsinstall</Username>
-                        <Password>windowsinstall</Password>
-                    </Credentials>
-                </PathAndCredentials>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="6">
-                    <Path>\\10.10.10.2\windowsinstall\virtio\smbus\w11\amd64</Path>
                     <Credentials>
                         <Username>windowsinstall</Username>
                         <Password>windowsinstall</Password>
@@ -131,79 +124,9 @@
             <UILanguageFallback>en-US</UILanguageFallback>
             <UserLocale>nl-BE</UserLocale>
         </component>
-        <!-- Disk Setup -->
+        <!-- Disk setup is intentionally omitted - Windows Setup will prompt for disk/partition selection.
+             Use unattend-vm.xml if you want fully automated disk layout. -->
         <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <!-- Create partition scheme -->
-            <DiskConfiguration>
-                <Disk wcm:action="add">
-                    <CreatePartitions>
-                        <!-- Windows RE Tools partition -->
-                        <CreatePartition wcm:action="add">
-                            <Order>1</Order>
-                            <Size>350</Size>
-                            <Type>Primary</Type>
-                        </CreatePartition>
-                        <!-- System partition (ESP) -->
-                        <CreatePartition wcm:action="add">
-                            <Order>2</Order>
-                            <Size>100</Size>
-                            <Type>EFI</Type>
-                        </CreatePartition>
-                        <!-- Microsoft reserved partition (MSR) -->
-                        <CreatePartition wcm:action="add">
-                            <Order>3</Order>
-                            <Size>128</Size>
-                            <Type>MSR</Type>
-                        </CreatePartition>
-                        <!-- Windows partition -->
-                        <CreatePartition wcm:action="add">
-                            <Order>4</Order>
-                            <Extend>true</Extend>
-                            <Type>Primary</Type>
-                        </CreatePartition>
-                    </CreatePartitions>
-                    <ModifyPartitions>
-                        <!-- Windows RE Tools partition -->
-                        <ModifyPartition wcm:action="add">
-                            <Order>1</Order>
-                            <PartitionID>1</PartitionID>
-                            <Label>WINRE</Label>
-                            <Format>NTFS</Format>
-                            <TypeID>de94bba4-06d1-4d40-a16a-bfd50179d6ac</TypeID>
-                        </ModifyPartition>
-                        <!-- System partition (ESP) -->
-                        <ModifyPartition wcm:action="add">
-                            <Order>2</Order>
-                            <PartitionID>2</PartitionID>
-                            <Label>System</Label>
-                            <Format>FAT32</Format>
-                        </ModifyPartition>
-                        <!-- MSR partition does not need to be modified -->
-                        <ModifyPartition wcm:action="add">
-                            <Order>3</Order>
-                            <PartitionID>3</PartitionID>
-                        </ModifyPartition>
-                        <!-- Windows partition -->
-                        <ModifyPartition wcm:action="add">
-                            <Order>4</Order>
-                            <PartitionID>4</PartitionID>
-                            <Label>Windows</Label>
-                            <Format>NTFS</Format>
-                        </ModifyPartition>
-                    </ModifyPartitions>
-                    <DiskID>0</DiskID>
-                    <WillWipeDisk>true</WillWipeDisk>
-                </Disk>
-                <WillShowUI>OnError</WillShowUI>
-            </DiskConfiguration>
-            <ImageInstall>
-                <OSImage>
-                    <InstallTo>
-                        <DiskID>0</DiskID>
-                        <PartitionID>4</PartitionID>
-                    </InstallTo>
-                </OSImage>
-            </ImageInstall>
             <UserData>
                 <ProductKey>
                     <!-- Using the generic Windows 11 Pro Key -->
@@ -227,31 +150,6 @@
 
     <!-- Settings to apply for this specific deployment -->
     <settings pass="specialize">
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>
-                <!-- Disable cloud content (tiktok, whatsapp, etc...) -->
-                <RunSynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /t REG_DWORD /d 1 /f</Path>
-                    <Order>1</Order>
-                </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableConsumerAccountStateContent /t REG_DWORD /d 1 /f</Path>
-                    <Order>2</Order>
-                </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableSoftLanding /t REG_DWORD /d 1 /f</Path>
-                    <Order>3</Order>
-                </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <Path>reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableCloudOptimizedContent /t REG_DWORD /d 1 /f</Path>
-                    <Order>4</Order>
-                </RunSynchronousCommand>
-            </RunSynchronous>
-        </component>
         <!-- Set Keyboard & Language Settings -->
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <!-- English (0409) with Belgian Period Azerty keyboard (00000813) -->
@@ -262,160 +160,9 @@
             <UserLocale>en-BE</UserLocale>
         </component>
 
-        <!-- Do not attempt to activate automatically -->
-        <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <SkipAutoActivation>true</SkipAutoActivation>
-        </component>
-
-        <!-- Do not participate in the Customer Experience Improvement Program (CEIP) -->
-        <component name="Microsoft-Windows-SQMApi" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <CEIPEnabled>0</CEIPEnabled>
-        </component>
-
+        <!-- Auto-generate a unique computer name -->
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ComputerName>WindowsVM</ComputerName>
-        </component>
-    </settings>
-
-    <!-- Settings to apply during the first-boot experience -->
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <!-- Set TimeZone -->
-            <TimeZone>Romance Standard Time</TimeZone>
-
-            <!-- Disable installing built-in Teams in Windows 11 -->
-            <ConfigureChatAutoInstall>false</ConfigureChatAutoInstall>
-
-            <!-- Disable windows features -->
-            <WindowsFeatures>
-                <ShowInternetExplorer>false</ShowInternetExplorer>
-                <ShowMediaCenter>false</ShowMediaCenter>
-                <ShowWindowsMediaPlayer>false</ShowWindowsMediaPlayer>
-            </WindowsFeatures>
-            
-            <!-- Disable Out-of-box-experience settings -->
-            <OOBE>
-                <HideEULAPage>true</HideEULAPage>
-                <HideLocalAccountScreen>true</HideLocalAccountScreen>
-                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
-                <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
-                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
-                <NetworkLocation>Home</NetworkLocation>
-                <ProtectYourPC>3</ProtectYourPC>
-                <VMModeOptimizations>
-                    <SkipWinREInitialization>true</SkipWinREInitialization>
-                    <SkipNotifyUILanguageChange>true</SkipNotifyUILanguageChange>
-                    <SkipAdministratorProfileRemoval>false</SkipAdministratorProfileRemoval>
-                </VMModeOptimizations>
-                <SkipMachineOOBE>true</SkipMachineOOBE>
-                <SkipUserOOBE>true</SkipUserOOBE>
-            </OOBE>
-
-            <!-- UserAccounts -->
-            <UserAccounts>
-                <LocalAccounts>
-                    <LocalAccount wcm:action="add">
-                        <Password>
-                            <!-- Hashed value for Blank Password -->
-                            <Value>UABhAHMAcwB3AG8AcgBkAA==</Value>
-                            <PlainText>false</PlainText>
-                        </Password>
-                        <Group>Administrators;Users</Group>
-                        <DisplayName>Timo</DisplayName>
-                        <Name>Timo</Name>
-                        <Description></Description>
-                    </LocalAccount>
-
-                    <!-- Add ansible user for automation -->
-                    <LocalAccount wcm:action="add">
-                        <Password>
-                            <Value>ansible</Value>
-                            <PlainText>true</PlainText>
-                        </Password>
-                        <Group>Administrators</Group>
-                        <DisplayName>ansible</DisplayName>
-                        <Name>ansible</Name>
-                        <Description>Ansible User</Description>
-                    </LocalAccount>
-                </LocalAccounts>
-            </UserAccounts>
-
-            <!-- Set commands to run configuration powershell script (for WinRM) -->
-            <FirstLogonCommands>
-                <!-- Further disable cloud content when this user logs on for the first time -->
-                <SynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v OemPreInstalledAppsEnabled /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>1</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v ContentDeliveryAllowed /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>2</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v PreInstalledAppsEnabled /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>3</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v PreInstalledAppsEverEnabled /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>4</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SilentInstalledAppsEnabled /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>5</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SystemPaneSuggestionsEnabled /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>6</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SoftLandingEnabled /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>7</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SubscribedContent-338389Enabled /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>8</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Description>Disable consumer features</Description>
-                    <CommandLine>reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager /v SubscribedContent-88000326Enabled /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>9</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand>
-                    <RequiresUserInput>false</RequiresUserInput>
-                    <CommandLine>cmd /C net use z: \\10.10.10.2\windowsinstall\Windows11 /user:windowsinstall windowsinstall</CommandLine>
-                    <Description>Mount windowsinstall folder</Description>
-                    <Order>10</Order>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -NoLogo -ExecutionPolicy ByPass -File Z:\configurewinrm.ps1</CommandLine>
-                    <Description>Configure WinRM so that ansible can connect to it</Description>
-                    <Order>11</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <RequiresUserInput>false</RequiresUserInput>
-                    <CommandLine>cmd /C net use z: /delete</CommandLine>
-                    <Description>Unmount windowsinstall folder</Description>
-                    <Order>13</Order>
-                </SynchronousCommand>
-            </FirstLogonCommands>
+            <ComputerName>*</ComputerName>
         </component>
     </settings>
 </unattend>

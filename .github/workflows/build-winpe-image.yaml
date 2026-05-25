@@ -1,0 +1,232 @@
+name: Build WinPE Image
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  cancel-in-progress: true
+  group: build-winpe-image
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build WinPE ISO
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    outputs:
+      win11-download-url: ${{ steps.fido.outputs.url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Download Windows ADK
+        shell: pwsh
+        run: |
+          Write-Output "Downloading Windows ADK..."
+          $ProgressPreference = 'SilentlyContinue'
+          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2271337" -OutFile "$env:TEMP\adksetup.exe" -UseBasicParsing
+          $ProgressPreference = 'Continue'
+
+      - name: Install Windows ADK
+        shell: pwsh
+        run: |
+          Write-Output "Installing Windows ADK Deployment Tools..."
+          $process = Start-Process -FilePath "$env:TEMP\adksetup.exe" `
+            -ArgumentList "/quiet", "/norestart", "/features", "OptionId.DeploymentTools" `
+            -Wait -NoNewWindow -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "Windows ADK installation failed with exit code $($process.ExitCode)"
+          }
+          Write-Output "Windows ADK installed."
+
+      - name: Download Windows ADK WinPE addon
+        shell: pwsh
+        run: |
+          Write-Output "Downloading Windows ADK WinPE addon..."
+          $ProgressPreference = 'SilentlyContinue'
+          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2271338" -OutFile "$env:TEMP\adkwinpesetup.exe" -UseBasicParsing
+          $ProgressPreference = 'Continue'
+
+      - name: Install Windows ADK WinPE addon
+        shell: pwsh
+        run: |
+          Write-Output "Installing Windows ADK WinPE addon..."
+          $process = Start-Process -FilePath "$env:TEMP\adkwinpesetup.exe" `
+            -ArgumentList "/quiet", "/norestart", "/features", "OptionId.WindowsPreinstallationEnvironment" `
+            -Wait -NoNewWindow -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "Windows ADK WinPE addon installation failed with exit code $($process.ExitCode)"
+          }
+          Write-Output "Windows ADK WinPE addon installed."
+
+      - name: Build WinPE image with virtio-win drivers
+        id: build
+        shell: pwsh
+        run: |
+          .\windows\create-winpe-image.ps1
+
+      - name: Get Windows 11 download URL via Fido
+        id: fido
+        shell: pwsh
+        run: |
+          $ProgressPreference = 'SilentlyContinue'
+          Invoke-WebRequest -Uri "https://github.com/pbatard/Fido/raw/master/Fido.ps1" -OutFile Fido.ps1
+          Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+          $url = (& .\Fido.ps1 -Win 11 -Rel Latest -Arch x64 -Lang "English (United States)" -Ed "Windows 11" -GetUrl).Trim()
+          if (-not $url -or $url -notmatch '^https://') {
+            throw "Failed to get a valid Windows 11 download URL from Fido. Got: $url"
+          }
+          Write-Output "Got Windows 11 download URL."
+          "url=$url" >> $env:GITHUB_OUTPUT
+
+      - name: Upload WinPE ISO as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: winpe-iso
+          path: C:\WinPE_amd64\WinPE_amd64.iso
+          retention-days: 7
+
+  upload:
+    name: Upload files to TheFactory
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+
+    steps:
+      - name: Download WinPE ISO artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: winpe-iso
+          path: ./artifact
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s' "${{ secrets.THEFACTORY_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          tags: tag:github-cicd
+
+      - name: Add TheFactory to SSH known hosts
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+        run: |
+          ssh-keyscan "$THEFACTORY_HOST" >> ~/.ssh/known_hosts
+
+      - name: Upload WinPE ISO to TheFactory
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
+        run: |
+          rsync -av --info=progress2 ./artifact/WinPE_amd64.iso \
+            "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/WinPE.iso"
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" \
+            "chown windowsinstall:windowsinstall /mnt/FranzHopper/windowsinstall/WinPE.iso"
+
+      - name: Download virtio-win ISO on TheFactory and extract
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
+        run: |
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" 'bash -s' << 'ENDSSH'
+          set -euo pipefail
+          BASE=/mnt/FranzHopper/windowsinstall
+          echo "Downloading virtio-win ISO..."
+          curl -fL -o "$BASE/virtio-win.iso" \
+            "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+          echo "virtio-win ISO downloaded: $(du -h "$BASE/virtio-win.iso" | cut -f1)"
+          if [ -d "$BASE/virtio" ]; then
+            echo "Backing up existing virtio/ directory..."
+            rm -rf "$BASE/virtio-bak"
+            mv "$BASE/virtio" "$BASE/virtio-bak"
+          fi
+          echo "Extracting virtio-win ISO via Docker..."
+          docker run --rm \
+            -v "$BASE:/work" \
+            alpine sh -c "apk add --no-cache 7zip && 7z x /work/virtio-win.iso -o/work/virtio/ -y"
+          echo "Removing backup..."
+          rm -rf "$BASE/virtio-bak"
+          echo "virtio extraction complete."
+          ENDSSH
+
+      - name: Download Windows 11 ISO on TheFactory and extract
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
+          WIN11_URL: ${{ needs.build.outputs.win11-download-url }}
+        run: |
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" WIN11_URL="$WIN11_URL" 'bash -s' << 'ENDSSH'
+          set -euo pipefail
+          BASE=/mnt/FranzHopper/windowsinstall
+          echo "Downloading Windows 11 ISO..."
+          curl -fL -o "$BASE/Windows11.iso" "$WIN11_URL"
+          echo "Windows 11 ISO downloaded: $(du -h "$BASE/Windows11.iso" | cut -f1)"
+          if [ -d "$BASE/Windows11" ]; then
+            echo "Backing up existing Windows11/ directory..."
+            rm -rf "$BASE/Windows11-bak"
+            mv "$BASE/Windows11" "$BASE/Windows11-bak"
+          fi
+          echo "Extracting Windows 11 ISO via Docker..."
+          docker run --rm \
+            -v "$BASE:/work" \
+            alpine sh -c "apk add --no-cache 7zip && 7z x /work/Windows11.iso -o/work/Windows11/ -y"
+          echo "Removing backup..."
+          rm -rf "$BASE/Windows11-bak"
+          echo "Windows 11 extraction complete."
+          ENDSSH
+
+  notify:
+    name: Send Pushover notification
+    runs-on: ubuntu-latest
+    needs: [build, upload]
+    if: always()
+    permissions:
+      contents: read
+
+    steps:
+      - name: Determine status and compose message
+        id: status
+        run: |
+          BUILD_RESULT="${{ needs.build.result }}"
+          UPLOAD_RESULT="${{ needs.upload.result }}"
+          if [ "$BUILD_RESULT" = "success" ] && [ "$UPLOAD_RESULT" = "success" ]; then
+            echo "title=WinPE Build Complete" >> "$GITHUB_OUTPUT"
+            echo "message=WinPE ISO, Windows 11 ISO and virtio drivers updated on TheFactory (/mnt/FranzHopper/windowsinstall/)" >> "$GITHUB_OUTPUT"
+            echo "priority=0" >> "$GITHUB_OUTPUT"
+          elif [ "$BUILD_RESULT" != "success" ]; then
+            echo "title=WinPE Build Failed" >> "$GITHUB_OUTPUT"
+            echo "message=WinPE image build failed (status: $BUILD_RESULT). Check GitHub Actions for details." >> "$GITHUB_OUTPUT"
+            echo "priority=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "title=WinPE Upload Failed" >> "$GITHUB_OUTPUT"
+            echo "message=WinPE image built but upload to TheFactory failed (status: $UPLOAD_RESULT). Check GitHub Actions for details." >> "$GITHUB_OUTPUT"
+            echo "priority=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Send Pushover notification
+        env:
+          MESSAGE: ${{ steps.status.outputs.message }}
+          PRIORITY: ${{ steps.status.outputs.priority }}
+          PUSHOVER_API_TOKEN: ${{ secrets.PUSHOVER_API_TOKEN }}
+          PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
+          TITLE: ${{ steps.status.outputs.title }}
+        run: |
+          curl -s \
+            --form-string "token=$PUSHOVER_API_TOKEN" \
+            --form-string "user=$PUSHOVER_USER_KEY" \
+            --form-string "title=$TITLE" \
+            --form-string "message=$MESSAGE" \
+            --form-string "priority=$PRIORITY" \
+            https://api.pushover.net/1/messages.json
+
