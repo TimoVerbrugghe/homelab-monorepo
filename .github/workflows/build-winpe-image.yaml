@@ -1,8 +1,6 @@
 name: Build WinPE Image
 
 on:
-  schedule:
-    - cron: '0 3 * * 0'
   workflow_dispatch:
 
 concurrency:
@@ -69,7 +67,7 @@ jobs:
         id: build
         shell: pwsh
         run: |
-          .\windows\create-winpe-image-ci.ps1
+          .\windows\create-winpe-image.ps1
 
       - name: Get Windows 11 download URL via Fido
         id: fido
@@ -78,11 +76,9 @@ jobs:
           $ProgressPreference = 'SilentlyContinue'
           Invoke-WebRequest -Uri "https://github.com/pbatard/Fido/raw/master/Fido.ps1" -OutFile Fido.ps1
           Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-          $lines = & .\Fido.ps1 -Win 11 -Rel Latest -Arch x64 -Lang "English International" `
-            -Ed "Windows 11 Home/Pro/Edu" -GUI $false
-          $url = ($lines | Where-Object { $_ -match '^https://' } | Select-Object -Last 1).Trim()
-          if (-not $url) {
-            throw "Failed to get a valid Windows 11 download URL from Fido. Output: $($lines -join "`n")"
+          $url = (& .\Fido.ps1 -Win 11 -Rel Latest -Arch x64 -Lang "English (United States)" -Ed "Windows 11" -GetUrl).Trim()
+          if (-not $url -or $url -notmatch '^https://') {
+            throw "Failed to get a valid Windows 11 download URL from Fido. Got: $url"
           }
           Write-Output "Got Windows 11 download URL."
           "url=$url" >> $env:GITHUB_OUTPUT
@@ -107,21 +103,6 @@ jobs:
         with:
           name: winpe-iso
           path: ./artifact
-
-      - name: Download virtio-win ISO
-        run: |
-          echo "Downloading latest stable virtio-win ISO..."
-          curl -fL -o ./virtio-win.iso \
-            "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
-          echo "virtio-win ISO downloaded: $(du -h ./virtio-win.iso | cut -f1)"
-
-      - name: Download Windows 11 ISO
-        env:
-          WIN11_URL: ${{ needs.build.outputs.win11-download-url }}
-        run: |
-          echo "Downloading Windows 11 ISO..."
-          curl -fL -o ./Windows11.iso "$WIN11_URL"
-          echo "Windows 11 ISO downloaded: $(du -h ./Windows11.iso | cut -f1)"
 
       - name: Set up SSH key
         run: |
@@ -153,15 +134,7 @@ jobs:
           ssh "$THEFACTORY_USER@$THEFACTORY_HOST" \
             "chown windowsinstall:windowsinstall /mnt/FranzHopper/windowsinstall/WinPE.iso"
 
-      - name: Upload virtio-win ISO to TheFactory
-        env:
-          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
-          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
-        run: |
-          rsync -av --info=progress2 ./virtio-win.iso \
-            "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/virtio-win.iso"
-
-      - name: Extract virtio-win ISO on TheFactory via Docker
+      - name: Download virtio-win ISO on TheFactory and extract
         env:
           THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
           THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
@@ -169,43 +142,45 @@ jobs:
           ssh "$THEFACTORY_USER@$THEFACTORY_HOST" 'bash -s' << 'ENDSSH'
           set -euo pipefail
           BASE=/mnt/FranzHopper/windowsinstall
+          echo "Downloading virtio-win ISO..."
+          curl -fL -o "$BASE/virtio-win.iso" \
+            "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+          echo "virtio-win ISO downloaded: $(du -h "$BASE/virtio-win.iso" | cut -f1)"
           if [ -d "$BASE/virtio" ]; then
             echo "Backing up existing virtio/ directory..."
+            rm -rf "$BASE/virtio-bak"
             mv "$BASE/virtio" "$BASE/virtio-bak"
           fi
           echo "Extracting virtio-win ISO via Docker..."
           docker run --rm \
             -v "$BASE:/work" \
-            alpine sh -c "apk add --no-cache p7zip && 7z x /work/virtio-win.iso -o/work/virtio/ -y"
+            alpine sh -c "apk add --no-cache 7zip && 7z x /work/virtio-win.iso -o/work/virtio/ -y"
           echo "Removing backup..."
           rm -rf "$BASE/virtio-bak"
           echo "virtio extraction complete."
           ENDSSH
 
-      - name: Upload Windows 11 ISO to TheFactory
+      - name: Download Windows 11 ISO on TheFactory and extract
         env:
           THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
           THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
+          WIN11_URL: ${{ needs.build.outputs.win11-download-url }}
         run: |
-          rsync -av --info=progress2 ./Windows11.iso \
-            "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/Windows11.iso"
-
-      - name: Extract Windows 11 ISO on TheFactory via Docker
-        env:
-          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
-          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER }}
-        run: |
-          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" 'bash -s' << 'ENDSSH'
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" WIN11_URL="$WIN11_URL" 'bash -s' << 'ENDSSH'
           set -euo pipefail
           BASE=/mnt/FranzHopper/windowsinstall
+          echo "Downloading Windows 11 ISO..."
+          curl -fL -o "$BASE/Windows11.iso" "$WIN11_URL"
+          echo "Windows 11 ISO downloaded: $(du -h "$BASE/Windows11.iso" | cut -f1)"
           if [ -d "$BASE/Windows11" ]; then
             echo "Backing up existing Windows11/ directory..."
+            rm -rf "$BASE/Windows11-bak"
             mv "$BASE/Windows11" "$BASE/Windows11-bak"
           fi
           echo "Extracting Windows 11 ISO via Docker..."
           docker run --rm \
             -v "$BASE:/work" \
-            alpine sh -c "apk add --no-cache p7zip && 7z x /work/Windows11.iso -o/work/Windows11/ -y"
+            alpine sh -c "apk add --no-cache 7zip && 7z x /work/Windows11.iso -o/work/Windows11/ -y"
           echo "Removing backup..."
           rm -rf "$BASE/Windows11-bak"
           echo "Windows 11 extraction complete."
