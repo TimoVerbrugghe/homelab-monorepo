@@ -76,6 +76,7 @@ description: 'Web testing helpers'
 ```
 
 The poor description fails because:
+
 - No specific triggers (when should Copilot load this?)
 - No keywords (what user prompts would match?)
 - No capabilities (what can it actually do?)
@@ -85,7 +86,7 @@ The poor description fails because:
 The body contains detailed instructions that Copilot loads AFTER the skill is activated. Recommended sections:
 
 | Section | Purpose |
-|---------|---------|
+| --------- | --------- |
 | `# Title` | Brief overview of what this skill enables |
 | `## When to Use This Skill` | List of scenarios (reinforces description triggers) |
 | `## Prerequisites` | Required tools, dependencies, environment setup (if applicable) |
@@ -94,7 +95,9 @@ The body contains detailed instructions that Copilot loads AFTER the skill is ac
 | `## Troubleshooting` | Reactive fixes for known issues ("if you see X, try Y") |
 | `## References` | Links to bundled docs or external resources |
 
-Not every skill needs every section. Skip `## Prerequisites` if there are no external dependencies. Skip `## Step-by-Step Workflows` if the skill is purely advisory. Include `## Gotchas` whenever the skill involves external tools, APIs, or platform-specific behavior.
+Not every skill needs every section. Skip `## Prerequisites` if there are no external dependencies.
+Skip `## Step-by-Step Workflows` if the skill is purely advisory.
+Include `## Gotchas` whenever the skill involves external tools, APIs, or platform-specific behavior.
 
 For content quality principles (what to include and what to leave out), see [Writing High-Impact Skills](#writing-high-impact-skills) below.
 
@@ -121,7 +124,9 @@ For content quality principles (what to include and what to leave out), see [Wri
 - At least one browser engine installed: `npx playwright install chromium`
 ```
 
-**`## Step-by-Step Workflows`** — Numbered steps for repeatable procedures where sequence matters (build, deploy, environment setup). Describe WHAT to accomplish at each stage, not hardcoded file paths or line numbers — steps should be adaptable to different project structures. For complex workflows (>5 steps), split into `references/` files and link to them.
+**`## Step-by-Step Workflows`** — Numbered steps for repeatable procedures where sequence matters (build, deploy, environment setup).
+Describe WHAT to accomplish at each stage, not hardcoded file paths or line numbers — steps should be adaptable to different project
+structures. For complex workflows (>5 steps), split into `references/` files and link to them.
 
 ```markdown
 ## Step-by-Step Workflows
@@ -166,7 +171,7 @@ Skills can include additional files that Copilot accesses on-demand:
 ### Supported Resource Types
 
 | Folder | Purpose | Loaded into Context? | Example Files |
-|--------|---------|---------------------|---------------|
+| -------- | --------- | --------------------- | --------------- |
 | `scripts/` | Executable automation that performs specific operations | When executed | `helper.py`, `validate.sh`, `build.ts` |
 | `references/` | Documentation the AI agent reads to inform decisions | Yes, when referenced | `api_reference.md`, `schema.md`, `workflow_guide.md` |
 | `assets/` | **Static files used AS-IS** in output (not modified by the AI agent) | No | `logo.png`, `brand-template.pptx`, `custom-font.ttf` |
