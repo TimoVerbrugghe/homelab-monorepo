@@ -76,7 +76,11 @@ services:
   bazarr:
     <<: [*hardening-defaults, *limits-medium]
     container_name: bazarr
-    image: lscr.io/linuxserver/bazarr:latest
+    image: lscr.io/linuxserver/bazarr:v1.5.6-ls349
+    # bazarr's child web server (main.py) is memory-hungry during mass subtitle searches;
+    # override limits-medium's 1g cap to avoid OOM kills (upstream bug #3233 means
+    # the launcher does not restart the child, so an OOM kill silently kills the UI).
+    mem_limit: 2g
     user: "3000:3000"
     tmpfs:
       - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
@@ -96,10 +100,11 @@ services:
       radarr:
         condition: service_started
     healthcheck:
-      test: ["CMD-SHELL", "curl http://localhost:6767/api/v1/status || exit 1"]
-      interval: 1s
+      test: ["CMD-SHELL", "curl --fail http://localhost:6767/api/v1/status || exit 1"]
+      interval: 30s
       timeout: 5s
-      retries: 60
+      retries: 3
+      start_period: 90s
     ports:
       - 14002:6767
 
