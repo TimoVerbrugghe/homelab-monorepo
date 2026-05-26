@@ -127,7 +127,7 @@ Configure appropriate delays, periods, timeouts, and thresholds for each.
 - [ ] Security: runAsNonRoot, readOnlyRootFilesystem, dropped capabilities
 - [ ] Resources: Requests and limits defined
 - [ ] Probes: Liveness, readiness, startup configured
-- [ ] Images: Specific tags (never :latest)
+- [ ] Images: Specific tags used
 - [ ] Replicas: Minimum 2-3 for production
 - [ ] Strategy: RollingUpdate with appropriate surge/unavailable
 - [ ] PDB: Defined for production

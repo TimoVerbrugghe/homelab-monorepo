@@ -288,7 +288,7 @@ spec:
 - [ ] Are unnecessary `capabilities` dropped?
 - [ ] Are `NetworkPolicies` considered for communication restrictions?
 - [ ] Is RBAC configured with least privilege for ServiceAccounts?
-- [ ] Are `ImagePullPolicy` and image tags (`:latest` avoided) correctly set?
+- [ ] Is `ImagePullPolicy` correctly set?
 - [ ] Is logging sent to `STDOUT`/`STDERR`?
 - [ ] Are appropriate `nodeSelector` or `tolerations` used for scheduling?
 - [ ] Is the `strategy` for rolling updates configured?
