@@ -78,6 +78,5 @@ Quick checklist before opening a PR:
 - YAML passes `yamllint`
 - Shell scripts pass `shellcheck`
 - Kubernetes manifests include the hardening baseline (see `.github/instructions/kubernetes-deployment-best-practices.instructions.md`)
-- No `:latest` image tags
 - No secrets or credentials committed — use `.env.template` patterns
 - Maintenance matrix reviewed (see `.github/copilot-instructions.md`)
