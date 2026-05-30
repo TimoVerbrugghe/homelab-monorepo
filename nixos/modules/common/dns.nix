@@ -11,7 +11,7 @@
   # Add a dns manager so that tailscale does not overwrite /etc/resolv.conf. Ensures that docker dns keeps working
   services.resolved = {
     enable = true;
-    domains = [ "~." ];
-    fallbackDns = [ "10.10.10.35" "10.10.10.21" "10.10.10.22" ];
+    settings.Resolve.Domains = [ "~." ];
+    settings.Resolve.FallbackDNS = [ "10.10.10.35" "10.10.10.21" "10.10.10.22" ];
   };
 }
