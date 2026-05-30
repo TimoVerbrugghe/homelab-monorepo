@@ -52,6 +52,8 @@ spec:
           value: "dark"
         - name: CONCURRENT_TRANSCRIPTIONS
           value: "25"
+        - name: MAX_CONCURRENT_EXTRACTIONS
+          value: "3"
         - name: UVICORN_TIMEOUT_KEEP_ALIVE
           value: "300"
         - name: LANGUAGE_DETECTION_CANDIDATES
@@ -123,8 +125,8 @@ spec:
             path: /health
             port: 9000
           periodSeconds: 30
-          timeoutSeconds: 10
-          failureThreshold: 3
+          timeoutSeconds: 30
+          failureThreshold: 5
         startupProbe:
           httpGet:
             path: /health
