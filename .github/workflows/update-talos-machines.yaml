@@ -71,6 +71,47 @@ jobs:
           curl -sL https://talos.dev/install | sh
           talosctl version --client
 
+      - name: Create talosctl version helper
+        run: |
+          cat > /tmp/talosctl-versioned.sh << 'SCRIPT'
+          #!/usr/bin/env bash
+          # Returns the path to a talosctl binary compatible with the given node.
+          # If the node's Talos version differs from the installed talosctl, the
+          # matching version is downloaded and cached at /tmp/talosctl-<version>.
+          # Usage: /tmp/talosctl-versioned.sh <node_ip>
+          set -euo pipefail
+
+          NODE_IP="$1"
+
+          NODE_VERSION=$(talosctl version -n "$NODE_IP" -e "$ENDPOINT" 2>/dev/null \
+            | awk '/Server:/{server=1} server && /Tag:/{print $2; exit}' || true)
+
+          if [ -z "$NODE_VERSION" ]; then
+            echo "WARNING: could not determine version for $NODE_IP, using installed talosctl" >&2
+            echo "talosctl"
+            exit 0
+          fi
+
+          CLIENT_VERSION=$(talosctl version --client 2>/dev/null \
+            | awk '/Client:/{client=1} client && /Tag:/{print $2; exit}' || true)
+
+          if [ "$NODE_VERSION" = "$CLIENT_VERSION" ]; then
+            echo "talosctl"
+            exit 0
+          fi
+
+          CACHED_BIN="/tmp/talosctl-${NODE_VERSION}"
+          if [ ! -f "$CACHED_BIN" ]; then
+            echo "Downloading talosctl ${NODE_VERSION} for ${NODE_IP} (node: ${NODE_VERSION}, installed: ${CLIENT_VERSION})..." >&2
+            curl -sL "https://github.com/siderolabs/talos/releases/download/${NODE_VERSION}/talosctl-linux-amd64" \
+              -o "$CACHED_BIN"
+            chmod +x "$CACHED_BIN"
+          fi
+
+          echo "$CACHED_BIN"
+          SCRIPT
+          chmod +x /tmp/talosctl-versioned.sh
+
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
         with:
@@ -85,8 +126,9 @@ jobs:
           TALOSCONFIG: ~/.talos/config
         run: |
           talosctl version -n $SKIDBLADNIR -e $ENDPOINT
-          echo "Updating skidbladnir ($SKIDBLADNIR) to $IMAGE"
-          talosctl upgrade --nodes $SKIDBLADNIR -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update skidbladnir"
+          TALOSCTL=$(/tmp/talosctl-versioned.sh "$SKIDBLADNIR")
+          echo "Updating skidbladnir ($SKIDBLADNIR) to $IMAGE (using $TALOSCTL)"
+          "$TALOSCTL" upgrade --nodes $SKIDBLADNIR -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update skidbladnir"
           sleep 30
 
       - name: Update Talos node manta
@@ -96,8 +138,9 @@ jobs:
           TALOSCONFIG: ~/.talos/config
         run: |
           talosctl version -n $MANTA -e $ENDPOINT
-          echo "Updating manta ($MANTA) to $IMAGE"
-          talosctl upgrade --nodes $MANTA -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update manta"
+          TALOSCTL=$(/tmp/talosctl-versioned.sh "$MANTA")
+          echo "Updating manta ($MANTA) to $IMAGE (using $TALOSCTL)"
+          "$TALOSCTL" upgrade --nodes $MANTA -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update manta"
           sleep 30
 
       - name: Update Talos node william
@@ -107,8 +150,9 @@ jobs:
           TALOSCONFIG: ~/.talos/config
         run: |
           talosctl version -n $WILLIAM -e $ENDPOINT
-          echo "Updating william ($WILLIAM) to $IMAGE"
-          talosctl upgrade --nodes $WILLIAM -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update william"
+          TALOSCTL=$(/tmp/talosctl-versioned.sh "$WILLIAM")
+          echo "Updating william ($WILLIAM) to $IMAGE (using $TALOSCTL)"
+          "$TALOSCTL" upgrade --nodes $WILLIAM -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update william"
           sleep 30
 
       - name: Update Talos node yumi
@@ -118,8 +162,9 @@ jobs:
           TALOSCONFIG: ~/.talos/config
         run: |
           talosctl version -n $YUMI -e $ENDPOINT
-          echo "Updating yumi ($YUMI) to $IMAGE"
-          talosctl upgrade --nodes $YUMI -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update yumi"
+          TALOSCTL=$(/tmp/talosctl-versioned.sh "$YUMI")
+          echo "Updating yumi ($YUMI) to $IMAGE (using $TALOSCTL)"
+          "$TALOSCTL" upgrade --nodes $YUMI -e $ENDPOINT --image $IMAGE --wait || echo "Failed to update yumi"
 
       - name: Upgrade Kubernetes
         if: ${{ inputs.upgrade_kubernetes }}
