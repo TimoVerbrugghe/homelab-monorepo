@@ -2,6 +2,17 @@ name: Build WinPE Image
 
 on:
   workflow_dispatch:
+    inputs:
+      arch:
+        description: Windows architecture (passed to Fido -Arch)
+        default: x64
+        required: false
+        type: string
+      lang:
+        description: Windows language (passed to Fido -Lang)
+        default: English (United States)
+        required: false
+        type: string
 
 concurrency:
   cancel-in-progress: true
@@ -189,11 +200,12 @@ jobs:
         shell: pwsh
         run: |
           $ProgressPreference = 'SilentlyContinue'
-          Invoke-WebRequest -Uri "https://github.com/pbatard/Fido/raw/master/Fido.ps1" -OutFile Fido.ps1
+          Invoke-WebRequest -Uri "https://github.com/pbatard/Fido/raw/master/Fido.ps1" -OutFile Fido.ps1 -UseBasicParsing
           Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-          $url = (& .\Fido.ps1 -Win 11 -Rel Latest -Arch x64 -Lang "English (United States)" -Ed "Windows 11" -GetUrl).Trim()
+          $fidoOutput = & .\Fido.ps1 -Arch "${{ inputs.arch }}" -Lang "${{ inputs.lang }}" -GetUrl 2>&1
+          $url = ($fidoOutput | ForEach-Object { "$_" } | Where-Object { $_ -match '^https://' } | Select-Object -Last 1)
           if (-not $url -or $url -notmatch '^https://') {
-            throw "Failed to get a valid Windows 11 download URL from Fido. Got: $url"
+            throw "Failed to get a valid Windows 11 download URL from Fido. Got: $($fidoOutput -join [Environment]::NewLine)"
           }
           Write-Output "Got Windows 11 download URL."
           "url=$url" >> $env:GITHUB_OUTPUT
