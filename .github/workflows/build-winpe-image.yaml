@@ -84,7 +84,7 @@ jobs:
           "url=$url" >> $env:GITHUB_OUTPUT
 
       - name: Upload WinPE ISO as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: winpe-iso
           path: C:\WinPE_amd64\WinPE_amd64.iso
