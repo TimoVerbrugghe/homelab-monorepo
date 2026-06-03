@@ -238,8 +238,8 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          printf '%s' "${{ secrets.THEFACTORY_SSH_PRIVATE_KEY_WINDOWSINSTALL }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          printf '%s' "${{ secrets.THEFACTORY_SSH_PRIVATE_KEY_WINDOWSINSTALL }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
 
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
