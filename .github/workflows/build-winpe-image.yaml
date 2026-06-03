@@ -9,8 +9,11 @@ on:
         required: false
         type: string
       lang:
-        description: Windows language (passed to Fido -Lang)
-        default: English (United States)
+        description: >-
+          Windows language (passed to Fido -Lang). Must be one of the exact language Names
+          returned by Fido (e.g. "English", "English International", "German", "French", etc.).
+          Use "English" for English (United States). Run Fido with -Lang List to see all options.
+        default: English
         required: false
         type: string
 
