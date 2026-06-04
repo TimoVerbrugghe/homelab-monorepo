@@ -14,40 +14,112 @@ jobs:
       contents: read
 
     steps:
-      - name: Set up SSH key
+      - name: Inspect SSH key from secret
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          printf '%s\n' "${{ secrets.THEFACTORY_SSH_PRIVATE_KEY_WINDOWSINSTALL }}" > ~/.ssh/id_ed25519
+
+          # Write the key exactly as GitHub provides it
+          printf '%s' "${{ secrets.THEFACTORY_SSH_PRIVATE_KEY_WINDOWSINSTALL }}" > ~/.ssh/id_ed25519_raw
+          chmod 600 ~/.ssh/id_ed25519_raw
+
+          echo "=== Key file stats ==="
+          wc -l ~/.ssh/id_ed25519_raw
+          wc -c ~/.ssh/id_ed25519_raw
+
+          echo ""
+          echo "=== First line (header check) ==="
+          head -1 ~/.ssh/id_ed25519_raw
+
+          echo ""
+          echo "=== Last line (footer check) ==="
+          tail -1 ~/.ssh/id_ed25519_raw
+
+          echo ""
+          echo "=== Hex of last 4 bytes (check for CR/LF issues) ==="
+          tail -c 4 ~/.ssh/id_ed25519_raw | xxd
+
+          echo ""
+          echo "=== Strip any Windows-style CR (\\r) and write final key ==="
+          sed 's/\r//' ~/.ssh/id_ed25519_raw > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          echo "Key fingerprint:"
+
+          echo ""
+          echo "=== Validate key: derive public key from private ==="
+          if ssh-keygen -y -f ~/.ssh/id_ed25519; then
+            echo "Private key is valid and can derive its public key."
+          else
+            echo "ERROR: ssh-keygen -y failed - key is corrupted or has wrong format!"
+            exit 1
+          fi
+
+          echo ""
+          echo "=== Key fingerprint ==="
           ssh-keygen -l -f ~/.ssh/id_ed25519
 
       - name: Connect to Tailscale
-        uses: tailscale/github-action@v3
+        uses: tailscale/github-action@v4
         with:
           oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
           tags: tag:github-cicd
 
-      - name: Wait for Tailscale to settle
-        run: sleep 5
-
-      - name: Add TheFactory to SSH known hosts
+      - name: Diagnose Tailscale network reachability
         env:
           THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
         run: |
-          echo "Scanning host: $THEFACTORY_HOST"
-          ssh-keyscan -T 10 "$THEFACTORY_HOST" >> ~/.ssh/known_hosts
-          echo "known_hosts contents:"
-          cat ~/.ssh/known_hosts
+          echo "=== Tailscale status ==="
+          tailscale status
 
-      - name: Test SSH connection
+          echo ""
+          echo "=== DNS resolution of $THEFACTORY_HOST ==="
+          if getent hosts "$THEFACTORY_HOST"; then
+            echo "DNS resolved OK."
+          else
+            echo "WARNING: DNS resolution failed for $THEFACTORY_HOST"
+          fi
+
+          echo ""
+          echo "=== Ping test (3 packets, 5s timeout) ==="
+          if ping -c 3 -W 5 "$THEFACTORY_HOST" 2>&1; then
+            echo "Host is reachable via ICMP."
+          else
+            echo "WARNING: ping failed - host may be unreachable or blocking ICMP"
+          fi
+
+          echo ""
+          echo "=== TCP port 22 reachability ==="
+          if timeout 10 bash -c "echo >/dev/tcp/$THEFACTORY_HOST/22" 2>/dev/null; then
+            echo "Port 22 is open and reachable."
+          else
+            echo "ERROR: Cannot reach port 22 on $THEFACTORY_HOST"
+          fi
+
+      - name: SSH keyscan (collect host key)
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+        run: |
+          echo "=== Running ssh-keyscan for $THEFACTORY_HOST ==="
+          if ssh-keyscan -T 15 -v "$THEFACTORY_HOST" 2>&1 | tee /tmp/keyscan_output.txt; then
+            grep -v "^#" /tmp/keyscan_output.txt >> ~/.ssh/known_hosts
+            echo ""
+            echo "=== known_hosts after keyscan ==="
+            cat ~/.ssh/known_hosts
+          else
+            echo "ERROR: ssh-keyscan failed!"
+            cat /tmp/keyscan_output.txt
+            exit 1
+          fi
+
+      - name: Test SSH connection (verbose)
         env:
           THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
           THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER_WINDOWSINSTALL }}
         run: |
-          echo "Testing SSH connection to $THEFACTORY_USER@$THEFACTORY_HOST..."
-          ssh -v -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes \
+          echo "=== Attempting SSH to $THEFACTORY_USER@$THEFACTORY_HOST ==="
+          ssh -vvv \
+            -i ~/.ssh/id_ed25519 \
+            -o StrictHostKeyChecking=yes \
+            -o ConnectTimeout=15 \
             "$THEFACTORY_USER@$THEFACTORY_HOST" \
-            "echo 'SSH connection successful! hostname: \$(hostname)'"
+            "echo 'SSH connection successful!'; echo \"hostname: \$(hostname)\"; echo \"user: \$(id)\""
