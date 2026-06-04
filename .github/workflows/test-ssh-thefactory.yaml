@@ -1,0 +1,53 @@
+name: Test SSH Connection to TheFactory
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-ssh:
+    name: Test SSH to TheFactory via Tailscale
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.THEFACTORY_SSH_PRIVATE_KEY_WINDOWSINSTALL }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "Key fingerprint:"
+          ssh-keygen -l -f ~/.ssh/id_ed25519
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          tags: tag:github-cicd
+
+      - name: Wait for Tailscale to settle
+        run: sleep 5
+
+      - name: Add TheFactory to SSH known hosts
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+        run: |
+          echo "Scanning host: $THEFACTORY_HOST"
+          ssh-keyscan -T 10 "$THEFACTORY_HOST" >> ~/.ssh/known_hosts
+          echo "known_hosts contents:"
+          cat ~/.ssh/known_hosts
+
+      - name: Test SSH connection
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER_WINDOWSINSTALL }}
+        run: |
+          echo "Testing SSH connection to $THEFACTORY_USER@$THEFACTORY_HOST..."
+          ssh -v -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes \
+            "$THEFACTORY_USER@$THEFACTORY_HOST" \
+            "echo 'SSH connection successful! hostname: \$(hostname)'"
