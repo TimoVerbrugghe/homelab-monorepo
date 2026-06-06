@@ -278,15 +278,19 @@ jobs:
           curl -fL -o "$BASE/virtio-win.iso" \
             "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
           echo "virtio-win ISO downloaded: $(du -h "$BASE/virtio-win.iso" | cut -f1)"
-          if [ -d "$BASE/virtio" ]; then
-            echo "Backing up existing virtio/ directory..."
-            rm -rf "$BASE/virtio-bak"
-            mv "$BASE/virtio" "$BASE/virtio-bak"
+          if [ -d "$BASE/virtio-new" ]; then
+            echo "Removing stale virtio-new/ from previous run..."
+            chmod -R u+w "$BASE/virtio-new" 2>/dev/null || true
+            rm -rf "$BASE/virtio-new"
           fi
-          echo "Extracting virtio-win ISO..."
-          7z x "$BASE/virtio-win.iso" -o"$BASE/virtio/" -y
-          echo "Removing backup..."
-          rm -rf "$BASE/virtio-bak"
+          echo "Extracting virtio-win ISO to staging directory..."
+          7z x "$BASE/virtio-win.iso" -o"$BASE/virtio-new/" -y
+          echo "Extraction succeeded, swapping into place..."
+          if [ -d "$BASE/virtio" ]; then
+            chmod -R u+w "$BASE/virtio" 2>/dev/null || true
+            rm -rf "$BASE/virtio"
+          fi
+          mv "$BASE/virtio-new" "$BASE/virtio"
           echo "virtio extraction complete."
           ENDSSH
 
@@ -302,14 +306,18 @@ jobs:
           echo "Downloading Windows 11 ISO..."
           curl -fL -o "$BASE/Windows11.iso" "$WIN11_URL"
           echo "Windows 11 ISO downloaded: $(du -h "$BASE/Windows11.iso" | cut -f1)"
-          if [ -d "$BASE/Windows11" ]; then
-            echo "Backing up existing Windows11/ directory..."
-            rm -rf "$BASE/Windows11-bak"
-            mv "$BASE/Windows11" "$BASE/Windows11-bak"
+          if [ -d "$BASE/Windows11-new" ]; then
+            echo "Removing stale Windows11-new/ from previous run..."
+            chmod -R u+w "$BASE/Windows11-new" 2>/dev/null || true
+            rm -rf "$BASE/Windows11-new"
           fi
-          echo "Extracting Windows 11 ISO..."
-          7z x "$BASE/Windows11.iso" -o"$BASE/Windows11/" -y
-          echo "Removing backup..."
-          rm -rf "$BASE/Windows11-bak"
+          echo "Extracting Windows 11 ISO to staging directory..."
+          7z x "$BASE/Windows11.iso" -o"$BASE/Windows11-new/" -y
+          echo "Extraction succeeded, swapping into place..."
+          if [ -d "$BASE/Windows11" ]; then
+            chmod -R u+w "$BASE/Windows11" 2>/dev/null || true
+            rm -rf "$BASE/Windows11"
+          fi
+          mv "$BASE/Windows11-new" "$BASE/Windows11"
           echo "Windows 11 extraction complete."
           ENDSSH
