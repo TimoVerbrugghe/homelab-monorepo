@@ -259,7 +259,9 @@ jobs:
           THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
           THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER_WINDOWSINSTALL }}
         run: |
-          rsync -av --info=progress2 ./artifact/WinPE_amd64.iso \
+          rsync -a --info=progress2 --whole-file \
+            -e "ssh -T -o Compression=no" \
+            ./artifact/WinPE_amd64.iso \
             "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/WinPE.iso"
           ssh "$THEFACTORY_USER@$THEFACTORY_HOST" \
             "chown windowsinstall:windowsinstall /mnt/FranzHopper/windowsinstall/WinPE.iso"
@@ -281,10 +283,8 @@ jobs:
             rm -rf "$BASE/virtio-bak"
             mv "$BASE/virtio" "$BASE/virtio-bak"
           fi
-          echo "Extracting virtio-win ISO via Docker..."
-          docker run --rm \
-            -v "$BASE:/work" \
-            alpine sh -c "apk add --no-cache 7zip && 7z x /work/virtio-win.iso -o/work/virtio/ -y"
+          echo "Extracting virtio-win ISO..."
+          7z x "$BASE/virtio-win.iso" -o"$BASE/virtio/" -y
           echo "Removing backup..."
           rm -rf "$BASE/virtio-bak"
           echo "virtio extraction complete."
@@ -307,10 +307,8 @@ jobs:
             rm -rf "$BASE/Windows11-bak"
             mv "$BASE/Windows11" "$BASE/Windows11-bak"
           fi
-          echo "Extracting Windows 11 ISO via Docker..."
-          docker run --rm \
-            -v "$BASE:/work" \
-            alpine sh -c "apk add --no-cache 7zip && 7z x /work/Windows11.iso -o/work/Windows11/ -y"
+          echo "Extracting Windows 11 ISO..."
+          7z x "$BASE/Windows11.iso" -o"$BASE/Windows11/" -y
           echo "Removing backup..."
           rm -rf "$BASE/Windows11-bak"
           echo "Windows 11 extraction complete."
