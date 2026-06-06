@@ -329,5 +329,18 @@ jobs:
             rm -rf "$BASE/Windows11"
           fi
           mv "$BASE/Windows11-new" "$BASE/Windows11"
+          echo "Fixing permissions on Windows11 folder..."
+          find "$BASE/Windows11" -type f -exec chmod a+rx {} \;
+          find "$BASE/Windows11" -type d -exec chmod a+rwx {} \;
           echo "Windows 11 extraction complete."
           ENDSSH
+
+      - name: Upload unattend XML files to TheFactory
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER_WINDOWSINSTALL }}
+        run: |
+          rsync -a --info=progress2 \
+            -e "ssh -T -o Compression=no" \
+            windows/unattend-*.xml \
+            "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/Windows11/"
