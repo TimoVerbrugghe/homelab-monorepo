@@ -23,6 +23,38 @@
       "id": "tailscale-oauth-client-secret",
       "description": "Tailscale OAuth client secret",
       "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "unifi-username",
+      "description": "UniFi local admin username"
+    },
+    {
+      "type": "promptString",
+      "id": "unifi-password",
+      "description": "UniFi local admin password",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "proxmox-host",
+      "description": "Proxmox VE host (IP or hostname)"
+    },
+    {
+      "type": "promptString",
+      "id": "proxmox-user",
+      "description": "Proxmox user (e.g. root@pam)"
+    },
+    {
+      "type": "promptString",
+      "id": "proxmox-token-name",
+      "description": "Proxmox API token name"
+    },
+    {
+      "type": "promptString",
+      "id": "proxmox-token-value",
+      "description": "Proxmox API token value",
+      "password": true
     }
   ],
   "servers": {
@@ -67,6 +99,28 @@
         "${input:portainer-token}",
         "-disable-version-check"
       ]
+    },
+    "unifi-network": {
+      "command": "uvx",
+      "args": ["unifi-network-mcp@latest"],
+      "env": {
+        "UNIFI_HOST": "10.10.10.1",
+        "UNIFI_USERNAME": "${input:unifi-username}",
+        "UNIFI_PASSWORD": "${input:unifi-password}",
+        "UNIFI_VERIFY_SSL": "false"
+      }
+    },
+    "proxmox": {
+      "command": "uvx",
+      "args": ["proxmox-mcp-plus"],
+      "env": {
+        "PROXMOX_HOST": "${input:proxmox-host}",
+        "PROXMOX_USER": "${input:proxmox-user}",
+        "PROXMOX_TOKEN_NAME": "${input:proxmox-token-name}",
+        "PROXMOX_TOKEN_VALUE": "${input:proxmox-token-value}",
+        "PROXMOX_PORT": "8006",
+        "PROXMOX_VERIFY_SSL": "false"
+      }
     }
   }
 }
