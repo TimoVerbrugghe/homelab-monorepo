@@ -37,11 +37,6 @@
     },
     {
       "type": "promptString",
-      "id": "proxmox-host",
-      "description": "Proxmox VE host (IP or hostname)"
-    },
-    {
-      "type": "promptString",
       "id": "proxmox-user",
       "description": "Proxmox user (e.g. root@pam)"
     },
@@ -104,7 +99,7 @@
       "command": "uvx",
       "args": ["unifi-network-mcp@latest"],
       "env": {
-        "UNIFI_HOST": "10.10.10.1",
+        "UNIFI_HOST": "unifi.local.timo.be",
         "UNIFI_USERNAME": "${input:unifi-username}",
         "UNIFI_PASSWORD": "${input:unifi-password}",
         "UNIFI_VERIFY_SSL": "false"
@@ -114,7 +109,7 @@
       "command": "uvx",
       "args": ["proxmox-mcp-plus"],
       "env": {
-        "PROXMOX_HOST": "${input:proxmox-host}",
+        "PROXMOX_HOST": "proxmox.kubernetes.timo.be",
         "PROXMOX_USER": "${input:proxmox-user}",
         "PROXMOX_TOKEN_NAME": "${input:proxmox-token-name}",
         "PROXMOX_TOKEN_VALUE": "${input:proxmox-token-value}",
