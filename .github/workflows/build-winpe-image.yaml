@@ -300,8 +300,18 @@ jobs:
           THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER_WINDOWSINSTALL }}
           WIN11_URL: ${{ needs.build.outputs.win11-download-url }}
         run: |
-          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" WIN11_URL="$WIN11_URL" 'bash -s' << 'ENDSSH'
           set -euo pipefail
+          if [ -z "$WIN11_URL" ]; then
+            echo "ERROR: WIN11_URL is empty or unset" >&2
+            exit 1
+          fi
+          # Base64-encode the URL so it is free of shell metacharacters (&, ?, %)
+          # and can be safely passed as a positional argument through any remote shell.
+          # The remote script decodes it before use.
+          ENCODED_URL=$(printf '%s' "$WIN11_URL" | base64 | tr -d '\n')
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" bash -s -- "$ENCODED_URL" << 'ENDSSH'
+          set -euo pipefail
+          WIN11_URL=$(printf '%s' "$1" | base64 -d)
           BASE=/mnt/FranzHopper/windowsinstall
           echo "Downloading Windows 11 ISO..."
           curl -fL -o "$BASE/Windows11.iso" "$WIN11_URL"
