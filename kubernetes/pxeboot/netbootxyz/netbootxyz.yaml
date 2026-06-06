@@ -85,7 +85,15 @@ spec:
             - name: config
               mountPath: /config
             - name: assets
-              mountPath: /assets   
+              mountPath: /assets
+            - name: winpe-assets
+              mountPath: /assets/WinPE/x64
+              readOnly: true
+            # Injects local-vars.ipxe into the TFTP root so win_base_url is pre-set.
+            - name: local-vars-ipxe
+              mountPath: /config/local-vars.ipxe
+              readOnly: true
+              subPath: local-vars.ipxe
       volumes:
         - name: config
           emptyDir:
@@ -95,3 +103,10 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 100Mi
+        - name: local-vars-ipxe
+          configMap:
+            name: netbootxyz-local-vars-ipxe
+        - name: winpe-assets
+          persistentVolumeClaim:
+            claimName: netbootxyz-winpe-pvc
+            readOnly: true

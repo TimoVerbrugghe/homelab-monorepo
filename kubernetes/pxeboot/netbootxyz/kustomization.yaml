@@ -5,3 +5,15 @@ resources:
   - netbootxyz.yaml
   - netbootxyz-service.yaml
   - netbootxyz-ingress.yaml
+  - netbootxyz-winpe-storage.yaml
+configMapGenerator:
+  - name: netbootxyz-local-vars-ipxe
+    namespace: pxeboot
+    literals:
+      - |
+        local-vars.ipxe=set win_base_url http://10.10.10.37/WinPE
+    options:
+      labels:
+        app.kubernetes.io/instance: netbootxyz
+        app.kubernetes.io/name: netbootxyz
+        app.kubernetes.io/part-of: homelab
