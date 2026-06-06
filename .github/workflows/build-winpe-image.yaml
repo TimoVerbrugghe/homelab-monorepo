@@ -275,10 +275,10 @@ jobs:
           set -euo pipefail
           BASE=/mnt/FranzHopper/windowsinstall
           echo "Downloading virtio-win ISO..."
-          command -v aria2c &>/dev/null || apt-get install -y --no-install-recommends aria2
-          aria2c --file-allocation=none -x 16 -s 16 -k 1M -j 1 \
-            --dir "$BASE" --out "virtio-win.iso" \
-            "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+          docker run --rm -v "$BASE:/downloads" alpine \
+            sh -c "apk add --no-cache aria2 && aria2c --file-allocation=none -x 16 -s 16 -k 1M -j 1 \
+              --dir /downloads --out virtio-win.iso \
+              https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
           echo "virtio-win ISO downloaded: $(du -h "$BASE/virtio-win.iso" | cut -f1)"
           if [ -d "$BASE/virtio" ]; then
             echo "Backing up existing virtio/ directory..."
@@ -304,9 +304,9 @@ jobs:
           set -euo pipefail
           BASE=/mnt/FranzHopper/windowsinstall
           echo "Downloading Windows 11 ISO..."
-          command -v aria2c &>/dev/null || apt-get install -y --no-install-recommends aria2
-          aria2c --file-allocation=none -x 16 -s 16 -k 1M -j 1 \
-            --dir "$BASE" --out "Windows11.iso" "$WIN11_URL"
+          docker run --rm -v "$BASE:/downloads" alpine \
+            sh -c "apk add --no-cache aria2 && aria2c --file-allocation=none -x 16 -s 16 -k 1M -j 1 \
+              --dir /downloads --out Windows11.iso \"$WIN11_URL\""
           echo "Windows 11 ISO downloaded: $(du -h "$BASE/Windows11.iso" | cut -f1)"
           if [ -d "$BASE/Windows11" ]; then
             echo "Backing up existing Windows11/ directory..."
