@@ -260,7 +260,7 @@ jobs:
           THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER_WINDOWSINSTALL }}
         run: |
           rsync -a --info=progress2 --whole-file \
-            -e "ssh -T -c aes128-gcm@openssh.com -o Compression=no" \
+            -e "ssh -T -o Compression=no" \
             ./artifact/WinPE_amd64.iso \
             "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/WinPE.iso"
           ssh "$THEFACTORY_USER@$THEFACTORY_HOST" \
