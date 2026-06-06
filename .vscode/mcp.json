@@ -98,7 +98,7 @@
         "PROXMOX_USER": "root@pam",
         "PROXMOX_TOKEN_NAME": "mcp-token",
         "PROXMOX_TOKEN_VALUE": "${input:proxmox-token-value}",
-        "PROXMOX_PORT": "8006",
+        "PROXMOX_PORT": "443",
         "PROXMOX_VERIFY_SSL": "true"
       }
     }
