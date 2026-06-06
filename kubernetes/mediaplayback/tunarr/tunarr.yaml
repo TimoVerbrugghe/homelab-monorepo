@@ -68,6 +68,14 @@ spec:
           value: "/config/tunarr"
         - name: TUNARR_SERVER_TRUST_PROXY
           value: "true"
+        # Suppress MeiliSearch (embedded search engine) logs entirely.
+        # Tunarr pipes meilisearch stdout/stderr to logs/meilisearch.log with
+        # no rotation, which caused the 8 GB log that filled the 20 Gi volume.
+        # MEILI_LOG_LEVEL is a native MeiliSearch env var inherited by the
+        # child process. Tunarr has no dedicated env var for this.
+        # See: https://www.meilisearch.com/docs/learn/self_hosted/configure_meilisearch_at_launch#log-level
+        - name: MEILI_LOG_LEVEL
+          value: "OFF"
 
         resources:
           requests:
