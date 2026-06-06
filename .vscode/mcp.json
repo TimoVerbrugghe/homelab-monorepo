@@ -26,24 +26,9 @@
     },
     {
       "type": "promptString",
-      "id": "unifi-username",
-      "description": "UniFi local admin username"
-    },
-    {
-      "type": "promptString",
       "id": "unifi-password",
       "description": "UniFi local admin password",
       "password": true
-    },
-    {
-      "type": "promptString",
-      "id": "proxmox-user",
-      "description": "Proxmox user (e.g. root@pam)"
-    },
-    {
-      "type": "promptString",
-      "id": "proxmox-token-name",
-      "description": "Proxmox API token name"
     },
     {
       "type": "promptString",
@@ -100,7 +85,7 @@
       "args": ["unifi-network-mcp@latest"],
       "env": {
         "UNIFI_HOST": "unifi.local.timo.be",
-        "UNIFI_USERNAME": "${input:unifi-username}",
+        "UNIFI_USERNAME": "unifimcp",
         "UNIFI_PASSWORD": "${input:unifi-password}",
         "UNIFI_VERIFY_SSL": "true"
       }
@@ -110,8 +95,8 @@
       "args": ["proxmox-mcp-plus"],
       "env": {
         "PROXMOX_HOST": "proxmox.kubernetes.timo.be",
-        "PROXMOX_USER": "${input:proxmox-user}",
-        "PROXMOX_TOKEN_NAME": "${input:proxmox-token-name}",
+        "PROXMOX_USER": "root@pam",
+        "PROXMOX_TOKEN_NAME": "mcp-token",
         "PROXMOX_TOKEN_VALUE": "${input:proxmox-token-value}",
         "PROXMOX_PORT": "8006",
         "PROXMOX_VERIFY_SSL": "true"
