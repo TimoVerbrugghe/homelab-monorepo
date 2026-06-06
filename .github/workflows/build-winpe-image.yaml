@@ -300,7 +300,8 @@ jobs:
           THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER_WINDOWSINSTALL }}
           WIN11_URL: ${{ needs.build.outputs.win11-download-url }}
         run: |
-          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" WIN11_URL="$WIN11_URL" 'bash -s' << 'ENDSSH'
+          QUOTED_URL=$(printf '%q' "$WIN11_URL")
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" "WIN11_URL=$QUOTED_URL" 'bash -s' << 'ENDSSH'
           set -euo pipefail
           BASE=/mnt/FranzHopper/windowsinstall
           echo "Downloading Windows 11 ISO..."
