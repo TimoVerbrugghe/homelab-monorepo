@@ -1,0 +1,38 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    app.kubernetes.io/instance: netbootxyz
+    app.kubernetes.io/name: netbootxyz
+    app.kubernetes.io/part-of: homelab
+  name: netbootxyz-winpe-pv
+spec:
+  accessModes:
+    - ReadOnlyMany
+  capacity:
+    storage: 50Gi
+  nfs:
+    path: /mnt/FranzHopper/windowsinstall
+    readOnly: true
+    server: 10.10.10.2
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/instance: netbootxyz
+    app.kubernetes.io/name: netbootxyz
+    app.kubernetes.io/part-of: homelab
+  name: netbootxyz-winpe-pvc
+  namespace: pxeboot
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: ""
+  volumeName: netbootxyz-winpe-pv
