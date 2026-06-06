@@ -275,20 +275,16 @@ jobs:
           set -euo pipefail
           BASE=/mnt/FranzHopper/windowsinstall
           echo "Downloading virtio-win ISO..."
-          docker run --rm -v "$BASE:/downloads" alpine \
-            sh -c "apk add --no-cache aria2 && aria2c --file-allocation=none -x 16 -s 16 -k 1M -j 1 \
-              --dir /downloads --out virtio-win.iso \
-              https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+          curl -fL -o "$BASE/virtio-win.iso" \
+            "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
           echo "virtio-win ISO downloaded: $(du -h "$BASE/virtio-win.iso" | cut -f1)"
           if [ -d "$BASE/virtio" ]; then
             echo "Backing up existing virtio/ directory..."
             rm -rf "$BASE/virtio-bak"
             mv "$BASE/virtio" "$BASE/virtio-bak"
           fi
-          echo "Extracting virtio-win ISO via Docker..."
-          docker run --rm \
-            -v "$BASE:/work" \
-            alpine sh -c "apk add --no-cache 7zip && 7z x /work/virtio-win.iso -o/work/virtio/ -y"
+          echo "Extracting virtio-win ISO..."
+          7z x "$BASE/virtio-win.iso" -o"$BASE/virtio/" -y
           echo "Removing backup..."
           rm -rf "$BASE/virtio-bak"
           echo "virtio extraction complete."
@@ -304,19 +300,15 @@ jobs:
           set -euo pipefail
           BASE=/mnt/FranzHopper/windowsinstall
           echo "Downloading Windows 11 ISO..."
-          docker run --rm -v "$BASE:/downloads" alpine \
-            sh -c "apk add --no-cache aria2 && aria2c --file-allocation=none -x 16 -s 16 -k 1M -j 1 \
-              --dir /downloads --out Windows11.iso \"$WIN11_URL\""
+          curl -fL -o "$BASE/Windows11.iso" "$WIN11_URL"
           echo "Windows 11 ISO downloaded: $(du -h "$BASE/Windows11.iso" | cut -f1)"
           if [ -d "$BASE/Windows11" ]; then
             echo "Backing up existing Windows11/ directory..."
             rm -rf "$BASE/Windows11-bak"
             mv "$BASE/Windows11" "$BASE/Windows11-bak"
           fi
-          echo "Extracting Windows 11 ISO via Docker..."
-          docker run --rm \
-            -v "$BASE:/work" \
-            alpine sh -c "apk add --no-cache 7zip && 7z x /work/Windows11.iso -o/work/Windows11/ -y"
+          echo "Extracting Windows 11 ISO..."
+          7z x "$BASE/Windows11.iso" -o"$BASE/Windows11/" -y
           echo "Removing backup..."
           rm -rf "$BASE/Windows11-bak"
           echo "Windows 11 extraction complete."
