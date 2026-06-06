@@ -18,6 +18,7 @@
     yamllint
     butane
     socat
+    uv
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
