@@ -147,40 +147,6 @@ jobs:
           Add-WindowsPackage -PackagePath "$adk_winpe\WinPE_OCs\en-us\WinPE-EnhancedStorage_en-us.cab" -Path $mountfolder -IgnoreCheck
           Add-WindowsPackage -PackagePath "$adk_winpe\WinPE_OCs\WinPE-SecureBootCmdlets.cab" -Path $mountfolder
 
-      - name: Download virtio-win ISO
-        shell: pwsh
-        run: |
-          Write-Output "Downloading virtio-win ISO..."
-          curl.exe -fL -o C:\virtio-win.iso "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
-          Write-Output "virtio-win ISO downloaded: $([math]::Round((Get-Item C:\virtio-win.iso).Length / 1MB, 1)) MB"
-
-      - name: Inject virtio-win drivers into boot image
-        shell: pwsh
-        run: |
-          $virtio_iso_path = "C:\virtio-win.iso"
-          $mountfolder = "C:\WinPE_amd64\mount"
-          Write-Output "Mounting virtio-win ISO..."
-          $mountResult = Mount-DiskImage -ImagePath $virtio_iso_path -PassThru
-          $driveLetter = ($mountResult | Get-Volume).DriveLetter
-          $isoMountPath = "$($driveLetter):\"
-          Write-Output "Adding virtio-win drivers to boot image..."
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\NetKVM\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\pvpanic\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\qemupciserial\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\qemufwcfg\w11\amd64" -Recurse
-          # SMBus driver skipped - known installation issues
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\sriov\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viofs\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viogpudo\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioinput\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viomem\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viorng\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioscsi\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioserial\w11\amd64" -Recurse
-          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viostor\w11\amd64" -Recurse
-          Write-Output "Dismounting virtio-win ISO..."
-          Dismount-DiskImage -ImagePath $virtio_iso_path
-
       - name: Apply startnet.cmd to boot image
         shell: pwsh
         run: |
@@ -291,6 +257,8 @@ jobs:
             rm -rf "$BASE/virtio"
           fi
           mv "$BASE/virtio-new" "$BASE/virtio"
+          echo "Fixing permissions on virtio folder..."
+          chmod -R a+rX "$BASE/virtio"
           echo "virtio extraction complete."
           ENDSSH
 
@@ -330,8 +298,7 @@ jobs:
           fi
           mv "$BASE/Windows11-new" "$BASE/Windows11"
           echo "Fixing permissions on Windows11 folder..."
-          find "$BASE/Windows11" -type f -exec chmod a+rx {} \;
-          find "$BASE/Windows11" -type d -exec chmod a+rwx {} \;
+          chmod -R a+rX "$BASE/Windows11"
           echo "Windows 11 extraction complete."
           ENDSSH
 
