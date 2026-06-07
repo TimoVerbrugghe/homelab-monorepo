@@ -28,9 +28,7 @@ set /p CHOICE=Enter your choice [0-%COUNT%]:
 if "%CHOICE%"=="0" (
     echo.
     echo Starting Windows setup without unattend file...
-    pushd z:\
-    setup.exe
-    popd
+    z:\setup.exe
     goto :EOF
 )
 
@@ -42,8 +40,6 @@ if "!CHOSEN!"=="" (
 
 echo.
 echo Starting Windows setup with: !CHOSEN!
-pushd z:\
-setup.exe /unattend:"!CHOSEN!"
-popd
+z:\setup.exe /unattend:"!CHOSEN!"
 
 endlocal
