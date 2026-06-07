@@ -1,0 +1,60 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: watchstate
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    # Webhook endpoint → no auth but rate-limited (backends POST here; no shared-secret
+    # enforcement is possible at this layer since each backend uses its own token in the URL).
+    # Consider adding an IP allowlist middleware scoped to your media servers if they have
+    # static IPs.
+    - match: ( Host(`watchstate.timo.be`) || Host(`watchstate.kubernetes.timo.be`) ) && PathPrefix(`/webhook`)
+      kind: Rule
+      services:
+        - name: watchstate-svc
+          port: 14013
+      middlewares:
+        - name: ratelimit
+          namespace: traefik
+
+    # Everything else → auth
+    - match: Host(`watchstate.timo.be`) || Host(`watchstate.kubernetes.timo.be`)
+      kind: Rule
+      services:
+        - name: watchstate-svc
+          port: 14013
+      middlewares:
+        - name: auth
+          namespace: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: watchstate-svc
+  namespace: traefik
+spec:
+  clusterIP: None
+  ports:
+    - port: 14013
+      targetPort: 14013
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: watchstate-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: watchstate-svc
+addressType: IPv4
+ports:
+  - port: 14013
+endpoints:
+  - addresses:
+      - "10.10.10.2"
+    conditions:
+      ready: true

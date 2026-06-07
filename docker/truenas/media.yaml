@@ -413,6 +413,35 @@ services:
     ports:
       - 14012:8877
 
+  watchstate:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: watchstate
+    image: ghcr.io/arabcoders/watchstate:latest
+    # read_only cannot be true: the bundled Redis writes its pidfile to /opt/redis.pid
+    # (inside the installed app dir). A tmpfs on /opt would shadow the entire application.
+    # Re-evaluate if upstream moves the pidfile out of /opt.
+    read_only: false
+    user: "3000:3000"
+    tmpfs:
+      # /run is not needed: watchstate sets XDG_RUNTIME_DIR=/tmp and does not use s6-overlay.
+      # Redis dir is /config/cache/ (volume) and logs to stdout, so /var/log is also not needed.
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    restart: always
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - watchstate:/config
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/v1/api/system/healthcheck || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    ports:
+      - 14013:8080
+
 networks:
   dockerproxy:
     external: true
@@ -539,3 +568,9 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/houndarr"
+  watchstate:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/watchstate"
