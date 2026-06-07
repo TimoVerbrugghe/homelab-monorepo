@@ -134,8 +134,12 @@ spec:
           mountPath: /cache
         - name: movies
           mountPath: /movies
+        - name: music
+          mountPath: /music
         - name: tvshows
           mountPath: /tv
+        - name: tmp
+          mountPath: /tmp
         - name: transcode-cache
           mountPath: /dev/shm
       
@@ -148,12 +152,15 @@ spec:
       - name: movies
         persistentVolumeClaim:
           claimName: movies-pvc
-      - name: tvshows
-        persistentVolumeClaim:
-          claimName: tvshows-pvc
       - name: music
         persistentVolumeClaim:
           claimName: music-pvc
+      - name: tvshows
+        persistentVolumeClaim:
+          claimName: tvshows-pvc
+      - name: tmp
+        emptyDir:
+          medium: Memory
       - name: transcode-cache
         emptyDir:
           medium: Memory

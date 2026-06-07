@@ -10,6 +10,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
   iscsi:
     targetPortal: 10.10.10.2:3260
     iqn: iqn.2025-11.timo.be:jellyfin
@@ -28,4 +29,5 @@ spec:
   resources:
     requests:
       storage: 300Gi
+  storageClassName: ""
   volumeName: jellyfin-pv
