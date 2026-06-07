@@ -159,8 +159,7 @@ spec:
         persistentVolumeClaim:
           claimName: tvshows-pvc
       - name: tmp
-        emptyDir:
-          medium: Memory
+        emptyDir: {} # disk-backed; Jellyfin/ffmpeg may write large temp files
       - name: transcode-cache
         emptyDir:
           medium: Memory
