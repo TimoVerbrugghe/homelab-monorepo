@@ -261,7 +261,7 @@ jobs:
           fi
           mv "$BASE/virtio-new" "$BASE/virtio"
           echo "Fixing permissions on virtio folder..."
-          chmod -R a+rX "$BASE/virtio"
+          chmod -R a+rx "$BASE/virtio"
           echo "virtio extraction complete."
           ENDSSH
 
@@ -301,7 +301,7 @@ jobs:
           fi
           mv "$BASE/Windows11-new" "$BASE/Windows11"
           echo "Fixing permissions on Windows11 folder..."
-          chmod -R a+rX "$BASE/Windows11"
+          chmod -R a+rx "$BASE/Windows11"
           echo "Windows 11 extraction complete."
           ENDSSH
 
