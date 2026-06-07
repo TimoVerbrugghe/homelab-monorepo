@@ -3,7 +3,7 @@
 <!--
     Fully automated unattend for Windows 11 Pro inside a QEMU/KVM virtual machine.
     Disk layout is auto-configured, OOBE is fully skipped, and virtio drivers are
-    injected via DriverPaths from the SMB share so the installed OS boots in a VM.
+    slipstreamed into install.wim during the CI build so the installed OS boots in a VM.
     VMModeOptimizations accelerates OOBE inside a VM.
 -->
 
@@ -11,11 +11,15 @@
     <!-- Settings to apply during Windows Setup -->
     <settings pass="windowsPE">
         <!--
-            DriverPaths injects these drivers into the target Windows installation.
-            Baking them into WinPE only helps WinPE boot - the installed OS needs
-            its own copy, which Windows Setup pulls from these paths during setup.
-            Virtio drivers must be present on the windowsinstall SMB share.
+            DriverPaths is disabled. Virtio drivers are now slipstreamed directly into
+            install.wim during the CI build, making unattend-based driver injection
+            unnecessary. Commented out due to:
+            https://github.com/virtio-win/kvm-guest-drivers-windows/issues/1100
+            Drivers injected via unattend.xml DriverPaths do not work reliably.
+            Uncomment this block (and disable install.wim injection in the build workflow)
+            to revert to the DriverPaths approach.
         -->
+        <!--
         <component name="Microsoft-Windows-PnpCustomizationsWinPE" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
             <DriverPaths>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="1">
@@ -25,7 +29,7 @@
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <!-- Balloon driver skipped - known to cause performance issues -->
+                Balloon driver skipped - known to cause performance issues
                 <PathAndCredentials wcm:action="add" wcm:keyValue="3">
                     <Path>\\10.10.10.2\windowsinstall\virtio\pvpanic\w11\amd64</Path>
                     <Credentials>
@@ -112,6 +116,7 @@
                 </PathAndCredentials>
             </DriverPaths>
         </component>
+        -->
         <!-- Keyboard & Language settings during windows Setup -->
         <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SetupUILanguage>
