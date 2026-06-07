@@ -2,7 +2,16 @@
 setlocal enabledelayedexpansion
 
 wpeinit
+
+echo Waiting for network share to become available...
+:WAIT_NET
+net use z: /delete >nul 2>&1
 net use z: \\10.10.10.2\windowsinstall\Windows11 /user:windowsinstall windowsinstall
+if errorlevel 1 (
+    echo Network not ready yet, retrying in 5 seconds...
+    timeout /t 5 /nobreak >nul
+    goto WAIT_NET
+)
 
 echo.
 echo ============================================================
