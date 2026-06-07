@@ -1,0 +1,323 @@
+x-hardening-defaults: &hardening-defaults
+  security_opt:
+    - no-new-privileges=true
+  cap_drop:
+    - ALL
+  read_only: true
+  tty: false
+  stdin_open: false
+  logging:
+    driver: json-file
+    options:
+      max-size: "50m"
+      max-file: "5"
+
+x-limits-light: &limits-light
+  pids_limit: 512
+  mem_limit: 512m
+  cpus: 0.50
+
+x-limits-medium: &limits-medium
+  pids_limit: 512
+  mem_limit: 1g
+  cpus: 1.00
+
+x-limits-heavy: &limits-heavy
+  pids_limit: 512
+  mem_limit: 2g
+  cpus: 2.00
+
+services:
+  recyclarr:
+    <<: [*hardening-defaults, *limits-light]
+    image: ghcr.io/recyclarr/recyclarr:8
+    container_name: recyclarr
+    tmpfs:
+      - /run:rw,exec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    user: ${PUID:-3000}:${PGID:-3000}
+    networks:
+      - dockerproxy
+    volumes:
+      - recyclarr:/config
+    environment:
+      - TZ=Europe/Brussels
+      - CRON_SCHEDULE=@daily
+
+  flaresolverr:
+    <<: [*hardening-defaults, *limits-medium]
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    read_only: false
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_FILE=${LOG_FILE:-none}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/London
+    networks:
+      - dockerproxy
+
+  swaparr-radarr:
+    <<: [*hardening-defaults, *limits-light]
+    image: ghcr.io/thijmengthn/swaparr:latest
+    container_name: swaparr-radarr
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - BASEURL=http://radarr:7878    # IP or FQDN           (Required)
+      - APIKEY=${RADARR_API_KEY}      # Radarr API Key       (Required)
+      - PLATFORM=radarr               # "radarr", "sonarr".. (Optional) default: radarr
+      - TIME_THRESHOLD=1d             # 1d, 6h, 30m, etc..   (Optional) default: 2h
+      - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB
+      - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m
+      - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3
+
+  swaparr-sonarr:
+    <<: [*hardening-defaults, *limits-light]
+    image: ghcr.io/thijmengthn/swaparr:latest
+    container_name: swaparr-sonarr
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - BASEURL=http://sonarr:8989    # IP or FQDN           (Required)
+      - APIKEY=${SONARR_API_KEY}      # Sonarr API Key       (Required)
+      - PLATFORM=sonarr               # "radarr", "sonarr".. (Optional) default: radarr
+      - TIME_THRESHOLD=1d             # 1d, 6h, 30m, etc..   (Optional) default: 2h
+      - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB
+      - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m
+      - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3
+
+  yamtrack:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: yamtrack
+    image: ghcr.io/fuzzygrim/yamtrack
+    read_only: false
+    tmpfs:
+      - /run:rw,exec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    depends_on:
+      - yamtrack-redis
+    environment:
+      - TZ=Europe/Berlin
+      - SECRET=longstring
+      - REDIS_URL=redis://yamtrack-redis:6379
+      - URLS=URLS=https://yamtrack.kubernetes.timo.be,https://yamtrack.timo.be,http://yamtrackapi.kubernetes.timo.be
+    volumes:
+      - yamtrack-db:/yamtrack/db
+    ports:
+      - 14006:8000
+
+  yamtrack-redis:
+    <<: [*hardening-defaults, *limits-light]
+    container_name: yamtrack-redis
+    image: redis:7-alpine
+    user: "999:999"
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - yamtrack-redis:/data
+
+  dispatcharr:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: dispatcharr
+    image: ghcr.io/dispatcharr/dispatcharr:latest
+    read_only: false
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    volumes:
+      - dispatcharr:/data
+    environment:
+      - DISPATCHARR_ENV=aio
+      - REDIS_HOST=localhost
+      - CELERY_BROKER_URL=redis://localhost:6379/0
+      - DISPATCHARR_LOG_LEVEL=info
+    ports:
+      - 14008:9191
+
+  wrapperr:
+    <<: [*hardening-defaults, *limits-light]
+    container_name: wrapperr
+    image: ghcr.io/aunefyren/wrapperr:latest
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - wrapperr:/app/config
+    ports:
+      - 14010:8282
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8282/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  obzorarr:
+    <<: [*hardening-defaults, *limits-light]
+    container_name: obzorarr
+    image: ghcr.io/engels74/obzorarr-docker:latest
+    read_only: false
+    tmpfs:
+      - /run:rw,exec,nosuid,nodev,size=64m
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID:-3000}
+      - PGID=${PGID:-3000}
+      - TZ=Europe/Brussels
+      - UMASK=002
+      - PLEX_SERVER_URL=http://plex.local.timo.be:32400
+      - PLEX_TOKEN=${PLEX_TOKEN:-none}
+    volumes:
+      - obzorarr:/config
+    ports:
+      - 14011:3000
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  houndarr:
+    <<: [*hardening-defaults, *limits-light]
+    image: ghcr.io/av1155/houndarr:latest
+    container_name: houndarr
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=Europe/Brussels
+      - UMASK=002
+      - HOUNDARR_SECURE_COOKIES=true
+      - HOUNDARR_TRUSTED_PROXIES=10.10.10.34
+    volumes:
+      - houndarr:/data
+    ports:
+      - 14012:8877
+
+  watchstate:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: watchstate
+    image: ghcr.io/arabcoders/watchstate:latest
+    # read_only cannot be true: the bundled Redis writes its pidfile to /opt/redis.pid
+    # (inside the installed app dir). A tmpfs on /opt would shadow the entire application.
+    # Re-evaluate if upstream moves the pidfile out of /opt.
+    read_only: false
+    user: "3000:3000"
+    tmpfs:
+      # /run is not needed: watchstate sets XDG_RUNTIME_DIR=/tmp and does not use s6-overlay.
+      # Redis dir is /config/cache/ (volume) and logs to stdout, so /var/log is also not needed.
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - watchstate:/config
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/v1/api/system/healthcheck || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    ports:
+      - 14013:8080
+
+networks:
+  dockerproxy:
+    external: true
+
+volumes:
+  dispatcharr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/dispatcharr"
+  houndarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/houndarr"
+  obzorarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/obzorarr"
+  recyclarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/recyclarr"
+  watchstate:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/watchstate"
+  wrapperr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/wrapperr"
+  yamtrack-db:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/yamtrack/yamtrack-db"
+  yamtrack-redis:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/yamtrack/yamtrack-redis"

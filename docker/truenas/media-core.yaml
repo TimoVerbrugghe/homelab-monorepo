@@ -1,0 +1,287 @@
+x-hardening-defaults: &hardening-defaults
+  security_opt:
+    - no-new-privileges=true
+  cap_drop:
+    - ALL
+  read_only: true
+  tty: false
+  stdin_open: false
+  logging:
+    driver: json-file
+    options:
+      max-size: "50m"
+      max-file: "5"
+
+x-limits-light: &limits-light
+  pids_limit: 512
+  mem_limit: 512m
+  cpus: 0.50
+
+x-limits-medium: &limits-medium
+  pids_limit: 512
+  mem_limit: 1g
+  cpus: 1.00
+
+x-limits-heavy: &limits-heavy
+  pids_limit: 512
+  mem_limit: 2g
+  cpus: 2.00
+
+services:
+  sonarr:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    user: "3000:3000"
+    tmpfs:
+      - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - sonarr:/config
+      - tvshows:/tv
+      - downloads:/downloads
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8989/ping || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    ports:
+      - 14000:8989
+
+  radarr:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: radarr
+    image: lscr.io/linuxserver/radarr:latest
+    user: "3000:3000"
+    tmpfs:
+      - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - radarr:/config
+      - movies:/movies
+      - downloads:/downloads
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:7878/ping || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    ports:
+      - 14001:7878
+
+  bazarr:
+    <<: [*hardening-defaults, *limits-heavy]
+    container_name: bazarr
+    image: lscr.io/linuxserver/bazarr:v1.5.6
+    user: "3000:3000"
+    tmpfs:
+      - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - bazarr:/config
+      - movies:/movies
+      - tvshows:/tv
+    depends_on:
+      sonarr:
+        condition: service_started
+      radarr:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:6767/api/v1/status || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    ports:
+      - 14002:6767
+
+  seerr:
+    <<: [*hardening-defaults, *limits-medium]
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
+    container_name: seerr
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Brussels
+    volumes:
+      - seerr:/app/config
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+    ports:
+      - 14003:5055
+    dns:
+      - 10.10.10.21
+      - 10.10.10.22
+      - 10.10.10.35
+
+  prowlarr:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:latest
+    user: "3000:3000"
+    tmpfs:
+      - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - prowlarr:/config
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:9696/ping || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    ports:
+      - 14004:9696
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+  audiobookshelf:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: audiobookshelf
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - TZ=Europe/Brussels
+    volumes:
+      - abs-config:/config
+      - abs-metadata:/metadata
+      - audiobooks:/audiobooks
+    ports:
+      - 14007:80
+
+  tautulli:
+    <<: [*hardening-defaults, *limits-light]
+    container_name: tautulli
+    image: tautulli/tautulli:latest
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - PUID=${PUID:-3000}
+      - PGID=${PGID:-3000}
+      - TZ=Europe/Brussels
+    volumes:
+      - tautulli:/config
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8181 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    ports:
+      - 14009:8181
+
+networks:
+  dockerproxy:
+    external: true
+
+volumes:
+  abs-config:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/audiobookshelf/abs-config"
+  abs-metadata:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/audiobookshelf/abs-metadata"
+  audiobooks:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/audiobooks"
+  bazarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/bazarr"
+  downloads:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/downloads"
+  movies:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/movies"
+  prowlarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/prowlarr"
+  radarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/radarr"
+  seerr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/overseerr"
+  sonarr:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/sonarr"
+  tautulli:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/tautulli"
+  tvshows:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/tvshows"
