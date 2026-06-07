@@ -101,6 +101,10 @@
         "PROXMOX_PORT": "443",
         "PROXMOX_VERIFY_SSL": "true"
       }
+    },
+    "cloudflare": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp"
     }
   }
 }
