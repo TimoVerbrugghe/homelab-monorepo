@@ -83,7 +83,7 @@ services:
   bazarr:
     <<: [*hardening-defaults, *limits-heavy]
     container_name: bazarr
-    image: lscr.io/linuxserver/bazarr:v1.5.6
+    image: lscr.io/linuxserver/bazarr:1.5.6
     user: "3000:3000"
     tmpfs:
       - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
