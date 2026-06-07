@@ -147,6 +147,40 @@ jobs:
           Add-WindowsPackage -PackagePath "$adk_winpe\WinPE_OCs\en-us\WinPE-EnhancedStorage_en-us.cab" -Path $mountfolder -IgnoreCheck
           Add-WindowsPackage -PackagePath "$adk_winpe\WinPE_OCs\WinPE-SecureBootCmdlets.cab" -Path $mountfolder
 
+      - name: Download virtio-win ISO
+        shell: pwsh
+        run: |
+          Write-Output "Downloading virtio-win ISO..."
+          curl.exe -fL -o C:\virtio-win.iso "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+          Write-Output "virtio-win ISO downloaded: $([math]::Round((Get-Item C:\virtio-win.iso).Length / 1MB, 1)) MB"
+
+      - name: Inject virtio-win drivers into boot image
+        shell: pwsh
+        run: |
+          $virtio_iso_path = "C:\virtio-win.iso"
+          $mountfolder = "C:\WinPE_amd64\mount"
+          Write-Output "Mounting virtio-win ISO..."
+          $mountResult = Mount-DiskImage -ImagePath $virtio_iso_path -PassThru
+          $driveLetter = ($mountResult | Get-Volume).DriveLetter
+          $isoMountPath = "$($driveLetter):\"
+          Write-Output "Adding virtio-win drivers to boot image..."
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\NetKVM\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\pvpanic\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\qemupciserial\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\qemufwcfg\w11\amd64" -Recurse
+          # SMBus driver skipped - known installation issues
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\sriov\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viofs\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viogpudo\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioinput\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viomem\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viorng\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioscsi\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\vioserial\w11\amd64" -Recurse
+          Add-WindowsDriver -Path $mountfolder -Driver "$isoMountPath\viostor\w11\amd64" -Recurse
+          Write-Output "Dismounting virtio-win ISO..."
+          Dismount-DiskImage -ImagePath $virtio_iso_path
+
       - name: Apply startnet.cmd to boot image
         shell: pwsh
         run: |
@@ -186,10 +220,109 @@ jobs:
           path: C:\WinPE_amd64\WinPE_amd64.iso
           retention-days: 7
 
+  inject-install-wim:
+    name: Inject virtio-win drivers into install.wim
+    runs-on: windows-latest
+    needs: build
+    permissions:
+      contents: read
+
+    steps:
+      - name: Download virtio-win ISO
+        shell: pwsh
+        run: |
+          Write-Output "Downloading virtio-win ISO..."
+          $ProgressPreference = 'SilentlyContinue'
+          curl.exe -fL -o C:\virtio-win.iso "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+          Write-Output "virtio-win ISO downloaded: $([math]::Round((Get-Item C:\virtio-win.iso).Length / 1MB, 1)) MB"
+
+      - name: Download Windows 11 ISO
+        shell: pwsh
+        env:
+          WIN11_URL: ${{ needs.build.outputs.win11-download-url }}
+        run: |
+          Write-Output "Downloading Windows 11 ISO..."
+          $ProgressPreference = 'SilentlyContinue'
+          curl.exe -fL -o C:\Windows11.iso $env:WIN11_URL
+          Write-Output "Windows 11 ISO downloaded: $([math]::Round((Get-Item C:\Windows11.iso).Length / 1MB, 1)) MB"
+
+      - name: Export Windows 11 Pro edition to install.wim
+        shell: pwsh
+        run: |
+          Write-Output "Mounting Windows 11 ISO..."
+          $mountResult = Mount-DiskImage -ImagePath "C:\Windows11.iso" -PassThru
+          $driveLetter = ($mountResult | Get-Volume).DriveLetter
+          $winIsoPath = "${driveLetter}:"
+          New-Item -ItemType Directory -Path "C:\install-wim-work" -Force | Out-Null
+          $installWimSrc = "$winIsoPath\sources\install.wim"
+          $installEsdSrc = "$winIsoPath\sources\install.esd"
+          if (Test-Path $installWimSrc) {
+            $sourceFile = $installWimSrc
+          } elseif (Test-Path $installEsdSrc) {
+            $sourceFile = $installEsdSrc
+          } else {
+            throw "Neither install.wim nor install.esd found in Windows 11 ISO sources\"
+          }
+          Write-Output "Source image: $sourceFile"
+          $images = Get-WindowsImage -ImagePath $sourceFile
+          $images | ForEach-Object { Write-Output "  [$($_.ImageIndex)] $($_.ImageName)" }
+          $proImage = $images | Where-Object { $_.ImageName -eq "Windows 11 Pro" } | Select-Object -First 1
+          if (-not $proImage) {
+            throw "Could not find 'Windows 11 Pro' edition. Available editions: $($images.ImageName -join ', ')"
+          }
+          Write-Output "Exporting [$($proImage.ImageIndex)] $($proImage.ImageName) to install.wim..."
+          Export-WindowsImage -SourceImagePath $sourceFile -SourceIndex $proImage.ImageIndex `
+            -DestinationImagePath "C:\install-wim-work\install.wim" -CompressionType max
+          Write-Output "Dismounting and deleting Windows 11 ISO to free disk space..."
+          Dismount-DiskImage -ImagePath "C:\Windows11.iso"
+          Remove-Item -Force "C:\Windows11.iso"
+          Write-Output "install.wim size: $([math]::Round((Get-Item C:\install-wim-work\install.wim).Length / 1MB, 1)) MB"
+
+      - name: Inject virtio-win drivers into install.wim
+        shell: pwsh
+        run: |
+          $destWim = "C:\install-wim-work\install.wim"
+          $mountDir = "C:\install-wim-mount"
+          New-Item -ItemType Directory -Path $mountDir -Force | Out-Null
+          Write-Output "Mounting virtio-win ISO..."
+          $virtioMountResult = Mount-DiskImage -ImagePath "C:\virtio-win.iso" -PassThru
+          $virtioDriveLetter = ($virtioMountResult | Get-Volume).DriveLetter
+          $virtioPath = "${virtioDriveLetter}:"
+          $images = Get-WindowsImage -ImagePath $destWim
+          foreach ($img in $images) {
+            Write-Output "Processing [$($img.ImageIndex)] $($img.ImageName)..."
+            Mount-WindowsImage -ImagePath $destWim -Index $img.ImageIndex -Path $mountDir
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\NetKVM\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\pvpanic\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\qemupciserial\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\qemufwcfg\w11\amd64" -Recurse
+            # SMBus driver skipped - known installation issues
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\sriov\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\viofs\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\viogpudo\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\vioinput\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\viomem\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\viorng\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\vioscsi\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\vioserial\w11\amd64" -Recurse
+            Add-WindowsDriver -Path $mountDir -Driver "$virtioPath\viostor\w11\amd64" -Recurse
+            Write-Output "Saving index $($img.ImageIndex)..."
+            Dismount-WindowsImage -Path $mountDir -Save -Verbose
+          }
+          Write-Output "Dismounting virtio-win ISO..."
+          Dismount-DiskImage -ImagePath "C:\virtio-win.iso"
+
+      - name: Upload install.wim artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: install-wim
+          path: C:\install-wim-work\install.wim
+          retention-days: 7
+
   upload:
     name: Upload files to TheFactory
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, inject-install-wim]
     permissions:
       contents: read
 
@@ -202,6 +335,12 @@ jobs:
         with:
           name: winpe-iso
           path: ./artifact
+
+      - name: Download install.wim artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: install-wim
+          path: ./install-wim
 
       - name: Set up SSH key
         run: |
@@ -303,6 +442,24 @@ jobs:
           echo "Fixing permissions on Windows11 folder..."
           chmod -R a+rx "$BASE/Windows11"
           echo "Windows 11 extraction complete."
+          ENDSSH
+
+      - name: Replace install.esd with virtio-injected install.wim on TheFactory
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+          THEFACTORY_USER: ${{ secrets.THEFACTORY_SSH_USER_WINDOWSINSTALL }}
+        run: |
+          rsync -a --info=progress2 --whole-file \
+            -e "ssh -T -o Compression=no" \
+            ./install-wim/install.wim \
+            "$THEFACTORY_USER@$THEFACTORY_HOST:/mnt/FranzHopper/windowsinstall/Windows11/sources/install.wim"
+          ssh "$THEFACTORY_USER@$THEFACTORY_HOST" 'bash -s' << 'ENDSSH'
+          set -euo pipefail
+          BASE=/mnt/FranzHopper/windowsinstall
+          echo "Removing install.esd if present (replaced by virtio-injected install.wim)..."
+          rm -f "$BASE/Windows11/sources/install.esd"
+          chown windowsinstall:windowsinstall "$BASE/Windows11/sources/install.wim"
+          echo "install.wim replacement complete."
           ENDSSH
 
       - name: Upload unattend XML files to TheFactory

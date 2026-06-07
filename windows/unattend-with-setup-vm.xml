@@ -3,7 +3,7 @@
 <!--
     Unattend for Windows 11 Pro inside a QEMU/KVM virtual machine, going through
     Windows Setup interactively (no disk auto-layout).
-    Virtio drivers are injected via DriverPaths from the SMB share.
+    Virtio drivers are slipstreamed into install.wim during the CI build.
     VMModeOptimizations accelerates OOBE inside a VM.
 -->
 
@@ -11,10 +11,15 @@
     <!-- Settings to apply during Windows Setup -->
     <settings pass="windowsPE">
         <!--
-            DriverPaths injects virtio drivers into the target Windows installation.
-            Windows Setup pulls them from the SMB share during setup so the
-            installed OS boots correctly in a QEMU/KVM VM.
+            DriverPaths is disabled. Virtio drivers are now slipstreamed directly into
+            install.wim during the CI build, making unattend-based driver injection
+            unnecessary. Commented out due to:
+            https://github.com/virtio-win/kvm-guest-drivers-windows/issues/1100
+            Drivers injected via unattend.xml DriverPaths do not work reliably.
+            Uncomment this block (and disable install.wim injection in the build workflow)
+            to revert to the DriverPaths approach.
         -->
+        <!--
         <component name="Microsoft-Windows-PnpCustomizationsWinPE" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
             <DriverPaths>
                 <PathAndCredentials wcm:action="add" wcm:keyValue="1">
@@ -24,7 +29,7 @@
                         <Password>windowsinstall</Password>
                     </Credentials>
                 </PathAndCredentials>
-                <!-- Balloon driver skipped - known to cause performance issues -->
+                Balloon driver skipped - known to cause performance issues
                 <PathAndCredentials wcm:action="add" wcm:keyValue="3">
                     <Path>\\10.10.10.2\windowsinstall\virtio\pvpanic\w11\amd64</Path>
                     <Credentials>
@@ -111,6 +116,7 @@
                 </PathAndCredentials>
             </DriverPaths>
         </component>
+        -->
         <!-- Keyboard & Language settings during windows Setup -->
         <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SetupUILanguage>
