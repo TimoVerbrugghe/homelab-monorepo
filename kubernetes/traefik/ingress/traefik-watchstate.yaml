@@ -13,7 +13,7 @@ spec:
     # enforcement is possible at this layer since each backend uses its own token in the URL).
     # Consider adding an IP allowlist middleware scoped to your media servers if they have
     # static IPs.
-    - match: ( Host(`watchstate.timo.be`) || Host(`watchstate.kubernetes.timo.be`) ) && PathPrefix(`/webhook`)
+    - match: ( Host(`watchstate.timo.be`) || Host(`watchstate.kubernetes.timo.be`) ) && PathPrefix(`/v1/api/webhook`)
       kind: Rule
       services:
         - name: watchstate-svc
