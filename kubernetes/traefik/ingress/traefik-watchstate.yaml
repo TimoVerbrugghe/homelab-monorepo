@@ -9,21 +9,15 @@ spec:
   entryPoints:
     - websecure
   routes:
-    # Webhook endpoint → no auth but rate-limited (backends POST here; no shared-secret
-    # enforcement is possible at this layer since each backend uses its own token in the URL).
-    # Consider adding an IP allowlist middleware scoped to your media servers if they have
-    # static IPs.
-    - match: ( Host(`watchstate.timo.be`) || Host(`watchstate.kubernetes.timo.be`) ) && PathPrefix(`/webhook`)
+    # Webhook endpoint → no auth (backends POST here with their own token in the URL).
+    - match: ( Host(`watchstate.timo.be`) || Host(`watchstate.kubernetes.timo.be`) ) && PathPrefix(`/v1/api/webhook`)
       kind: Rule
       services:
         - name: watchstate-svc
           port: 14013
-      middlewares:
-        - name: ratelimit
-          namespace: traefik
 
     # Everything else → auth
-    - match: Host(`watchstate.timo.be`) || Host(`watchstate.kubernetes.timo.be`)
+    - match: ( Host(`watchstate.timo.be`) || Host(`watchstate.kubernetes.timo.be`) ) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: watchstate-svc

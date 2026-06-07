@@ -178,6 +178,11 @@ endpoints:
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
+  - name: "Watchstate"
+    url: "http://thefactory.local.timo.be:14013"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
   - name: "Tunarr"
     url: "http://tunarr.mediaplayback.svc.cluster.local:8000"
     group: Media
