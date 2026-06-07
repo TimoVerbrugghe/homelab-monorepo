@@ -16,6 +16,11 @@ on:
         default: English
         required: false
         type: string
+  push:
+    branches:
+      - main
+    paths:
+      - windows/**
 
 concurrency:
   cancel-in-progress: true
@@ -25,9 +30,46 @@ permissions:
   contents: read
 
 jobs:
+  changes:
+    name: Detect changed files
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      startnet: ${{ steps.check.outputs.startnet }}
+      unattend: ${{ steps.check.outputs.unattend }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 2
+
+      - name: Check which files changed
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "startnet=true" >> "$GITHUB_OUTPUT"
+            echo "unattend=true" >> "$GITHUB_OUTPUT"
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD)
+            if echo "$CHANGED" | grep -q "^windows/startnet\.cmd$"; then
+              echo "startnet=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "startnet=false" >> "$GITHUB_OUTPUT"
+            fi
+            if echo "$CHANGED" | grep -qE "^windows/.*\.xml$"; then
+              echo "unattend=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "unattend=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
   build:
     name: Build WinPE ISO
     runs-on: windows-latest
+    needs: changes
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.startnet == 'true'
     permissions:
       contents: read
     outputs:
@@ -223,7 +265,8 @@ jobs:
   inject-install-wim:
     name: Inject virtio-win drivers into install.wim
     runs-on: windows-latest
-    needs: build
+    needs: [build, changes]
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.startnet == 'true'
     permissions:
       contents: read
 
@@ -322,7 +365,8 @@ jobs:
   upload:
     name: Upload files to TheFactory
     runs-on: ubuntu-latest
-    needs: [build, inject-install-wim]
+    needs: [build, inject-install-wim, changes]
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.startnet == 'true'
     permissions:
       contents: read
 
@@ -461,6 +505,41 @@ jobs:
           chown windowsinstall:windowsinstall "$BASE/Windows11/sources/install.wim"
           echo "install.wim replacement complete."
           ENDSSH
+
+  upload-unattend:
+    name: Upload unattend XML files to TheFactory
+    runs-on: ubuntu-latest
+    needs: changes
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      needs.changes.outputs.unattend == 'true' ||
+      needs.changes.outputs.startnet == 'true'
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s' "${{ secrets.THEFACTORY_SSH_PRIVATE_KEY_WINDOWSINSTALL }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          tags: tag:github-cicd
+
+      - name: Add TheFactory to SSH known hosts
+        env:
+          THEFACTORY_HOST: ${{ secrets.THEFACTORY_TAILSCALE_HOSTNAME }}
+        run: |
+          ssh-keyscan "$THEFACTORY_HOST" >> ~/.ssh/known_hosts
 
       - name: Upload unattend XML files to TheFactory
         env:

@@ -232,7 +232,7 @@ provide it before generating any manifests.
 | `update-badges.yaml` | push on `main` | Regenerate README count badges |
 | `update-talos-machines.yaml` | `workflow_dispatch` | Update Talos machine configs |
 | `validate-shell-scripts.yaml` | push/PR on `*.sh` | shellcheck + bash syntax |
-| `build-winpe-image.yaml` | weekly schedule + `workflow_dispatch` | Build WinPE ISO with virtio-win drivers, upload to TheFactory via Tailscale, send Pushover notification |
+| `build-winpe-image.yaml` | weekly schedule + `workflow_dispatch` + push on `windows/**` | Build WinPE ISO with virtio-win drivers, upload to TheFactory via Tailscale, send Pushover notification. On push: full build if `startnet.cmd` changes; XML-only upload if only unattend XMLs change |
 
 ## Documentation
 
