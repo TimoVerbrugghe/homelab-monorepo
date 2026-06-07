@@ -31,7 +31,7 @@ services:
   sonarr:
     <<: [*hardening-defaults, *limits-medium]
     container_name: sonarr
-    image: ghcr.io/linuxserver/sonarr:latest
+    image: lscr.io/linuxserver/sonarr:latest
     user: "3000:3000"
     tmpfs:
       - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
@@ -57,7 +57,7 @@ services:
   radarr:
     <<: [*hardening-defaults, *limits-medium]
     container_name: radarr
-    image: ghcr.io/linuxserver/radarr:latest
+    image: lscr.io/linuxserver/radarr:latest
     user: "3000:3000"
     tmpfs:
       - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
@@ -83,7 +83,7 @@ services:
   bazarr:
     <<: [*hardening-defaults, *limits-heavy]
     container_name: bazarr
-    image: ghcr.io/linuxserver/bazarr:v1.5.6
+    image: lscr.io/linuxserver/bazarr:1.5.6
     user: "3000:3000"
     tmpfs:
       - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
@@ -140,7 +140,7 @@ services:
   prowlarr:
     <<: [*hardening-defaults, *limits-medium]
     container_name: prowlarr
-    image: ghcr.io/linuxserver/prowlarr:latest
+    image: lscr.io/linuxserver/prowlarr:latest
     user: "3000:3000"
     tmpfs:
       - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
