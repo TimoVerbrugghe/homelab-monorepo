@@ -69,6 +69,23 @@ Several services are not running in this cluster and remain on separate NixOS VM
 
 - Nothing right now. Feel free to suggest other things I might want to do in this setup!
 
+## MCP Servers
+
+The `.vscode/mcp.json` file configures [Model Context Protocol](https://modelcontextprotocol.io/) servers for use with GitHub Copilot and other MCP-compatible clients in VS Code.
+
+| Server | Type | Description | Auth |
+| ------ | ---- | ----------- | ---- |
+| `homeAssistant` | HTTP | [Home Assistant MCP](https://www.home-assistant.io/integrations/mcp_server/) — query and control Home Assistant entities | Long-lived access token (prompted) |
+| `kubernetes` | stdio (`npx`) | [mcp-server-kubernetes](https://github.com/Flux159/mcp-server-kubernetes) — interact with the Kubernetes cluster via `kubectl` | Uses local kubeconfig |
+| `siderolabs-docs` | HTTP | [Siderolabs docs MCP](https://docs.siderolabs.com/mcp) — search Talos Linux and Omni documentation | None |
+| `tailscale` | stdio (`npx`) | [tailscale-mcp-server](https://github.com/HexSleeves/tailscale-mcp-server) — manage Tailscale devices and ACLs | OAuth client ID + secret (prompted) |
+| `portainer` | stdio (container) | [portainer-mcp-enhanced](https://github.com/jmrplens/portainer-mcp-enhanced) — manage Docker stacks and containers via Portainer | API token (prompted) |
+| `unifi-network` | stdio (`uvx`) | [unifi-network-mcp](https://github.com/sirpatil/unifi-network-mcp) — manage UniFi network devices and clients | Password (prompted) |
+| `proxmox` | stdio (`uvx`) | [proxmox-mcp-plus](https://github.com/canvrno/ProxmoxMCP) — manage Proxmox VMs and containers | API token value (prompted) |
+| `cloudflare` | HTTP | [Cloudflare API MCP](https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/) — access all Cloudflare APIs (DNS, Workers, R2, Zero Trust, …) via [Codemode](https://developers.cloudflare.com/agents/model-context-protocol/protocol/codemode/) | OAuth via Cloudflare dashboard (browser redirect on first use) |
+
+Secrets are never stored — any server that requires credentials uses `${input:...}` prompts so VS Code asks for them at connection time.
+
 ## Contributing
 
 Suggestions, ideas, and improvements are welcome! See [AGENTS.md](AGENTS.md) for the full guide on how this repo is structured and how to make changes.
