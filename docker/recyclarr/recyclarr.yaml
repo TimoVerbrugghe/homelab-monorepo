@@ -8,7 +8,6 @@ sonarr:
     quality_definition:
       type: series
 
-
     # Quality Profiles: https://recyclarr.dev/wiki/yaml/config-reference/quality-profiles/ 
     # Using my own defined quality profile (base template used from https://github.com/recyclarr/config-templates/blob/master/sonarr/includes/quality-profiles/sonarr-v4-quality-profile-web-2160p.yml)
     # Reason is because I want to include all qualities in the same profile (down to 720p)
@@ -54,7 +53,7 @@ sonarr:
       - trash_ids:
         # HDR Formats - Unified HDR consolidates DV, HDR, HDR10, HDR10+, HLG, PQ into single scoring
         - 505d871304820ba7106b693be6fe4a9e # HDR
-        - 7c3a61a9c6cb04f52f1544be6d44a026 # DV Boost
+        # - 7c3a61a9c6cb04f52f1544be6d44a026 # DV Boost - Turned off for more compatibility with Apple TV
         - 0c4b99df9206d2cfac3c05ab897dd62a # HDR10+ Boost
         - 9b27ab6498ec0f31a3353992e19434ca # DV (w/o HDR fallback)
 
@@ -94,7 +93,6 @@ sonarr:
         - ae58039e1319178e6be73caab5c42166 # SHO
         - 1efe8da11bfd74fbbcd4d8117ddb9213 # STAN
         - 9623c5c9cac8e939c1b9aedd32f640bf # SYFY
-        - 60f6d50cbd3cfc3e9a8c00e3a30c3114 # VRV
 
         # Streaming Services - European & Oceania
         - e6e299075e22ac8f541f722254c8350a # AUBC
@@ -198,7 +196,7 @@ radarr:
       - trash_ids:
         # HDR Formats - Unified HDR consolidates DV, HDR, HDR10, HDR10+, HLG, PQ into single scoring
         - 493b6d1dbec3c3364c59d7607f7e3405 # HDR
-        - b337d6812e06c200ec9a2d3cfa9d20a7 # DV Boost
+        # - b337d6812e06c200ec9a2d3cfa9d20a7 # DV Boost - Turned off for more compatibility with Apple TV
         - caa37d0df9c348912df1fb1d88f9273a # HDR10+ Boost
         - 923b6abef9b17f937fab56cfcf89e1f1 # DV (w/o HDR fallback)
 
@@ -252,7 +250,6 @@ radarr:
         - e36a0ba1bc902b26ee40818a1d59b8bd # PMTP
         - 44c2b54d7c81c1a442a8b2cabeaef54f # ROKU
         - c2863d2a50c9acad1fb50e53ece60817 # STAN
-        - 60f6d50cbd3cfc3e9a8c00e3a30c3114 # VRV
         assign_scores_to:
           - name: Ultra-HD
 
@@ -331,7 +328,6 @@ radarr:
       - trash_ids:
           - b6832f586342ef70d9c128d40c07b872 # Bad Dual Groups
           - cc444569854e9de0b084ab2b8b1532b2 # Black and White Editions
-          - 90cedc1fea7ea5d11298bebd3d1d3223 # EVO (no WEBDL)
           - ae9b7c9ebde1f3bd336a8cbd1ec4c5e5 # No-RlsGroup
           # - 7357cf5161efbf8c4d5d0c30b4815ee2 # Obfuscated
           - 5c44f52a8714fdd79bb4d98e2673be1f # Retags
