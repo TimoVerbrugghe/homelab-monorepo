@@ -25,9 +25,9 @@ spec:
         app.kubernetes.io/part-of: homelab
     spec:
       securityContext:
-        fsGroup: 3000
+        fsGroup: 65532
         runAsNonRoot: true
-        runAsUser: 3000
+        runAsUser: 65532
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -41,7 +41,7 @@ spec:
             capabilities:
               drop: ["ALL"]
             readOnlyRootFilesystem: true
-            runAsGroup: 3000
+            runAsGroup: 65532
           env:
             - name: CRON_SCHEDULE
               value: "@daily"
