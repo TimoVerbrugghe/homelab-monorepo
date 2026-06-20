@@ -3,7 +3,7 @@
 sonarr:
   web-2160p-v4:
     base_url: http://sonarr:8989
-    api_key: !secret sonarr_api_key
+    api_key: !env_var SONARR_API_KEY
 
     quality_definition:
       type: series
@@ -53,7 +53,7 @@ sonarr:
       - trash_ids:
         # HDR Formats - Unified HDR consolidates DV, HDR, HDR10, HDR10+, HLG, PQ into single scoring
         - 505d871304820ba7106b693be6fe4a9e # HDR
-        # - 7c3a61a9c6cb04f52f1544be6d44a026 # DV Boost - Turned off for more compatibility with Apple TV
+        - 7c3a61a9c6cb04f52f1544be6d44a026 # DV Boost
         - 0c4b99df9206d2cfac3c05ab897dd62a # HDR10+ Boost
         - 9b27ab6498ec0f31a3353992e19434ca # DV (w/o HDR fallback)
 
@@ -147,7 +147,7 @@ sonarr:
 radarr:
   remux-web-2160p:
     base_url: http://radarr:7878
-    api_key: !secret radarr_api_key
+    api_key: !env_var RADARR_API_KEY
 
     quality_definition:
       type: movie
@@ -196,7 +196,7 @@ radarr:
       - trash_ids:
         # HDR Formats - Unified HDR consolidates DV, HDR, HDR10, HDR10+, HLG, PQ into single scoring
         - 493b6d1dbec3c3364c59d7607f7e3405 # HDR
-        # - b337d6812e06c200ec9a2d3cfa9d20a7 # DV Boost - Turned off for more compatibility with Apple TV
+        - b337d6812e06c200ec9a2d3cfa9d20a7 # DV Boost
         - caa37d0df9c348912df1fb1d88f9273a # HDR10+ Boost
         - 923b6abef9b17f937fab56cfcf89e1f1 # DV (w/o HDR fallback)
 

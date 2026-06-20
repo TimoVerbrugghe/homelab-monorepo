@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recyclarr
+  namespace: mediaplayback
+  labels:
+    app.kubernetes.io/instance: recyclarr
+    app.kubernetes.io/name: recyclarr
+    app.kubernetes.io/part-of: homelab
+  annotations:
+    keel.sh/match-tag: "true"
+    keel.sh/policy: force
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/trigger: poll
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: recyclarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: recyclarr
+        app.kubernetes.io/name: recyclarr
+        app.kubernetes.io/part-of: homelab
+    spec:
+      securityContext:
+        fsGroup: 3000
+        runAsNonRoot: true
+        runAsUser: 3000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: recyclarr
+          image: ghcr.io/recyclarr/recyclarr:8
+          imagePullPolicy: IfNotPresent
+          stdin: false
+          tty: false
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+            runAsGroup: 3000
+          env:
+            - name: CRON_SCHEDULE
+              value: "@daily"
+            - name: TZ
+              value: Europe/Brussels
+            - name: RADARR_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: recyclarr-secrets
+                  key: RADARR_API_KEY
+            - name: SONARR_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: recyclarr-secrets
+                  key: SONARR_API_KEY
+          livenessProbe:
+            exec:
+              command:
+                - recyclarr
+                - --version
+            initialDelaySeconds: 30
+            periodSeconds: 300
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - recyclarr
+                - --version
+            initialDelaySeconds: 10
+            periodSeconds: 60
+            timeoutSeconds: 10
+            failureThreshold: 3
+          startupProbe:
+            exec:
+              command:
+                - recyclarr
+                - --version
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 30
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: recyclarr-config
+              mountPath: /config/recyclarr.yaml
+              subPath: recyclarr.yaml
+            - name: run
+              mountPath: /run
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          emptyDir: {}
+        - name: recyclarr-config
+          configMap:
+            name: recyclarr-config
+        - name: run
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 128Mi

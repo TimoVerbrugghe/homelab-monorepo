@@ -28,22 +28,6 @@ x-limits-heavy: &limits-heavy
   cpus: 2.00
 
 services:
-  recyclarr:
-    <<: [*hardening-defaults, *limits-light]
-    image: ghcr.io/recyclarr/recyclarr:8
-    container_name: recyclarr
-    tmpfs:
-      - /run:rw,exec,nosuid,nodev,size=64m
-      - /tmp:rw,noexec,nosuid,nodev,size=512m
-    user: ${PUID:-3000}:${PGID:-3000}
-    networks:
-      - dockerproxy
-    volumes:
-      - recyclarr:/config
-    environment:
-      - TZ=Europe/Brussels
-      - CRON_SCHEDULE=@daily
-
   flaresolverr:
     <<: [*hardening-defaults, *limits-medium]
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -291,12 +275,6 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/obzorarr"
-  recyclarr:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/recyclarr"
   watchstate:
     driver: local
     driver_opts:
