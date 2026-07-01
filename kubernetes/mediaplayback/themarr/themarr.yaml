@@ -1,0 +1,134 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: themarr
+  namespace: mediaplayback
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: themarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: themarr
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+      containers:
+      - name: themarr
+        image: ghcr.io/timoverbrugghe/themarr:latest
+        imagePullPolicy: Always
+        stdin: false
+        tty: false
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        env:
+        - name: PLEX_URL
+          value: "http://plex.local.timo.be:32400"
+        - name: JELLYFIN_URL
+          value: "http://jellyfin.local.timo.be:8096"
+        - name: FLASK_DEBUG
+          value: "false"
+        - name: DEFAULT_THEME
+          value: "dark"
+        - name: DEFAULT_VIEW
+          value: "list"
+        - name: DISABLE_AUTH
+          value: "true"
+        - name: PLEX_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: themarr-secrets
+              key: PLEX_TOKEN
+        - name: JELLYFIN_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: themarr-secrets
+              key: JELLYFIN_API_KEY
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: themarr-secrets
+              key: API_KEY
+        - name: PUSHOVER_APP_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: themarr-secrets
+              key: PUSHOVER_APP_TOKEN
+        - name: PUSHOVER_USER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: themarr-secrets
+              key: PUSHOVER_USER_KEY
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        volumeMounts:
+        - name: movies
+          mountPath: /movies
+        - name: tvshows
+          mountPath: /tv
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: movies
+        persistentVolumeClaim:
+          claimName: movies-pvc
+      - name: tvshows
+        persistentVolumeClaim:
+          claimName: tvshows-pvc
+      - name: tmp
+        emptyDir:
+          medium: Memory
+          sizeLimit: 512Mi

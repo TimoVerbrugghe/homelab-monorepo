@@ -11,6 +11,7 @@ resources:
   - discovery-relay
   - plex
   - jellyfin
+  - themarr
   - tunarr
   - media-storage.yaml
   - kptv-fast

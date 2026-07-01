@@ -1,0 +1,51 @@
+---
+# Service to be used by Traefik and Tailscale Ingress to access the Themarr Web UI
+apiVersion: v1
+kind: Service
+metadata:
+  name: themarr
+  namespace: mediaplayback
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: themarr
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: themarr
+  namespace: mediaplayback
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`themarr.kubernetes.timo.be`) || Host(`themarr.timo.be`)
+      kind: Rule
+      services:
+        - name: themarr
+          port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: themarr-tailscale
+  namespace: mediaplayback
+  annotations:
+    # Instead of exposing as a machine, expose it as a Tailscale Service
+    tailscale.com/proxy-group: tailscale-services
+spec:
+  defaultBackend:
+    service:
+      name: themarr
+      port:
+        number: 8080
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - themarr
