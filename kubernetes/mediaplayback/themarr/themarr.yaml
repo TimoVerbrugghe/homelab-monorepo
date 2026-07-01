@@ -25,6 +25,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
         runAsNonRoot: true
+        runAsUser: 999
       containers:
       - name: themarr
         image: ghcr.io/timoverbrugghe/themarr:latest
@@ -33,6 +34,7 @@ spec:
         tty: false
         securityContext:
           allowPrivilegeEscalation: false
+          runAsUser: 999
           runAsNonRoot: true
           readOnlyRootFilesystem: true
           capabilities:
@@ -61,11 +63,6 @@ spec:
             secretKeyRef:
               name: themarr-secrets
               key: JELLYFIN_API_KEY
-        - name: API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: themarr-secrets
-              key: API_KEY
         - name: PUSHOVER_APP_TOKEN
           valueFrom:
             secretKeyRef:
@@ -117,18 +114,18 @@ spec:
         volumeMounts:
         - name: movies
           mountPath: /movies
-        - name: tvshows
-          mountPath: /tv
         - name: tmp
           mountPath: /tmp
+        - name: tvshows
+          mountPath: /tv
       volumes:
       - name: movies
         persistentVolumeClaim:
           claimName: movies-pvc
-      - name: tvshows
-        persistentVolumeClaim:
-          claimName: tvshows-pvc
       - name: tmp
         emptyDir:
           medium: Memory
-          sizeLimit: 512Mi
+          sizeLimit: 128Mi
+      - name: tvshows
+        persistentVolumeClaim:
+          claimName: tvshows-pvc
