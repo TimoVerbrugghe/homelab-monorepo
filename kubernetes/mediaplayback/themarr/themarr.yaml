@@ -40,9 +40,9 @@ spec:
               - ALL
         env:
         - name: PLEX_URL
-          value: "http://plex:32400"
+          value: "http://plex.local.timo.be:32400"
         - name: JELLYFIN_URL
-          value: "http://jellyfin:8096"
+          value: "http://jellyfin.local.timo.be:8096"
         - name: FLASK_DEBUG
           value: "false"
         - name: DEFAULT_THEME
@@ -50,7 +50,7 @@ spec:
         - name: DEFAULT_VIEW
           value: "list"
         - name: DISABLE_AUTH
-          value: "false"
+          value: "true"
         - name: PLEX_TOKEN
           valueFrom:
             secretKeyRef:
@@ -61,31 +61,11 @@ spec:
             secretKeyRef:
               name: themarr-secrets
               key: JELLYFIN_API_KEY
-        - name: AUTH_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: themarr-secrets
-              key: AUTH_USERNAME
-        - name: AUTH_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: themarr-secrets
-              key: AUTH_PASSWORD
         - name: API_KEY
           valueFrom:
             secretKeyRef:
               name: themarr-secrets
               key: API_KEY
-        - name: WEBHOOK_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: themarr-secrets
-              key: WEBHOOK_USERNAME
-        - name: WEBHOOK_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: themarr-secrets
-              key: WEBHOOK_PASSWORD
         - name: PUSHOVER_APP_TOKEN
           valueFrom:
             secretKeyRef:
@@ -141,8 +121,6 @@ spec:
           mountPath: /tv
         - name: tmp
           mountPath: /tmp
-        - name: run
-          mountPath: /run
       volumes:
       - name: movies
         persistentVolumeClaim:
@@ -154,7 +132,3 @@ spec:
         emptyDir:
           medium: Memory
           sizeLimit: 512Mi
-      - name: run
-        emptyDir:
-          medium: Memory
-          sizeLimit: 64Mi
