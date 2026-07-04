@@ -147,8 +147,12 @@ services:
     <<: [*hardening-defaults, *limits-light]
     container_name: wrapperr
     image: ghcr.io/aunefyren/wrapperr:latest
-    # Wrapperr entrypoint uses setpriv to switch UID/GID before startup.
+    # Wrapperr entrypoint starts as root, chowns /app/config to PUID:PGID, then
+    # drops privileges via setpriv. CAP_CHOWN is required for the chown to
+    # succeed on the bind-mounted host directory; SETGID/SETUID are required
+    # for setpriv to switch UIDs. All three are dropped after exec.
     cap_add:
+      - CHOWN
       - SETGID
       - SETUID
     restart: unless-stopped
