@@ -85,7 +85,7 @@ services:
     image: ghcr.io/fuzzygrim/yamtrack
     read_only: false
     tmpfs:
-      - /run:rw,exec,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=512m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN
@@ -173,7 +173,7 @@ services:
     image: ghcr.io/engels74/obzorarr-docker:latest
     read_only: false
     tmpfs:
-      - /run:rw,exec,nosuid,nodev,size=64m
+      - /run:rw,exec,nosuid,nodev,size=512m
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     cap_add:
       - CHOWN

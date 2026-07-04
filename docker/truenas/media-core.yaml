@@ -34,7 +34,7 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     user: "3000:3000"
     tmpfs:
-      - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
+      - /run:rw,exec,nosuid,nodev,size=512m,uid=3000,gid=3000
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     restart: unless-stopped
     networks:
@@ -60,7 +60,7 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     user: "3000:3000"
     tmpfs:
-      - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
+      - /run:rw,exec,nosuid,nodev,size=512m,uid=3000,gid=3000
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     restart: unless-stopped
     networks:
@@ -86,7 +86,7 @@ services:
     image: lscr.io/linuxserver/bazarr:1.5.6
     user: "3000:3000"
     tmpfs:
-      - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
+      - /run:rw,exec,nosuid,nodev,size=512m,uid=3000,gid=3000
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     restart: unless-stopped
     networks:
@@ -143,7 +143,7 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     user: "3000:3000"
     tmpfs:
-      - /run:rw,exec,nosuid,nodev,size=64m,uid=3000,gid=3000
+      - /run:rw,exec,nosuid,nodev,size=512m,uid=3000,gid=3000
       - /tmp:rw,noexec,nosuid,nodev,size=512m
     restart: unless-stopped
     networks:
