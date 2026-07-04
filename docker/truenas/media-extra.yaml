@@ -147,6 +147,10 @@ services:
     <<: [*hardening-defaults, *limits-light]
     container_name: wrapperr
     image: ghcr.io/aunefyren/wrapperr:latest
+    # Wrapperr entrypoint uses setpriv to switch UID/GID before startup.
+    cap_add:
+      - SETGID
+      - SETUID
     restart: unless-stopped
     networks:
       - dockerproxy
