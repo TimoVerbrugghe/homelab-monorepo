@@ -66,19 +66,12 @@
       }
     },
     "portainer": {
-      "type": "stdio",
-      "command": "container",
-      "args": [
-        "run",
-        "--rm",
-        "-i",
-        "ghcr.io/jmrplens/portainer-mcp-enhanced:latest",
-        "-server",
-        "https://portainer.kubernetes.timo.be",
-        "-token",
-        "${input:portainer-token}",
-        "-disable-version-check"
-      ]
+      "command": "uvx",
+      "args": ["mcp-portainer"],
+      "env": {
+        "PORTAINER_URL": "https://portainer.kubernetes.timo.be",
+        "PORTAINER_API_KEY": "${input:portainer-token}"
+      }
     },
     "unifi-network": {
       "command": "uvx",
