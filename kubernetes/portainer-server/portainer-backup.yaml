@@ -10,6 +10,9 @@ spec:
       template:
         spec:
           securityContext:
+            runAsGroup: 0
+            runAsNonRoot: false # Portainer data under /var/mnt/portainer is root-owned hostPath content.
+            runAsUser: 0
             seccompProfile:
               type: RuntimeDefault
           restartPolicy: OnFailure
@@ -24,6 +27,9 @@ spec:
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
               env:
                 - name: BACKUP_NAME
                   value: "portainer"
