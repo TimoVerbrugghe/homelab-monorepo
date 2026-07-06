@@ -71,7 +71,7 @@ Several services are not running in this cluster and remain on separate NixOS VM
 
 ## Contributing
 
-Suggestions, ideas, and improvements are welcome! See [AGENTS.md](AGENTS.md) for the full guide on how this repo is structured and how to make changes.
+Suggestions, ideas, and improvements are welcome! See [.github/copilot-instructions.md](.github/copilot-instructions.md) for the full guide on how this repo is structured and how to make changes.
 
 Quick checklist before opening a PR:
 
