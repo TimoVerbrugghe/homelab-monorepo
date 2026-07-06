@@ -1,4 +1,5 @@
 # Add autoupdate through keel for kubelet-serving-cert-approver
+# Increase initialDelaySeconds on liveness & readiness probes to 30
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,3 +8,21 @@ metadata:
     keel.sh/policy: all
     keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kubelet-serving-cert-approver
+  template:
+    spec:
+      containers:
+        - name: cert-approver
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+            initialDelaySeconds: 30
