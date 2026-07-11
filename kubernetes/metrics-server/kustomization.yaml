@@ -4,7 +4,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/refs/heads/main/deploy/standalone-install.yaml
+  - https://github.com/alex1989hu/kubelet-serving-cert-approver//deploy/standalone
+  # - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/refs/heads/main/deploy/standalone-install.yaml
   - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
 patches:
