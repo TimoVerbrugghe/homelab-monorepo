@@ -8,6 +8,7 @@ on:
 
 jobs:
   update-badges:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -93,5 +94,5 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update README badges"
-            git push
+            git push origin HEAD:main
           fi
