@@ -8,15 +8,24 @@ on:
 
 jobs:
   update-badges:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     
     steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.GH_APP_CLIENT_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Get repository statistics
         id: stats
@@ -85,5 +94,5 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update README badges"
-            git push
+            git push origin HEAD:main
           fi
