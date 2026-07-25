@@ -29,7 +29,7 @@ spec:
         runAsNonRoot: false
       containers:
       - name: trawl
-        image: ghcr.io/germondai/trawl:v1.0.1
+        image: ghcr.io/germondai/trawl:latest
         stdin: false
         tty: false
         securityContext:
