@@ -76,12 +76,10 @@ providers:
     namespaces: []
     allowCrossNamespace: true
     allowExternalNameServices: true
-    ingressClass: traefik
 
   kubernetesIngress:
     enabled: true
     namespaces: []
-    ingressClass: traefik
     allowExternalNameServices: true
     publishedService:
       enabled: true

@@ -52,9 +52,8 @@ kind: IngressRoute
 metadata:
   name: plex
   namespace: mediaplayback
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

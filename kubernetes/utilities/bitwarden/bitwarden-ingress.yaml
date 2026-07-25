@@ -3,9 +3,8 @@ kind: IngressRoute
 metadata:
   name: bitwarden
   namespace: utilities-priv
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

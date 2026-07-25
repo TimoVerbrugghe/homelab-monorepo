@@ -19,9 +19,8 @@ kind: IngressRoute
 metadata:
   name: themarr
   namespace: mediaplayback
-  annotations:
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

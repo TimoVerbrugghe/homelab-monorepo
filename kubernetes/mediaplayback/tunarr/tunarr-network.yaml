@@ -19,9 +19,8 @@ kind: IngressRoute
 metadata:
   name: tunarr-authless
   namespace: mediaplayback
-  annotations:
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:
@@ -36,9 +35,8 @@ kind: IngressRoute
 metadata:
   name: tunarr-authenticated
   namespace: mediaplayback
-  annotations:
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

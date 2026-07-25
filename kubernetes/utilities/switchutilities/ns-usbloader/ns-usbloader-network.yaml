@@ -37,9 +37,8 @@ kind: IngressRoute
 metadata:
   name: ns-usbloader-web-traefik
   namespace: utilities
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:
