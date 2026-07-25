@@ -367,6 +367,8 @@ filtering:
       answer: 4.223.119.74
     - domain: aelita.local.timo.be
       answer: 10.10.10.3
+    - domain: trawl.local.timo.be
+      answer: 10.10.10.34
   safe_fs_patterns:
     - /opt/adguardhome/work/data/userfilters/*
   safebrowsing_cache_size: 1048576

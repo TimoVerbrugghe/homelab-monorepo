@@ -1,0 +1,130 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trawl
+  namespace: mediaplayback
+  labels:
+    app.kubernetes.io/name: trawl
+    app.kubernetes.io/instance: trawl
+    app.kubernetes.io/part-of: homelab
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: trawl
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: trawl
+        app.kubernetes.io/instance: trawl
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        # trawl uses headless Firefox (Camoufox) which requires root; no non-root image available
+        runAsNonRoot: false
+      containers:
+      - name: trawl
+        image: ghcr.io/germondai/trawl:latest
+        stdin: false
+        tty: false
+        securityContext:
+          allowPrivilegeEscalation: false
+          # trawl requires root for headless Firefox (Camoufox); no non-root image available
+          runAsNonRoot: false
+          # Firefox writes to multiple paths at runtime; cannot use readOnlyRootFilesystem
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+        env:
+        - name: REDIS_URL
+          value: "redis://localhost:6379"
+        - name: BROWSER_POOL_SIZE
+          value: "5"
+        ports:
+        - name: http
+          containerPort: 8191
+          protocol: TCP
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "2000m"
+            memory: "3Gi"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8191
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8191
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        volumeMounts:
+        - name: dshm
+          mountPath: /dev/shm
+      - name: redis
+        image: redis:8.8-alpine
+        stdin: false
+        tty: false
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 999
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        ports:
+        - name: redis
+          containerPort: 6379
+          protocol: TCP
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+        readinessProbe:
+          exec:
+            command:
+              - redis-cli
+              - ping
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+              - redis-cli
+              - ping
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        - name: redis-tmp
+          mountPath: /tmp
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 1Gi
+      - name: redis-data
+        emptyDir: {}
+      - name: redis-tmp
+        emptyDir:
+          medium: Memory
+          sizeLimit: 64Mi

@@ -28,21 +28,6 @@ x-limits-heavy: &limits-heavy
   cpus: 2.00
 
 services:
-  flaresolverr:
-    <<: [*hardening-defaults, *limits-medium]
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    read_only: false
-    restart: unless-stopped
-    environment:
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOG_FILE=${LOG_FILE:-none}
-      - LOG_HTML=${LOG_HTML:-false}
-      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-      - TZ=Europe/London
-    networks:
-      - dockerproxy
-
   swaparr-radarr:
     <<: [*hardening-defaults, *limits-light]
     image: ghcr.io/thijmengthn/swaparr:latest
