@@ -8,7 +8,6 @@ metadata:
   labels:
     app.kubernetes.io/name: trawl
     app.kubernetes.io/instance: trawl
-    app.kubernetes.io/part-of: homelab
 spec:
   ports:
     - name: http
