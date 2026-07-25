@@ -3,9 +3,8 @@ kind: IngressRoute
 metadata:
   name: yamtrack
   namespace: traefik
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:
@@ -24,9 +23,8 @@ kind: IngressRoute
 metadata:
   name: yamtrack-api
   namespace: traefik
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

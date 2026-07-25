@@ -4,9 +4,8 @@ kind: IngressRoute
 metadata:
   name: tinshop-traefik
   namespace: utilities
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

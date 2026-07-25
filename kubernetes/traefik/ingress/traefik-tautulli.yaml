@@ -3,9 +3,8 @@ kind: IngressRoute
 metadata:
   name: tautulli
   namespace: traefik
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

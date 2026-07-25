@@ -4,9 +4,8 @@ kind: IngressRoute
 metadata:
   name: kptv-fast
   namespace: mediaplayback
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

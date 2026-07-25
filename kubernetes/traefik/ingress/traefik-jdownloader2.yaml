@@ -30,9 +30,8 @@ kind: IngressRoute
 metadata:
   name: jdownloader2
   namespace: traefik
-  annotations:
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

@@ -4,9 +4,8 @@ kind: IngressRoute
 metadata:
   name: adguardhome-traefik
   namespace: adguardhome
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

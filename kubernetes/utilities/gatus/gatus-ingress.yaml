@@ -4,9 +4,8 @@ kind: IngressRoute
 metadata:
   name: gatus
   namespace: utilities-priv
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

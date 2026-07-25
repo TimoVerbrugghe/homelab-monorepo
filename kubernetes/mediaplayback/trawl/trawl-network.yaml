@@ -22,13 +22,12 @@ kind: IngressRoute
 metadata:
   name: trawl
   namespace: mediaplayback
-  annotations:
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:
-    - match: Host(`trawl.local.timo.be`)
+    - match: Host(`trawl.kubernetes.timo.be`)
       kind: Rule
       services:
         - name: trawl

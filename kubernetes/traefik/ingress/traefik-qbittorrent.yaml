@@ -43,9 +43,8 @@ kind: IngressRoute
 metadata:
   name: qbittorrent
   namespace: traefik
-  annotations:
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

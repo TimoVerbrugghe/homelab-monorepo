@@ -14,12 +14,10 @@ patches:
       kind: Deployment
       name: traefik
     path: traefik-deployment-patch.yaml
-      
 
 helmCharts:
   - name: traefik
     repo: https://traefik.github.io/charts
-    version: 38.0.1
     namespace: traefik
     includeCRDs: true
     releaseName: traefik

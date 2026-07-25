@@ -96,9 +96,8 @@ kind: IngressRoute
 metadata:
   name: dns
   namespace: traefik
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:

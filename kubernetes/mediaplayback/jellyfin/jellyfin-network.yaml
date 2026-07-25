@@ -45,9 +45,8 @@ kind: IngressRoute
 metadata:
   name: jellyfin
   namespace: mediaplayback
-  annotations: 
-    kubernetes.io/ingress.class: traefik
 spec:
+  ingressClassName: traefik
   entryPoints:
     - websecure
   routes:
