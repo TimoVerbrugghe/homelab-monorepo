@@ -7,7 +7,6 @@ metadata:
   labels:
     app.kubernetes.io/name: trawl
     app.kubernetes.io/instance: trawl
-    app.kubernetes.io/part-of: homelab
 spec:
   replicas: 1
   strategy:
@@ -72,9 +71,6 @@ spec:
           periodSeconds: 30
           timeoutSeconds: 10
           failureThreshold: 3
-        volumeMounts:
-        - name: dshm
-          mountPath: /dev/shm
       - name: redis
         image: redis:8.8-alpine
         stdin: false
@@ -115,16 +111,6 @@ spec:
         volumeMounts:
         - name: redis-data
           mountPath: /data
-        - name: redis-tmp
-          mountPath: /tmp
       volumes:
-      - name: dshm
-        emptyDir:
-          medium: Memory
-          sizeLimit: 1Gi
       - name: redis-data
         emptyDir: {}
-      - name: redis-tmp
-        emptyDir:
-          medium: Memory
-          sizeLimit: 64Mi

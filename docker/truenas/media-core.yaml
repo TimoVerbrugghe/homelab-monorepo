@@ -163,6 +163,8 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
+    extra_hosts:
+      - "trawl.local.timo.be:10.10.10.34"
 
   audiobookshelf:
     <<: [*hardening-defaults, *limits-medium]
