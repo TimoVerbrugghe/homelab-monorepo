@@ -200,8 +200,10 @@
       Timos-Macbook-Air = nix-darwin.lib.darwinSystem {
         specialArgs = inputs;
         modules = [
-          # Fixes some issues with programs installed by nix (searching in spotlight, adding to dock) - see https://github.com/hraban/mac-app-util
-          mac-app-util.darwinModules.default
+          # Temporarily disabled: upstream mac-app-util currently pulls a Common Lisp
+          # source from gitlab.common-lisp.net that intermittently fails to fetch,
+          # which blocks darwin rebuilds.
+          # mac-app-util.darwinModules.default
           nix-homebrew.darwinModules.nix-homebrew
           ./machines/macbookair/configuration.nix
           {

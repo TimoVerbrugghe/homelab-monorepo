@@ -6,19 +6,31 @@
 
   # WARNING: Less stable on MacOS than homebrew
   environment.systemPackages = with pkgs; [ 
-    direnv
-    iperf
-    powershell
-    nano
-    kubernetes-helm
-    kubectl
     ansible
-    talosctl
     azure-cli
-    yamllint
     butane
+    cmatrix
+    direnv
+    eza
+    fastfetch
+    fzf
+    gh # GitHub CLI
+    git
+    iperf
+    jq
+    kubectl
+    kubernetes-helm
+    minikube
+    nano
+    nmap
+    powershell
+    sshpass
+    talosctl
     socat
     uv
+    vim
+    yamllint
+    zoxide
   ];
   
   # Create /etc/zshrc that loads the nix-darwin environment.
@@ -36,6 +48,7 @@
 
     # Install mas cli to get Mac App Store IDs for masApps
     brews = [
+      "bat"
       "baobab"
       "mas"
     ];

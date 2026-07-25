@@ -1,34 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-
-  # WARNING: Less stable on MacOS than homebrew
-  environment.systemPackages = with pkgs; [ 
-    vim
-    fastfetch
-    git
-    ansible
-    sshpass
-    talosctl
-    minikube
-		cmatrix
-    fzf
-    zoxide
-    eza
-    nmap
-    jq
-    gh # GitHub CLI
-    terraform # Terraform CLI
-  ];
-
-  homebrew = {
-    brews = [
-      "bat"
-    ];
-  };
-
 	# Shell aliases
   environment.shellAliases = {
     k = "kubectl";
