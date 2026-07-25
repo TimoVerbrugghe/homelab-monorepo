@@ -20,6 +20,7 @@
     jq
     kubectl
     kubernetes-helm
+    kustomize
     minikube
     nano
     nmap
