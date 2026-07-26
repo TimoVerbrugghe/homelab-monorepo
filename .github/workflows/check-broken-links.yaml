@@ -23,7 +23,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
 
       - name: Check links in markdown files
         uses: tcort/github-action-markdown-link-check@v1
