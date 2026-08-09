@@ -132,6 +132,13 @@ services:
     restart: unless-stopped
     networks:
       - dockerproxy
+    # Mitigate intermittent resolver timeouts (EAI_AGAIN) seen on Epic endpoints.
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    dns_opt:
+      - timeout:2
+      - attempts:5
     environment:
       - EPIC_EMAIL=${EPICGAMES_EMAIL}
       - PUSHOVER_TOKEN=${EPICGAMES_PUSHOVER_TOKEN}
@@ -243,7 +250,7 @@ configs:
       {
         "accounts": [
           {
-            "email": "${EPICGAMES_EMAIL}",
+            "email": "${EPICGAMES_EMAIL}"
           }
         ],
         "runOnStartup": true,
