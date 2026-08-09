@@ -156,6 +156,30 @@ services:
       retries: 3
       start_period: 30s
 
+  epicgames-freegames:
+    <<: [*hardening-defaults, *limits-heavy]
+    container_name: epicgames-freegames
+    image: ghcr.io/claabs/epicgames-freegames-node:v5.1.0
+    # read_only cannot be true: the entrypoint writes temporary config, timezone,
+    # and cron state outside /usr/app/config before starting the scheduler.
+    read_only: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    restart: unless-stopped
+    networks:
+      - dockerproxy
+    environment:
+      - EMAIL=${EPICGAMES_EMAIL}
+      - PUSHOVER_TOKEN=${EPICGAMES_PUSHOVER_TOKEN}
+      - PUSHOVER_USER_ID=${EPICGAMES_PUSHOVER_USER_ID}
+    volumes:
+      - epicgames-freegames:/usr/app/config
+    configs:
+      - source: epicgames-freegames-config
+        target: /usr/app/config/config.json
+    ports:
+      - 14014:3000
+
   obzorarr:
     <<: [*hardening-defaults, *limits-light]
     container_name: obzorarr
@@ -249,7 +273,29 @@ networks:
   dockerproxy:
     external: true
 
+configs:
+  epicgames-freegames-config:
+    content: |
+      {
+        "runOnStartup": true,
+        "cronSchedule": "0 0,6,12,18 * * *",
+        "logLevel": "info",
+        "searchStrategy": "all",
+        "notifyEula": false,
+        "timezone": "Europe/Brussels",
+        "skipVersionCheck": false,
+        "webPortalConfig": {
+          "baseUrl": "https://epicgames.timo.be"
+        }
+      }
+
 volumes:
+  epicgames-freegames:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/FranzHopper/appdata/epicgames-freegames"
   dispatcharr:
     driver: local
     driver_opts:
