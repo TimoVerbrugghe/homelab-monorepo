@@ -1,0 +1,148 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swaparr-radarr
+  namespace: utilities
+  labels:
+    app.kubernetes.io/name: swaparr-radarr
+    app.kubernetes.io/instance: swaparr-radarr
+    app.kubernetes.io/part-of: homelab
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swaparr-radarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swaparr-radarr
+        app.kubernetes.io/instance: swaparr-radarr
+        app.kubernetes.io/part-of: homelab
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+      containers:
+        - name: swaparr-radarr
+          image: ghcr.io/thijmengthn/swaparr:latest
+          stdin: false
+          tty: false
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: BASEURL
+              value: "http://truenas.local.timo.be:14001"
+            - name: APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: swaparr-secrets
+                  key: RADARR_API_KEY
+            - name: PLATFORM
+              value: "radarr"
+            - name: TIME_THRESHOLD
+              value: "1d"
+            - name: SIZE_THRESHOLD
+              value: "25GB"
+            - name: CHECK_INTERVAL
+              value: "10m"
+            - name: STRIKE_THRESHOLD
+              value: "3"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swaparr-sonarr
+  namespace: utilities
+  labels:
+    app.kubernetes.io/name: swaparr-sonarr
+    app.kubernetes.io/instance: swaparr-sonarr
+    app.kubernetes.io/part-of: homelab
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swaparr-sonarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swaparr-sonarr
+        app.kubernetes.io/instance: swaparr-sonarr
+        app.kubernetes.io/part-of: homelab
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+      containers:
+        - name: swaparr-sonarr
+          image: ghcr.io/thijmengthn/swaparr:latest
+          stdin: false
+          tty: false
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: BASEURL
+              value: "http://truenas.local.timo.be:14000"
+            - name: APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: swaparr-secrets
+                  key: SONARR_API_KEY
+            - name: PLATFORM
+              value: "sonarr"
+            - name: TIME_THRESHOLD
+              value: "1d"
+            - name: SIZE_THRESHOLD
+              value: "25GB"
+            - name: CHECK_INTERVAL
+              value: "10m"
+            - name: STRIKE_THRESHOLD
+              value: "3"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory

@@ -1,0 +1,45 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: epicgames-freegames
+  namespace: traefik
+spec:
+  ingressClassName: traefik
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`epicgames.timo.be`)
+      kind: Rule
+      services:
+        - name: epicgames-freegames-svc
+          port: 14014
+      middlewares:
+        - name: auth
+          namespace: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: epicgames-freegames-svc
+  namespace: traefik
+spec:
+  clusterIP: None
+  ports:
+    - port: 14014
+      targetPort: 14014
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: epicgames-freegames-svc-1
+  namespace: traefik
+  labels:
+    kubernetes.io/service-name: epicgames-freegames-svc
+addressType: IPv4
+ports:
+  - port: 14014
+endpoints:
+  - addresses:
+      - "10.10.10.2"
+    conditions:
+      ready: true

@@ -22,6 +22,7 @@ resources:
   - traefik-obzorarr.yaml
   - traefik-houndarr.yaml
   - traefik-watchstate.yaml
+  - traefik-epicgames-freegames.yaml
 
   # Custom Ingresses - TheFactory Downloaders
   - traefik-qbittorrent.yaml

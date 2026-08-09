@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - swaparr.yaml
+secretGenerator:
+  - name: swaparr-secrets
+    envs:
+      - swaparr-secrets.env
+    options:
+      labels:
+        app.kubernetes.io/name: swaparr
