@@ -5,5 +5,8 @@
   "searchStrategy": "all",
   "notifyEula": false,
   "timezone": "Europe/Brussels",
-  "skipVersionCheck": false
+  "skipVersionCheck": false,
+  "webPortalConfig": {
+    "baseUrl": "https://epicgames.timo.be"
+  }
 }
