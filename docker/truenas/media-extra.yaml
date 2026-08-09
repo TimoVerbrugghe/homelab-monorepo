@@ -174,7 +174,9 @@ services:
       - PUSHOVER_USER_ID=${EPICGAMES_PUSHOVER_USER_ID}
     volumes:
       - epicgames-freegames:/usr/app/config
-      - ./epicgames-freegames-config.json:/usr/app/config/config.json:ro
+    configs:
+      - source: epicgames-freegames-config
+        target: /usr/app/config/config.json
     ports:
       - 14014:3000
 
@@ -270,6 +272,22 @@ services:
 networks:
   dockerproxy:
     external: true
+
+configs:
+  epicgames-freegames-config:
+    content: |
+      {
+        "runOnStartup": true,
+        "cronSchedule": "0 0,6,12,18 * * *",
+        "logLevel": "info",
+        "searchStrategy": "all",
+        "notifyEula": false,
+        "timezone": "Europe/Brussels",
+        "skipVersionCheck": false,
+        "webPortalConfig": {
+          "baseUrl": "https://epicgames.timo.be"
+        }
+      }
 
 volumes:
   epicgames-freegames:
