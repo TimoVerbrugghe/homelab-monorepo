@@ -28,7 +28,7 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
-        runAsNonRoot: true
+        runAsNonRoot: false  # image only contains root user
       containers:
         - name: swaparr-radarr
           image: ghcr.io/thijmengthn/swaparr:latest
@@ -102,7 +102,7 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
-        runAsNonRoot: true
+        runAsNonRoot: false  # image only contains root user
       containers:
         - name: swaparr-sonarr
           image: ghcr.io/thijmengthn/swaparr:latest

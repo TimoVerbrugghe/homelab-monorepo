@@ -241,6 +241,11 @@ configs:
   epicgames-freegames-config:
     content: |
       {
+        "accounts": [
+          {
+            "email": "${EPICGAMES_EMAIL}",
+          }
+        ],
         "runOnStartup": true,
         "cronSchedule": "0 0,6,12,18 * * *",
         "logLevel": "info",
