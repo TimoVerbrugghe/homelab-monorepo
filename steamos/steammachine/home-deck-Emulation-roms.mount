@@ -1,0 +1,10 @@
+[Unit]
+Description=NFS mount for Emulation ROMs share
+After=network-online.target
+Wants=network-online.target
+
+[Mount]
+What=nfs.local.timo.be:/mnt/X.A.N.A./media/games/roms
+Where=/home/deck/Emulation/roms
+Type=nfs
+Options=vers=4.2,relatime,sec=sys,hard,rw,nolock,_netdev

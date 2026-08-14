@@ -1,0 +1,5 @@
+- name: Configure SteamMachine
+  hosts: steammachine
+  gather_facts: true
+  roles:
+    - role: ../roles/configure-steammachine

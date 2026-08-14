@@ -1,0 +1,9 @@
+[Unit]
+Description=Automount for the Emulation ROMs NFS share
+
+[Automount]
+Where=/home/deck/Emulation/roms
+TimeoutIdleSec=600
+
+[Install]
+WantedBy=multi-user.target

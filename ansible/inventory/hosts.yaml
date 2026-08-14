@@ -83,3 +83,8 @@ gamingvm:
       ansible_become_password: ''
       ansible_winrm_operation_timeout_sec: 120
       ansible_winrm_read_timeout_sec: 150
+
+steammachine:
+  hosts:
+    steammachine.local.timo.be:
+      ansible_user: deck

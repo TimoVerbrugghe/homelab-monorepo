@@ -1,0 +1,67 @@
+# Mounting NFS needs CAP_SYS_ADMIN, so this must be a system (root) unit, not a user unit.
+# See steamos/steammachine/README.md for the full rationale.
+
+- name: Ensure Emulation mount points exist
+  ansible.builtin.file:
+    path: "/home/deck/Emulation/{{ item }}"
+    state: directory
+    owner: deck
+    group: deck
+    mode: "0755"
+  loop:
+    - roms
+    - bios
+    - saves
+  become: true
+
+- name: Install NFS mount units
+  ansible.builtin.copy:
+    src: "{{ steammachine_files_dir }}/{{ item }}.mount"
+    dest: "/etc/systemd/system/{{ item }}.mount"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ steammachine_nfs_mount_units }}"
+  become: true
+
+- name: Install NFS automount units
+  ansible.builtin.copy:
+    src: "{{ steammachine_files_dir }}/{{ item }}.automount"
+    dest: "/etc/systemd/system/{{ item }}.automount"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ steammachine_nfs_mount_units }}"
+  become: true
+
+- name: Ensure atomic-update keep-list directory exists
+  ansible.builtin.file:
+    path: /etc/atomic-update.conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+
+# Since SteamOS 3.6, /etc changes are discarded on update unless whitelisted here.
+- name: Whitelist the NFS units so SteamOS updates don't discard them
+  ansible.builtin.copy:
+    src: "{{ steammachine_files_dir }}/steammachine-emulation.conf"
+    dest: /etc/atomic-update.conf.d/steammachine-emulation.conf
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true
+
+- name: Enable and start the NFS automount units
+  ansible.builtin.systemd:
+    name: "{{ item }}.automount"
+    enabled: true
+    state: started
+  loop: "{{ steammachine_nfs_mount_units }}"
+  become: true
