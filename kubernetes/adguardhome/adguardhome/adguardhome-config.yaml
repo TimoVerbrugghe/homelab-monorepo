@@ -281,10 +281,6 @@ filtering:
       answer: 10.10.10.43
     - domain: pdu.local.timo.be
       answer: 10.10.10.12
-    - domain: gamingserver.local.timo.be
-      answer: 10.10.10.15
-    - domain: sunshine.local.timo.be
-      answer: 10.10.10.15
     - domain: dns.local.timo.be
       answer: 10.10.10.35
     - domain: adguardhome-ulrich.local.timo.be

@@ -1,2 +1,0 @@
-New-NetIPAddress -IPAddress 10.10.10.11 -DefaultGateway 10.10.10.1 -PrefixLength 24 -InterfaceIndex (Get-NetAdapter).InterfaceIndex
-Set-DNSClientServerAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -ServerAddresses 10.10.10.35,10.10.10.21,10.10.10.22

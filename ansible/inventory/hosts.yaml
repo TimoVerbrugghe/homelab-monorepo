@@ -69,21 +69,6 @@ azure:
       ansible_become_method: sudo
       ansible_become_user: root
       
-gamingvm:
-  hosts:
-    gamingvm.local.timo.be:
-      ansible_user: ansible
-      ansible_password: ansible
-      ansible_connection: winrm
-      ansible_winrm_transport: credssp
-      ansible_winrm_server_cert_validation: ignore
-      ansible_become: true
-      ansible_become_method: runas
-      ansible_become_user: GamingVM
-      ansible_become_password: ''
-      ansible_winrm_operation_timeout_sec: 120
-      ansible_winrm_read_timeout_sec: 150
-
 steammachine:
   hosts:
     steammachine.local.timo.be:
