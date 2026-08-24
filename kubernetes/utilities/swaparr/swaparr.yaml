@@ -50,12 +50,12 @@ spec:
                   key: RADARR_API_KEY
             - name: PLATFORM
               value: "radarr"
-            - name: TIME_THRESHOLD
+            - name: MAX_DOWNLOAD_TIME
               value: "1d"
             - name: SIZE_THRESHOLD
               value: "25GB"
             - name: CHECK_INTERVAL
-              value: "10m"
+              value: "1d"
             - name: STRIKE_THRESHOLD
               value: "3"
           resources:
@@ -122,14 +122,14 @@ spec:
                 secretKeyRef:
                   name: swaparr-secrets
                   key: SONARR_API_KEY
+            - name: MAX_DOWNLOAD_TIME
+              value: "1d"
             - name: PLATFORM
               value: "sonarr"
-            - name: TIME_THRESHOLD
-              value: "1d"
-            - name: SIZE_THRESHOLD
+            - name: IGNORE_ABOVE_SIZE
               value: "25GB"
             - name: CHECK_INTERVAL
-              value: "10m"
+              value: "1d"
             - name: STRIKE_THRESHOLD
               value: "3"
           resources:

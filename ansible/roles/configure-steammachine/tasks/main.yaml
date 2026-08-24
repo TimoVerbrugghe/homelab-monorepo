@@ -1,2 +1,2 @@
-- name: Configure Emulation NFS automounts (roms, bios, saves)
-  ansible.builtin.include_tasks: nfs-emulation-mounts.yaml
+- name: Configure NFS ROMs automount
+  ansible.builtin.include_tasks: nfs-roms-mount.yaml

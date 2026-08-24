@@ -5,6 +5,6 @@ The following Decky plugins are currently installed:
 - **SteamGridDB**
 - **ProtonDB Badges**
 - **Emudecky**
-- **Tabmaster**
 - **MagicPods**
 - **PlayTime**
+- **CSS Loader**

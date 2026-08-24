@@ -1,37 +1,31 @@
 # Mounting NFS needs CAP_SYS_ADMIN, so this must be a system (root) unit, not a user unit.
 # See steamos/steammachine/README.md for the full rationale.
 
-- name: Ensure Emulation mount points exist
+- name: Ensure ROMs mount point exists
   ansible.builtin.file:
-    path: "/home/deck/Emulation/{{ item }}"
+    path: /home/deck/Emulation/roms
     state: directory
     owner: deck
     group: deck
     mode: "0755"
-  loop:
-    - roms
-    - bios
-    - saves
   become: true
 
-- name: Install NFS mount units
+- name: Install NFS mount unit
   ansible.builtin.copy:
-    src: "{{ steammachine_files_dir }}/{{ item }}.mount"
-    dest: "/etc/systemd/system/{{ item }}.mount"
+    src: "{{ steammachine_files_dir }}/home-deck-Emulation-roms.mount"
+    dest: /etc/systemd/system/home-deck-Emulation-roms.mount
     owner: root
     group: root
     mode: "0644"
-  loop: "{{ steammachine_nfs_mount_units }}"
   become: true
 
-- name: Install NFS automount units
+- name: Install NFS automount unit
   ansible.builtin.copy:
-    src: "{{ steammachine_files_dir }}/{{ item }}.automount"
-    dest: "/etc/systemd/system/{{ item }}.automount"
+    src: "{{ steammachine_files_dir }}/home-deck-Emulation-roms.automount"
+    dest: /etc/systemd/system/home-deck-Emulation-roms.automount
     owner: root
     group: root
     mode: "0644"
-  loop: "{{ steammachine_nfs_mount_units }}"
   become: true
 
 - name: Ensure atomic-update keep-list directory exists
@@ -46,22 +40,17 @@
 # Since SteamOS 3.6, /etc changes are discarded on update unless whitelisted here.
 - name: Whitelist the NFS units so SteamOS updates don't discard them
   ansible.builtin.copy:
-    src: "{{ steammachine_files_dir }}/steammachine-emulation.conf"
-    dest: /etc/atomic-update.conf.d/steammachine-emulation.conf
+    src: "{{ steammachine_files_dir }}/steammachine-roms.conf"
+    dest: /etc/atomic-update.conf.d/steammachine-roms.conf
     owner: root
     group: root
     mode: "0644"
   become: true
 
-- name: Reload systemd
+- name: Enable and start the NFS automount unit
   ansible.builtin.systemd:
-    daemon_reload: true
-  become: true
-
-- name: Enable and start the NFS automount units
-  ansible.builtin.systemd:
-    name: "{{ item }}.automount"
+    name: home-deck-Emulation-roms.automount
     enabled: true
     state: started
-  loop: "{{ steammachine_nfs_mount_units }}"
+    daemon_reload: true
   become: true

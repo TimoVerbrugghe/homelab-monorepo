@@ -1,9 +1,0 @@
-[Unit]
-Description=Automount for the Emulation saves NFS share
-
-[Automount]
-Where=/home/deck/Emulation/saves
-TimeoutIdleSec=600
-
-[Install]
-WantedBy=multi-user.target

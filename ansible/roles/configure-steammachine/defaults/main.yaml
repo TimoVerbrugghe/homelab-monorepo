@@ -3,8 +3,3 @@
 # place under steamos/steammachine so both the ansible role and manual/docs stay in sync).
 steammachine_files_dir: "{{ playbook_dir }}/../../steamos/steammachine"
 
-# One systemd unit pair per Emulation share, named after the mount point they control.
-steammachine_nfs_mount_units:
-  - home-deck-Emulation-roms
-  - home-deck-Emulation-bios
-  - home-deck-Emulation-saves

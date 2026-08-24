@@ -1,9 +1,0 @@
-[Unit]
-Description=Automount for the Emulation BIOS NFS share
-
-[Automount]
-Where=/home/deck/Emulation/bios
-TimeoutIdleSec=600
-
-[Install]
-WantedBy=multi-user.target
