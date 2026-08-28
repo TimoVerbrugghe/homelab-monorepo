@@ -69,7 +69,6 @@
       "google-chrome"
       "monitorcontrol"
       "moonlight"
-      "orbstack"
     ];
     masApps = {
       "Xcode" = 497799835;
