@@ -83,7 +83,7 @@
       "args": ["mcp-portainer"],
       "tools": ["*"],
       "env": {
-        "PORTAINER_URL": "https://portainer.kubernetes.timo.be",
+        "PORTAINER_URL": "https://portainer.timo.be",
         "PORTAINER_API_KEY": "$COPILOT_MCP_PORTAINER_TOKEN"
       }
     },
