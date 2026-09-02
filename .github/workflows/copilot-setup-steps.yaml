@@ -42,6 +42,17 @@ jobs:
           sudo apt-get update -q
           sudo apt-get install -y shellcheck
 
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          tags: tag:ci
+          accept-routes: true
+
       - name: Verify tool versions
         run: |
           yamllint --version
@@ -49,3 +60,7 @@ jobs:
           kubectl version --client
           kustomize version
           shellcheck --version
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/uv" --version
+          "$HOME/.local/bin/uvx" --version
+          tailscale status
