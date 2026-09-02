@@ -96,7 +96,7 @@
         "UNIFI_HOST": "10.10.10.1",
         "UNIFI_USERNAME": "unifimcp",
         "UNIFI_PASSWORD": "$COPILOT_MCP_UNIFI_PASSWORD",
-        "UNIFI_VERIFY_SSL": "true"
+        "UNIFI_VERIFY_SSL": "false"
       }
     },
     "proxmox": {
