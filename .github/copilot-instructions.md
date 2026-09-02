@@ -411,7 +411,8 @@ When you change a file in column A, you must also review/update the files in col
 | `.github/workflows/*.yaml` (new workflow) | `README.md` GitHub Workflows Status badge section; the `CI Workflows Summary` section in this file; `update-badges.yaml` if badge count changes |
 | `.github/workflows/update-badges.yaml` | `README.md` badge section (auto-generated, but verify count patterns still match) |
 | `internal_ips.md` | Kubernetes manifests or Docker Compose files that reference those IPs by hostname/IP |
-| `.vscode/mcp.json` | `README.md` MCP Servers section |
+| `.vscode/mcp.json` | `README.md` MCP Servers section; `.github/mcp.json` (cloud agent equivalent) if servers were added/removed/renamed |
+| `.github/mcp.json` | `.github/workflows/copilot-setup-steps.yaml` (tool installs/auth needed by any new server); required `COPILOT_MCP_*` Agents secrets documented in the file's header comment |
 | `recyclarr/recyclarr.yaml` | `recyclarr/secrets.yaml.template` (if new secret keys are referenced) |
 | Talos machine configs (`kubernetes/talos/`) | `ansible/playbooks/bootstrap-talos-k8s-cluster.yaml`; `ansible/scripts/bootstrap-talos-cluster.sh` |
 | Add/rename a NixOS ISO definition | `.github/workflows/build-nixos-isos.yaml` matrix list; `nixos/isos/` directory |

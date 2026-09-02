@@ -1,0 +1,97 @@
+// This file is a copy-paste source for the GitHub Copilot cloud coding agent's
+// repository-level MCP configuration (repo Settings > Copilot > MCP servers).
+// GitHub does not read this file automatically -- there is no repo-file
+// convention for cloud agent MCP config (unlike Actions workflows). Copy the
+// "mcpServers" JSON object below (everything from the outer "{" onward, minus
+// these "//" comments, which are not valid JSON and must be removed before
+// pasting -- this matches GitHub's own documented example format) into the
+// "MCP configuration" box in the repo settings UI, then click
+// "Save MCP configuration".
+//
+// How this differs from .vscode/mcp.json:
+// - .vscode/mcp.json runs MCP servers locally inside VS Code, using
+//   "${input:...}" prompts to collect secrets interactively from you at
+//   runtime.
+// - This file runs MCP servers inside GitHub's cloud agent sandbox. It has no
+//   access to your local machine, your VS Code prompts, or your LAN/tailnet by
+//   default. "${input:...}" placeholders are replaced with "COPILOT_MCP_*"
+//   Agents secrets/variables (configured separately under Settings > Copilot >
+//   Coding agent > Secrets and variables), substituted at run time.
+// - Network access to homelab services (Kubernetes API, Home Assistant, etc.)
+//   is only possible because .github/workflows/copilot-setup-steps.yaml joins
+//   the tailnet (tailscale/github-action) and writes a kubeconfig before the
+//   agent's tools are started, with "accept-routes: true" so LAN-advertised
+//   subnet routes (e.g. 10.10.10.0/24) are reachable too.
+// - "siderolabs-docs" and "cloudflare" are plain remote HTTP MCP servers and
+//   need no secrets or network setup, so they work unchanged from the VS Code
+//   config.
+// - "unifi-network" and "proxmox" are NOT included below: their MCP servers
+//   require "uvx" from Python's "uv" toolchain, which IS installed by
+//   copilot-setup-steps.yaml, but their endpoints (unifi.local.timo.be,
+//   proxmox.kubernetes.timo.be) were not confirmed reachable/resolvable from
+//   the cloud agent's tailnet-joined sandbox at the time this file was
+//   written. Add them here once connectivity is verified, following the same
+//   pattern as "homeAssistant" and "portainer" below.
+//
+// Required Agents secrets (repo Settings > Copilot > Coding agent > Secrets
+// and variables > New secret) -- names MUST start with "COPILOT_MCP_":
+//   COPILOT_MCP_HA_TOKEN                       Home Assistant long-lived access token
+//   COPILOT_MCP_PORTAINER_TOKEN                 Portainer administrator API token
+//   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID        Tailscale OAuth client ID for the MCP server's own tailnet API access (separate from the Actions-level TAILSCALE_OAUTH_CLIENT_ID secret used by copilot-setup-steps.yaml to join the tailnet)
+//   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET    Tailscale OAuth client secret (see above)
+//
+// Note: the Kubernetes MCP server needs no COPILOT_MCP_* secret -- it reads
+// the kubeconfig written to $HOME/.kube/config by copilot-setup-steps.yaml
+// (sourced from the repository's KUBECONFIG Actions secret).
+{
+  "mcpServers": {
+    "homeAssistant": {
+      "type": "http",
+      "url": "http://homeassistant.pony-godzilla.ts.net:8123/api/mcp",
+      "tools": ["*"],
+      "headers": {
+        "Authorization": "Bearer $COPILOT_MCP_HA_TOKEN"
+      }
+    },
+    "kubernetes": {
+      "type": "local",
+      "command": "npx",
+      "args": ["mcp-server-kubernetes"],
+      "tools": ["*"]
+    },
+    "siderolabs-docs": {
+      "type": "http",
+      "url": "https://docs.siderolabs.com/mcp",
+      "tools": ["*"]
+    },
+    "tailscale": {
+      "type": "local",
+      "command": "npx",
+      "args": [
+        "--package=@hexsleeves/tailscale-mcp-server",
+        "tailscale-mcp-server"
+      ],
+      "tools": ["*"],
+      "env": {
+        "TAILSCALE_OAUTH_CLIENT_ID": "$COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID",
+        "TAILSCALE_OAUTH_CLIENT_SECRET": "$COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET",
+        "TAILSCALE_TAILNET": "pony-godzilla.ts.net"
+      }
+    },
+    "portainer": {
+      "type": "local",
+      "command": "uvx",
+      "args": ["mcp-portainer"],
+      "tools": ["*"],
+      "env": {
+        "PORTAINER_URL": "https://portainer.kubernetes.timo.be",
+        "PORTAINER_API_KEY": "$COPILOT_MCP_PORTAINER_TOKEN"
+      }
+    },
+    "cloudflare": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp",
+      "tools": ["*"]
+    }
+  }
+}

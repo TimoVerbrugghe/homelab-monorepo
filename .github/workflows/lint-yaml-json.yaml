@@ -56,10 +56,14 @@ jobs:
       - name: Lint JSON files
         run: |
           echo "Linting JSON files..."
+          # .github/mcp.json is intentionally excluded: it uses "//" line
+          # comments (invalid JSON) to document the file, matching GitHub's
+          # own documented example format for copy-paste MCP configuration.
           find . -name "*.json" \
             -not -path "*/node_modules/*" \
             -not -path "*/.venv/*" \
             -not -path "*/result/*" \
+            -not -path "./.github/mcp.json" \
             -exec echo "Checking: {}" \; \
             -exec jsonlint -q {} \; || exit 1
 
@@ -70,4 +74,5 @@ jobs:
             -not -path "*/node_modules/*" \
             -not -path "*/.venv/*" \
             -not -path "*/result/*" \
+            -not -path "./.github/mcp.json" \
             -exec sh -c 'echo "Validating: $1" && jq empty "$1"' _ {} \; || exit 1
