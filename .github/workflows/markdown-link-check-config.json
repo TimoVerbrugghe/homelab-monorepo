@@ -17,6 +17,9 @@
     },
     {
       "pattern": "\\.ts\\.net"
+    },
+    {
+      "pattern": "^https://docs\\.siderolabs\\.com/mcp$"
     }
   ],
   "replacementPatterns": [],

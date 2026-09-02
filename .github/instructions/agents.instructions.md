@@ -1042,7 +1042,6 @@ Each level can override settings from previous levels.
 
 ### Related Files
 
-- [Prompt Files Guidelines](./prompt.instructions.md) - For creating prompt files
 - [Instructions Guidelines](./instructions.instructions.md) - For creating instruction files
 
 ## Version Compatibility Notes
