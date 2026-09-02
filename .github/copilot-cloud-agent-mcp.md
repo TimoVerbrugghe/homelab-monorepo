@@ -30,22 +30,28 @@ The Copilot coding agent runs its **setup steps**
 in a GitHub-hosted Actions runner before the agent session starts. That
 workflow now joins the `pony-godzilla` tailnet using the
 [`tailscale/github-action`](https://github.com/tailscale/github-action) with
-an OAuth client (`TS_OAUTH_CLIENT_ID` / `TS_OAUTH_CLIENT_SECRET` **Actions**
-secrets — not `COPILOT_MCP_*`, since this step runs as a normal workflow, not
-inside an MCP server process) and `accept-routes: true`, so that LAN subnet
-routes advertised into the tailnet (the homelab's `10.10.10.0/24` network,
-per [internal_ips.md](../internal_ips.md)) become reachable for the
-remainder of the agent's ephemeral environment.
+an OAuth client (`TAILSCALE_OAUTH_CLIENT_ID` / `TAILSCALE_OAUTH_CLIENT_SECRET`
+**Actions** secrets — the same secrets already used by
+[rotate-cluster-credentials.yaml](workflows/rotate-cluster-credentials.yaml)
+and other workflows in this repo; not `COPILOT_MCP_*`, since this step runs
+as a normal workflow, not inside an MCP server process) and
+`accept-routes: true`, so that LAN subnet routes advertised into the tailnet
+(the homelab's `10.10.10.0/24` network, per
+[internal_ips.md](../internal_ips.md)) become reachable for the remainder of
+the agent's ephemeral environment.
 
 This means MCP servers that point at homelab hosts can now be reached
 directly, either by:
 
-- **LAN IP** (e.g. `10.10.10.28` for Home Assistant), for hosts documented in
+- **LAN IP** (e.g. `10.10.10.1` for UniFi, `10.10.10.33:6443` for the
+  Kubernetes API server), for hosts documented in
   [internal_ips.md](../internal_ips.md), or
 - **Tailscale MagicDNS name** (`<host>.pony-godzilla.ts.net`), for hosts that
-  are themselves tailnet nodes (confirmed reachable for Proxmox and
+  are themselves tailnet nodes — confirmed reachable for Proxmox and
   Portainer, which don't have a dedicated LAN IP entry in
-  [internal_ips.md](../internal_ips.md)).
+  [internal_ips.md](../internal_ips.md), and used for Home Assistant too
+  (`homeassistant.pony-godzilla.ts.net`) even though it has a LAN IP entry
+  there (`10.10.10.28`), per explicit preference for MagicDNS over LAN IP.
 
 Either form resolves once the runner has joined the tailnet with
 `accept-routes: true`. `*.local` mDNS names and public hostnames like
@@ -69,15 +75,17 @@ GitHub-hosted runners.
   `copilot-setup-steps.yaml` joins the tailnet with `accept-routes: true`,
   these are **enabled**, addressed by LAN IP or tailnet MagicDNS name (see
   above) instead of the `*.local` / `*.kubernetes.timo.be` /
-  `*.local.timo.be` hostnames used locally.
-- `kubernetes` (`mcp-server-kubernetes`) needs a kubeconfig pointing at the
-  cluster's API server (`10.10.10.33:6443`, now reachable over the tailnet
-  subnet route). Unlike the other servers it has no argument-based
-  host/token config — the npx package expects an ambient kubeconfig file on
-  disk. Provisioning that safely (writing cluster credentials to disk in the
-  ephemeral runner from a secret) is a bigger lift and is **left deferred**
-  pending an explicit decision on how to scope the kubeconfig's RBAC
-  permissions before handing broad cluster access to a cloud agent.
+  `*.local.timo.be` hostnames used locally. Home Assistant is itself a
+  tailnet node, so it is addressed by its MagicDNS name
+  (`homeassistant.pony-godzilla.ts.net`) rather than its LAN IP.
+- `kubernetes` (`mcp-server-kubernetes`) is now **enabled**. It needs a
+  kubeconfig pointing at the cluster's API server, provided as an ambient
+  file on disk (the npx package has no argument-based host/token config).
+  `copilot-setup-steps.yaml` writes it from the repository's existing
+  `KUBECONFIG` **Actions** secret (the same secret used by
+  [deploy-k8s-resource.yaml](workflows/deploy-k8s-resource.yaml) and
+  [iscsi-kubernetes.yaml](workflows/iscsi-kubernetes.yaml)) to
+  `$HOME/.kube/config` before the agent session starts.
 
 ## MCP configuration JSON (paste into the GitHub UI)
 
@@ -96,7 +104,7 @@ GitHub-hosted runners.
     },
     "homeAssistant": {
       "type": "http",
-      "url": "http://10.10.10.28:8123/api/mcp",
+      "url": "http://homeassistant.pony-godzilla.ts.net:8123/api/mcp",
       "headers": {
         "Authorization": "Bearer $COPILOT_MCP_HA_TOKEN"
       },
@@ -137,20 +145,29 @@ GitHub-hosted runners.
         "PROXMOX_VERIFY_SSL": "true"
       },
       "tools": ["*"]
+    },
+    "kubernetes": {
+      "type": "local",
+      "command": "npx",
+      "args": ["mcp-server-kubernetes"],
+      "tools": ["*"]
     }
   }
 }
 ```
 
-> **Note:** Home Assistant (`10.10.10.28`) and UniFi (`10.10.10.1`) are LAN
-> IPs confirmed against [internal_ips.md](../internal_ips.md). Portainer and
+> **Note:** UniFi (`10.10.10.1`) is a LAN IP confirmed against
+> [internal_ips.md](../internal_ips.md). Home Assistant, Portainer, and
 > Proxmox have no dedicated LAN IP entry there, so their tailnet MagicDNS
-> names (`portainer.pony-godzilla.ts.net`, `proxmox.pony-godzilla.ts.net`)
-> are used instead — these were resolved and confirmed to have an assigned
-> tailnet address, but end-to-end reachability from a GitHub-hosted runner
-> has not been tested. Verify with a real Copilot agent run (or a manual
-> `curl`/`nc` check from a machine on the same tailnet with `tag:ci`-scoped
-> access) before relying on this in production.
+> names (`homeassistant.pony-godzilla.ts.net`,
+> `portainer.pony-godzilla.ts.net`, `proxmox.pony-godzilla.ts.net`) are used
+> instead — these were resolved and confirmed to have an assigned tailnet
+> address, but end-to-end reachability from a GitHub-hosted runner has not
+> been tested. Verify with a real Copilot agent run (or a manual `curl`/`nc`
+> check from a machine on the same tailnet with `tag:ci`-scoped access)
+> before relying on this in production. `kubernetes` is reached via the
+> cluster's LAN API server address (`10.10.10.33:6443`) baked into the
+> kubeconfig itself, not via an MCP server argument.
 
 Required Copilot Agents secrets (create under **Settings → Secrets and
 variables → Copilot**, not Actions):
@@ -164,16 +181,21 @@ variables → Copilot**, not Actions):
 
 Required repository **Actions** secrets (create under **Settings → Secrets
 and variables → Actions** — used by `copilot-setup-steps.yaml` itself, not
-by MCP server processes):
+by MCP server processes). These already exist in this repository and are
+shared with other workflows:
 
-| Secret name | Source value |
-| ------------- | ------------- |
-| `TS_OAUTH_CLIENT_ID` | Tailscale OAuth client ID (tag-scoped, e.g. `tag:ci`) |
-| `TS_OAUTH_CLIENT_SECRET` | Tailscale OAuth client secret |
+| Secret name | Source value | Also used by |
+| ------------- | ------------- | ------------- |
+| `TAILSCALE_OAUTH_CLIENT_ID` | Tailscale OAuth client ID (tag-scoped, e.g. `tag:ci`) | — |
+| `TAILSCALE_OAUTH_CLIENT_SECRET` | Tailscale OAuth client secret | — |
+| `KUBECONFIG` | Kubeconfig for the `sectorfive` cluster's API server | [rotate-cluster-credentials.yaml](workflows/rotate-cluster-credentials.yaml), [deploy-k8s-resource.yaml](workflows/deploy-k8s-resource.yaml), [iscsi-kubernetes.yaml](workflows/iscsi-kubernetes.yaml) |
 
 The Tailscale OAuth client should be scoped (via an ACL tag such as
 `tag:ci`) to only the access the cloud agent actually needs — avoid reusing
-a broad/admin-scoped OAuth client for this purpose.
+a broad/admin-scoped OAuth client for this purpose. `KUBECONFIG` currently
+grants the same access as the other workflows above (cluster-admin); scoping
+it down to a narrower role for the cloud agent specifically is a possible
+future hardening step (see Open follow-ups).
 
 `tailscale` (the `@hexsleeves/tailscale-mcp-server` MCP server from
 [.vscode/mcp.json](../.vscode/mcp.json)) is intentionally omitted from the
@@ -183,42 +205,17 @@ same environment. Tailnet connectivity for the *other* MCP servers is
 instead provisioned once, up front, by `copilot-setup-steps.yaml` joining
 the tailnet directly — see above.
 
-## Deferred servers (reference translation, not yet applied)
-
-```json
-{
-  "mcpServers": {
-    "kubernetes": {
-      "type": "local",
-      "command": "npx",
-      "args": ["mcp-server-kubernetes"],
-      "tools": ["*"]
-    }
-  }
-}
-```
-
-`kubernetes` needs a kubeconfig written to disk (e.g. `$HOME/.kube/config`)
-pointing at `https://10.10.10.33:6443`, sourced from a secret. This is kept
-deferred until there's an explicit decision on:
-
-- Whether to mint a scoped ServiceAccount/RBAC role for the cloud agent
-  rather than reusing an admin kubeconfig.
-- Where the kubeconfig gets written from a secret (an additional
-  `copilot-setup-steps.yaml` step) without it ever appearing in workflow
-  logs.
-
 ## Open follow-ups
 
-1. Validate real end-to-end reachability of `10.10.10.28` (HA),
-   `10.10.10.1` (UniFi), `portainer.pony-godzilla.ts.net`, and
-   `proxmox.pony-godzilla.ts.net` from an actual Copilot coding agent run —
-   the addresses above were derived from repo docs and MagicDNS lookups from
-   a developer machine already on the tailnet, not from a live cloud-agent
-   test.
-2. Decide on a scoped Kubernetes RBAC role/kubeconfig strategy, then move
-   `kubernetes` from deferred to enabled with a `copilot-setup-steps.yaml`
-   step that writes the kubeconfig from a secret.
+1. Validate real end-to-end reachability of `homeassistant.pony-godzilla.ts.net`,
+   `10.10.10.1` (UniFi), `portainer.pony-godzilla.ts.net`,
+   `proxmox.pony-godzilla.ts.net`, and `10.10.10.33:6443` (kubernetes) from an
+   actual Copilot coding agent run — the addresses above were derived from
+   repo docs and MagicDNS lookups from a developer machine already on the
+   tailnet, not from a live cloud-agent test.
+2. Consider minting a scoped ServiceAccount/RBAC role for the cloud agent's
+   `kubernetes` MCP server instead of reusing the same cluster-admin
+   `KUBECONFIG` secret used by deployment workflows.
 3. If/when GitHub ships a write API for the Copilot MCP configuration
    setting, this doc's JSON can be applied programmatically instead of via
    the UI.
