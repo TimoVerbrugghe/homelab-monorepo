@@ -107,7 +107,7 @@
       "env": {
         "PROXMOX_HOST": "proxmox.pony-godzilla.ts.net",
         "PROXMOX_USER": "root@pam",
-        "PROXMOX_TOKEN_NAME": "mcp-token",
+        "PROXMOX_TOKEN_NAME": "mcp-token-github",
         "PROXMOX_TOKEN_VALUE": "$COPILOT_MCP_PROXMOX_TOKEN_VALUE",
         "PROXMOX_PORT": "443",
         "PROXMOX_VERIFY_SSL": "true"
