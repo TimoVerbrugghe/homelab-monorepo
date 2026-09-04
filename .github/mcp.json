@@ -63,27 +63,13 @@
       "url": "https://docs.siderolabs.com/mcp",
       "tools": ["*"]
     },
-    "tailscale": {
-      "type": "local",
-      "command": "npx",
-      "args": [
-        "--package=@hexsleeves/tailscale-mcp-server",
-        "tailscale-mcp-server"
-      ],
-      "tools": ["*"],
-      "env": {
-        "TAILSCALE_OAUTH_CLIENT_ID": "$COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID",
-        "TAILSCALE_OAUTH_CLIENT_SECRET": "$COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET",
-        "TAILSCALE_TAILNET": "pony-godzilla.ts.net"
-      }
-    },
     "portainer": {
       "type": "local",
       "command": "uvx",
       "args": ["mcp-portainer"],
       "tools": ["*"],
       "env": {
-        "PORTAINER_URL": "https://portainer.timo.be",
+        "PORTAINER_URL": "https://portainer.pony-godzilla.ts.net",
         "PORTAINER_API_KEY": "$COPILOT_MCP_PORTAINER_TOKEN"
       }
     },
