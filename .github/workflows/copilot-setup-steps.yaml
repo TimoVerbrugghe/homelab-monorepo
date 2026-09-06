@@ -37,6 +37,11 @@ jobs:
           curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
           sudo mv kustomize /usr/local/bin/kustomize
 
+      - name: Install talosctl
+        run: |
+          curl -sL https://talos.dev/install | sh
+          talosctl version --client
+
       - name: Install shellcheck
         run: |
           sudo apt-get update -q
@@ -52,11 +57,28 @@ jobs:
           oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
           tags: tag:github-cicd
 
+      # Both configs come from the repository Actions secrets (rotated by
+      # rotate-cluster-credentials.yaml).
       - name: Provision kubeconfig for kubernetes MCP server
         run: |
           mkdir -p "$HOME/.kube"
-          echo "${{ secrets.COPILOT_MCP_KUBECONFIG }}" > "$HOME/.kube/config"
+          echo "${{ secrets.KUBECONFIG }}" > "$HOME/.kube/config"
           chmod 600 "$HOME/.kube/config"
+          if ! kubectl config view --minify > /dev/null 2>&1; then
+            echo "::error::KUBECONFIG secret is missing or not a valid kubeconfig"
+            exit 1
+          fi
+          kubectl cluster-info || echo "::warning::Cluster not reachable yet"
+
+      - name: Provision talosconfig
+        run: |
+          mkdir -p "$HOME/.talos"
+          echo "${{ secrets.TALOSCONFIG }}" > "$HOME/.talos/config"
+          chmod 600 "$HOME/.talos/config"
+          if ! talosctl config info > /dev/null 2>&1; then
+            echo "::error::TALOSCONFIG secret is missing or not a valid talosconfig"
+            exit 1
+          fi
 
       - name: Verify tool versions
         run: |
@@ -64,6 +86,7 @@ jobs:
           jsonlint --version || true
           kubectl version --client
           kustomize version
+          talosctl version --client
           shellcheck --version
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           "$HOME/.local/bin/uv" --version
