@@ -65,10 +65,20 @@ jobs:
                 [[ -z "$namespace" || -z "$deployment" ]] && continue
                 has_iscsi="false"
 
-                # Detect direct iSCSI volumes in pod spec.
-                direct_iscsi=$(kubectl get deployment "$deployment" -n "$namespace" -o json | jq -r 'any(.spec.template.spec.volumes[]?; has("iscsi"))')
-                if [[ "$direct_iscsi" == "true" ]]; then
+                # Explicit opt-in label. Kept first because it is the only signal that
+                # survives a migration to a CSI driver, where an iSCSI-backed volume
+                # becomes an ordinary PVC reference indistinguishable from local-path.
+                labelled=$(kubectl get deployment "$deployment" -n "$namespace" -o jsonpath='{.metadata.labels.homelab\.io/iscsi-workload}' 2>/dev/null || true)
+                if [[ "$labelled" == "true" ]]; then
                   has_iscsi="true"
+                fi
+
+                # Detect direct iSCSI volumes in pod spec.
+                if [[ "$has_iscsi" != "true" ]]; then
+                  direct_iscsi=$(kubectl get deployment "$deployment" -n "$namespace" -o json | jq -r 'any(.spec.template.spec.volumes[]?; has("iscsi"))')
+                  if [[ "$direct_iscsi" == "true" ]]; then
+                    has_iscsi="true"
+                  fi
                 fi
 
                 # Detect PVC-backed volumes that resolve to iSCSI PVs.

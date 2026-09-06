@@ -4,10 +4,13 @@ machine:
   certSANs:
     - 10.10.10.31
     - manta.local.timo.be
-  kubelet:
-    nodeIP:
-      validSubnets:
-        - 10.10.10.0/24
+---
+# Replaces the deprecated v1alpha1 machine.kubelet.nodeIP field (Talos 1.14).
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+nodeIP:
+  validSubnets:
+    - 10.10.10.0/24
 ---
 apiVersion: v1alpha1
 kind: HostnameConfig

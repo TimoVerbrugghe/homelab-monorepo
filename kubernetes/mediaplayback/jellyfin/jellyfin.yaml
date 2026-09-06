@@ -4,6 +4,9 @@ kind: Deployment
 metadata:
   name: jellyfin
   namespace: mediaplayback
+  labels:
+    # Opt-in marker for .github/workflows/iscsi-kubernetes.yaml discovery.
+    homelab.io/iscsi-workload: "true"
   annotations:
     keel.sh/policy: force
     keel.sh/match-tag: "true"

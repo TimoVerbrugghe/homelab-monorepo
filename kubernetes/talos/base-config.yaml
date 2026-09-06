@@ -3,34 +3,57 @@ machine:
   certSANs:
     - 10.10.10.33
     - kubernetes.local.timo.be
-  kubelet:
-    # Fat image necessary for iscsi to work
-    image: ghcr.io/siderolabs/kubelet:v1.35.0-fat
-    # Required for metrics-server, which is required by homepage to use its kubernetes widget
-    extraArgs:
-      rotate-server-certificates: true
-    extraConfig:
-      nodeStatusUpdateFrequency: 4s
-      featureGates:
-        GracefulNodeShutdown: true
-  
-  sysctls:
-    vm.nr_hugepages: "1024"
-  
   network:
-    nameservers:      
+    nameservers:
       - 10.10.10.21
       - 10.10.10.22
       - 10.10.10.35
 
+  # machine.install is deprecated in Talos 1.14 in favour of UnattendedInstallConfig.
+  # It is deliberately NOT migrated: UnattendedInstallConfig defaults to wiping the
+  # install disk, which is unsafe to introduce on an existing cluster.
   install:
     disk: /dev/sda
 
     # Image with several extensions & kernel args - see talos-image.yaml
     # curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
-    image: factory.talos.dev/installer/451cf6f46f8d83ff633a62c31305b3ff2b3df0af14a0a9c81b9eda8d9456114e:v1.12.0
-
-cluster:
-  controlPlane:
-    endpoint: https://10.10.10.33:6443
-    
+    #
+    # The schematic ID is a hash of talos-image.yaml, so it only changes when the
+    # extension/kernel-arg list changes. On upgrade only the version tag is bumped.
+    #
+    # Talos does not support skipping minor versions: upgrade one minor at a time
+    # (1.12 -> 1.13 -> 1.14), bumping this tag and re-applying between each hop.
+    image: factory.talos.dev/installer/451cf6f46f8d83ff633a62c31305b3ff2b3df0af14a0a9c81b9eda8d9456114e:v1.14.0
+---
+# Replaces the deprecated v1alpha1 machine.sysctls field (Talos 1.14).
+apiVersion: v1alpha1
+kind: SysctlConfig
+params:
+  vm.nr_hugepages: "1024"
+---
+# Replaces the deprecated v1alpha1 machine.kubelet image/extraArgs/extraConfig fields (Talos 1.14).
+apiVersion: v1alpha1
+kind: KubeletConfig
+# Fat image necessary for the in-tree iscsi volume plugin to work: it ships the
+# iscsiadm wrapper the kubelet shells out to. Kubernetes 1.35 is supported by
+# Talos 1.14 (support matrix: 1.37, 1.36, 1.35, 1.34, 1.33).
+image: ghcr.io/siderolabs/kubelet:v1.35.0-fat
+# Required for metrics-server, which is required by homepage to use its kubernetes widget
+extraArgs:
+  rotate-server-certificates: true
+config:
+  nodeStatusUpdateFrequency: 4s
+  featureGates:
+    GracefulNodeShutdown: true
+---
+# Replaces the deprecated v1alpha1 cluster.controlPlane.endpoint field (Talos 1.14).
+apiVersion: v1alpha1
+kind: KubeClusterConfig
+clusterName: sectorfive
+endpoint: https://10.10.10.33:6443
+---
+# New in Talos 1.14, and only emitted for freshly generated clusters, so an upgraded
+# cluster has to opt in explicitly. Trims the SSD-backed volumes weekly.
+apiVersion: v1alpha1
+kind: FilesystemTrimConfig
+interval: 168h0m0s
