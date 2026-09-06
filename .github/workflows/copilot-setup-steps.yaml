@@ -37,6 +37,11 @@ jobs:
           curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
           sudo mv kustomize /usr/local/bin/kustomize
 
+      - name: Install talosctl
+        run: |
+          curl -sL https://talos.dev/install | sh
+          talosctl version --client
+
       - name: Install shellcheck
         run: |
           sudo apt-get update -q
@@ -52,26 +57,30 @@ jobs:
           oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
           tags: tag:github-cicd
 
-      # Uses the repository Actions secret KUBECONFIG (rotated by
+      # Both configs come from the repository Actions secrets (rotated by
       # rotate-cluster-credentials.yaml). COPILOT_MCP_* Agents secrets are only
       # injected into MCP server processes, not into this workflow's secrets
       # context, so they cannot be used here.
       - name: Provision kubeconfig for kubernetes MCP server
-        env:
-          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
         run: |
           mkdir -p "$HOME/.kube"
-          printf '%s\n' "$KUBECONFIG_CONTENT" > "$HOME/.kube/config"
+          echo "${{ secrets.KUBECONFIG }}" > "$HOME/.kube/config"
           chmod 600 "$HOME/.kube/config"
-          if [ ! -s "$HOME/.kube/config" ]; then
-            echo "::error::KUBECONFIG secret is empty - the kubernetes MCP server will not start"
-            exit 1
-          fi
           if ! kubectl config view --minify > /dev/null 2>&1; then
-            echo "::error::KUBECONFIG secret does not contain a valid kubeconfig"
+            echo "::error::KUBECONFIG secret is missing or not a valid kubeconfig"
             exit 1
           fi
           kubectl cluster-info || echo "::warning::Cluster not reachable yet"
+
+      - name: Provision talosconfig
+        run: |
+          mkdir -p "$HOME/.talos"
+          echo "${{ secrets.TALOSCONFIG }}" > "$HOME/.talos/config"
+          chmod 600 "$HOME/.talos/config"
+          if ! talosctl config info > /dev/null 2>&1; then
+            echo "::error::TALOSCONFIG secret is missing or not a valid talosconfig"
+            exit 1
+          fi
 
       - name: Verify tool versions
         run: |
@@ -79,6 +88,7 @@ jobs:
           jsonlint --version || true
           kubectl version --client
           kustomize version
+          talosctl version --client
           shellcheck --version
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           "$HOME/.local/bin/uv" --version
