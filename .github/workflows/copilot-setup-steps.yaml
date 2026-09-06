@@ -52,11 +52,26 @@ jobs:
           oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
           tags: tag:github-cicd
 
+      # Uses the repository Actions secret KUBECONFIG (rotated by
+      # rotate-cluster-credentials.yaml). COPILOT_MCP_* Agents secrets are only
+      # injected into MCP server processes, not into this workflow's secrets
+      # context, so they cannot be used here.
       - name: Provision kubeconfig for kubernetes MCP server
+        env:
+          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
         run: |
           mkdir -p "$HOME/.kube"
-          echo "${{ secrets.COPILOT_MCP_KUBECONFIG }}" > "$HOME/.kube/config"
+          printf '%s\n' "$KUBECONFIG_CONTENT" > "$HOME/.kube/config"
           chmod 600 "$HOME/.kube/config"
+          if [ ! -s "$HOME/.kube/config" ]; then
+            echo "::error::KUBECONFIG secret is empty - the kubernetes MCP server will not start"
+            exit 1
+          fi
+          if ! kubectl config view --minify > /dev/null 2>&1; then
+            echo "::error::KUBECONFIG secret does not contain a valid kubeconfig"
+            exit 1
+          fi
+          kubectl cluster-info || echo "::warning::Cluster not reachable yet"
 
       - name: Verify tool versions
         run: |
