@@ -58,9 +58,7 @@ jobs:
           tags: tag:github-cicd
 
       # Both configs come from the repository Actions secrets (rotated by
-      # rotate-cluster-credentials.yaml). COPILOT_MCP_* Agents secrets are only
-      # injected into MCP server processes, not into this workflow's secrets
-      # context, so they cannot be used here.
+      # rotate-cluster-credentials.yaml).
       - name: Provision kubeconfig for kubernetes MCP server
         run: |
           mkdir -p "$HOME/.kube"
