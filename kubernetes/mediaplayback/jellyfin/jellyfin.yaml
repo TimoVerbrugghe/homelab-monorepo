@@ -28,32 +28,11 @@ spec:
         seccompProfile:
           type: RuntimeDefault
         fsGroup: 3000
-      # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem
-      initContainers:
-      - name: prep-volume
-        image: busybox:1.35
-        stdin: false
-        tty: false
-        command: ['sh', '-c']
-        args:
-        - |
-          if ! blkid /dev/sda; then
-            echo "Formatting volume with ext4..."
-            mkfs.ext4 /dev/sda
-          else
-            echo "Volume already formatted"
-          fi
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: jellyfin-config
-          mountPath: /dev/sda
-          subPath: ""
-
       # ONE-TIME: Migrate /config ownership from to another jellyfin user (UID/GID 3000).
       # This init container is only needed when changing runAsUser/runAsGroup on an existing
       # jellyfin install. After confirming jellyfin is healthy and running as non-root,
       # comment out this entire initContainer block.
+      # initContainers:
       # - name: chown-config
       #   image: busybox:1.35
       #   command: ['sh', '-c']

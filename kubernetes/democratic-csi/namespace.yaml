@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: democratic-csi
+  # The CSI node plugin runs privileged with hostPath/hostPID/hostIPC access so it
+  # can drive the host iscsid and bind-mount devices into kubelet's plugin dirs.
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged

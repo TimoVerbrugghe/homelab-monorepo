@@ -28,28 +28,6 @@ spec:
         seccompProfile:
           type: RuntimeDefault
         # fsGroup: 1000
-      # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem
-      initContainers:
-      - name: format-volume
-        image: busybox:1.35
-        stdin: false
-        tty: false
-        command: ['sh', '-c']
-        args:
-        - |
-          if ! blkid /dev/sda; then
-            echo "Formatting volume with ext4..."
-            mkfs.ext4 /dev/sda
-          else
-            echo "Volume already formatted"
-          fi
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: tunarr-config
-          mountPath: /dev/sda
-          subPath: ""
-
       containers:
       - name: tunarr
         image: ghcr.io/chrisbenincasa/tunarr:latest

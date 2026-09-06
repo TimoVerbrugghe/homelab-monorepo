@@ -1,0 +1,29 @@
+# Apply all these resources with `kubectl apply -k .` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+# The driver config is file-shaped (it is mounted at /config/driver-config-file.yaml),
+# so `files:` is used here rather than the `envs:` pattern used elsewhere in this repo.
+# Copy driver-config-file.yaml.template -> driver-config-file.yaml and fill it in first.
+secretGenerator:
+  - name: democratic-csi-driver-config
+    namespace: democratic-csi
+    files:
+      - driver-config-file.yaml
+    type: Opaque
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: homelab
+
+resources:
+  - namespace.yaml
+  - rbac.yaml
+  - configmap.yaml
+  - csidriver.yaml
+  - storageclass.yaml
+  - controller.yaml
+  - node.yaml

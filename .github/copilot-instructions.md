@@ -400,6 +400,8 @@ When you change a file in column A, you must also review/update the files in col
 | -------------------- | --------------------- |
 | `kubernetes/<service>/` manifests | `kubernetes/<service>/kustomization.yaml` (resource list); the `CI Workflows Summary` section in this file if a new workflow is added |
 | Add a new Kubernetes service directory | `kubernetes/README.md`; the `CI Workflows Summary` section in this file if applicable |
+| `kubernetes/democratic-csi/` (rendered chart) | `kubernetes/democratic-csi/driver-config-file.yaml.template`; `.gitignore` entry for the real config; `kubernetes/README.md` iSCSI section |
+| Add an iSCSI-backed workload | `homelab.io/iscsi-workload: "true"` label on the Deployment (drives `.github/workflows/iscsi-kubernetes.yaml` discovery) |
 | `nixos/flake.nix` inputs | `nixos/flake.lock` (run `nix flake update`); per-machine configs if module API changed |
 | `nixos/modules/<module>.nix` | All `nixos/machines/*/default.nix` files that import that module |
 | Add a new NixOS machine | `nixos/flake.nix` (add to `nixosConfigurations`); `ansible/inventory/hosts.yaml` if it needs Ansible |

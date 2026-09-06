@@ -1,0 +1,46 @@
+---
+# Copy this file to driver-config-file.yaml (gitignored) and fill in the real
+# values before running `kubectl apply -k kubernetes/democratic-csi/`.
+#
+# Docs: https://github.com/democratic-csi/democratic-csi
+# Reference example: examples/freenas-api-iscsi.yaml in the upstream repo.
+#
+# freenas-api-iscsi talks to TrueNAS purely over the REST API, so only an API key
+# is needed (no SSH key, unlike the older freenas-iscsi driver).
+driver: freenas-api-iscsi
+instance_id: sectorfive
+httpConnection:
+  protocol: https
+  host: 10.10.10.2
+  port: 443
+  # TrueNAS: Credentials -> Local Users -> root -> API Keys (or a dedicated user)
+  apiKey: REPLACE_ME
+  allowInsecure: true
+zfs:
+  # Parent dataset under which democratic-csi creates one zvol per volume.
+  # Must already exist on TrueNAS. Example: tank/k8s/vols
+  datasetParentName: REPLACE_ME
+  # Must NOT be nested inside datasetParentName. Example: tank/k8s/snaps
+  detachedSnapshotsDatasetParentName: REPLACE_ME
+  zvolCompression: ""
+  zvolDedup: ""
+  zvolEnableReservation: false
+  zvolBlocksize: ""
+iscsi:
+  targetPortal: "10.10.10.2:3260"
+  targetPortals: []
+  interface: ""
+  namePrefix: "csi-"
+  nameSuffix: ""
+  # Must match an existing iSCSI portal / initiator group / auth setup on TrueNAS.
+  targetGroups:
+    - targetGroupPortalGroup: 1
+      targetGroupInitiatorGroup: 1
+      targetGroupAuthType: None
+      targetGroupAuthGroup: ""
+  extentInsecureTpc: true
+  extentXenCompat: false
+  extentDisablePhysicalBlocksize: true
+  extentBlocksize: 512
+  extentRpm: "SSD"
+  extentAvailThreshold: 0

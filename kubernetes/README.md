@@ -126,19 +126,35 @@ Replace `<NEW_NODE_IP>` with the IP address of the node you want to add, and `<N
 ## iSCSI volumes
 
 Plex, Jellyfin and Tunarr keep their state on iSCSI volumes served by TrueNAS
-(`10.10.10.2:3260`). Those PersistentVolumes still use the **in-tree** `spec.iscsi`
-plugin, which Kubernetes has deprecated and Talos 1.14 breaks as soon as workload
-isolation (`SecurityProfileConfig` with `workloadIsolation: true`) is enabled: the
-kubelet then runs in its own PID namespace and can no longer reach the host `iscsid`.
-This repository therefore ships **no** `SecurityProfileConfig` document, and moving
-these volumes to a CSI driver (for example
-[democratic-csi](https://github.com/democratic-csi/democratic-csi), which has a
-first-class TrueNAS ZFS-over-iSCSI driver) is a prerequisite for ever turning
-isolation on.
+(`10.10.10.2:3260`). The **in-tree** `spec.iscsi` plugin these used to rely on is
+deprecated by Kubernetes and broken by Talos 1.14 workload isolation
+(`SecurityProfileConfig` with `workloadIsolation: true`): the kubelet then runs in its
+own PID namespace and can no longer reach the host `iscsid`. Those PersistentVolumes
+now use `spec.csi` against
+[democratic-csi](https://github.com/democratic-csi/democratic-csi) instead — see
+`kubernetes/democratic-csi/`. `base-config.yaml` still pins `workloadIsolation: false`;
+flip it to `true` only once CSI is proven on every node, one node at a time.
 
 > [!WARNING]
 > Plex and Jellyfin store sqlite databases on these volumes and are known to corrupt
 > them on NFS-backed storage. Any migration must keep block-level iSCSI semantics.
+
+### Cutting a volume over to CSI
+
+`spec.persistentvolumesource` on a PV and `spec.storageClassName` on a PVC are both
+immutable, so `kubectl apply` cannot convert an existing volume in place — the pair has
+to be recreated. The reclaim policy is `Retain`, so deleting them never touches the
+zvol, and democratic-csi only formats a device that is not already formatted, so the
+existing ext4 filesystem and its data survive untouched. Snapshot the zvols on TrueNAS
+first anyway.
+
+```bash
+kubectl -n mediaplayback scale deployment/<service> --replicas=0
+kubectl -n mediaplayback delete pvc <service>-pvc
+kubectl delete pv <service>-pv
+kubectl apply -k kubernetes/mediaplayback/<service>/
+kubectl -n mediaplayback rollout status deployment/<service>
+```
 
 Deployments that consume these volumes carry the `homelab.io/iscsi-workload: "true"`
 label. `.github/workflows/iscsi-kubernetes.yaml` discovers workloads purely by that
@@ -171,6 +187,16 @@ kubectl apply -k kubernetes/cert-manager/
 
 ```bash
 kubectl apply -k kubernetes/traefik-config/
+```
+
+### Deploy the iSCSI CSI driver
+
+Required before any of the mediaplayback services. Create
+`kubernetes/democratic-csi/driver-config-file.yaml` from the committed
+`.template` first (TrueNAS API key and dataset paths — the real file is gitignored).
+
+```bash
+kubectl apply -k kubernetes/democratic-csi/
 ```
 
 ### Deploy other resources
