@@ -16,7 +16,7 @@ talosctl gen config --output controlplane-william.yaml \
   --output-types controlplane \
   --with-secrets secrets.yaml \
   --config-patch @base-config.yaml \
-  --config-patch @controlplane-config.yaml \
+  --config-patch-control-plane @controlplane-config.yaml \
   --config-patch @william-patch.yaml \
   sectorfive https://10.10.10.30:6443
 
@@ -25,7 +25,7 @@ talosctl gen config --output controlplane-skidbladnir.yaml \
   --output-types controlplane \
   --with-secrets secrets.yaml \
   --config-patch @base-config.yaml \
-  --config-patch @controlplane-config.yaml \
+  --config-patch-control-plane @controlplane-config.yaml \
   --config-patch @skidbladnir-patch.yaml \
   sectorfive https://10.10.10.30:6443
 
@@ -34,7 +34,7 @@ talosctl gen config --output controlplane-manta.yaml \
   --output-types controlplane \
   --with-secrets secrets.yaml \
   --config-patch @base-config.yaml \
-  --config-patch @controlplane-config.yaml \
+  --config-patch-control-plane @controlplane-config.yaml \
   --config-patch @manta-patch.yaml \
   sectorfive https://10.10.10.30:6443
 
@@ -61,6 +61,32 @@ talosctl bootstrap -n 10.10.10.30 -e 10.10.10.30 --talosconfig talosconfig
 # Get kubeconfig file
 talosctl kubeconfig --nodes 10.10.10.30 -e 10.10.10.30 --talosconfig ./talosconfig
 ```
+
+`controlplane-config.yaml` is passed with `--config-patch-control-plane` rather than
+`--config-patch`, because `gen config` renders every output type internally and its
+`$patch: delete` of the control-plane taint fails against the worker config.
+
+## Updating Existing Nodes
+
+Always regenerate the full config with `talosctl gen config` (as above) and apply it with
+`talosctl apply-config --file <file>`. Do **not** use `talosctl patch machineconfig` to move a
+node onto these configs: the Talos 1.14 documents (`KubeletConfig`, `UnattendedInstallConfig`,
+`SysctlConfig`, `ResolverConfig`, `KubeClusterConfig`, `KubeAPIServerConfig`, `KubeNodeConfig`)
+conflict with the equivalent `v1alpha1` fields that a pre-1.14 node still carries, and patching
+appends to list fields such as `certSANs`, `addresses`, `routes` and `nameservers` instead of
+replacing them.
+
+Test before committing to a change:
+
+```bash
+talosctl validate --mode metal --config controlplane-skidbladnir.yaml
+talosctl apply-config --dry-run -n 10.10.10.32 --file controlplane-skidbladnir.yaml
+# applies in memory and reverts automatically after the timeout
+talosctl apply-config --mode=try --timeout=3m -n 10.10.10.32 --file controlplane-skidbladnir.yaml
+```
+
+Applying a config always restarts the `kube-apiserver` static pod, so roll one node at a time and
+wait for `talosctl get machinestatus` to report `ready: true` before moving on.
 
 ## Warning: Kubelet TLS CSR During Bootstrap
 

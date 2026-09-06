@@ -3,11 +3,16 @@ machine:
   certSANs:
     - 10.10.10.33
     - kubernetes.local.timo.be
-  network:
-    nameservers:
-      - 10.10.10.21
-      - 10.10.10.22
-      - 10.10.10.35
+---
+# Replaces the deprecated v1alpha1 machine.network.nameservers field (Talos 1.14).
+# Talos 1.14 rejects the config if nameservers are set in both places, and
+# talosctl gen config now always emits a ResolverConfig document.
+apiVersion: v1alpha1
+kind: ResolverConfig
+nameservers:
+  - address: 10.10.10.21
+  - address: 10.10.10.22
+  - address: 10.10.10.35
 ---
 # Replaces the deprecated v1alpha1 machine.install field (Talos 1.14).
 #
@@ -70,3 +75,17 @@ endpoint: https://10.10.10.33:6443
 apiVersion: v1alpha1
 kind: FilesystemTrimConfig
 interval: 168h0m0s
+---
+# New in Talos 1.14. sandboxd runs CRI containerd, the kubelet and all pods in a
+# dedicated PID + mount namespace. With isolation enabled the deprecated in-tree
+# Kubernetes iSCSI volume plugin breaks: the kubelet can no longer reach the host
+# iscsid across the sandbox boundary, which would take down plex, jellyfin and
+# tunarr (see kubernetes/mediaplayback/*/*-storage.yaml).
+#
+# An upgraded cluster does not get this document at all and keeps the old
+# behaviour, but talosctl gen config defaults it to true, so it is pinned to false
+# here to stop a config regeneration from silently breaking those volumes.
+# Flip to true only after migrating those volumes to a CSI driver.
+apiVersion: v1alpha1
+kind: SecurityProfileConfig
+workloadIsolation: false
