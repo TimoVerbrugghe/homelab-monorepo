@@ -54,7 +54,7 @@ spec:
     service:
       name: portainer
       port:
-        number: 9443
+        number: 9000
   ingressClassName: tailscale
   tls:
     - hosts:

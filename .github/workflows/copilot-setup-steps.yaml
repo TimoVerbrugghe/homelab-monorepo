@@ -55,7 +55,7 @@ jobs:
       - name: Provision kubeconfig for kubernetes MCP server
         run: |
           mkdir -p "$HOME/.kube"
-          echo "${{ secrets.KUBECONFIG }}" > "$HOME/.kube/config"
+          echo "${{ secrets.COPILOT_MCP_KUBECONFIG }}" > "$HOME/.kube/config"
           chmod 600 "$HOME/.kube/config"
 
       - name: Verify tool versions
