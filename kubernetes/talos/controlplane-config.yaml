@@ -1,9 +1,12 @@
-version: v1alpha1
-cluster:
-  # .cluster.allowSchedulingOnControlPlanes is listed as moved to KubeNodeConfig in
-  # Talos 1.14, but that document exposes no equivalent field yet (only taints), so
-  # it stays in v1alpha1 where it is still honoured.
-  allowSchedulingOnControlPlanes: true
+# Replaces the deprecated v1alpha1 cluster.allowSchedulingOnControlPlanes field
+# (Talos 1.14): deleting the control-plane taint is what makes the nodes schedulable.
+# Strategic-merged onto the KubeNodeConfig generated for control plane nodes, so the
+# node-role.kubernetes.io/control-plane label is preserved.
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+taints:
+  node-role.kubernetes.io/control-plane:
+    $patch: delete
 ---
 # Replaces the deprecated v1alpha1 cluster.apiServer field (Talos 1.14).
 # Note the rename: cluster.apiServer.certSANs -> certExtraSANs.
