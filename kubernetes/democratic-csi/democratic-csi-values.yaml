@@ -33,8 +33,9 @@ node:
   # Hardening-baseline exceptions, all inherent to a CSI node plugin:
   #   * privileged + CAP_SYS_ADMIN -- performs iscsiadm logins and mount(2)
   #   * hostNetwork/hostIPC/hostPID -- must share the host's iSCSI session and
-  #     initiator state with `iscsid`; hostPID is required under Talos 1.14
-  #     workload isolation
+  #     initiator state with `iscsid`; hostNetwork is what makes the `chroot`
+  #     strategy below work, because iscsiadm reaches iscsid over an abstract
+  #     unix socket that is scoped to the network namespace
   #   * hostPath mounts of /var/lib/kubelet and /dev -- propagates mounts back
   #     to the kubelet and opens the attached block devices
   #   * writable root filesystem -- iscsiadm writes its node database
@@ -44,20 +45,22 @@ node:
   # the Talos host root, but *not* in the kubelet's mount namespace, which is
   # where hostPath volumes are resolved -- the pod would stay in
   # ContainerCreating with "path /etc/iscsi does not exist". They are also
-  # unnecessary: with the `nsenter` strategy below every iscsiadm call runs
-  # inside the ext-iscsid namespace, which has its own copy of both.
+  # unnecessary: `chroot /host` below gives iscsiadm the host's own copies.
   driver:
     image:
       # Chart default is `latest`; pin it (repo convention).
       registry: ghcr.io/democratic-csi/democratic-csi
       tag: v1.9.5
-    # Talos runs iscsid as the `ext-iscsid` extension service in its own mount
-    # namespace, so the image's default `chroot /host` strategy cannot see it.
-    # `nsenter` enters the running iscsid's namespaces instead (this is why
-    # hostPID above is required). Binary path verified on Talos v1.14.0 /
-    # iscsi-tools v0.2.0: /usr/local/sbin/iscsiadm.
+    # Talos runs iscsid as the `ext-iscsid` extension service. `chroot` runs the
+    # host's iscsiadm binary against the host root (mounted at /host) while
+    # staying in the pod's -- i.e. the host's, via hostNetwork -- network
+    # namespace, which is where iscsiadm finds iscsid's socket. This is the only
+    # strategy that survives Talos 1.14 workload isolation: with `sandboxd`
+    # enabled hostPID exposes only the sandbox PID namespace, so `nsenter`'s
+    # `pgrep iscsid` finds nothing and every iscsiadm call fails. Binary path
+    # verified on Talos v1.14.0 / iscsi-tools v0.2.0: /usr/local/sbin/iscsiadm.
     extraEnv:
       - name: ISCSIADM_HOST_STRATEGY
-        value: nsenter
+        value: chroot
       - name: ISCSIADM_HOST_PATH
         value: /usr/local/sbin/iscsiadm
