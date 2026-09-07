@@ -128,9 +128,9 @@ Replace `<NEW_NODE_IP>` with the IP address of the node you want to add, and `<N
 Plex, Jellyfin and Tunarr keep their state on iSCSI volumes served by TrueNAS
 (`10.10.10.2:3260`). The **in-tree** `spec.iscsi` plugin these used to rely on is
 deprecated by Kubernetes and broken by Talos 1.14 workload isolation
-(`SecurityProfileConfig` with `workloadIsolation: true`): the kubelet then runs in its
-own PID namespace and can no longer reach the host `iscsid`. Those PersistentVolumes
-now use `spec.csi` against
+(`SecurityProfileConfig` with `workloadIsolation: true`, now enabled on every node): the
+kubelet then runs in its own PID namespace and can no longer reach the host `iscsid`.
+Those PersistentVolumes now use `spec.csi` against
 [democratic-csi](https://github.com/democratic-csi/democratic-csi) instead — see
 `kubernetes/democratic-csi/`, installed from its Helm chart through Kustomize's
 `helmCharts:`. The driver runs in **`node-manual`** mode: it only performs the
@@ -140,21 +140,30 @@ inline in `democratic-csi-values.yaml`. Targets stay hand-managed on TrueNAS
 exactly as before; the PVs carry the portal, IQN and LUN.
 
 On Talos, `iscsid` runs as the `ext-iscsid` extension service in its own mount
-namespace, so the node plugin is configured with `ISCSIADM_HOST_STRATEGY: nsenter`
-(hence `hostPID: true`) and `ISCSIADM_HOST_PATH: /usr/local/sbin/iscsiadm`. Every
-`iscsiadm` call therefore runs inside the `ext-iscsid` namespace, which carries its
-own `/etc/iscsi` and `/var/lib/iscsi`. Do **not** hostPath-mount those two paths into
-the node plugin: they exist in the Talos host root but not in the kubelet's mount
-namespace, where hostPath volumes are resolved, so the pods would never leave
-`ContainerCreating`.
+namespace, so the node plugin is configured with `ISCSIADM_HOST_STRATEGY: chroot` and
+`ISCSIADM_HOST_PATH: /usr/local/sbin/iscsiadm`. Every `iscsiadm` call therefore runs as
+`chroot /host /usr/local/sbin/iscsiadm`, using the host's own `/etc/iscsi` and
+`/var/lib/iscsi` through the chart's `/` hostPath, and reaches `iscsid` over its
+netns-scoped socket because the pod has `hostNetwork: true`.
+
+The alternative `nsenter` strategy must **not** be used here. It locates `iscsid` with
+`pgrep iscsid` and enters its namespaces, but under `workloadIsolation: true` `hostPID`
+only exposes the sandbox's PID namespace (PID 1 is `sandboxd`), so `pgrep` finds nothing
+and every `iscsiadm` call fails.
+
+Do **not** hostPath-mount `/etc/iscsi` or `/var/lib/iscsi` into the node plugin: they
+exist in the Talos host root but not in the kubelet's mount namespace, where hostPath
+volumes are resolved, so the pods would never leave `ContainerCreating`.
 
 `kubernetes-csi/csi-driver-iscsi` was evaluated as an alternative — Talos names it
 first in the 1.14 release notes — but it is self-declared **Alpha**, has no tagged
 release, no Helm chart, and is published only as
 `gcr.io/k8s-staging-sig-storage/iscsiplugin:canary`, so it cannot be pinned.
 
-`base-config.yaml` still pins `workloadIsolation: false`;
-flip it to `true` only once CSI is proven on every node, one node at a time.
+`base-config.yaml` sets `workloadIsolation: true`. The setting only takes effect when
+the affected services start, so `talosctl patch mc` alone is not enough despite its
+`Applied configuration without a reboot` message — reboot each node afterwards, one at a
+time, and confirm a `sandboxd` service appears in `talosctl -n <ip> services`.
 
 > [!WARNING]
 > Plex and Jellyfin store sqlite databases on these volumes and are known to corrupt
