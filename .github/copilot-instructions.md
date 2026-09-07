@@ -37,7 +37,7 @@ steamdeck/         Steam Deck app lists and custom grids
 
 | Area | Technology |
 | ------ | ----------- |
-| Kubernetes | Talos Linux, Kustomize (service directories use plain manifests; do not use `helmCharts:` in this repository) |
+| Kubernetes | Talos Linux, Kustomize (service directories use plain manifests; upstream charts are pulled via `helmCharts:` — see `kubernetes/traefik/`, `kubernetes/democratic-csi/`) |
 | Container runtime | containerd (via Talos) |
 | NixOS | Nix flakes, nixpkgs stable + unstable channels |
 | Docker Compose | Compose v2 on TrueNAS Scale and David host |
@@ -352,8 +352,14 @@ labels:
 - **Kubernetes hardening**: use
   `.github/instructions/kubernetes-deployment-best-practices.instructions.md`
   as the single source of truth.
-- **Kustomize, not Helm**: the cluster uses plain Kustomize. Prefer rendered
-  manifests for service directories. Do not use `helmCharts:`.
+- **Kustomize first**: write plain manifests for services that are ours. For
+  upstream software that is normally distributed as a Helm chart, use Kustomize's
+  `helmCharts:` with a companion `<service>-values.yaml` rather than vendoring
+  rendered output — `kubernetes/traefik/` and `kubernetes/democratic-csi/` are the
+  reference implementations. Those directories must be applied with
+  `kubectl kustomize --enable-helm <dir> | kubectl apply -f -`;
+  `.github/workflows/deploy-k8s-resource.yaml` detects `helmCharts:` and does this
+  automatically.
 - **NixOS flake inputs**: always run `nix flake update` in `nixos/` after changing inputs; keep the lock file committed.
 - **Docker Compose env files**: `*.env` files are gitignored — only commit `*.env.template` files with `VARIABLE_NAME=` placeholders.
 - **Kubernetes secret files**: follow the existing repo pattern of
@@ -400,7 +406,7 @@ When you change a file in column A, you must also review/update the files in col
 | -------------------- | --------------------- |
 | `kubernetes/<service>/` manifests | `kubernetes/<service>/kustomization.yaml` (resource list); the `CI Workflows Summary` section in this file if a new workflow is added |
 | Add a new Kubernetes service directory | `kubernetes/README.md`; the `CI Workflows Summary` section in this file if applicable |
-| `kubernetes/democratic-csi/` (rendered chart) | `kubernetes/democratic-csi/driver-config-file.yaml.template`; `.gitignore` entry for the real config; `kubernetes/README.md` iSCSI section |
+| `kubernetes/democratic-csi/democratic-csi-values.yaml` | Chart `version:` in `kubernetes/democratic-csi/kustomization.yaml`; `kubernetes/README.md` iSCSI section |
 | Add an iSCSI-backed workload | `homelab.io/iscsi-workload: "true"` label on the Deployment (drives `.github/workflows/iscsi-kubernetes.yaml` discovery) |
 | `nixos/flake.nix` inputs | `nixos/flake.lock` (run `nix flake update`); per-machine configs if module API changed |
 | `nixos/modules/<module>.nix` | All `nixos/machines/*/default.nix` files that import that module |

@@ -1,0 +1,47 @@
+---
+# democratic-csi in `node-manual` mode.
+#
+# `node-manual` performs only the node-side attach/mount of *pre-provisioned*
+# volumes: the zvol, the iSCSI extent and the target are created by hand on
+# TrueNAS, exactly as they were for the deprecated in-tree `iscsi:` volume
+# plugin. It therefore needs no TrueNAS API key, no SSH key and no controller --
+# the whole driver config is the single `driver: node-manual` line below.
+#
+# Why a CSI driver at all, then? Talos 1.14 `workloadIsolation` puts the kubelet
+# in its own PID/mount namespace, where it can no longer reach the host `iscsid`
+# that the in-tree plugin drives. The CSI node plugin does the iscsiadm work
+# itself, in its own pod with `hostPID: true`, so the sandbox boundary does not
+# apply. See kubernetes/README.md -> "iSCSI volumes".
+
+driver:
+  config:
+    driver: node-manual
+
+csiDriver:
+  name: org.democratic-csi.node-manual
+  # node-manual implements no ControllerPublishVolume, and the controller
+  # deployment (which carries external-attacher) is disabled below, so nothing
+  # would ever process a VolumeAttachment. Must stay false or pods hang.
+  attachRequired: false
+
+# Nothing to provision: no volumes are created, expanded, snapshotted or
+# deleted by Kubernetes, so the controller and all its CSI sidecars are dropped.
+controller:
+  enabled: false
+
+node:
+  # Hardening-baseline exceptions, all inherent to a CSI node plugin:
+  #   * privileged + CAP_SYS_ADMIN -- performs iscsiadm logins and mount(2)
+  #   * hostNetwork/hostIPC/hostPID -- must share the host's iSCSI session and
+  #     initiator state with `iscsid`; hostPID is required under Talos 1.14
+  #     workload isolation
+  #   * hostPath mounts of /var/lib/kubelet, /dev, /etc/iscsi -- propagates
+  #     mounts back to the kubelet and manages the initiator database
+  #   * writable root filesystem -- iscsiadm writes its node database
+  # The namespace is therefore labelled `pod-security.../enforce: privileged`.
+  hostPID: true
+  driver:
+    image:
+      # Chart default is `latest`; pin it (repo convention).
+      registry: ghcr.io/democratic-csi/democratic-csi
+      tag: v1.9.5

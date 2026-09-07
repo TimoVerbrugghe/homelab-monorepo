@@ -5,8 +5,8 @@
 # the exact same block device -- no data is copied and democratic-csi only formats
 # a device that is not already formatted, so the existing ext4 filesystem survives.
 #
-# Because this PV is imported rather than provisioned, democratic-csi's controller
-# never manages it: the node plugin simply logs into portal/iqn/lun below.
+# democratic-csi runs in `node-manual` mode, which has no controller and needs no
+# TrueNAS credentials: the node plugin simply logs into portal/iqn/lun below.
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -20,12 +20,13 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: truenas-iscsi
   csi:
-    driver: org.democratic-csi.iscsi
+    driver: org.democratic-csi.node-manual
     # Arbitrary but must be unique and stable; not a TrueNAS-side identifier.
     volumeHandle: tunarr-pv
     fsType: ext4
     volumeAttributes:
       node_attach_driver: iscsi
+      provisioner_driver: node-manual
       portal: 10.10.10.2:3260
       portals: ""
       interface: ""

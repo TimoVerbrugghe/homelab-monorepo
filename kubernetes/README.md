@@ -132,7 +132,14 @@ deprecated by Kubernetes and broken by Talos 1.14 workload isolation
 own PID namespace and can no longer reach the host `iscsid`. Those PersistentVolumes
 now use `spec.csi` against
 [democratic-csi](https://github.com/democratic-csi/democratic-csi) instead — see
-`kubernetes/democratic-csi/`. `base-config.yaml` still pins `workloadIsolation: false`;
+`kubernetes/democratic-csi/`, installed from its Helm chart through Kustomize's
+`helmCharts:`. The driver runs in **`node-manual`** mode: it only performs the
+node-side attach/mount of volumes that already exist on TrueNAS, so it needs no
+TrueNAS API key and no controller — its entire config is `driver: node-manual`,
+inline in `democratic-csi-values.yaml`. Targets stay hand-managed on TrueNAS
+exactly as before; the PVs carry the portal, IQN and LUN.
+
+`base-config.yaml` still pins `workloadIsolation: false`;
 flip it to `true` only once CSI is proven on every node, one node at a time.
 
 > [!WARNING]
@@ -191,12 +198,12 @@ kubectl apply -k kubernetes/traefik-config/
 
 ### Deploy the iSCSI CSI driver
 
-Required before any of the mediaplayback services. Create
-`kubernetes/democratic-csi/driver-config-file.yaml` from the committed
-`.template` first (TrueNAS API key and dataset paths — the real file is gitignored).
+Required before any of the mediaplayback services. No prerequisites — the driver
+runs in `node-manual` mode and needs no credentials.
 
 ```bash
-kubectl apply -k kubernetes/democratic-csi/
+kubectl kustomize --enable-helm kubernetes/democratic-csi/ | \
+  kubectl apply -f -
 ```
 
 ### Deploy other resources

@@ -20,9 +20,6 @@ controlplane*.yaml
 worker*.yaml
 worker.yaml
 secrets.yaml
-# democratic-csi driver config: contains the TrueNAS API key.
-# Only driver-config-file.yaml.template is committed.
-kubernetes/democratic-csi/driver-config-file.yaml
 talosconfig
 extension-patch.yaml
 kubesecrets.yaml
