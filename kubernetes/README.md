@@ -141,9 +141,12 @@ exactly as before; the PVs carry the portal, IQN and LUN.
 
 On Talos, `iscsid` runs as the `ext-iscsid` extension service in its own mount
 namespace, so the node plugin is configured with `ISCSIADM_HOST_STRATEGY: nsenter`
-(hence `hostPID: true`) and `ISCSIADM_HOST_PATH: /usr/local/sbin/iscsiadm`. The
-`/etc/iscsi` and `/var/lib/iscsi` host directories are mounted explicitly, because
-the chart only adds them automatically for drivers whose name contains `iscsi`.
+(hence `hostPID: true`) and `ISCSIADM_HOST_PATH: /usr/local/sbin/iscsiadm`. Every
+`iscsiadm` call therefore runs inside the `ext-iscsid` namespace, which carries its
+own `/etc/iscsi` and `/var/lib/iscsi`. Do **not** hostPath-mount those two paths into
+the node plugin: they exist in the Talos host root but not in the kubelet's mount
+namespace, where hostPath volumes are resolved, so the pods would never leave
+`ContainerCreating`.
 
 `kubernetes-csi/csi-driver-iscsi` was evaluated as an alternative — Talos names it
 first in the 1.14 release notes — but it is self-declared **Alpha**, has no tagged
