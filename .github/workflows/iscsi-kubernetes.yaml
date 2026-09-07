@@ -11,7 +11,7 @@ on:
           - Scale Up
           - Scale Down
       workloads:
-        description: "Optional manual override (comma separated: namespace/type/name/replicas). Leave empty to auto-discover deployments labelled homelab.io/iscsi-workload=true."
+        description: "Optional manual override (comma separated: namespace/type/name/replicas). Leave empty for auto-discovery of iSCSI deployments."
         required: false
         type: string
         default: ""
@@ -51,11 +51,7 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
-      # Runs when no manual workloads input is provided. Discovery is strictly opt-in:
-      # only Deployments carrying the `homelab.io/iscsi-workload: "true"` label are
-      # selected. This is the only signal that survives a migration to a CSI driver,
-      # where an iSCSI-backed volume becomes an ordinary PVC reference indistinguishable
-      # from a local-path one.
+      # Runs when no manual workloads input is provided, discovers iSCSI workloads by inspecting all deployments and their volumes.
       - name: Discover iSCSI workloads from cluster
         id: discover-iscsi-workloads
         if: ${{ inputs.workloads == '' }}
@@ -63,8 +59,59 @@ jobs:
         run: |
           set -euo pipefail
 
-          WORKLOAD_LIST=$(kubectl get deployments -A -l homelab.io/iscsi-workload=true -o json |
-            jq -r '.items[] | "\(.metadata.namespace)/deployment/\(.metadata.name)"')
+          discover_iscsi_workloads() {
+            kubectl get deployments -A -o json | jq -r '.items[] | [.metadata.namespace, .metadata.name] | @tsv' |
+              while IFS=$'\t' read -r namespace deployment; do
+                [[ -z "$namespace" || -z "$deployment" ]] && continue
+                has_iscsi="false"
+
+                # Explicit opt-in label. Kept first because it is the only signal that
+                # survives a migration to a CSI driver, where an iSCSI-backed volume
+                # becomes an ordinary PVC reference indistinguishable from local-path.
+                labelled=$(kubectl get deployment "$deployment" -n "$namespace" -o jsonpath='{.metadata.labels.homelab\.io/iscsi-workload}' 2>/dev/null || true)
+                if [[ "$labelled" == "true" ]]; then
+                  has_iscsi="true"
+                fi
+
+                # Detect direct iSCSI volumes in pod spec.
+                if [[ "$has_iscsi" != "true" ]]; then
+                  direct_iscsi=$(kubectl get deployment "$deployment" -n "$namespace" -o json | jq -r 'any(.spec.template.spec.volumes[]?; has("iscsi"))')
+                  if [[ "$direct_iscsi" == "true" ]]; then
+                    has_iscsi="true"
+                  fi
+                fi
+
+                # Detect PVC-backed volumes that resolve to iSCSI PVs.
+                if [[ "$has_iscsi" != "true" ]]; then
+                  while IFS= read -r pvc; do
+                    [[ -z "$pvc" ]] && continue
+                    pv_name=$(kubectl get pvc "$pvc" -n "$namespace" -o jsonpath='{.spec.volumeName}' 2>/dev/null || true)
+                    [[ -z "$pv_name" ]] && continue
+
+                    pv_is_iscsi=$(kubectl get pv "$pv_name" -o json 2>/dev/null | jq -r '
+                      if (.spec.iscsi != null) then
+                        "true"
+                      elif (.spec.csi != null and ((.spec.csi.driver // "") | ascii_downcase | contains("iscsi"))) then
+                        "true"
+                      else
+                        "false"
+                      end
+                    ')
+
+                    if [[ "$pv_is_iscsi" == "true" ]]; then
+                      has_iscsi="true"
+                      break
+                    fi
+                  done < <(kubectl get deployment "$deployment" -n "$namespace" -o json | jq -r '.spec.template.spec.volumes[]? | select(has("persistentVolumeClaim")) | .persistentVolumeClaim.claimName')
+                fi
+
+                if [[ "$has_iscsi" == "true" ]]; then
+                  echo "$namespace/deployment/$deployment"
+                fi
+              done
+          }
+
+          WORKLOAD_LIST=$(discover_iscsi_workloads)
           {
             echo "workload_list<<EOF"
             echo "$WORKLOAD_LIST"

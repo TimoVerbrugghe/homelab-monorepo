@@ -40,6 +40,8 @@ node:
   #     to the kubelet and opens the attached block devices
   #   * writable root filesystem -- iscsiadm writes its node database
   # The namespace is therefore labelled `pod-security.../enforce: privileged`.
+  hostIPC: true
+  hostNetwork: true
   hostPID: true
   # keel keeps the node plugin on the newest `latest` build. `force` +
   # `match-tag` is the combination keel needs for a floating tag: it compares

@@ -77,15 +77,15 @@ kind: FilesystemTrimConfig
 interval: 168h0m0s
 ---
 # New in Talos 1.14. sandboxd runs CRI containerd, the kubelet and all pods in a
-# dedicated PID + mount namespace. This is only safe here because plex, jellyfin and
-# tunarr no longer use the deprecated in-tree Kubernetes iSCSI volume plugin, which
-# cannot reach the host iscsid across the sandbox boundary: they went to democratic-csi
-# (see kubernetes/democratic-csi/ and kubernetes/mediaplayback/*/*-storage.yaml).
+# dedicated PID + mount namespace. With isolation enabled the deprecated in-tree
+# Kubernetes iSCSI volume plugin breaks: the kubelet can no longer reach the host
+# iscsid across the sandbox boundary, which would take down plex, jellyfin and
+# tunarr (see kubernetes/mediaplayback/*/*-storage.yaml).
 #
-# The CSI node plugin must use ISCSIADM_HOST_STRATEGY: chroot, not nsenter. Under
-# isolation hostPID only exposes the sandbox's own PID namespace, so nsenter cannot
-# find the host iscsid to enter; chroot into the /host hostPath works because the pod
-# also has hostNetwork and iscsiadm reaches iscsid over a netns-scoped socket.
+# An upgraded cluster does not get this document at all and keeps the old
+# behaviour, but talosctl gen config defaults it to true, so it is pinned to false
+# here to stop a config regeneration from silently breaking those volumes.
+# Flip to true only after migrating those volumes to a CSI driver.
 apiVersion: v1alpha1
 kind: SecurityProfileConfig
-workloadIsolation: true
+workloadIsolation: false
