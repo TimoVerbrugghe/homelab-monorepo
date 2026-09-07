@@ -139,6 +139,17 @@ TrueNAS API key and no controller — its entire config is `driver: node-manual`
 inline in `democratic-csi-values.yaml`. Targets stay hand-managed on TrueNAS
 exactly as before; the PVs carry the portal, IQN and LUN.
 
+On Talos, `iscsid` runs as the `ext-iscsid` extension service in its own mount
+namespace, so the node plugin is configured with `ISCSIADM_HOST_STRATEGY: nsenter`
+(hence `hostPID: true`) and `ISCSIADM_HOST_PATH: /usr/local/sbin/iscsiadm`. The
+`/etc/iscsi` and `/var/lib/iscsi` host directories are mounted explicitly, because
+the chart only adds them automatically for drivers whose name contains `iscsi`.
+
+`kubernetes-csi/csi-driver-iscsi` was evaluated as an alternative — Talos names it
+first in the 1.14 release notes — but it is self-declared **Alpha**, has no tagged
+release, no Helm chart, and is published only as
+`gcr.io/k8s-staging-sig-storage/iscsiplugin:canary`, so it cannot be pinned.
+
 `base-config.yaml` still pins `workloadIsolation: false`;
 flip it to `true` only once CSI is proven on every node, one node at a time.
 
