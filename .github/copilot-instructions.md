@@ -281,8 +281,12 @@ labels:
 
 ### Image tags
 
-- Never use `:latest` — always pin to a specific version tag.
-- Image digests (`@sha256:...`) are preferred for critical workloads.
+- Floating tags such as `:latest` are allowed and widely used in this repo. Pair
+  them with keel annotations (`keel.sh/policy: force` + `keel.sh/match-tag: "true"`)
+  and `imagePullPolicy: Always` so updates are actually rolled out.
+- Pin a specific version tag only when a workload has to be held back
+  deliberately; say why in a comment.
+- Image digests (`@sha256:...`) are an option for workloads that must never move.
 
 ### Storage
 
@@ -302,7 +306,7 @@ labels:
   ```
 
 - Always specify `restart: unless-stopped` (or `restart: always` for critical services).
-- Pin image versions — no `:latest` tags.
+- Floating tags such as `:latest` are allowed; pin a version only when a stack has to be held back deliberately.
 - Networks: use named networks with `driver: bridge`; avoid `network_mode: host` unless required (e.g. multicast relay).
 
 ## NixOS / Nix Flake Conventions

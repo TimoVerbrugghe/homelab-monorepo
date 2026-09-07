@@ -41,6 +41,15 @@ node:
   #   * writable root filesystem -- iscsiadm writes its node database
   # The namespace is therefore labelled `pod-security.../enforce: privileged`.
   hostPID: true
+  # keel keeps the node plugin on the newest `latest` build. `force` +
+  # `match-tag` is the combination keel needs for a floating tag: it compares
+  # the digest behind `latest` on every poll and rolls the DaemonSet when it
+  # moves (a plain `all`/`major` policy only reacts to semver tag changes).
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
   # NOTE: do not hostPath-mount /etc/iscsi or /var/lib/iscsi here. They exist in
   # the Talos host root, but *not* in the kubelet's mount namespace, which is
   # where hostPath volumes are resolved -- the pod would stay in
@@ -48,9 +57,12 @@ node:
   # unnecessary: `chroot /host` below gives iscsiadm the host's own copies.
   driver:
     image:
-      # Chart default is `latest`; pin it (repo convention).
+      # Deliberately unpinned: keel (see annotations above) watches `latest` and
+      # rolls the DaemonSet whenever the digest changes. `Always` is what makes
+      # that roll actually fetch the new build.
       registry: ghcr.io/democratic-csi/democratic-csi
-      tag: v1.9.5
+      tag: latest
+      pullPolicy: Always
     # Talos runs iscsid as the `ext-iscsid` extension service. `chroot` runs the
     # host's iscsiadm binary against the host root (mounted at /host) while
     # staying in the pod's -- i.e. the host's, via hostNetwork -- network
