@@ -19,7 +19,6 @@ resources:
 helmCharts:
   - name: democratic-csi
     repo: https://democratic-csi.github.io/charts/
-    version: 0.15.1
     releaseName: democratic-csi
     namespace: democratic-csi
     valuesFile: democratic-csi-values.yaml
