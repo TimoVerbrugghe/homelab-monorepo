@@ -51,10 +51,7 @@ params:
 # Replaces the deprecated v1alpha1 machine.kubelet image/extraArgs/extraConfig fields (Talos 1.14).
 apiVersion: v1alpha1
 kind: KubeletConfig
-# Fat image necessary for the in-tree iscsi volume plugin to work: it ships the
-# iscsiadm wrapper the kubelet shells out to. Kubernetes 1.37 is the default for
-# Talos 1.14 (support matrix: 1.37, 1.36, 1.35, 1.34, 1.33).
-image: ghcr.io/siderolabs/kubelet:v1.37.0-fat
+# image is intentionally omitted so Talos uses the built-in default kubelet image.
 # Required for metrics-server, which is required by homepage to use its kubernetes widget
 extraArgs:
   rotate-server-certificates: true
