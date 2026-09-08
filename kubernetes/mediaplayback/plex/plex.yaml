@@ -4,6 +4,9 @@ kind: Deployment
 metadata:
   name: plex
   namespace: mediaplayback
+  labels:
+    # Opt-in marker for .github/workflows/iscsi-kubernetes.yaml discovery.
+    homelab.io/iscsi-workload: "true"
   annotations:
     keel.sh/policy: force
     keel.sh/match-tag: "true"
@@ -24,28 +27,6 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
-      # Ensuring that the zvol that gets attached through iscsi is formatted with filesystem
-      initContainers:
-      - name: format-volume
-        image: busybox:1.35
-        stdin: false
-        tty: false
-        command: ['sh', '-c']
-        args:
-        - |
-          if ! blkid /dev/sda; then
-            echo "Formatting volume with ext4..."
-            mkfs.ext4 /dev/sda
-          else
-            echo "Volume already formatted"
-          fi
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: plex-config
-          mountPath: /dev/sda
-          subPath: ""
-
       containers:
       - name: plex
         image: plexinc/pms-docker

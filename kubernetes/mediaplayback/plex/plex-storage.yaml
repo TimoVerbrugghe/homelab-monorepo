@@ -1,4 +1,12 @@
 ---
+# Pre-provisioned (static) CSI volume: the zvol and the iSCSI target already exist
+# on TrueNAS and were previously consumed by the deprecated in-tree `iscsi:` volume
+# plugin, which Talos 1.14 workload isolation breaks. Switching to spec.csi keeps
+# the exact same block device -- no data is copied and democratic-csi only formats
+# a device that is not already formatted, so the existing ext4 filesystem survives.
+#
+# democratic-csi runs in `node-manual` mode, which has no controller and needs no
+# TrueNAS credentials: the node plugin simply logs into portal/iqn/lun below.
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -10,13 +18,20 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: "" # explicitly empty: prevents default StorageClass binding; binds only to the named iSCSI PV below
-  iscsi:
-    targetPortal: 10.10.10.2:3260
-    iqn: iqn.2025-11.timo.be:plex
-    lun: 0
+  storageClassName: truenas-iscsi
+  csi:
+    driver: org.democratic-csi.node-manual
+    # Arbitrary but must be unique and stable; not a TrueNAS-side identifier.
+    volumeHandle: plex-pv
     fsType: ext4
-    readOnly: false
+    volumeAttributes:
+      node_attach_driver: iscsi
+      provisioner_driver: node-manual
+      portal: 10.10.10.2:3260
+      portals: ""
+      interface: ""
+      iqn: iqn.2025-11.timo.be:plex
+      lun: "0"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -29,5 +44,5 @@ spec:
   resources:
     requests:
       storage: 300Gi
-  storageClassName: "" # explicitly empty: prevents default StorageClass binding; binds only to the named iSCSI PV above
-  volumeName: plex-pv
+  storageClassName: truenas-iscsi
+  volumeName: plex-pv # binds only to the pre-provisioned PV above

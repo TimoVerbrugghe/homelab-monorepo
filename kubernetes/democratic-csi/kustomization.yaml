@@ -1,0 +1,24 @@
+---
+# Apply with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the
+# directory containing this file (the deploy-k8s-resource workflow detects the
+# `helmCharts:` block below and does this automatically).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: democratic-csi
+
+labels:
+  - includeSelectors: false
+    pairs:
+      app.kubernetes.io/part-of: homelab
+
+resources:
+  - namespace.yaml
+  - storageclass.yaml
+
+helmCharts:
+  - name: democratic-csi
+    repo: https://democratic-csi.github.io/charts/
+    releaseName: democratic-csi
+    namespace: democratic-csi
+    valuesFile: democratic-csi-values.yaml

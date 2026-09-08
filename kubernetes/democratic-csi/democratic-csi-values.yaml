@@ -1,0 +1,80 @@
+---
+# democratic-csi in `node-manual` mode.
+#
+# `node-manual` performs only the node-side attach/mount of *pre-provisioned*
+# volumes: the zvol, the iSCSI extent and the target are created by hand on
+# TrueNAS, exactly as they were for the deprecated in-tree `iscsi:` volume
+# plugin. It therefore needs no TrueNAS API key, no SSH key and no controller --
+# the whole driver config is the single `driver: node-manual` line below.
+#
+# Why a CSI driver at all, then? Talos 1.14 `workloadIsolation` puts the kubelet
+# in its own PID/mount namespace, where it can no longer reach the host `iscsid`
+# that the in-tree plugin drives. The CSI node plugin does the iscsiadm work
+# itself, in its own pod with `hostPID: true`, so the sandbox boundary does not
+# apply. See kubernetes/README.md -> "iSCSI volumes".
+
+driver:
+  config:
+    driver: node-manual
+
+csiDriver:
+  name: org.democratic-csi.node-manual
+  # node-manual implements no ControllerPublishVolume, and the controller
+  # deployment (which carries external-attacher) is disabled below, so nothing
+  # would ever process a VolumeAttachment. Must stay false or pods hang.
+  attachRequired: false
+
+# Nothing to provision: no volumes are created, expanded, snapshotted or
+# deleted by Kubernetes, so the controller and all its CSI sidecars are dropped.
+controller:
+  enabled: false
+
+node:
+  # Hardening-baseline exceptions, all inherent to a CSI node plugin:
+  #   * privileged + CAP_SYS_ADMIN -- performs iscsiadm logins and mount(2)
+  #   * hostNetwork/hostIPC/hostPID -- must share the host's iSCSI session and
+  #     initiator state with `iscsid`; hostNetwork is what makes the `chroot`
+  #     strategy below work, because iscsiadm reaches iscsid over an abstract
+  #     unix socket that is scoped to the network namespace
+  #   * hostPath mounts of /var/lib/kubelet and /dev -- propagates mounts back
+  #     to the kubelet and opens the attached block devices
+  #   * writable root filesystem -- iscsiadm writes its node database
+  # The namespace is therefore labelled `pod-security.../enforce: privileged`.
+  hostIPC: true
+  hostNetwork: true
+  hostPID: true
+  # keel keeps the node plugin on the newest `latest` build. `force` +
+  # `match-tag` is the combination keel needs for a floating tag: it compares
+  # the digest behind `latest` on every poll and rolls the DaemonSet when it
+  # moves (a plain `all`/`major` policy only reacts to semver tag changes).
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+  # NOTE: do not hostPath-mount /etc/iscsi or /var/lib/iscsi here. They exist in
+  # the Talos host root, but *not* in the kubelet's mount namespace, which is
+  # where hostPath volumes are resolved -- the pod would stay in
+  # ContainerCreating with "path /etc/iscsi does not exist". They are also
+  # unnecessary: `chroot /host` below gives iscsiadm the host's own copies.
+  driver:
+    image:
+      # Deliberately unpinned: keel (see annotations above) watches `latest` and
+      # rolls the DaemonSet whenever the digest changes. `Always` is what makes
+      # that roll actually fetch the new build.
+      registry: ghcr.io/democratic-csi/democratic-csi
+      tag: latest
+      pullPolicy: Always
+    # Talos runs iscsid as the `ext-iscsid` extension service. `chroot` runs the
+    # host's iscsiadm binary against the host root (mounted at /host) while
+    # staying in the pod's -- i.e. the host's, via hostNetwork -- network
+    # namespace, which is where iscsiadm finds iscsid's socket. This is the only
+    # strategy that survives Talos 1.14 workload isolation: with `sandboxd`
+    # enabled hostPID exposes only the sandbox PID namespace, so `nsenter`'s
+    # `pgrep iscsid` finds nothing and every iscsiadm call fails. Binary path
+    # verified on Talos v1.14.0 / iscsi-tools v0.2.0: /usr/local/sbin/iscsiadm.
+    extraEnv:
+      - name: ISCSIADM_HOST_STRATEGY
+        value: chroot
+      - name: ISCSIADM_HOST_PATH
+        value: /usr/local/sbin/iscsiadm

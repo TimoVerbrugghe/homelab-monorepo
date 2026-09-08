@@ -3,34 +3,86 @@ machine:
   certSANs:
     - 10.10.10.33
     - kubernetes.local.timo.be
-  kubelet:
-    # Fat image necessary for iscsi to work
-    image: ghcr.io/siderolabs/kubelet:v1.35.0-fat
-    # Required for metrics-server, which is required by homepage to use its kubernetes widget
-    extraArgs:
-      rotate-server-certificates: true
-    extraConfig:
-      nodeStatusUpdateFrequency: 4s
-      featureGates:
-        GracefulNodeShutdown: true
-  
-  sysctls:
-    vm.nr_hugepages: "1024"
-  
-  network:
-    nameservers:      
-      - 10.10.10.21
-      - 10.10.10.22
-      - 10.10.10.35
-
-  install:
-    disk: /dev/sda
-
-    # Image with several extensions & kernel args - see talos-image.yaml
-    # curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
-    image: factory.talos.dev/installer/451cf6f46f8d83ff633a62c31305b3ff2b3df0af14a0a9c81b9eda8d9456114e:v1.12.0
-
-cluster:
-  controlPlane:
-    endpoint: https://10.10.10.33:6443
-    
+---
+# Replaces the deprecated v1alpha1 machine.network.nameservers field (Talos 1.14).
+# Talos 1.14 rejects the config if nameservers are set in both places, and
+# talosctl gen config now always emits a ResolverConfig document.
+apiVersion: v1alpha1
+kind: ResolverConfig
+nameservers:
+  - address: 10.10.10.21
+  - address: 10.10.10.22
+  - address: 10.10.10.35
+---
+# Replaces the deprecated v1alpha1 machine.install field (Talos 1.14).
+#
+# The unattended installer only runs while a node is booted from ephemeral media
+# (ISO/PXE) and has not been installed yet; once Talos is on disk it is not run again.
+# Upgrades (talosctl upgrade --image ...) and config re-applies never go through it,
+# so wiping here is safe: the system disk holds no persistent data. Yumi's local
+# volumes are carved out of a separate disk (see yumi-patch-localstorage.yaml, which
+# selects "!system_disk") and the mediaplayback volumes live on TrueNAS over iSCSI.
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+installer:
+  # Image with several extensions & kernel args - see talos-image.yaml
+  # curl -X POST --data-binary @talos-image.yaml https://factory.talos.dev/schematics
+  #
+  # The schematic ID is a hash of talos-image.yaml, so it only changes when the
+  # extension/kernel-arg list changes. On upgrade only the version tag is bumped.
+  #
+  # ghcr.io/siderolabs/installer is no longer published as of Talos 1.14: installer
+  # images are served by the Image Factory as factory.talos.dev/metal-installer/...
+  #
+  # Talos does not support skipping minor versions: upgrade one minor at a time
+  # (1.12 -> 1.13 -> 1.14) with talosctl upgrade --image <same path>:<version>.
+  image: factory.talos.dev/metal-installer/451cf6f46f8d83ff633a62c31305b3ff2b3df0af14a0a9c81b9eda8d9456114e:v1.14.0
+provisioning:
+  diskSelector:
+    match: disk.dev_path == "/dev/sda"
+  wipe: true
+---
+# Replaces the deprecated v1alpha1 machine.sysctls field (Talos 1.14).
+apiVersion: v1alpha1
+kind: SysctlConfig
+params:
+  vm.nr_hugepages: "1024"
+---
+# Replaces the deprecated v1alpha1 machine.kubelet image/extraArgs/extraConfig fields (Talos 1.14).
+apiVersion: v1alpha1
+kind: KubeletConfig
+# image is intentionally omitted so Talos uses the built-in default kubelet image.
+# Required for metrics-server, which is required by homepage to use its kubernetes widget
+extraArgs:
+  rotate-server-certificates: true
+config:
+  nodeStatusUpdateFrequency: 4s
+  featureGates:
+    GracefulNodeShutdown: true
+---
+# Replaces the deprecated v1alpha1 cluster.controlPlane.endpoint field (Talos 1.14).
+apiVersion: v1alpha1
+kind: KubeClusterConfig
+clusterName: sectorfive
+endpoint: https://10.10.10.33:6443
+---
+# New in Talos 1.14. Only emitted for freshly generated clusters, so an upgraded
+# cluster opts in simply by shipping this document: trimming starts as soon as the
+# config is applied, no further action needed. Trims the SSD-backed volumes weekly.
+apiVersion: v1alpha1
+kind: FilesystemTrimConfig
+interval: 168h0m0s
+---
+# New in Talos 1.14. sandboxd runs CRI containerd, the kubelet and all pods in a
+# dedicated PID + mount namespace. This is only safe here because plex, jellyfin and
+# tunarr no longer use the deprecated in-tree Kubernetes iSCSI volume plugin, which
+# cannot reach the host iscsid across the sandbox boundary: they went to democratic-csi
+# (see kubernetes/democratic-csi/ and kubernetes/mediaplayback/*/*-storage.yaml).
+#
+# The CSI node plugin must use ISCSIADM_HOST_STRATEGY: chroot, not nsenter. Under
+# isolation hostPID only exposes the sandbox's own PID namespace, so nsenter cannot
+# find the host iscsid to enter; chroot into the /host hostPath works because the pod
+# also has hostNetwork and iscsiadm reaches iscsid over a netns-scoped socket.
+apiVersion: v1alpha1
+kind: SecurityProfileConfig
+workloadIsolation: true

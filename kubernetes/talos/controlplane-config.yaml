@@ -1,12 +1,20 @@
-cluster:
-  allowSchedulingOnControlPlanes: true
-  controlPlane:
-    endpoint: https://10.10.10.33:6443 
-
-  apiServer:
-    certSANs:
-      - 10.10.10.33
-      - kubernetes.local.timo.be
-    extraArgs:
-      default-not-ready-toleration-seconds: 120
-      default-unreachable-toleration-seconds: 120
+# Replaces the deprecated v1alpha1 cluster.allowSchedulingOnControlPlanes field
+# (Talos 1.14): deleting the control-plane taint is what makes the nodes schedulable.
+# Strategic-merged onto the KubeNodeConfig generated for control plane nodes, so the
+# node-role.kubernetes.io/control-plane label is preserved.
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+taints:
+  node-role.kubernetes.io/control-plane:
+    $patch: delete
+---
+# Replaces the deprecated v1alpha1 cluster.apiServer field (Talos 1.14).
+# Note the rename: cluster.apiServer.certSANs -> certExtraSANs.
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+certExtraSANs:
+  - 10.10.10.33
+  - kubernetes.local.timo.be
+extraArgs:
+  default-not-ready-toleration-seconds: 120
+  default-unreachable-toleration-seconds: 120

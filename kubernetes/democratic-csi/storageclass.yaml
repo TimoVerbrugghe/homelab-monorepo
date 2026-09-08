@@ -1,0 +1,15 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: truenas-iscsi
+  labels:
+    app.kubernetes.io/name: democratic-csi
+    app.kubernetes.io/instance: democratic-csi
+# Volumes are created by hand on TrueNAS and imported as static PVs, so nothing
+# ever provisions through this class. It exists purely to give the PV/PVC pairs
+# a named class to bind on, and to keep any cluster-default StorageClass from
+# being injected into the PVCs.
+provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
