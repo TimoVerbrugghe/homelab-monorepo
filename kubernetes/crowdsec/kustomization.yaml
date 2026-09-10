@@ -1,0 +1,37 @@
+# Apply all these resources with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the directory containing this file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: crowdsec
+
+labels:
+  - includeSelectors: false
+    pairs:
+      app.kubernetes.io/part-of: homelab
+
+resources:
+  - namespace.yaml
+
+# Bouncer API key created once via `cscli bouncers add traefik-bouncer` against the
+# running LAPI pod, then stored here and reflected into the traefik namespace so the
+# CrowdSec Traefik bouncer plugin can read it as a mounted file.
+secretGenerator:
+  - name: crowdsec-bouncer-secrets
+    envs:
+      - crowdsec-bouncer.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "traefik"
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+helmCharts:
+  - name: crowdsec
+    repo: https://crowdsecurity.github.io/helm-charts
+    releaseName: crowdsec
+    namespace: crowdsec
+    valuesFile: crowdsec-values.yaml

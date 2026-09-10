@@ -1,6 +1,22 @@
 globalArguments:
   - "--global.sendanonymoususage"
 
+# Loads the CrowdSec bouncer plugin so it can be referenced by the
+# crowdsec-bouncer Middleware (kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
+# Requires the CrowdSec LAPI + agent to be deployed first (kubernetes/crowdsec/).
+experimental:
+  plugins:
+    crowdsec-bouncer:
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.7.1
+
+# Mounts the bouncer API key (reflected from the crowdsec namespace, see
+# kubernetes/crowdsec/kustomization.yaml) as a file the plugin can read.
+volumes:
+  - name: crowdsec-bouncer-secrets
+    mountPath: "/etc/traefik/crowdsec"
+    type: secret
+
 logs:
   general:
     level: INFO
@@ -50,9 +66,13 @@ ports:
         idleTimeout: 420s
     tls:
       enabled: true
-    # middlewares:
-    #   - traefik-secureheaders@kubernetescrd
-    #   - traefik-ratelimit@kubernetescrd
+    # secureheaders and ratelimit are defined in kubernetes/traefik/middlewares/
+    # but not yet applied here; enable them by uncommenting once ready.
+    # crowdsec-bouncer requires kubernetes/crowdsec/ to be deployed first.
+    middlewares:
+      - traefik-crowdsec-bouncer@kubernetescrd
+      # - traefik-secureheaders@kubernetescrd
+      # - traefik-ratelimit@kubernetescrd
   metrics:
     port: 9100
     expose:
