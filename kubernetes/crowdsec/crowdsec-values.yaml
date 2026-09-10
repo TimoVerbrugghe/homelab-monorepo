@@ -1,0 +1,86 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/crowdsecurity/helm-charts/main/charts/crowdsec/values.schema.json
+#
+# Values for the official `crowdsecurity/crowdsec` Helm chart, deploying the
+# CrowdSec Security Engine (agent) as a DaemonSet reading Traefik's pod logs,
+# plus the Local API (LAPI) that stores/serves ban decisions to the Traefik
+# CrowdSec bouncer plugin (see kubernetes/traefik/traefik-values.yaml and
+# kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
+
+# Talos/containerd cluster: pod logs on disk are wrapped in the containerd
+# CRI log format, not the raw docker JSON log format.
+container_runtime: containerd
+
+lapi:
+  # No public exposure: only the in-cluster bouncer plugin needs to reach the
+  # LAPI, via the ClusterIP `crowdsec-service` Service (default service type).
+  ingress:
+    enabled: false
+
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+    # readOnlyRootFilesystem/runAsNonRoot are left at the image defaults (root,
+    # writable root filesystem): the crowdsec binary writes its SQLite
+    # database, hub state and generated LAPI credentials under /etc/crowdsec
+    # and /var/lib/crowdsec/data at runtime and the upstream image does not
+    # ship a non-root user.
+
+  podLabels:
+    app.kubernetes.io/name: crowdsec-lapi
+    app.kubernetes.io/instance: crowdsec-lapi
+    app.kubernetes.io/part-of: homelab
+
+  # No dynamic StorageClass is provisioned for this workload; both volumes
+  # default to `enabled: true` upstream, so they must be explicitly disabled
+  # here. Bouncer API keys/registered machine credentials are then only kept
+  # for the lifetime of the pod, which is acceptable since the bouncer key is
+  # re-created out-of-band (see crowdsec-bouncer.env.template) if the LAPI
+  # pod is ever recreated.
+  persistentVolume:
+    data:
+      enabled: false
+    config:
+      enabled: false
+
+agent:
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+    # readOnlyRootFilesystem/runAsNonRoot left at image defaults; see the note
+    # under lapi.securityContext above. The agent additionally needs the
+    # hostPath /var/log mount (chart default `hostVarLog: true`) to tail
+    # Traefik's pod logs, which is why the namespace uses the `privileged`
+    # Pod Security Standard (see namespace.yaml).
+
+  podLabels:
+    app.kubernetes.io/name: crowdsec-agent
+    app.kubernetes.io/instance: crowdsec-agent
+    app.kubernetes.io/part-of: homelab
+
+  # Read the JSON access logs of the Traefik pods (kubernetes/traefik) so
+  # CrowdSec can match them against the crowdsecurity/traefik parsers/scenarios
+  # installed below.
+  acquisition:
+    - namespace: traefik
+      podName: traefik-*
+      program: traefik
+
+  env:
+    # Collections installed from https://hub.crowdsec.net on startup:
+    # - crowdsecurity/traefik: Traefik-specific parsers/scenarios
+    # - crowdsecurity/http-cve: known HTTP CVE exploitation attempts
+    # - crowdsecurity/base-http-scenarios: generic HTTP brute-force/probing scenarios
+    - name: COLLECTIONS
+      value: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios"
