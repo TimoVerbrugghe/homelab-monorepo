@@ -71,12 +71,12 @@ spec:
         # Only schedule on nodes that have an Intel GPU available
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "1Gi"
+            cpu: "500m"
             gpu.intel.com/i915: "1"
           limits:
             memory: "8Gi"
-            cpu: "2000m"
+            cpu: "3000m"
             gpu.intel.com/i915: "1"
         
         startupProbe:
