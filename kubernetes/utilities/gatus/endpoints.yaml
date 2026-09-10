@@ -198,6 +198,16 @@ endpoints:
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
+  - name: "Themarr"
+    url: "http://themarr.mediaplayback.svc.cluster.local:8080/health"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Trawl"
+    url: "http://trawl.mediaplayback.svc.cluster.local:8191/health"
+    group: Media
+    <<: [*defaults-http, *defaults-alerts]
+
   # Downloaders Group
   - name: "Qbittorrent"
     url: "http://thefactory.local.timo.be:12000"
@@ -327,6 +337,11 @@ endpoints:
 
   - name: "Keel (Kubernetes)"
     url: "http://keel.utilities.svc.cluster.local:9300"
+    group: Utilities
+    <<: [*defaults-http, *defaults-alerts]
+
+  - name: "Homepage"
+    url: "https://homepage.timo.be"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
