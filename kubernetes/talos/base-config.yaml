@@ -46,6 +46,8 @@ provisioning:
 apiVersion: v1alpha1
 kind: SysctlConfig
 params:
+  net.core.default_qdisc: "fq"
+  net.ipv4.tcp_congestion_control: "bbr"
   vm.nr_hugepages: "1024"
 ---
 # Replaces the deprecated v1alpha1 machine.kubelet image/extraArgs/extraConfig fields (Talos 1.14).
