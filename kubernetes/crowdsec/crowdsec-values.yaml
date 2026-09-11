@@ -93,7 +93,10 @@ agent:
 
   # Read the JSON access logs of the Traefik pods (kubernetes/traefik) so
   # CrowdSec can match them against the crowdsecurity/traefik parsers/scenarios
-  # installed below.
+  # installed below. This requires Traefik's accessLog.format: json (see
+  # kubernetes/traefik/traefik-values.yaml) -- if that is ever changed away
+  # from json, the crowdsecurity/traefik parser will silently stop matching
+  # lines.
   acquisition:
     - namespace: traefik
       podName: traefik-*
