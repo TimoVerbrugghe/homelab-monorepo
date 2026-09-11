@@ -1,5 +1,6 @@
-# Apply the non-helm resources (namespace, bouncer secret) with `kubectl apply -k .`
-# Apply the Helm-inflated resources with:
+# `kubectl apply -k .` does not support helmCharts: (it errors out demanding
+# --enable-helm, a flag `apply -k` doesn't have), so this must always be
+# rendered and applied in one step:
 #   kubectl kustomize --enable-helm . | kubectl apply -n crowdsec -f -
 # (the -n flag is required: this chart's templates don't set metadata.namespace on
 # every resource, and kustomize's namespace transformer doesn't backfill it onto
