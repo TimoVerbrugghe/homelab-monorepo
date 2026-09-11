@@ -44,7 +44,6 @@ generatorOptions:
 helmCharts:
   - name: crowdsec
     repo: https://crowdsecurity.github.io/helm-charts
-    version: 0.24.2
     releaseName: crowdsec
     namespace: crowdsec
     valuesFile: crowdsec-values.yaml
