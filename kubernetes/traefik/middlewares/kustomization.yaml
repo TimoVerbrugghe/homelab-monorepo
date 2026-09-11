@@ -4,6 +4,5 @@ kind: Kustomization
 resources:
   - crowdsec-bouncer.yaml
   - ratelimit.yaml
-  - ratelimit-jellyfin.yaml
   - secureheaders.yaml
   - traefik-tls-cert.yaml

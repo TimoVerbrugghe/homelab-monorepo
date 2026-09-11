@@ -222,10 +222,8 @@ internet-reachable too.
 
 The `jellyfin` entrypoint has its own TLS (served automatically from the
 cluster-wide `TLSStore`'s `defaultCertificate`, same as `websecure`) and its
-own copy of the `crowdsec-bouncer` and `secureheaders` middlewares, plus a
-dedicated, stricter `ratelimit-jellyfin` middleware
-(`kubernetes/traefik/middlewares/ratelimit-jellyfin.yaml`) since this is the
-only entrypoint meant to be reachable directly from the internet.
+own copy of the `crowdsec-bouncer`, `secureheaders`, and shared `ratelimit`
+middlewares, so it keeps the same protections as `websecure`.
 
 ## Order of deployment
 
