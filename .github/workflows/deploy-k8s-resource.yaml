@@ -48,6 +48,25 @@ jobs:
             echo "No Helm charts detected in kustomization file"
           fi
 
+      - name: Detect target namespace
+        id: detect-namespace
+        run: |
+          # Kustomize's `namespace:` transformer does not reliably reach
+          # resources emitted by the `helmCharts:` (Helm inflator) generator
+          # when the chart's own templates omit `metadata.namespace` (a known
+          # kustomize/helm interaction gap, not a config mistake). Extract the
+          # kustomization's top-level namespace (if any) so it can be passed
+          # explicitly to `kubectl apply/delete -f -` and prevent those
+          # resources from silently landing in the current context's default
+          # namespace.
+          namespace=$(awk -F': *' '/^namespace:/{print $2; exit}' "${{ steps.check-kustomization.outputs.kustomization_file }}")
+          echo "namespace=$namespace" >> $GITHUB_OUTPUT
+          if [ -n "$namespace" ]; then
+            echo "Detected top-level namespace: $namespace"
+          else
+            echo "No top-level namespace set in kustomization file"
+          fi
+
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
         with:
@@ -69,7 +88,11 @@ jobs:
       - name: Apply with Kustomize and Helm
         if: ${{ inputs.action == 'apply' && steps.detect-helm.outputs.uses_helm == 'true' }}
         run: |
-          kubectl kustomize --enable-helm kubernetes/${{ inputs.resource }} | kubectl apply -f -
+          namespace_flag=()
+          if [ -n "${{ steps.detect-namespace.outputs.namespace }}" ]; then
+            namespace_flag=(-n "${{ steps.detect-namespace.outputs.namespace }}")
+          fi
+          kubectl kustomize --enable-helm kubernetes/${{ inputs.resource }} | kubectl apply "${namespace_flag[@]}" -f -
 
       - name: Delete with Kustomize (without Helm)
         if: ${{ inputs.action == 'delete' && steps.detect-helm.outputs.uses_helm == 'false' }}
@@ -79,7 +102,11 @@ jobs:
       - name: Delete with Kustomize and Helm
         if: ${{ inputs.action == 'delete' && steps.detect-helm.outputs.uses_helm == 'true' }}
         run: |
-          kubectl kustomize --enable-helm kubernetes/${{ inputs.resource }} | kubectl delete -f -
+          namespace_flag=()
+          if [ -n "${{ steps.detect-namespace.outputs.namespace }}" ]; then
+            namespace_flag=(-n "${{ steps.detect-namespace.outputs.namespace }}")
+          fi
+          kubectl kustomize --enable-helm kubernetes/${{ inputs.resource }} | kubectl delete "${namespace_flag[@]}" -f -
 
       - name: Verify operation
         run: |

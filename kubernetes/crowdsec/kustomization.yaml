@@ -1,4 +1,9 @@
-# Apply all these resources with `kubectl kustomize --enable-helm . | kubectl apply -f -` from the directory containing this file
+# Apply the non-helm resources (namespace, bouncer secret) with `kubectl apply -k .`
+# Apply the Helm-inflated resources with:
+#   kubectl kustomize --enable-helm . | kubectl apply -n crowdsec -f -
+# (the -n flag is required: this chart's templates don't set metadata.namespace on
+# every resource, and kustomize's namespace transformer doesn't backfill it onto
+# Helm-inflated output -- see .github/workflows/deploy-k8s-resource.yaml)
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -12,9 +17,12 @@ labels:
 resources:
   - namespace.yaml
 
-# Bouncer API key created once via `cscli bouncers add traefik-bouncer` against the
-# running LAPI pod, then stored here and reflected into the traefik namespace so the
-# CrowdSec Traefik bouncer plugin can read it as a mounted file.
+# The bouncer key is a static, self-generated pre-shared value (see
+# crowdsec-bouncer.env.template) rather than one obtained from `cscli bouncers add`.
+# It's stored here and reflected into the traefik namespace so the CrowdSec Traefik
+# bouncer plugin can read it as a mounted file; it's also exposed to LAPI via
+# lapi.env (BOUNCER_KEY_traefik_bouncer) in crowdsec-values.yaml so LAPI
+# self-registers the traefik_bouncer with this same key on every restart.
 secretGenerator:
   - name: crowdsec-bouncer-secrets
     envs:
