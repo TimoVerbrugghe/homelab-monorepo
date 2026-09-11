@@ -37,9 +37,12 @@ lapi:
 
   # No dynamic StorageClass is provisioned for this workload; both volumes
   # default to `enabled: true` upstream, so they must be explicitly disabled
-  # here. Registered bouncer/machine credentials are then only kept for the
-  # lifetime of the pod, but this is a non-issue for the Traefik bouncer: see
-  # `env` below, which re-registers it with a fixed key on every startup.
+  # here. This also means the SQLite decisions database (all currently active
+  # bans) is lost on every pod restart, not just registered bouncer/machine
+  # credentials. The credential loss is a non-issue for the Traefik bouncer:
+  # see `env` below, which re-registers it with a fixed key on every startup.
+  # The decision loss just means active bans are re-derived from live log
+  # traffic rather than persisted; there is no user-facing action needed.
   persistentVolume:
     data:
       enabled: false
