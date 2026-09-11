@@ -18,7 +18,6 @@ patches:
 helmCharts:
   - name: traefik
     repo: https://traefik.github.io/charts
-    version: 37.1.1
     namespace: traefik
     includeCRDs: true
     releaseName: traefik
