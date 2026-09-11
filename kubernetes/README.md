@@ -254,10 +254,6 @@ full flow.
 # generate a static key, store it in kubernetes/crowdsec/crowdsec-bouncer.env, then:
 openssl rand -hex 32
 
-# `kubectl apply -k` doesn't support helmCharts:, so this must be rendered and
-# applied in one step (it also generates the namespace/secretGenerator
-# resources); -n crowdsec is required because the chart doesn't set
-# metadata.namespace on every resource itself.
 kubectl kustomize --enable-helm kubernetes/crowdsec/ | \
   kubectl apply -n crowdsec -f -
 
