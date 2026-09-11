@@ -67,6 +67,13 @@ ports:
         enabled: true
       # secureheaders and ratelimit are defined in kubernetes/traefik/middlewares/.
       # crowdsec-bouncer requires kubernetes/crowdsec/ to be deployed first.
+      # All three Middleware CRDs referenced below live in
+      # kubernetes/traefik/middlewares/ (applied separately from this Helm
+      # chart, via `kubectl apply -k kubernetes/traefik/middlewares/` -- see
+      # kubernetes/README.md). Apply that kustomization before or together
+      # with this chart: if it's applied after, Traefik will reject these
+      # entrypoint middleware references (unresolved Middleware CRDs) until it
+      # is restarted or the config is reloaded.
       middlewares:
         - traefik-crowdsec-bouncer@kubernetescrd
         - traefik-secureheaders@kubernetescrd

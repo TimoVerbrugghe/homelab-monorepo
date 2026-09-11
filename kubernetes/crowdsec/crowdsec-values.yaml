@@ -6,8 +6,12 @@
 # CrowdSec bouncer plugin (see kubernetes/traefik/traefik-values.yaml and
 # kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
 
-# Talos/containerd cluster: pod logs on disk are wrapped in the containerd
-# CRI log format, not the raw docker JSON log format.
+# Talos/containerd cluster: each line in /var/log/containers/*.log is wrapped
+# in the containerd CRI log format (timestamp + stream + tags prefixing the
+# actual log line), not the raw docker JSON log driver format. This setting
+# only tells crowdsec how to unwrap that CRI framing; it is unrelated to (and
+# does not change) the JSON *content* of Traefik's access log lines once
+# unwrapped -- see the `acquisition` block below, which parses that JSON.
 container_runtime: containerd
 
 lapi:
