@@ -25,19 +25,30 @@ requests at the edge before they reach any backend service.
 
 ## Bouncer API key
 
-The bouncer API key is generated once against a running LAPI pod:
+The Traefik bouncer key is a static, pre-shared value **you** generate — it is no longer
+obtained from `cscli bouncers add`:
 
 ```bash
-kubectl -n crowdsec exec deploy/crowdsec -- cscli bouncers add traefik-bouncer -o raw
+openssl rand -hex 32
 ```
 
-Store the printed key in a local, uncommitted `kubernetes/crowdsec/crowdsec-bouncer.env`
-(see `crowdsec-bouncer.env.template`). The `secretGenerator` in
+Store it in a local, uncommitted `kubernetes/crowdsec/crowdsec-bouncer.env` (see
+`crowdsec-bouncer.env.template`). The `secretGenerator` in
 `kubernetes/crowdsec/kustomization.yaml` turns it into the `crowdsec-bouncer-secrets`
-Secret and [Reflector](https://github.com/emberstack/kubernetes-reflector) copies it into
-the `traefik` namespace, where it is mounted into the Traefik pod as a file
-(`volumes:` in `traefik-values.yaml`) that the plugin reads via
-`crowdsecLapiKeyFile`.
+Secret, which is used two ways:
+
+- [Reflector](https://github.com/emberstack/kubernetes-reflector) copies it into the
+  `traefik` namespace, where it is mounted into the Traefik pod as a file (`volumes:` in
+  `traefik-values.yaml`) that the plugin reads via `crowdsecLapiKeyFile`.
+- `lapi.env` in `crowdsec-values.yaml` exposes the same value to the LAPI container as
+  `BOUNCER_KEY_traefik_bouncer`. CrowdSec's entrypoint script scans for `BOUNCER_KEY_*`
+  env vars on every container start and idempotently runs
+  `cscli bouncers add traefik_bouncer -k <key>` (skipped if already registered), so the
+  bouncer is re-registered with this exact key every time the LAPI pod restarts or is
+  recreated — no persistent storage and no manual `cscli bouncers add` needed. The
+  bouncer name uses an underscore (`traefik_bouncer`, not `traefik-bouncer`) because the
+  entrypoint derives it from the env var name via `compgen -A variable`, which does not
+  expose hyphenated names as shell variables.
 
 > [!IMPORTANT]
 > Deploy `kubernetes/crowdsec/` and create the bouncer secret **before** the

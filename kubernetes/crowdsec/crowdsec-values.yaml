@@ -37,15 +37,32 @@ lapi:
 
   # No dynamic StorageClass is provisioned for this workload; both volumes
   # default to `enabled: true` upstream, so they must be explicitly disabled
-  # here. Bouncer API keys/registered machine credentials are then only kept
-  # for the lifetime of the pod, which is acceptable since the bouncer key is
-  # re-created out-of-band (see crowdsec-bouncer.env.template) if the LAPI
-  # pod is ever recreated.
+  # here. Registered bouncer/machine credentials are then only kept for the
+  # lifetime of the pod, but this is a non-issue for the Traefik bouncer: see
+  # `env` below, which re-registers it with a fixed key on every startup.
   persistentVolume:
     data:
       enabled: false
     config:
       enabled: false
+
+  # crowdsecurity/crowdsec's entrypoint (docker-start-custom.sh) scans for
+  # BOUNCER_KEY_<name> env vars on every container start and idempotently
+  # runs `cscli bouncers add <name> -k <key>` for each one (skipping it if a
+  # bouncer with that name is already registered). Pointing this at the same
+  # crowdsec-bouncer-secrets Secret the Traefik plugin reads means the
+  # traefik_bouncer registration always uses the same pre-shared key, so it
+  # survives LAPI pod restarts/recreation without persistent storage and
+  # without ever needing to re-run `cscli bouncers add` or update the Traefik
+  # secret. The bouncer name may only contain [A-Za-z0-9_]: the entrypoint
+  # discovers these via `compgen -A variable`, which does not expose
+  # hyphenated env var names as shell variables.
+  env:
+    - name: BOUNCER_KEY_traefik_bouncer
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-bouncer-secrets
+          key: bouncer-api-key
 
 agent:
   podSecurityContext:
