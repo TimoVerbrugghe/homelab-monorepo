@@ -1,0 +1,9 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: ratelimit-jellyfin
+  namespace: traefik
+spec:
+  rateLimit:
+    average: 50
+    burst: 50
