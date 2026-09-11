@@ -4,8 +4,9 @@
 runs two components:
 
 - **LAPI** (Local API) — a single-replica Deployment that stores ban decisions in an
-  in-memory SQLite database (persistence is disabled; no dynamic StorageClass is
-  provisioned for this workload) and serves them over its `crowdsec-service` ClusterIP
+  ephemeral, pod-local SQLite database (persistence is disabled; no dynamic
+  StorageClass is provisioned for this workload, so the database is lost on every pod
+  restart) and serves them over its `crowdsec-service` ClusterIP
   Service. It is never exposed outside the cluster.
 - **Agent** — a DaemonSet that tails Traefik's JSON access logs directly from
   `/var/log/containers` (hostPath) via the `acquisition` config in

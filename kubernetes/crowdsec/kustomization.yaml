@@ -1,10 +1,11 @@
-# `kubectl apply -k .` does not support helmCharts: (it errors out demanding
-# --enable-helm, a flag `apply -k` doesn't have), so this must always be
-# rendered and applied in one step, with an explicit namespace:
+# `kubectl apply -k .` does not support helmCharts: directly (the deploy workflow
+# already renders those via `kubectl kustomize --enable-helm`), so that alone works
+# for most charts. This chart is the exception: its templates don't set
+# metadata.namespace on every resource, and kustomize's namespace transformer
+# doesn't backfill it onto Helm-inflated output, so an explicit -n is required
+# when applying manually:
 #   kubectl kustomize --enable-helm . | kubectl apply -n crowdsec -f -
-# The -n flag is required: this chart's templates don't set metadata.namespace on
-# every resource, and kustomize's namespace transformer doesn't backfill it onto
-# Helm-inflated output. This is a quirk of this chart only -- the shared
+# This is a quirk of this chart only -- the shared
 # .github/workflows/deploy-k8s-resource.yaml workflow does not special-case it,
 # so deploy this resource manually with the command above.
 apiVersion: kustomize.config.k8s.io/v1beta1

@@ -251,7 +251,7 @@ entrypoint, otherwise Traefik fails to mount the bouncer key file and its pods
 full flow.
 
 ```bash
-# generate a static key, store it in kubernetes/crowdsec/crowdsec-bouncer.env, then:
+# generate a static key and store it in kubernetes/crowdsec/crowdsec-bouncer.env:
 openssl rand -hex 32
 
 kubectl kustomize --enable-helm kubernetes/crowdsec/ | \
