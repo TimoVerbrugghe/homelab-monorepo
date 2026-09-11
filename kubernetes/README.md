@@ -247,10 +247,16 @@ kubectl kustomize --enable-helm kubernetes/democratic-csi/ | \
 The `crowdsec-bouncer-secrets` Secret must be reflected into the `traefik` namespace
 before the `crowdsec-bouncer` middleware is referenced on Traefik's `websecure`
 entrypoint, otherwise Traefik fails to mount the bouncer key file and its pods
-`CrashLoopBackOff`. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md) for the
+`CrashLoopBackOff`. The `traefik` namespace itself must therefore exist *before*
+CrowdSec is deployed, so create it first, then CrowdSec, then the rest of the
+Traefik chart. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md) for the
 full flow.
 
 ```bash
+# create the traefik namespace first, so the Reflector-annotated Secret below
+# has somewhere to be copied into:
+kubectl apply -f kubernetes/traefik/traefik-namespace.yaml
+
 # generate a static key and store it in kubernetes/crowdsec/crowdsec-bouncer.env:
 openssl rand -hex 32
 
