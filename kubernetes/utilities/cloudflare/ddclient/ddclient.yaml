@@ -70,12 +70,22 @@ spec:
             periodSeconds: 60
             timeoutSeconds: 5
             failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - pgrep
+                - -f
+                - ddclient
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           volumeMounts:
+            - name: config
+              mountPath: /config
             - name: ddclient-config
               mountPath: /config/ddclient.conf
               subPath: ddclient.conf
-            - name: config
-              mountPath: /config
             - name: run
               mountPath: /run
             - name: tmp
