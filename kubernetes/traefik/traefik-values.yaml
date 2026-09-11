@@ -30,6 +30,10 @@ accessLog:
 
 deployment:
   enabled: true
+  # Must equal the current control-plane node count (manta, skidbladnir, william):
+  # the affinity rules below require one pod per control-plane node, so a mismatch
+  # leaves surplus pods permanently Pending. Update this if control-plane nodes are
+  # added/removed.
   replicas: 3
 
 # traefik-kubevip uses externalTrafficPolicy: Local (see traefik-service.yaml) so
