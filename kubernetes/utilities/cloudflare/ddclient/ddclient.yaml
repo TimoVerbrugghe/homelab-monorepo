@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddclient
+  namespace: utilities
+  labels:
+    app.kubernetes.io/name: ddclient
+    app.kubernetes.io/instance: ddclient
+    app.kubernetes.io/part-of: homelab
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ddclient
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ddclient
+        app.kubernetes.io/instance: ddclient
+        app.kubernetes.io/part-of: homelab
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: false  # s6-overlay init (LSIO base image) requires root to start; it drops privileges to PUID/PGID internally
+        fsGroup: 1000
+      containers:
+        - name: ddclient
+          image: lscr.io/linuxserver/ddclient:latest
+          imagePullPolicy: Always
+          stdin: false
+          tty: false
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Brussels"
+            - name: CLOUDFLARE_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: ddclient-secrets
+                  key: CLOUDFLARE_API_TOKEN
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+          volumeMounts:
+            - name: ddclient-config
+              mountPath: /config/ddclient.conf
+              subPath: ddclient.conf
+            - name: config
+              mountPath: /config
+            - name: run
+              mountPath: /run
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: ddclient-config
+          configMap:
+            name: ddclient
+        - name: config
+          emptyDir:
+            medium: Memory
+        - name: run
+          emptyDir:
+            medium: Memory
+        - name: tmp
+          emptyDir:
+            medium: Memory
