@@ -28,6 +28,10 @@ spec:
     protocol: TCP
     port: 443
     targetPort: websecure
+  - name: jellyfin
+    protocol: TCP
+    port: 8096
+    targetPort: jellyfin
   - name: metrics
     protocol: TCP
     port: 9100
