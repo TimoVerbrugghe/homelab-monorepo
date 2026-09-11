@@ -15,7 +15,7 @@ secretGenerator:
       annotations:
         reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
         reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager, traefik"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager, traefik, utilities"
 
 resources:
   - https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml

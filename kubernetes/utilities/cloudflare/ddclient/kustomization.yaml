@@ -11,16 +11,6 @@ configMapGenerator:
       labels:
         app.kubernetes.io/name: ddclient
 
-secretGenerator:
-  - name: ddclient-secrets
-    namespace: utilities
-    envs:
-      - ddclient-secrets.env
-    type: Opaque
-    options:
-      labels:
-        app.kubernetes.io/name: ddclient
-
 generatorOptions:
   disableNameSuffixHash: true
 
