@@ -194,41 +194,11 @@ and it keeps working once the volumes become ordinary CSI-backed PVC references.
 
 ## CrowdSec
 
-`kubernetes/crowdsec/` deploys the official `crowdsecurity/crowdsec` Helm chart, which
-runs two components:
-
-- **LAPI** (Local API) — a single-replica Deployment that stores ban decisions in an
-  in-memory SQLite database (persistence is disabled; no dynamic StorageClass is
-  provisioned for this workload) and serves them over its `crowdsec-service` ClusterIP
-  Service. It is never exposed outside the cluster.
-- **Agent** — a DaemonSet that tails Traefik's JSON access logs directly from
-  `/var/log/containers` (hostPath) via the `acquisition` config in
-  `crowdsec-values.yaml`, matching them against the `crowdsecurity/traefik`,
-  `crowdsecurity/http-cve` and `crowdsecurity/base-http-scenarios` collections, and
-  pushing ban decisions to the LAPI. Because it needs the host's `/var/log`, the
-  `crowdsec` namespace uses the `privileged` Pod Security Standard.
-
-Enforcement happens in Traefik itself, via the
-[Traefik CrowdSec bouncer plugin](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin),
-loaded through `experimental.plugins` in `kubernetes/traefik/traefik-values.yaml` and
-applied to all ingress traffic through the `crowdsec-bouncer` Middleware
-(`kubernetes/traefik/middlewares/crowdsec-bouncer.yaml`) referenced on the `websecure`
-entrypoint. The plugin queries the LAPI's decisions stream and blocks/challenges
-requests at the edge before they reach any backend service.
-
-The bouncer API key is generated once against a running LAPI pod:
-
-```bash
-kubectl -n crowdsec exec deploy/crowdsec -- cscli bouncers add traefik-bouncer -o raw
-```
-
-Store the printed key in a local, uncommitted `kubernetes/crowdsec/crowdsec-bouncer.env`
-(see `crowdsec-bouncer.env.template`). The `secretGenerator` in
-`kubernetes/crowdsec/kustomization.yaml` turns it into the `crowdsec-bouncer-secrets`
-Secret and [Reflector](https://github.com/emberstack/kubernetes-reflector) copies it into
-the `traefik` namespace, where it is mounted into the Traefik pod as a file
-(`volumes:` in `traefik-values.yaml`) that the plugin reads via
-`crowdsecLapiKeyFile`.
+`kubernetes/crowdsec/` deploys the official `crowdsecurity/crowdsec` Helm chart in front
+of Traefik, and Traefik enforces its ban decisions via the
+[Traefik CrowdSec bouncer plugin](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin)
+on the `websecure` entrypoint. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md)
+for the full architecture, the bouncer API key setup, and collections notes.
 
 > [!IMPORTANT]
 > Deploy `kubernetes/crowdsec/` and create the bouncer secret **before** the
@@ -277,7 +247,8 @@ kubectl kustomize --enable-helm kubernetes/democratic-csi/ | \
 The `crowdsec-bouncer-secrets` Secret must be reflected into the `traefik` namespace
 before the `crowdsec-bouncer` middleware is referenced on Traefik's `websecure`
 entrypoint, otherwise Traefik fails to mount the bouncer key file and its pods
-`CrashLoopBackOff`. See [CrowdSec](#crowdsec) above for the full flow.
+`CrashLoopBackOff`. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md) for the
+full flow.
 
 ```bash
 kubectl kustomize --enable-helm kubernetes/crowdsec/ | \

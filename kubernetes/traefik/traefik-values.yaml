@@ -1,6 +1,3 @@
-globalArguments:
-  - "--global.sendanonymoususage"
-
 # Loads the CrowdSec bouncer plugin so it can be referenced by the
 # crowdsec-bouncer Middleware (kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
 # Requires the CrowdSec LAPI + agent to be deployed first (kubernetes/crowdsec/).
@@ -17,19 +14,19 @@ volumes:
     mountPath: "/etc/traefik/crowdsec"
     type: secret
 
-logs:
-  general:
-    level: INFO
-  access:
-    enabled: true
-    format: json
-    fields:
-      defaultMode: keep
-      headers:
-        defaultMode: drop
-    filters:
-      statuscodes: "400-499,500-599"
-      retryattempts: true
+log:
+  level: INFO
+
+accessLog:
+  enabled: true
+  format: json
+  fields:
+    defaultMode: keep
+    headers:
+      defaultMode: drop
+  filters:
+    statusCodes: "400-499,500-599"
+    retryAttempts: true
 
 deployment:
   enabled: true
@@ -41,11 +38,12 @@ ports:
     port: 8001
     expose:
       default: false
-    redirections:
-      entryPoint: 
-        to: websecure
-        scheme: https
-        permanent: true
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
   traefik:
     port: 9000
     exposedPort: 9000
@@ -64,15 +62,15 @@ ports:
         readTimeout: 420s
         writeTimeout: 420s
         idleTimeout: 420s
-    tls:
-      enabled: true
-    # secureheaders and ratelimit are defined in kubernetes/traefik/middlewares/
-    # but not yet applied here; enable them by uncommenting once ready.
-    # crowdsec-bouncer requires kubernetes/crowdsec/ to be deployed first.
-    middlewares:
-      - traefik-crowdsec-bouncer@kubernetescrd
-      # - traefik-secureheaders@kubernetescrd
-      # - traefik-ratelimit@kubernetescrd
+    http:
+      tls:
+        enabled: true
+      # secureheaders and ratelimit are defined in kubernetes/traefik/middlewares/.
+      # crowdsec-bouncer requires kubernetes/crowdsec/ to be deployed first.
+      middlewares:
+        - traefik-crowdsec-bouncer@kubernetescrd
+        - traefik-secureheaders@kubernetescrd
+        - traefik-ratelimit@kubernetescrd
   metrics:
     port: 9100
     expose:
@@ -103,9 +101,6 @@ providers:
     allowExternalNameServices: true
     publishedService:
       enabled: true
-
-dashboard:
-  enabled: true
 
 rbac:
   enabled: true

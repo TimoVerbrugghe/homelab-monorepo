@@ -34,7 +34,6 @@ lapi:
   podLabels:
     app.kubernetes.io/name: crowdsec-lapi
     app.kubernetes.io/instance: crowdsec-lapi
-    app.kubernetes.io/part-of: homelab
 
   # No dynamic StorageClass is provisioned for this workload; both volumes
   # default to `enabled: true` upstream, so they must be explicitly disabled
@@ -67,7 +66,6 @@ agent:
   podLabels:
     app.kubernetes.io/name: crowdsec-agent
     app.kubernetes.io/instance: crowdsec-agent
-    app.kubernetes.io/part-of: homelab
 
   # Read the JSON access logs of the Traefik pods (kubernetes/traefik) so
   # CrowdSec can match them against the crowdsecurity/traefik parsers/scenarios
@@ -82,5 +80,9 @@ agent:
     # - crowdsecurity/traefik: Traefik-specific parsers/scenarios
     # - crowdsecurity/http-cve: known HTTP CVE exploitation attempts
     # - crowdsecurity/base-http-scenarios: generic HTTP brute-force/probing scenarios
+    # - crowdsecurity/http-dos: HTTP(S) flood/DoS detection scenarios
+    # See kubernetes/crowdsec/README.md for other collections considered but
+    # not installed (they need application log ingestion this agent doesn't
+    # currently do, since it only tails Traefik's pod logs).
     - name: COLLECTIONS
-      value: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios"
+      value: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/http-dos"
