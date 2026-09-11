@@ -32,6 +32,26 @@ deployment:
   enabled: true
   replicas: 3
 
+# traefik-kubevip uses externalTrafficPolicy: Local (see traefik-service.yaml) so
+# CrowdSec/ratelimit see the real client IP instead of a SNAT'd node IP. kube-vip
+# only elects a leader (and therefore only advertises the VIP) from control-plane
+# nodes (kube-vip-ds nodeAffinity: node-role.kubernetes.io/{master,control-plane}).
+# Require one Traefik pod per control-plane node so every possible kube-vip leader
+# always has a local endpoint to route Local-policy traffic to.
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: traefik
+        topologyKey: kubernetes.io/hostname
+
 ports:
   web:
     # Setting port manually to 8001 since portaineredge uses port 8000, otherwise default helm chat values will use 8000
