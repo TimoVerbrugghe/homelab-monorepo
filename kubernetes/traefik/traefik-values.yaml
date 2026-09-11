@@ -52,6 +52,16 @@ affinity:
             app.kubernetes.io/name: traefik
         topologyKey: kubernetes.io/hostname
 
+# With replicas pinned 1:1 to control-plane nodes (see affinity above), the
+# default rolling update (maxUnavailable: 0, maxSurge: 1) has no spare node to
+# surge a new pod onto and deadlocks. maxUnavailable: 1/maxSurge: 0 lets an old
+# pod terminate first so the new one can take its place.
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+
 ports:
   web:
     # Setting port manually to 8001 since portaineredge uses port 8000, otherwise default helm chat values will use 8000
