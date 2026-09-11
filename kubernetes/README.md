@@ -194,8 +194,8 @@ and it keeps working once the volumes become ordinary CSI-backed PVC references.
 
 ## CrowdSec
 
-`kubernetes/crowdsec/` deploys the official `crowdsecurity/crowdsec` Helm chart in front
-of Traefik, and Traefik enforces its ban decisions via the
+`kubernetes/crowdsec/` deploys the official `crowdsecurity/crowdsec` Helm chart
+alongside Traefik, and Traefik enforces its ban decisions via the
 [Traefik CrowdSec bouncer plugin](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin)
 on the `websecure` entrypoint. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md)
 for the full architecture, the bouncer API key setup, and collections notes.
