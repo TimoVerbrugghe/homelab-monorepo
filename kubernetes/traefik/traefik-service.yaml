@@ -23,6 +23,7 @@ spec:
   loadBalancerClass: kube-vip.io/kube-vip-class
   type: LoadBalancer
   loadBalancerIP: 10.10.10.34
+  externalTrafficPolicy: Local
   ports:
   - name: websecure
     protocol: TCP
