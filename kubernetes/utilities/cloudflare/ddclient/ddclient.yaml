@@ -60,6 +60,16 @@ spec:
             limits:
               cpu: "100m"
               memory: "128Mi"
+          livenessProbe:
+            exec:
+              command:
+                - pgrep
+                - -f
+                - ddclient
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 3
           volumeMounts:
             - name: ddclient-config
               mountPath: /config/ddclient.conf
