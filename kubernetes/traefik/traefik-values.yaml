@@ -102,6 +102,12 @@ providers:
     publishedService:
       enabled: true
 
+# The dashboard is still served (api.dashboard defaults to true) on the
+# internal `traefik` entrypoint (port 9000, see ports.traefik below).
+# The old top-level `dashboard: enabled: true` key from the pre-41.x chart
+# schema was dropped here because chart 41.5.0's values.schema.json rejects
+# unknown top-level keys; use `ingressRoute.dashboard.enabled: true` instead
+# if you want the dashboard exposed via an IngressRoute.
 rbac:
   enabled: true
   
