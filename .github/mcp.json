@@ -46,7 +46,7 @@
   "mcpServers": {
     "homeAssistant": {
       "type": "http",
-      "url": "http://homeassistant.pony-godzilla.ts.net:8123/api/mcp",
+      "url": "http://homeassistant.pony-godzilla.ts.net:8123/api/webhook/mcp_100d2242e491e35d6076635a52461fa3",
       "tools": ["*"],
       "headers": {
         "Authorization": "Bearer $COPILOT_MCP_HA_TOKEN"

@@ -40,7 +40,7 @@
   "servers": {
     "homeAssistant": {
       "type": "http",
-      "url": "http://homeassistant.local:8123/api/mcp",
+      "url": "http://10.10.10.28:8123/api/webhook/mcp_100d2242e491e35d6076635a52461fa3",
       "headers": {
         "Authorization": "Bearer ${input:ha-token}"
       }
