@@ -257,7 +257,10 @@ full flow.
 # has somewhere to be copied into:
 kubectl apply -f kubernetes/traefik/traefik-namespace.yaml
 
-# generate a static key and store it in kubernetes/crowdsec/crowdsec-bouncer.env:
+# generate a static key, then copy kubernetes/crowdsec/crowdsec-bouncer.env.template
+# to kubernetes/crowdsec/crowdsec-bouncer.env (gitignored) and set
+# bouncer-api-key=<generated value> in it -- kustomize's secretGenerator fails
+# if this file is missing:
 openssl rand -hex 32
 
 kubectl kustomize --enable-helm kubernetes/crowdsec/ | \
