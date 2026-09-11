@@ -20,8 +20,8 @@ Enforcement happens in Traefik itself, via the
 [Traefik CrowdSec bouncer plugin](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin),
 loaded through `experimental.plugins` in `kubernetes/traefik/traefik-values.yaml` and
 applied to all ingress traffic through the `crowdsec-bouncer` Middleware
-(`kubernetes/traefik/middlewares/crowdsec-bouncer.yaml`) referenced on the `websecure`
-entrypoint. The plugin queries the LAPI's decisions stream and blocks/challenges
+(`kubernetes/traefik/middlewares/crowdsec-bouncer.yaml`) referenced on the `websecure`/`jellyfin`
+entrypoints. The plugin queries the LAPI's decisions stream and blocks/challenges
 requests at the edge before they reach any backend service.
 
 ## Bouncer API key
@@ -53,7 +53,7 @@ Secret, which is used two ways:
 
 > [!IMPORTANT]
 > Deploy `kubernetes/crowdsec/` and create the bouncer secret **before** the
-> `crowdsec-bouncer` middleware is referenced on Traefik's `websecure` entrypoint — see
+> `crowdsec-bouncer` middleware is referenced on Traefik's `websecure`/`jellyfin` entrypoints — see
 > [Order of deployment](../README.md#order-of-deployment) in the main Kubernetes README.
 
 ## Pod labels

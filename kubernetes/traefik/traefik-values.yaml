@@ -50,12 +50,18 @@ affinity:
       - labelSelector:
           matchLabels:
             app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: traefik-traefik
         topologyKey: kubernetes.io/hostname
 
 # With replicas pinned 1:1 to control-plane nodes (see affinity above), the
 # default rolling update (maxUnavailable: 0, maxSurge: 1) has no spare node to
 # surge a new pod onto and deadlocks. maxUnavailable: 1/maxSurge: 0 lets an old
-# pod terminate first so the new one can take its place.
+# pod terminate first so the new one can take its place. This does mean that
+# whichever control-plane node loses its pod during the rollout has no local
+# Traefik endpoint for a moment; if that node is the kube-vip leader at that
+# instant, Local-policy traffic to it is briefly dropped until kube-vip fails
+# over or the new pod comes up. Acceptable for this homelab; a PodDisruptionBudget
+# would only prevent voluntary disruptions, not this one.
 updateStrategy:
   type: RollingUpdate
   rollingUpdate:
