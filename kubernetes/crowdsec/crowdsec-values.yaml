@@ -1,17 +1,10 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/crowdsecurity/helm-charts/main/charts/crowdsec/values.schema.json
 #
-# Values for the official `crowdsecurity/crowdsec` Helm chart, deploying the
-# CrowdSec Security Engine (agent) as a DaemonSet reading Traefik's pod logs,
-# plus the Local API (LAPI) that stores/serves ban decisions to the Traefik
-# CrowdSec bouncer plugin (see kubernetes/traefik/traefik-values.yaml and
-# kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
+# Agent DaemonSet reads Traefik's pod logs; LAPI stores/serves ban decisions to
+# the Traefik bouncer plugin (kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
 
-# Talos/containerd cluster: each line in /var/log/containers/*.log is wrapped
-# in the containerd CRI log format (timestamp + stream + tags prefixing the
-# actual log line), not the raw docker JSON log driver format. This setting
-# only tells crowdsec how to unwrap that CRI framing; it is unrelated to (and
-# does not change) the JSON *content* of Traefik's access log lines once
-# unwrapped -- see the `acquisition` block below, which parses that JSON.
+# Talos wraps /var/log/containers/*.log in the containerd CRI format, not the
+# docker JSON log driver format this chart defaults to.
 container_runtime: containerd
 
 lapi:
@@ -29,62 +22,38 @@ lapi:
     capabilities:
       drop:
         - ALL
-    # readOnlyRootFilesystem/runAsNonRoot are left at the image defaults (root,
-    # writable root filesystem): the crowdsec binary writes its SQLite
-    # database, hub state and generated LAPI credentials under /etc/crowdsec
-    # and /var/lib/crowdsec/data at runtime and the upstream image does not
-    # ship a non-root user.
+    # readOnlyRootFilesystem/runAsNonRoot left at image defaults: crowdsec
+    # writes its SQLite DB/state under /etc/crowdsec and /var/lib/crowdsec
+    # at runtime, and the image ships no non-root user.
 
   podLabels:
     app.kubernetes.io/name: crowdsec-lapi
     app.kubernetes.io/instance: crowdsec-lapi
 
-  # No dynamic StorageClass is provisioned for this workload; both volumes
-  # default to `enabled: true` upstream, so they must be explicitly disabled
-  # here. This also means the SQLite decisions database (all currently active
-  # bans) is lost on every pod restart, not just registered bouncer/machine
-  # credentials. The credential loss is a non-issue for both the Traefik
-  # bouncer and the agent: see `env`/`lifecycle` below, which re-register each
-  # of them with a fixed identity on every startup. The decision loss just means
-  # active bans are re-derived from live log traffic rather than persisted;
-  # there is no user-facing action needed.
+  # No dynamic StorageClass provisioned, so persistence must be disabled
+  # explicitly. The decisions DB is lost on every restart (bans re-derive from
+  # live traffic); bouncer/agent credentials are re-registered on every start
+  # instead (see env/lifecycle below), so this needs no manual action.
   persistentVolume:
     data:
       enabled: false
     config:
       enabled: false
 
-  # crowdsecurity/crowdsec's *upstream image* entrypoint scans for
-  # BOUNCER_KEY_<name> env vars on every container start and idempotently
-  # runs `cscli bouncers add <name> -k <key>` for each one (skipping it if a
-  # bouncer with that name is already registered). This chart's `lapi`
-  # Deployment mounts a chart-provided ConfigMap over /docker_start.sh that
-  # *replaces* the upstream entrypoint, but the replacement script keeps this
-  # exact BOUNCER_KEY_* handling, so pointing this at the same
-  # crowdsec-bouncer-secrets Secret the Traefik plugin reads still means the
-  # traefik_bouncer registration always uses the same pre-shared key, and it
-  # survives LAPI pod restarts/recreation without persistent storage and
-  # without ever needing to re-run `cscli bouncers add` or update the Traefik
-  # secret. The bouncer name may only contain [A-Za-z0-9_]: the entrypoint
-  # discovers these via `compgen -A variable`, which does not expose
-  # hyphenated env var names as shell variables.
+  # The upstream image entrypoint auto-registers a bouncer for every
+  # BOUNCER_KEY_<name> env var (idempotent `cscli bouncers add <name> -k <key>`).
+  # This chart's /docker_start.sh override keeps that behavior, so the Traefik
+  # bouncer always re-registers with the same pre-shared key on every LAPI
+  # restart. Name may only contain [A-Za-z0-9_] (derived from the env var name).
   #
-  # Unlike BOUNCER_KEY_*, this chart's replacement /docker_start.sh has *no*
-  # AGENT_USERNAME/AGENT_PASSWORD handling at all (that logic only exists in
-  # the upstream image's own entrypoint, which only the agent DaemonSet pods
-  # run unmodified, since they have no such ConfigMap override). So LAPI never
-  # auto-registers the agent DaemonSet's shared machine identity on its own;
-  # the postStart lifecycle hook below does that instead, by running the same
-  # `cscli machines add ... --force` command the upstream entrypoint would
-  # have run, directly inside the LAPI container after each start. `--force`
-  # makes this idempotent (safe to always re-run, even if the machine is
-  # already registered), and `-f /dev/null` discards the generated credentials
-  # file so this doesn't clobber the LAPI's own /etc/crowdsec/local_api_credentials.yaml
-  # (used for LAPI's *own* local-agent auth, unrelated to the agent DaemonSet).
-  # The retry loop guards against the postStart hook racing LAPI's own startup
-  # (DB not yet initialized); the hook intentionally always exits 0 so a
-  # registration failure never crash-loops the LAPI container itself -- check
-  # `cscli machines list` on the LAPI pod to confirm registration succeeded.
+  # Unlike bouncers, this chart's /docker_start.sh has no AGENT_USERNAME/
+  # AGENT_PASSWORD handling (that's upstream-entrypoint-only, which the agent
+  # DaemonSet runs unmodified). The postStart hook below replicates it
+  # manually so the agent's shared machine identity also survives LAPI
+  # restarts. --force makes it idempotent; -f /dev/null discards the
+  # generated credentials file (unrelated to LAPI's own local-agent auth).
+  # The retry loop covers the DB-not-ready race at startup and always exits 0
+  # so a failure never crash-loops LAPI (check `cscli machines list` to confirm).
   lifecycle:
     postStart:
       exec:
@@ -125,45 +94,31 @@ agent:
     capabilities:
       drop:
         - ALL
-    # readOnlyRootFilesystem/runAsNonRoot left at image defaults; see the note
-    # under lapi.securityContext above. The agent additionally needs the
-    # hostPath /var/log mount (chart default `hostVarLog: true`) to tail
-    # Traefik's pod logs, which is why the namespace uses the `privileged`
-    # Pod Security Standard (see namespace.yaml).
+    # readOnlyRootFilesystem/runAsNonRoot left at image defaults (see lapi
+    # note above). Also needs hostPath /var/log to tail Traefik's logs, hence
+    # the `privileged` Pod Security Standard on this namespace (namespace.yaml).
 
   podLabels:
     app.kubernetes.io/name: crowdsec-agent
     app.kubernetes.io/instance: crowdsec-agent
 
-  # Read the JSON access logs of the Traefik pods (kubernetes/traefik) so
-  # CrowdSec can match them against the crowdsecurity/traefik parsers/scenarios
-  # installed below. This requires Traefik's accessLog.format: json (see
-  # kubernetes/traefik/traefik-values.yaml) -- if that is ever changed away
-  # from json, the crowdsecurity/traefik parser will silently stop matching
-  # lines.
+  # Read Traefik's JSON access logs (kubernetes/traefik) for the
+  # crowdsecurity/traefik parsers below. Requires accessLog.format: json in
+  # traefik-values.yaml.
   acquisition:
     - namespace: traefik
       podName: traefik-*
       program: traefik
 
   env:
-    # Collections installed from https://hub.crowdsec.net on startup:
-    # - crowdsecurity/traefik: Traefik-specific parsers/scenarios
-    # - crowdsecurity/http-cve: known HTTP CVE exploitation attempts
-    # - crowdsecurity/base-http-scenarios: generic HTTP brute-force/probing scenarios
-    # - crowdsecurity/http-dos: HTTP(S) flood/DoS detection scenarios
-    # See kubernetes/crowdsec/README.md for other collections considered but
-    # not installed (they need application log ingestion this agent doesn't
-    # currently do, since it only tails Traefik's pod logs).
+    # Collections from hub.crowdsec.net: Traefik parsers/scenarios, HTTP CVE
+    # exploits, generic HTTP brute-force/probing, HTTP(S) flood/DoS. See
+    # README.md for others considered but not installed.
     - name: COLLECTIONS
       value: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/http-dos"
-    # The agent runs with DISABLE_LOCAL_API=true (this chart's default for the agent
-    # DaemonSet) and authenticates to the separate LAPI Deployment as a "machine".
-    # Setting the same AGENT_USERNAME/AGENT_PASSWORD as lapi.env above makes the
-    # entrypoint write this fixed identity into local_api_credentials.yaml instead of
-    # generating a random one -- matching whichever machine LAPI registered via
-    # `cscli machines add "$AGENT_USERNAME" ... --force` on its own startup, so the
-    # two sides never fall out of sync regardless of which pod restarts first.
+    # Agent runs with DISABLE_LOCAL_API=true and authenticates to LAPI as a
+    # machine; same AGENT_USERNAME/PASSWORD as lapi.env keeps both sides in
+    # sync regardless of restart order (see lapi.lifecycle.postStart above).
     - name: AGENT_USERNAME
       valueFrom:
         secretKeyRef:

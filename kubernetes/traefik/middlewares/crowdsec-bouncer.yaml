@@ -11,11 +11,7 @@ spec:
       crowdsecLapiScheme: http
       crowdsecLapiHost: crowdsec-service.crowdsec.svc.cluster.local:8080
       crowdsecLapiKeyFile: /etc/traefik/crowdsec/bouncer-api-key
-      # Default (0) flips the plugin's internal isCrowdsecStreamHealthy flag to
-      # unhealthy after the very first failed decisions-stream poll, which then
-      # blocks ALL traffic (fail-closed) until the stream recovers -- this caused a
-      # ~6 minute blanket 403 outage on a single transient LAPI hiccup. -1 disables
-      # that flag entirely: on a stream failure the plugin just keeps serving from
-      # its last-known-good decision cache (known bans still enforced, unknown IPs
-      # fail open) instead of blocking everyone.
+      # Default (0) fails closed (blocks ALL traffic) after the first failed
+      # LAPI stream poll; -1 keeps serving from the last-known-good decision
+      # cache instead (fail open) until the stream recovers.
       updateMaxFailure: -1
