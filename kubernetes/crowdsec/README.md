@@ -15,21 +15,24 @@ mechanics and pod security/label rationale.
 
 ## Setup
 
-`crowdsec-bouncer.env` and `crowdsec-agent.env` are static, self-generated
-values (not `cscli`-issued) — copy each `.env.template` to `.env` (gitignored)
-and fill in:
+All three `.env` files (`crowdsec-bouncer.env`, `crowdsec-agent.env`,
+`crowdsec-console.env`) must exist (gitignored, copied from their
+`.env.template`) — `kustomize build` fails if any `secretGenerator` env file is
+missing, even if you leave its values blank to opt out of a feature. Copy each
+template to its `.env` file, then fill in the required ones:
 
 ```bash
 openssl rand -hex 32   # crowdsec-bouncer.env: bouncer-api-key
 openssl rand -hex 16   # crowdsec-agent.env: agent-password (agent-username: any stable string)
 ```
 
-`crowdsec-console.env` is optional and enables console enrollment (a
-prerequisite for enrolling into the CAPI community blocklist on
-[app.crowdsec.net](https://app.crowdsec.net/)). CAPI itself — the anonymous
-signal-push/community-blocklist registration — is already active without any
-of this, see the comment above `lapi.persistentVolume` in
-`crowdsec-values.yaml`. To enroll:
+`crowdsec-console.env`'s `enroll-key` is optional and, when set, enables
+console enrollment (a prerequisite for enrolling into the CAPI community
+blocklist on [app.crowdsec.net](https://app.crowdsec.net/)). CAPI itself — the
+anonymous signal-push/community-blocklist registration — is already active
+without any of this, see the comment above `lapi.persistentVolume` in
+`crowdsec-values.yaml`. Leave `crowdsec-console.env` as copied from its
+template (empty `enroll-key`) to skip console enrollment. To enroll:
 
 1. Copy `crowdsec-console.env.template` to `crowdsec-console.env` and paste in
    the enroll key from `app.crowdsec.net` → Security Engines → "Enroll
@@ -39,9 +42,11 @@ of this, see the comment above `lapi.persistentVolume` in
    community blocklist under its blocklist settings.
 
 > [!NOTE]
-> Leave `enroll-key` blank in `crowdsec-console.env` (its default) to skip
-> console enrollment entirely; `ENROLL_KEY` is read as an optional secret key
-> and the entrypoint only enrolls when it's non-empty.
+> Leave `enroll-key` blank in `crowdsec-console.env` (its default after
+> copying from the template) to skip console enrollment; `ENROLL_KEY` is read
+> as an optional secret key and the entrypoint only enrolls when it's
+> non-empty. The file itself must still exist for `kustomize build` to
+> succeed.
 
 ## Collections considered but not installed
 
