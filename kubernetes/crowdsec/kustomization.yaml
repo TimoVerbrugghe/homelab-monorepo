@@ -45,9 +45,15 @@ secretGenerator:
 generatorOptions:
   disableNameSuffixHash: true
 
+# version is pinned: an unpinned chart can resolve to a different (and
+# potentially differently-behaving) release per machine/run depending on the
+# local Helm cache, which is exactly the class of bug that motivated pinning
+# the Traefik chart (see kubernetes/traefik/kustomization.yaml). Bump
+# deliberately and re-verify the rendered output when upgrading.
 helmCharts:
   - name: crowdsec
     repo: https://crowdsecurity.github.io/helm-charts
+    version: 0.24.2
     releaseName: crowdsec
     namespace: crowdsec
     valuesFile: crowdsec-values.yaml
