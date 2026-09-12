@@ -18,6 +18,13 @@ patches:
 helmCharts:
   - name: traefik
     repo: https://traefik.github.io/charts
+    # Pinned: without a version, kustomize/helm can resolve (or cache) an
+    # older chart depending on the machine/run. Chart versions below 41.0.0
+    # (e.g. 37.1.1) silently drop the rendered `--entryPoints.<name>.http.tls`
+    # (for custom entrypoints) and `--entryPoints.<name>.http.middlewares`
+    # args entirely, even though traefik-values.yaml sets them correctly.
+    # Bump deliberately and re-verify the rendered args after doing so.
+    version: 41.5.0
     namespace: traefik
     includeCRDs: true
     releaseName: traefik

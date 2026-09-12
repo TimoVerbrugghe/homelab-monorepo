@@ -236,7 +236,7 @@ kubectl apply -k kubernetes/secrets/
 ### Bootstrap cluster
 
 ```bash
-kubectl kustomize --enable-helm kubernetes/cluster-bootstrap/ | \
+kustomize build --enable-helm kubernetes/cluster-bootstrap/ | \
   kubectl apply -f -
 ```
 
@@ -258,7 +258,7 @@ Required before any of the mediaplayback services. No prerequisites — the driv
 runs in `node-manual` mode and needs no credentials.
 
 ```bash
-kubectl kustomize --enable-helm kubernetes/democratic-csi/ | \
+kustomize build --enable-helm kubernetes/democratic-csi/ | \
   kubectl apply -f -
 ```
 
@@ -273,10 +273,10 @@ kubectl apply -f kubernetes/traefik/traefik-namespace.yaml
 
 # populate kubernetes/crowdsec/*.env from the *.env.template files first
 # (see kubernetes/crowdsec/README.md), then:
-kubectl kustomize --enable-helm kubernetes/crowdsec/ | \
+kustomize build --enable-helm kubernetes/crowdsec/ | \
   kubectl apply -n crowdsec -f -
 
-kubectl kustomize --enable-helm kubernetes/traefik/ | \
+kustomize build --enable-helm kubernetes/traefik/ | \
   kubectl apply -f -
 kubectl apply -k kubernetes/traefik/middlewares/
 ```
@@ -290,6 +290,6 @@ kubectl apply -k kubernetes/<resource>
 OR
 
 ```bash
-kubectl kustomize --enable-helm kubernetes/<resource>/ | \
+kustomize build --enable-helm kubernetes/<resource>/ | \
   kubectl apply -f -
 ```
