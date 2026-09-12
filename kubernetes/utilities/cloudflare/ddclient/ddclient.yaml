@@ -82,6 +82,8 @@ spec:
               value: "1000"
             - name: TZ
               value: "Europe/Brussels"
+            # Reuses cert-manager's DNS-01 token (Zone:DNS:Edit on timo.be), mirrored into this
+            # namespace by the emberstack Reflector - no separate token needed.
             - name: CLOUDFLARE_API_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -110,6 +112,7 @@ spec:
             timeoutSeconds: 5
             failureThreshold: 3
           readinessProbe:
+            # See livenessProbe comment above for why this pattern is anchored.
             exec:
               command:
                 - pgrep
