@@ -37,8 +37,11 @@ of this, see the comment above `lapi.persistentVolume` in
 2. Re-apply this directory (see [Order of deployment](../README.md#order-of-deployment)).
 3. On `app.crowdsec.net`, approve the newly-enrolled engine, then enable the
    community blocklist under its blocklist settings.
-4. Leave `enroll-key` blank in `crowdsec-console.env` to skip enrollment;
-   `ENROLL_KEY` is read as an optional secret key.
+
+> [!NOTE]
+> Leave `enroll-key` blank in `crowdsec-console.env` (its default) to skip
+> console enrollment entirely; `ENROLL_KEY` is read as an optional secret key
+> and the entrypoint only enrolls when it's non-empty.
 
 ## Collections considered but not installed
 

@@ -96,7 +96,9 @@ lapi:
     # associates this LAPI with a CrowdSec account at app.crowdsec.net so you
     # can approve enrollment there and add it to the CAPI community blocklist.
     # `cscli console enroll` runs on every LAPI start and is idempotent/
-    # re-approve-safe. Leave crowdsec-console.env's enroll-key empty to skip.
+    # re-approve-safe; the entrypoint script only calls it when ENROLL_KEY is
+    # non-empty, so leaving crowdsec-console.env's enroll-key empty (its
+    # default) is a safe, deliberate opt-out, not just a missing-secret case.
     - name: ENROLL_KEY
       valueFrom:
         secretKeyRef:
