@@ -116,14 +116,8 @@ ports:
       default: false
     exposedPort: 8000
     protocol: TCP
-  # Dedicated WAN-facing entrypoint for Jellyfin only. Kept separate from
-  # websecure so that forwarding this single port on the router cannot expose
-  # any other IngressRoute that also happens to use websecure. Internal
-  # container port intentionally differs from Jellyfin's own 8096 app port to
-  # avoid confusion between the two (they live on different Services/IPs, so
-  # there is no actual conflict either way).
   jellyfin:
-    port: 9443
+    port: 8096
     expose:
       default: false
     exposedPort: 8096
