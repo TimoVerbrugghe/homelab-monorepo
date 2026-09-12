@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddclient
+  namespace: utilities
+  labels:
+    app.kubernetes.io/name: ddclient
+    app.kubernetes.io/instance: ddclient
+    app.kubernetes.io/part-of: homelab
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ddclient
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ddclient
+        app.kubernetes.io/instance: ddclient
+        app.kubernetes.io/part-of: homelab
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: false  # s6-overlay init (LSIO base image) requires root to start; it drops privileges to PUID/PGID internally
+        fsGroup: 1000
+      initContainers:
+        # linuxserver.io's s6-overlay init script chmods/chowns everything under /config at startup;
+        # a ConfigMap volume is always read-only, so ddclient.conf can't be mounted straight into /config.
+        # Copy it into the writable /config emptyDir instead, keeping the deployment stateless (source of truth is the ConfigMap).
+        - name: copy-config
+          image: lscr.io/linuxserver/ddclient:latest
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - cp /ddclient-config/ddclient.conf /config/ddclient.conf
+          stdin: false
+          tty: false
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: ddclient-config
+              mountPath: /ddclient-config
+              readOnly: true
+            - name: config
+              mountPath: /config
+      containers:
+        - name: ddclient
+          image: lscr.io/linuxserver/ddclient:latest
+          imagePullPolicy: Always
+          stdin: false
+          tty: false
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              # linuxserver.io's s6-overlay init needs to chown/chmod /config and /run/ddclient* at startup,
+              # then, still running as root, needs to traverse those now abc-owned, mode 0700 paths,
+              # and finally drop privileges (via s6-applyuidgid) to abc to run the actual services.
+              add:
+                - CHOWN
+                - FOWNER
+                - DAC_OVERRIDE
+                - SETUID
+                - SETGID
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Brussels"
+            # Reuses cert-manager's DNS-01 token (Zone:DNS:Edit on timo.be), mirrored into this
+            # namespace by the emberstack Reflector - no separate token needed.
+            - name: CLOUDFLARE_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare-token-secret
+                  key: cloudflare-token
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+          livenessProbe:
+            # ddclient runs in --foreground mode with its process title set to
+            # "ddclient - sleeping for N seconds"; anchoring on that prefix targets the real
+            # daemon (PID confirmed via /proc/<pid>/cmdline) and avoids matching the
+            # `s6-supervise svc-ddclient` wrapper or the `inotifywait ddclient.conf` watcher,
+            # both of which a plain `pgrep -f ddclient` would also match.
+            exec:
+              command:
+                - pgrep
+                - -f
+                - ^ddclient - 
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            # See livenessProbe comment above for why this pattern is anchored.
+            exec:
+              command:
+                - pgrep
+                - -f
+                - ^ddclient - 
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: run
+              mountPath: /run
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: ddclient-config
+          configMap:
+            name: ddclient
+        - name: config
+          emptyDir:
+            medium: Memory
+        - name: run
+          emptyDir:
+            medium: Memory
+        - name: tmp
+          emptyDir:
+            medium: Memory
