@@ -40,6 +40,15 @@ lapi:
     config:
       enabled: false
 
+  # persistentVolume.config.enabled: false above makes the chart's
+  # StoreCAPICredentialsInSecret helper default true (see _helpers.tpl /
+  # capi-register-job.yaml in crowdsecurity/helm-charts), so a pre-install/
+  # pre-upgrade Job already auto-runs `cscli capi register` and stores the
+  # result in the `crowdsec-capi-credentials` Secret -- CAPI/community
+  # blocklist decisions are pulled with no config below. ENROLL_KEY below adds
+  # *console* enrollment on top of that (associates this LAPI with a
+  # CrowdSec account/dashboard), which is separate and optional.
+
   # The upstream image entrypoint auto-registers a bouncer for every
   # BOUNCER_KEY_<name> env var (idempotent `cscli bouncers add <name> -k <key>`).
   # This chart's /docker_start.sh override keeps that behavior, so the Traefik
@@ -83,6 +92,21 @@ lapi:
         secretKeyRef:
           name: crowdsec-agent-secrets
           key: agent-password
+    # Optional console enrollment (separate from CAPI registration above):
+    # associates this LAPI with a CrowdSec account at app.crowdsec.net so you
+    # can approve enrollment there and add it to the CAPI community blocklist.
+    # `cscli console enroll` runs on every LAPI start and is idempotent/
+    # re-approve-safe. Leave crowdsec-console.env's enroll-key empty to skip.
+    - name: ENROLL_KEY
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-console-secrets
+          key: enroll-key
+          optional: true
+    - name: ENROLL_INSTANCE_NAME
+      value: "sectorfive"
+    - name: ENROLL_TAGS
+      value: "k8s traefik"
 
 agent:
   podSecurityContext:
