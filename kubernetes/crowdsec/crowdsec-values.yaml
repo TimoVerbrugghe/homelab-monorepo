@@ -104,6 +104,10 @@ lapi:
         secretKeyRef:
           name: crowdsec-console-secrets
           key: enroll-key
+          # The secretGenerator below always produces this secret/key (README
+          # requires crowdsec-console.env to exist), so this isn't needed for
+          # the normal empty-enroll-key opt-out. It only guards against the
+          # secret being deleted or renamed out-of-band.
           optional: true
     - name: ENROLL_INSTANCE_NAME
       value: "sectorfive"

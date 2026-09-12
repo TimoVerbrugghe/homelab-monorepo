@@ -1,5 +1,5 @@
 # This chart's templates don't set metadata.namespace on every resource, so needs an explicit -n:
-#   kustomize build --enable-helm . | kubectl apply -n crowdsec -f -
+#   kubectl kustomize --enable-helm . | kubectl apply -n crowdsec -f -
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
