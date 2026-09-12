@@ -15,3 +15,8 @@ spec:
       # LAPI stream poll; -1 keeps serving from the last-known-good decision
       # cache instead (fail open) until the stream recovers.
       updateMaxFailure: -1
+      # Default (true) blocks plugin init on the first LAPI stream fetch
+      # (bounded by httpTimeoutSeconds, default 10s) before Traefik can serve
+      # routes using this middleware; false runs that first sync in the
+      # background so route availability is never delayed by LAPI reachability.
+      streamStartupBlock: false
