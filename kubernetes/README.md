@@ -208,7 +208,7 @@ for the full architecture, the bouncer API key setup, and collections notes.
 ## Jellyfin external access (isolated entrypoint)
 
 `kubernetes/traefik/traefik-values.yaml` defines a dedicated `jellyfin` Traefik
-entrypoint (internal port `9443`, exposed as port `8096` on the
+entrypoint (internal port `8096`, exposed as port `8096` on the
 `traefik-kubevip` Service / `10.10.10.34`) that is kept separate from the
 shared `websecure` entrypoint (port `443`). The `jellyfin` IngressRoute
 (`kubernetes/mediaplayback/jellyfin/jellyfin-network.yaml`) uses this
