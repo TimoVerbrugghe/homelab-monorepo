@@ -43,10 +43,11 @@ lapi:
   # default to `enabled: true` upstream, so they must be explicitly disabled
   # here. This also means the SQLite decisions database (all currently active
   # bans) is lost on every pod restart, not just registered bouncer/machine
-  # credentials. The credential loss is a non-issue for the Traefik bouncer:
-  # see `env` below, which re-registers it with a fixed key on every startup.
-  # The decision loss just means active bans are re-derived from live log
-  # traffic rather than persisted; there is no user-facing action needed.
+  # credentials. The credential loss is a non-issue for both the Traefik
+  # bouncer and the agent: see `env` below, which re-registers each of them
+  # with a fixed identity on every startup. The decision loss just means
+  # active bans are re-derived from live log traffic rather than persisted;
+  # there is no user-facing action needed.
   persistentVolume:
     data:
       enabled: false
@@ -64,12 +65,34 @@ lapi:
   # secret. The bouncer name may only contain [A-Za-z0-9_]: the entrypoint
   # discovers these via `compgen -A variable`, which does not expose
   # hyphenated env var names as shell variables.
+  # crowdsecurity/crowdsec's entrypoint also reads AGENT_USERNAME/AGENT_PASSWORD (if
+  # both are set) and unconditionally runs
+  # `cscli machines add "$AGENT_USERNAME" --password "$AGENT_PASSWORD" --force` on
+  # every start -- the same idempotent, no-persistence-needed pattern as the
+  # BOUNCER_KEY_* mechanism above, but for the agent DaemonSet's machine credentials
+  # (see agent.env below). Without this, a fresh LAPI pod has no record of the
+  # agent's previously auto-generated machine identity and every acquisition/push
+  # from the agent fails with "machine <id> not found" until the agent pod is also
+  # restarted and re-registers itself -- which still works today because the agent
+  # DaemonSet regenerates local_api_credentials.yaml on its own restart, but ties an
+  # LAPI-only restart to needing a matching agent restart. Fixing both sides removes
+  # that coupling entirely.
   env:
     - name: BOUNCER_KEY_traefik_bouncer
       valueFrom:
         secretKeyRef:
           name: crowdsec-bouncer-secrets
           key: bouncer-api-key
+    - name: AGENT_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-agent-secrets
+          key: agent-username
+    - name: AGENT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-agent-secrets
+          key: agent-password
 
 agent:
   podSecurityContext:
@@ -113,3 +136,20 @@ agent:
     # currently do, since it only tails Traefik's pod logs).
     - name: COLLECTIONS
       value: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/http-dos"
+    # The agent runs with DISABLE_LOCAL_API=true (this chart's default for the agent
+    # DaemonSet) and authenticates to the separate LAPI Deployment as a "machine".
+    # Setting the same AGENT_USERNAME/AGENT_PASSWORD as lapi.env above makes the
+    # entrypoint write this fixed identity into local_api_credentials.yaml instead of
+    # generating a random one -- matching whichever machine LAPI registered via
+    # `cscli machines add "$AGENT_USERNAME" ... --force` on its own startup, so the
+    # two sides never fall out of sync regardless of which pod restarts first.
+    - name: AGENT_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-agent-secrets
+          key: agent-username
+    - name: AGENT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-agent-secrets
+          key: agent-password

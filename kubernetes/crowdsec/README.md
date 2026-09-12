@@ -56,6 +56,47 @@ Secret, which is used two ways:
 > `crowdsec-bouncer` middleware is referenced on Traefik's `websecure`/`jellyfin` entrypoints — see
 > [Order of deployment](../README.md#order-of-deployment) in the main Kubernetes README.
 
+## Agent machine credentials
+
+The agent DaemonSet authenticates to LAPI as a "machine". Without LAPI persistence, an
+LAPI pod restart forgets any auto-generated machine identity the agent previously
+registered, so the agent's pushes/acquisitions start failing with `machine <id> not
+found` until the agent pod also restarts and re-registers itself. This is fixed the same
+way as the bouncer key above, with a static, self-generated identity:
+
+```bash
+openssl rand -hex 16   # for agent-password; agent-username just needs to be stable
+```
+
+Store it in a local, uncommitted `kubernetes/crowdsec/crowdsec-agent.env` (see
+`crowdsec-agent.env.template`). The `secretGenerator` in
+`kubernetes/crowdsec/kustomization.yaml` turns it into the `crowdsec-agent-secrets`
+Secret, exposed as `AGENT_USERNAME`/`AGENT_PASSWORD` on both `lapi.env` and `agent.env`
+in `crowdsec-values.yaml`:
+
+- On **LAPI**, CrowdSec's entrypoint runs
+  `cscli machines add "$AGENT_USERNAME" --password "$AGENT_PASSWORD" --force`
+  unconditionally on every start (safe to repeat).
+- On the **agent**, which runs with `DISABLE_LOCAL_API=true` and authenticates to the
+  separate LAPI Deployment, the entrypoint writes the same fixed values into
+  `local_api_credentials.yaml` instead of generating a random identity.
+
+Both sides always agree on the same credentials regardless of which pod restarts first,
+so no persistent storage is needed and the two pods never fall out of sync. A single
+identity is shared across all agent DaemonSet pods (one per node) — CrowdSec does not
+require unique machine IDs to operate, so this is simpler than deriving a per-node
+identity via the downward API and functionally equivalent.
+
+## Fail-closed bouncer behavior
+
+`kubernetes/traefik/middlewares/crowdsec-bouncer.yaml` sets `updateMaxFailure: -1`. The
+Traefik plugin's default (`0`) flips its internal health flag to unhealthy after the
+*first* failed decisions-stream poll to LAPI, and while unhealthy it blocks **all**
+traffic — not just previously-banned IPs — until the stream recovers. This caused a
+several-minute blanket outage from a single transient LAPI hiccup. `-1` disables that
+flag: on a stream failure the plugin keeps serving from its last-known-good decision
+cache (known bans stay enforced, unknown IPs fail open) instead of blocking everyone.
+
 ## Pod labels
 
 `lapi.podLabels`/`agent.podLabels` in `crowdsec-values.yaml` only set

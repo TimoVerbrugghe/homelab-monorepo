@@ -27,6 +27,13 @@ resources:
 # bouncer plugin can read it as a mounted file; it's also exposed to LAPI via
 # lapi.env (BOUNCER_KEY_traefik_bouncer) in crowdsec-values.yaml so LAPI
 # self-registers the traefik_bouncer with this same key on every restart.
+#
+# crowdsec-agent-secrets (see crowdsec-agent.env.template) is a static, self-generated
+# machine identity used the same way, but for the agent DaemonSet's own LAPI
+# registration: it's exposed to both lapi.env (AGENT_USERNAME/AGENT_PASSWORD) and
+# agent.env in crowdsec-values.yaml, so the agent always authenticates with the same
+# fixed credentials instead of relying on an auto-generated identity that would be
+# orphaned ("machine not found") whenever the LAPI pod restarts without persistence.
 secretGenerator:
   - name: crowdsec-bouncer-secrets
     envs:
@@ -37,6 +44,10 @@ secretGenerator:
         reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
         reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
         reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "traefik"
+  - name: crowdsec-agent-secrets
+    envs:
+      - crowdsec-agent.env
+    type: Opaque
 
 generatorOptions:
   disableNameSuffixHash: true
