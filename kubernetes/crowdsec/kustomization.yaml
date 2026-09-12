@@ -13,11 +13,13 @@ labels:
 resources:
   - namespace.yaml
 
-# Both secrets are static, self-generated values (not cscli-issued); see
+# All three secrets are static, self-generated (not cscli-issued) except
+# console-secrets, which holds the enroll key copied from app.crowdsec.net; see
 # crowdsec-*.env.template. bouncer-secrets is reflected into traefik for the
 # bouncer plugin's mounted key file; agent-secrets is the agent DaemonSet's
-# shared machine identity. Both are also exposed to LAPI via crowdsec-values.yaml
-# (lapi.env) so it re-registers them with the same values on every restart.
+# shared machine identity. All are exposed to LAPI via crowdsec-values.yaml
+# (lapi.env); bouncer/agent secrets re-register with the same values on every
+# restart, console-secrets re-runs `cscli console enroll` (idempotent).
 secretGenerator:
   - name: crowdsec-bouncer-secrets
     envs:
@@ -31,6 +33,10 @@ secretGenerator:
   - name: crowdsec-agent-secrets
     envs:
       - crowdsec-agent.env
+    type: Opaque
+  - name: crowdsec-console-secrets
+    envs:
+      - crowdsec-console.env
     type: Opaque
 
 generatorOptions:
