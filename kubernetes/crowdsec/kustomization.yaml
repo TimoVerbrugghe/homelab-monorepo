@@ -1,13 +1,6 @@
-# `kubectl apply -k .` does not support helmCharts: directly (the deploy workflow
-# already renders those via `kubectl kustomize --enable-helm`), so that alone works
-# for most charts. This chart is the exception: its templates don't set
-# metadata.namespace on every resource, and kustomize's namespace transformer
-# doesn't backfill it onto Helm-inflated output, so an explicit -n is required
-# when applying manually:
+# This chart's templates don't set metadata.namespace on every resource, so
+# `kubectl apply -k .` needs an explicit -n:
 #   kubectl kustomize --enable-helm . | kubectl apply -n crowdsec -f -
-# This is a quirk of this chart only -- the shared
-# .github/workflows/deploy-k8s-resource.yaml workflow does not special-case it,
-# so deploy this resource manually with the command above.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -21,19 +14,11 @@ labels:
 resources:
   - namespace.yaml
 
-# The bouncer key is a static, self-generated pre-shared value (see
-# crowdsec-bouncer.env.template) rather than one obtained from `cscli bouncers add`.
-# It's stored here and reflected into the traefik namespace so the CrowdSec Traefik
-# bouncer plugin can read it as a mounted file; it's also exposed to LAPI via
-# lapi.env (BOUNCER_KEY_traefik_bouncer) in crowdsec-values.yaml so LAPI
-# self-registers the traefik_bouncer with this same key on every restart.
-#
-# crowdsec-agent-secrets (see crowdsec-agent.env.template) is a static, self-generated
-# machine identity used the same way, but for the agent DaemonSet's own LAPI
-# registration: it's exposed to both lapi.env (AGENT_USERNAME/AGENT_PASSWORD) and
-# agent.env in crowdsec-values.yaml, so the agent always authenticates with the same
-# fixed credentials instead of relying on an auto-generated identity that would be
-# orphaned ("machine not found") whenever the LAPI pod restarts without persistence.
+# Both secrets are static, self-generated values (not cscli-issued); see
+# crowdsec-*.env.template. bouncer-secrets is reflected into traefik for the
+# bouncer plugin's mounted key file; agent-secrets is the agent DaemonSet's
+# shared machine identity. Both are also exposed to LAPI via crowdsec-values.yaml
+# (lapi.env) so it re-registers them with the same values on every restart.
 secretGenerator:
   - name: crowdsec-bouncer-secrets
     envs:

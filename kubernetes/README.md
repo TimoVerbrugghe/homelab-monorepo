@@ -264,25 +264,15 @@ kubectl kustomize --enable-helm kubernetes/democratic-csi/ | \
 
 ### Deploy CrowdSec (after Traefik's namespace exists)
 
-The `crowdsec-bouncer-secrets` Secret must be reflected into the `traefik` namespace
-before the `crowdsec-bouncer` middleware is referenced on Traefik's `websecure`/`jellyfin`
-entrypoints, otherwise Traefik fails to mount the bouncer key file and its pods
-`CrashLoopBackOff`. The `traefik` namespace itself must therefore exist *before*
-CrowdSec is deployed, so create it first, then CrowdSec, then the rest of the
-Traefik chart. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md) for the
-full flow.
+`crowdsec-bouncer-secrets` must be reflected into `traefik` before the
+`crowdsec-bouncer` middleware is referenced on Traefik's entrypoints, so the
+`traefik` namespace must exist first. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md).
 
 ```bash
-# create the traefik namespace first, so the Reflector-annotated Secret below
-# has somewhere to be copied into:
 kubectl apply -f kubernetes/traefik/traefik-namespace.yaml
 
-# generate a static key, then copy kubernetes/crowdsec/crowdsec-bouncer.env.template
-# to kubernetes/crowdsec/crowdsec-bouncer.env (gitignored) and set
-# bouncer-api-key=<generated value> in it -- kustomize's secretGenerator fails
-# if this file is missing:
-openssl rand -hex 32
-
+# populate kubernetes/crowdsec/*.env from the *.env.template files first
+# (see kubernetes/crowdsec/README.md), then:
 kubectl kustomize --enable-helm kubernetes/crowdsec/ | \
   kubectl apply -n crowdsec -f -
 
