@@ -18,8 +18,10 @@ resources:
 # app.crowdsec.net/security-engines. See crowdsec-*.env.template.
 # bouncer-secrets is reflected into traefik for the bouncer plugin's mounted
 # key file; agent-secrets is the agent DaemonSet's shared machine identity.
-# All are exposed to LAPI via crowdsec-values.yaml (lapi.env); bouncer/agent
-# secrets re-register with the same values on every restart, console-secrets
+# All are exposed to LAPI via crowdsec-values.yaml (lapi.env); agent-secrets
+# is also consumed directly by the agent DaemonSet (agent.env) so both sides
+# authenticate with the same machine identity. bouncer/agent secrets
+# re-register with the same values on every restart, console-secrets
 # re-runs `cscli console enroll` (idempotent).
 secretGenerator:
   - name: crowdsec-bouncer-secrets
