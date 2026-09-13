@@ -15,38 +15,43 @@ mechanics and pod security/label rationale.
 
 ## Setup
 
-All three `.env` files (`crowdsec-bouncer.env`, `crowdsec-agent.env`,
-`crowdsec-console.env`) must exist (gitignored, copied from their
-`.env.template`) — `kustomize build` fails if any `secretGenerator` env file is
-missing, even if you leave its values blank to opt out of a feature. Copy each
-template to its `.env` file, then fill in the required ones:
+The `crowdsec-secrets.env` file (gitignored, copied from
+`crowdsec-secrets.env.template`) must exist — `kustomize build` fails if any
+`secretGenerator` env file is missing, even if you leave its values blank to
+opt out of a feature. Copy the template to `crowdsec-secrets.env`, then fill
+in the required keys:
 
 ```bash
-openssl rand -hex 32   # crowdsec-bouncer.env: bouncer-api-key
-openssl rand -hex 16   # crowdsec-agent.env: agent-password (agent-username: any stable string)
+openssl rand -hex 32   # crowdsec-secrets.env: bouncer-api-key
+openssl rand -hex 16   # crowdsec-secrets.env: agent-password (agent-username: any stable string)
 ```
 
-`crowdsec-console.env`'s `enroll-key` is optional and, when set, enables
+`crowdsec-secrets.env`'s `enroll-key` is optional and, when set, enables
 console enrollment (a prerequisite for enrolling into the CAPI community
 blocklist on [app.crowdsec.net](https://app.crowdsec.net/)). CAPI itself — the
 anonymous signal-push/community-blocklist registration — is already active
 without any of this, see the comment below `lapi.persistentVolume` in
-`crowdsec-values.yaml`. Leave `crowdsec-console.env` as copied from its
-template (empty `enroll-key`) to skip console enrollment. To enroll:
+`crowdsec-values.yaml`. Leave `enroll-key` blank (its default after copying
+from the template) to skip console enrollment. To enroll:
 
-1. Copy `crowdsec-console.env.template` to `crowdsec-console.env` and paste in
-   the enroll key from `app.crowdsec.net` → Security Engines → "Enroll
-   command" → "Kubernetes" tab.
+1. In `crowdsec-secrets.env`, set `enroll-key` to the enroll key from
+   `app.crowdsec.net` → Security Engines → "Enroll command" → "Kubernetes" tab.
 2. Re-apply this directory (see [Order of deployment](../README.md#order-of-deployment)).
 3. On `app.crowdsec.net`, approve the newly-enrolled engine, then enable the
    community blocklist under its blocklist settings.
 
 > [!NOTE]
-> Leave `enroll-key` blank in `crowdsec-console.env` (its default after
+> Leave `enroll-key` blank in `crowdsec-secrets.env` (its default after
 > copying from the template) to skip console enrollment; `ENROLL_KEY` is read
 > as an optional secret key and the entrypoint only enrolls when it's
-> non-empty. The file itself must still exist for `kustomize build` to
-> succeed.
+> non-empty. The key itself must still exist in the file for `kustomize build`
+> to succeed.
+
+> [!NOTE]
+> All keys live in a single `crowdsec-secrets` Secret, which is reflected in
+> full into the `traefik` namespace (see `kustomization.yaml`) so the bouncer
+> plugin can read `bouncer-api-key`. The agent/console keys are reflected
+> alongside it but unused by Traefik.
 
 ## Collections considered but not installed
 
