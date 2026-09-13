@@ -8,6 +8,9 @@ generatorOptions:
 resources:
   - traefik-namespace.yaml
   - traefik-service.yaml
+  - middlewares
+  - ingress
+  - traefik-forward-auth
 
 patches:
   - target:
