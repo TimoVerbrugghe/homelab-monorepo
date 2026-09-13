@@ -30,7 +30,7 @@ spec:
       # After the first successful start with non-root execution, comment out this initContainer.
       initContainers:
         - name: chown-mealie-data
-          image: busybox:1.35
+          image: busybox
           stdin: false
           tty: false
           command: ['sh', '-c']
