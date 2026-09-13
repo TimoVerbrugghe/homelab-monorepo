@@ -46,7 +46,6 @@ from the template) to skip console enrollment. To enroll:
 > as an optional secret key and the entrypoint only enrolls when it's
 > non-empty. The key itself must still exist in the file for `kustomize build`
 > to succeed.
-
 > [!NOTE]
 > All keys live in a single `crowdsec-secrets` Secret, which is reflected in
 > full into the `traefik` namespace (see `kustomization.yaml`) so the bouncer
