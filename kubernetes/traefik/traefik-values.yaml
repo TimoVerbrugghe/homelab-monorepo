@@ -145,7 +145,7 @@ ports:
       middlewares:
         - traefik-crowdsec-bouncer@kubernetescrd
         - traefik-secureheaders@kubernetescrd
-        - traefik-ratelimit-jellyfin@kubernetescrd
+        - traefik-ratelimit@kubernetescrd
 ingressRoute:
   dashboard:
     enabled: false
