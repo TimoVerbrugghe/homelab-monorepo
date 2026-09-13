@@ -264,14 +264,14 @@ kubectl kustomize --enable-helm kubernetes/democratic-csi/ | \
 
 ### Deploy CrowdSec (after Traefik's namespace exists)
 
-`crowdsec-bouncer-secrets` must be reflected into `traefik` before the
+`crowdsec-secrets` must be reflected into `traefik` before the
 `crowdsec-bouncer` middleware is referenced on Traefik's entrypoints, so the
 `traefik` namespace must exist first. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md).
 
 ```bash
 kubectl apply -f kubernetes/traefik/traefik-namespace.yaml
 
-# populate kubernetes/crowdsec/*.env from the *.env.template files first
+# populate kubernetes/crowdsec/crowdsec-secrets.env from crowdsec-secrets.env.template first
 # (see kubernetes/crowdsec/README.md), then:
 kubectl kustomize --enable-helm kubernetes/crowdsec/ | \
   kubectl apply -n crowdsec -f -

@@ -13,34 +13,27 @@ labels:
 resources:
   - namespace.yaml
 
-# bouncer-secrets and agent-secrets are static, self-generated values (not
-# cscli-issued); console-secrets holds the enroll key copied from
-# app.crowdsec.net/security-engines. See crowdsec-*.env.template.
-# bouncer-secrets is reflected into traefik for the bouncer plugin's mounted
-# key file; agent-secrets is the agent DaemonSet's shared machine identity.
-# All are exposed to LAPI via crowdsec-values.yaml (lapi.env); agent-secrets
-# is also consumed directly by the agent DaemonSet (agent.env) so both sides
-# authenticate with the same machine identity. bouncer/agent secrets
-# re-register with the same values on every restart, console-secrets
-# re-runs `cscli console enroll` (idempotent).
+# bouncer-api-key/agent-username/agent-password are static, self-generated
+# values (not cscli-issued); enroll-key holds the enroll key copied from
+# app.crowdsec.net/security-engines. See crowdsec-secrets.env.template.
+# The whole secret is reflected into traefik for the bouncer plugin's mounted
+# key file (only bouncer-api-key is consumed there; the other keys are also
+# mounted alongside it but unused by Traefik). All keys are exposed to LAPI
+# via crowdsec-values.yaml (lapi.env); agent-username/agent-password are also
+# consumed directly by the agent DaemonSet (agent.env) so both sides
+# authenticate with the same machine identity. bouncer/agent credentials
+# re-register with the same values on every restart, enroll-key re-runs
+# `cscli console enroll` (idempotent).
 secretGenerator:
-  - name: crowdsec-bouncer-secrets
+  - name: crowdsec-secrets
     envs:
-      - crowdsec-bouncer.env
+      - crowdsec-secrets.env
     type: Opaque
     options:
       annotations:
         reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
         reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
         reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "traefik"
-  - name: crowdsec-agent-secrets
-    envs:
-      - crowdsec-agent.env
-    type: Opaque
-  - name: crowdsec-console-secrets
-    envs:
-      - crowdsec-console.env
-    type: Opaque
 
 generatorOptions:
   disableNameSuffixHash: true

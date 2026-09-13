@@ -8,9 +8,11 @@ experimental:
       version: v1.7.1
 
 # Mounts the bouncer API key (reflected from the crowdsec namespace, see
-# kubernetes/crowdsec/kustomization.yaml) as a file the plugin can read.
+# kubernetes/crowdsec/kustomization.yaml) as a file the plugin can read. The
+# reflected crowdsec-secrets Secret also carries the agent/console keys
+# (unused here) since it's a single Secret shared with the crowdsec namespace.
 volumes:
-  - name: crowdsec-bouncer-secrets
+  - name: crowdsec-secrets
     mountPath: "/etc/traefik/crowdsec"
     type: secret
 

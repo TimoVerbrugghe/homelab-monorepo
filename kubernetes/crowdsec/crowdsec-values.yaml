@@ -80,32 +80,32 @@ lapi:
     - name: BOUNCER_KEY_traefik_bouncer
       valueFrom:
         secretKeyRef:
-          name: crowdsec-bouncer-secrets
+          name: crowdsec-secrets
           key: bouncer-api-key
     - name: AGENT_USERNAME
       valueFrom:
         secretKeyRef:
-          name: crowdsec-agent-secrets
+          name: crowdsec-secrets
           key: agent-username
     - name: AGENT_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: crowdsec-agent-secrets
+          name: crowdsec-secrets
           key: agent-password
     # Optional console enrollment (separate from CAPI registration above):
     # associates this LAPI with a CrowdSec account at app.crowdsec.net so you
     # can approve enrollment there and add it to the CAPI community blocklist.
     # `cscli console enroll` runs on every LAPI start and is idempotent/
     # re-approve-safe; the entrypoint script only calls it when ENROLL_KEY is
-    # non-empty, so leaving crowdsec-console.env's enroll-key empty (its
+    # non-empty, so leaving crowdsec-secrets.env's enroll-key empty (its
     # default) is a safe, deliberate opt-out, not just a missing-secret case.
     - name: ENROLL_KEY
       valueFrom:
         secretKeyRef:
-          name: crowdsec-console-secrets
+          name: crowdsec-secrets
           key: enroll-key
           # The secretGenerator below always produces this secret/key (README
-          # requires crowdsec-console.env to exist), so this isn't needed for
+          # requires crowdsec-secrets.env to exist), so this isn't needed for
           # the normal empty-enroll-key opt-out. It only guards against the
           # secret being deleted or renamed out-of-band.
           optional: true
@@ -152,10 +152,10 @@ agent:
     - name: AGENT_USERNAME
       valueFrom:
         secretKeyRef:
-          name: crowdsec-agent-secrets
+          name: crowdsec-secrets
           key: agent-username
     - name: AGENT_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: crowdsec-agent-secrets
+          name: crowdsec-secrets
           key: agent-password
