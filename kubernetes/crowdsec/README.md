@@ -28,9 +28,9 @@ openssl rand -hex 16   # crowdsec-secrets.env: agent-password (agent-username: a
 
 `crowdsec-secrets.env`'s `enroll-key` is optional and, when set, enables
 console enrollment (a prerequisite for enrolling into the CAPI community
-blocklist on `app.crowdsec.net`). CAPI itself — the
-anonymous signal-push/community-blocklist registration — is already active
-without any of this, see the comment below `lapi.persistentVolume` in
+blocklist on `app.crowdsec.net`). CAPI itself — the anonymous
+signal-push/community-blocklist registration — is already active without any
+of this, see the comment below `lapi.persistentVolume` in
 `crowdsec-values.yaml`. Leave `enroll-key` blank (its default after copying
 from the template) to skip console enrollment. To enroll:
 
