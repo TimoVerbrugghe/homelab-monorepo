@@ -13,17 +13,7 @@ labels:
 resources:
   - namespace.yaml
 
-# bouncer-api-key/agent-username/agent-password are static, self-generated
-# values (not cscli-issued); enroll-key holds the enroll key copied from
-# app.crowdsec.net/security-engines. See crowdsec-secrets.env.template.
-# The whole secret is reflected into traefik for the bouncer plugin's mounted
-# key file (only bouncer-api-key is consumed there; the other keys are also
-# mounted alongside it but unused by Traefik). All keys are exposed to LAPI
-# via crowdsec-values.yaml (lapi.env); agent-username/agent-password are also
-# consumed directly by the agent DaemonSet (agent.env) so both sides
-# authenticate with the same machine identity. bouncer/agent credentials
-# re-register with the same values on every restart, enroll-key re-runs
-# `cscli console enroll` (idempotent).
+# The whole secret is reflected into traefik for the bouncer plugin's mounted key file.
 secretGenerator:
   - name: crowdsec-secrets
     envs:
@@ -40,9 +30,7 @@ generatorOptions:
 
 # version is pinned: an unpinned chart can resolve to a different (and
 # potentially differently-behaving) release per machine/run depending on the
-# local Helm cache, which is exactly the class of bug that motivated pinning
-# the Traefik chart (see kubernetes/traefik/kustomization.yaml). Bump
-# deliberately and re-verify the rendered output when upgrading.
+# local Helm cache
 helmCharts:
   - name: crowdsec
     repo: https://crowdsecurity.github.io/helm-charts
