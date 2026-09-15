@@ -13,7 +13,12 @@ labels:
 resources:
   - namespace.yaml
 
-# The whole secret is reflected into traefik for the bouncer plugin's mounted key file.
+# bouncer-api-key/agent-username/agent-password are static, self-generated
+# values (not cscli-issued); enroll-key is copied from app.crowdsec.net when
+# console enrollment is used. See crowdsec-secrets.env.template.
+# The whole secret is reflected into traefik for the bouncer plugin's mounted
+# key file; only bouncer-api-key is consumed there, while the other keys are
+# mounted alongside it but unused by Traefik.
 secretGenerator:
   - name: crowdsec-secrets
     envs:
