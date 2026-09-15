@@ -1,0 +1,22 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: crowdsec-bouncer
+  namespace: traefik
+spec:
+  plugin:
+    crowdsec-bouncer:
+      enabled: true
+      crowdsecMode: stream
+      crowdsecLapiScheme: http
+      crowdsecLapiHost: crowdsec-service.crowdsec.svc.cluster.local:8080
+      crowdsecLapiKeyFile: /etc/traefik/crowdsec/bouncer-api-key
+      # Default (0) fails closed (blocks ALL traffic) after the first failed
+      # LAPI stream poll; -1 keeps serving from the last-known-good decision
+      # cache instead (fail open) until the stream recovers.
+      updateMaxFailure: -1
+      # Default (true) blocks plugin init on the first LAPI stream fetch
+      # (bounded by httpTimeoutSeconds, default 10s) before Traefik can serve
+      # routes using this middleware; false runs that first sync in the
+      # background so route availability is never delayed by LAPI reachability.
+      streamStartupBlock: false

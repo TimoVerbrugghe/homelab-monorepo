@@ -20,7 +20,7 @@ spec:
         kubernetes.io/hostname: yumi
       initContainers:
       - name: chown-changedetection-data
-        image: busybox:1.35
+        image: busybox
         stdin: false
         tty: false
         command: ["sh", "-c", "chown -R 1000:1000 /datastore"]

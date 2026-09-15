@@ -192,6 +192,39 @@ label, so they can be scaled down cleanly before a TrueNAS restart and scaled ba
 afterwards. Opting a workload in or out is a matter of adding or removing the label —
 and it keeps working once the volumes become ordinary CSI-backed PVC references.
 
+## CrowdSec
+
+`kubernetes/crowdsec/` deploys the official `crowdsecurity/crowdsec` Helm chart
+alongside Traefik, and Traefik enforces its ban decisions via the
+[Traefik CrowdSec bouncer plugin](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin)
+on the `websecure` and `jellyfin` entrypoints. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md)
+for the full architecture, the bouncer API key setup, and collections notes.
+
+> [!IMPORTANT]
+> Deploy `kubernetes/crowdsec/` and create the bouncer secret **before** the
+> `crowdsec-bouncer` middleware is referenced on Traefik's `websecure`/`jellyfin`
+> entrypoints — see [Order of deployment](#order-of-deployment).
+
+## Jellyfin external access (isolated entrypoint)
+
+`kubernetes/traefik/traefik-values.yaml` defines a dedicated `jellyfin` Traefik
+entrypoint (internal port `8096`, exposed as port `8096` on the
+`traefik-kubevip` Service / `10.10.10.34`) that is kept separate from the
+shared `websecure` entrypoint (port `443`). The `jellyfin` IngressRoute
+(`kubernetes/mediaplayback/jellyfin/jellyfin-network.yaml`) uses this
+entrypoint instead of `websecure`.
+
+This means only Jellyfin — not every IngressRoute — becomes internet-reachable
+when the router forwards a WAN port to Traefik. On the UniFi router, forward
+WAN `443` to `10.10.10.34:8096` only. **Do not** also forward `443` → `443`
+(`websecure`), or every other IngressRoute using `websecure` becomes
+internet-reachable too.
+
+The `jellyfin` entrypoint has its own TLS (served automatically from the
+cluster-wide `TLSStore`'s `defaultCertificate`, same as `websecure`) and its
+own copy of the `crowdsec-bouncer`, `secureheaders`, and shared `ratelimit`
+middlewares, so it keeps the same protections as `websecure`.
+
 ## Order of deployment
 
 ### Secrets (cloudflare token, tailscale auth token, etc...)
@@ -227,6 +260,25 @@ runs in `node-manual` mode and needs no credentials.
 ```bash
 kubectl kustomize --enable-helm kubernetes/democratic-csi/ | \
   kubectl apply -f -
+```
+
+### Deploy CrowdSec (after Traefik's namespace exists)
+
+`crowdsec-secrets` must be reflected into `traefik` before the
+`crowdsec-bouncer` middleware is referenced on Traefik's entrypoints, so the
+`traefik` namespace must exist first. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md).
+
+```bash
+kubectl apply -f kubernetes/traefik/traefik-namespace.yaml
+
+# populate kubernetes/crowdsec/crowdsec-secrets.env from crowdsec-secrets.env.template first
+# (see kubernetes/crowdsec/README.md), then:
+kubectl kustomize --enable-helm kubernetes/crowdsec/ | \
+  kubectl apply -n crowdsec -f -
+
+kubectl kustomize --enable-helm kubernetes/traefik/ | \
+  kubectl apply -f -
+kubectl apply -k kubernetes/traefik/middlewares/
 ```
 
 ### Deploy other resources

@@ -48,7 +48,7 @@ metadata:
 spec:
   ingressClassName: traefik
   entryPoints:
-    - websecure
+    - jellyfin
   routes:
     - match: Host(`jellyfin.kubernetes.timo.be`) || Host(`jellyfin.timo.be`)
       kind: Rule

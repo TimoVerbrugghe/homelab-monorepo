@@ -1,23 +1,78 @@
-globalArguments:
-  - "--global.sendanonymoususage"
+# Loads the CrowdSec bouncer plugin so it can be referenced by the
+# crowdsec-bouncer Middleware (kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
+# Requires the CrowdSec LAPI + agent to be deployed first (kubernetes/crowdsec/).
+experimental:
+  plugins:
+    crowdsec-bouncer:
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.7.1
 
-logs:
-  general:
-    level: INFO
-  access:
-    enabled: true
-    format: json
-    fields:
-      defaultMode: keep
-      headers:
-        defaultMode: drop
-    filters:
-      statuscodes: "400-499,500-599"
-      retryattempts: true
+# Mounts the bouncer API key (reflected from the crowdsec namespace, see
+# kubernetes/crowdsec/kustomization.yaml) as a file the plugin can read. The
+# reflected crowdsec-secrets Secret also carries the agent/console keys
+# (unused here) since it's a single Secret shared with the crowdsec namespace.
+volumes:
+  - name: crowdsec-secrets
+    mountPath: "/etc/traefik/crowdsec"
+    type: secret
+
+log:
+  level: INFO
+
+accessLog:
+  enabled: true
+  format: json
+  fields:
+    defaultMode: keep
+    headers:
+      defaultMode: drop
+  filters:
+    statusCodes: "400-499,500-599"
+    retryAttempts: true
 
 deployment:
   enabled: true
+  # Must equal the current control-plane node count (manta, skidbladnir, william):
+  # the affinity rules below require one pod per control-plane node, so a mismatch
+  # leaves surplus pods permanently Pending. Update this if control-plane nodes are
+  # added/removed.
   replicas: 3
+
+# traefik-kubevip uses externalTrafficPolicy: Local (see traefik-service.yaml) so
+# CrowdSec/ratelimit see the real client IP instead of a SNAT'd node IP. kube-vip
+# only elects a leader (and therefore only advertises the VIP) from control-plane
+# nodes (kube-vip-ds nodeAffinity: node-role.kubernetes.io/{master,control-plane}).
+# Require one Traefik pod per control-plane node so every possible kube-vip leader
+# always has a local endpoint to route Local-policy traffic to.
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: traefik-traefik
+        topologyKey: kubernetes.io/hostname
+
+# With replicas pinned 1:1 to control-plane nodes (see affinity above), the
+# default rolling update (maxUnavailable: 0, maxSurge: 1) has no spare node to
+# surge a new pod onto and deadlocks. maxUnavailable: 1/maxSurge: 0 lets an old
+# pod terminate first so the new one can take its place. This does mean that
+# whichever control-plane node loses its pod during the rollout has no local
+# Traefik endpoint for a moment; if that node is the kube-vip leader at that
+# instant, Local-policy traffic to it is briefly dropped until kube-vip fails
+# over or the new pod comes up. Acceptable for this homelab; a PodDisruptionBudget
+# would only prevent voluntary disruptions, not this one.
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
 
 ports:
   web:
@@ -25,11 +80,12 @@ ports:
     port: 8001
     expose:
       default: false
-    redirections:
-      entryPoint: 
-        to: websecure
-        scheme: https
-        permanent: true
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
   traefik:
     port: 9000
     exposedPort: 9000
@@ -48,11 +104,22 @@ ports:
         readTimeout: 420s
         writeTimeout: 420s
         idleTimeout: 420s
-    tls:
-      enabled: true
-    # middlewares:
-    #   - traefik-secureheaders@kubernetescrd
-    #   - traefik-ratelimit@kubernetescrd
+    http:
+      tls:
+        enabled: true
+      # secureheaders and ratelimit are defined in kubernetes/traefik/middlewares/.
+      # crowdsec-bouncer requires kubernetes/crowdsec/ to be deployed first.
+      # All three Middleware CRDs referenced below live in
+      # kubernetes/traefik/middlewares/ (applied separately from this Helm
+      # chart, via `kubectl apply -k kubernetes/traefik/middlewares/` -- see
+      # kubernetes/README.md). Apply that kustomization before or together
+      # with this chart: if it's applied after, Traefik will reject these
+      # entrypoint middleware references (unresolved Middleware CRDs) until it
+      # is restarted or the config is reloaded.
+      middlewares:
+        - traefik-crowdsec-bouncer@kubernetescrd
+        - traefik-secureheaders@kubernetescrd
+        - traefik-ratelimit@kubernetescrd
   metrics:
     port: 9100
     expose:
@@ -65,7 +132,20 @@ ports:
       default: false
     exposedPort: 8000
     protocol: TCP
-
+  # Dedicated WAN-facing entrypoint for Jellyfin only.
+  jellyfin:
+    port: 8096
+    expose:
+      default: false
+    exposedPort: 8096
+    protocol: TCP
+    http:
+      tls:
+        enabled: true
+      middlewares:
+        - traefik-crowdsec-bouncer@kubernetescrd
+        - traefik-secureheaders@kubernetescrd
+        - traefik-ratelimit@kubernetescrd
 ingressRoute:
   dashboard:
     enabled: false
@@ -84,9 +164,12 @@ providers:
     publishedService:
       enabled: true
 
-dashboard:
-  enabled: true
-
+# The dashboard is still served (api.dashboard defaults to true) on the
+# internal `traefik` entrypoint (port 9000, see ports.traefik above).
+# The old top-level `dashboard: enabled: true` key from the pre-41.x chart
+# schema was dropped here because chart 41.5.0's values.schema.json rejects
+# unknown top-level keys; use `ingressRoute.dashboard.enabled: true` instead
+# if you want the dashboard exposed via an IngressRoute.
 rbac:
   enabled: true
   

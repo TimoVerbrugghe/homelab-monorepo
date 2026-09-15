@@ -23,11 +23,16 @@ spec:
   loadBalancerClass: kube-vip.io/kube-vip-class
   type: LoadBalancer
   loadBalancerIP: 10.10.10.34
+  externalTrafficPolicy: Local
   ports:
   - name: websecure
     protocol: TCP
     port: 443
     targetPort: websecure
+  - name: jellyfin
+    protocol: TCP
+    port: 8096
+    targetPort: jellyfin
   - name: metrics
     protocol: TCP
     port: 9100

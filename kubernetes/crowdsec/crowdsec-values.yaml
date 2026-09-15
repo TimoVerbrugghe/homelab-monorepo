@@ -1,0 +1,161 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/crowdsecurity/helm-charts/main/charts/crowdsec/values.schema.json
+#
+# Agent DaemonSet reads Traefik's pod logs; LAPI stores/serves ban decisions to
+# the Traefik bouncer plugin (kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
+
+# Talos wraps /var/log/containers/*.log in the containerd CRI format, not the
+# docker JSON log driver format this chart defaults to.
+container_runtime: containerd
+
+lapi:
+  # No public exposure: only the in-cluster bouncer plugin needs to reach the
+  # LAPI, via the ClusterIP `crowdsec-service` Service (default service type).
+  ingress:
+    enabled: false
+
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+    # readOnlyRootFilesystem/runAsNonRoot left at image defaults: crowdsec
+    # writes its SQLite DB/state under /etc/crowdsec and /var/lib/crowdsec
+    # at runtime, and the image ships no non-root user.
+
+  podLabels:
+    app.kubernetes.io/name: crowdsec-lapi
+    app.kubernetes.io/instance: crowdsec-lapi
+
+  # No dynamic StorageClass provisioned, so persistence must be disabled
+  # explicitly. The decisions DB is lost on every restart (bans re-derive from
+  # live traffic); bouncer/agent credentials are re-registered on every start
+  # instead (see env/lifecycle below), so this needs no manual action.
+  persistentVolume:
+    data:
+      enabled: false
+    config:
+      enabled: false
+
+  # persistentVolume.config.enabled: false above makes the chart's
+  # StoreCAPICredentialsInSecret helper default true (see _helpers.tpl /
+  # capi-register-job.yaml in crowdsecurity/helm-charts), so a pre-install/
+  # pre-upgrade Job already auto-runs `cscli capi register` and stores the
+  # result in the `crowdsec-capi-credentials` Secret -- CAPI/community
+  # blocklist decisions are pulled with no config below. ENROLL_KEY below adds
+  # *console* enrollment on top of that (associates this LAPI with a
+  # CrowdSec account/dashboard), which is separate and optional.
+
+  # The upstream image entrypoint auto-registers a bouncer for every
+  # BOUNCER_KEY_<name> env var (idempotent `cscli bouncers add <name> -k <key>`).
+  # This chart's /docker_start.sh override keeps that behavior, so the Traefik
+  # bouncer always re-registers with the same pre-shared key on every LAPI
+  # restart. Name may only contain [A-Za-z0-9_] (derived from the env var name).
+  #
+  # Unlike bouncers, this chart's /docker_start.sh has no AGENT_USERNAME/
+  # AGENT_PASSWORD handling (that's upstream-entrypoint-only, which the agent
+  # DaemonSet runs unmodified). The postStart hook below replicates it
+  # manually so the agent's shared machine identity also survives LAPI
+  # restarts. --force makes it idempotent; -f /dev/null discards the
+  # generated credentials file (unrelated to LAPI's own local-agent auth).
+  # The retry loop covers the DB-not-ready race at startup and always exits 0
+  # so a failure never crash-loops LAPI (check `cscli machines list` to confirm).
+  lifecycle:
+    postStart:
+      exec:
+        command:
+          - /bin/sh
+          - -c
+          - |
+            for i in $(seq 1 30); do
+              cscli machines add "$AGENT_USERNAME" --password "$AGENT_PASSWORD" -f /dev/null --force && exit 0
+              sleep 2
+            done
+            echo "crowdsec-agent-shared machine registration did not succeed after 60s" >&2
+
+  env:
+    - name: BOUNCER_KEY_traefik_bouncer
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-secrets
+          key: bouncer-api-key
+    - name: AGENT_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-secrets
+          key: agent-username
+    - name: AGENT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-secrets
+          key: agent-password
+    # Optional console enrollment (separate from CAPI registration above):
+    # associates this LAPI with a CrowdSec account at app.crowdsec.net so you
+    # can approve enrollment there and add it to the CAPI community blocklist.
+    # `cscli console enroll` runs on every LAPI start and is idempotent/
+    # re-approve-safe; the entrypoint script only calls it when ENROLL_KEY is
+    # non-empty, so leaving crowdsec-secrets.env's enroll-key empty (its
+    # default) is a safe, deliberate opt-out, not just a missing-secret case.
+    - name: ENROLL_KEY
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-secrets
+          key: enroll-key
+          # The secretGenerator below always produces this secret/key (README
+          # requires crowdsec-secrets.env to exist), so this isn't needed for
+          # the normal empty-enroll-key opt-out. It only guards against the
+          # secret being deleted or renamed out-of-band.
+          optional: true
+    - name: ENROLL_INSTANCE_NAME
+      value: "sectorfive"
+    - name: ENROLL_TAGS
+      value: "k8s traefik"
+
+agent:
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+    # readOnlyRootFilesystem/runAsNonRoot left at image defaults (see lapi
+    # note above). Also needs hostPath /var/log to tail Traefik's logs, hence
+    # the `privileged` Pod Security Standard on this namespace (namespace.yaml).
+
+  podLabels:
+    app.kubernetes.io/name: crowdsec-agent
+    app.kubernetes.io/instance: crowdsec-agent
+
+  # Read Traefik's JSON access logs (kubernetes/traefik) for the
+  # crowdsecurity/traefik parsers below. Requires accessLog.format: json in
+  # traefik-values.yaml.
+  acquisition:
+    - namespace: traefik
+      podName: traefik-*
+      program: traefik
+
+  env:
+    # Collections from hub.crowdsec.net: Traefik parsers/scenarios, HTTP CVE
+    # exploits, generic HTTP brute-force/probing, HTTP(S) flood/DoS. See
+    # README.md for others considered but not installed.
+    - name: COLLECTIONS
+      value: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/http-dos"
+    # Agent runs with DISABLE_LOCAL_API=true and authenticates to LAPI as a
+    # machine; same AGENT_USERNAME/PASSWORD as lapi.env keeps both sides in
+    # sync regardless of restart order (see lapi.lifecycle.postStart above).
+    - name: AGENT_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-secrets
+          key: agent-username
+    - name: AGENT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-secrets
+          key: agent-password

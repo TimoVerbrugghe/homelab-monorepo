@@ -1,0 +1,52 @@
+# This chart's templates don't set metadata.namespace on every resource, so an explicit -n is required:
+#   kustomize build --enable-helm . | kubectl apply -n crowdsec -f -
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: crowdsec
+
+labels:
+  - includeSelectors: false
+    pairs:
+      app.kubernetes.io/part-of: homelab
+
+resources:
+  - namespace.yaml
+
+# bouncer-api-key/agent-username/agent-password are static, self-generated
+# values (not cscli-issued); enroll-key holds the enroll key copied from
+# app.crowdsec.net/security-engines. See crowdsec-secrets.env.template.
+# The whole secret is reflected into traefik for the bouncer plugin's mounted
+# key file (only bouncer-api-key is consumed there; the other keys are also
+# mounted alongside it but unused by Traefik). All keys are exposed to LAPI
+# via crowdsec-values.yaml (lapi.env); agent-username/agent-password are also
+# consumed directly by the agent DaemonSet (agent.env) so both sides
+# authenticate with the same machine identity. bouncer/agent credentials
+# re-register with the same values on every restart, enroll-key re-runs
+# `cscli console enroll` (idempotent).
+secretGenerator:
+  - name: crowdsec-secrets
+    envs:
+      - crowdsec-secrets.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "traefik"
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+# version is pinned: an unpinned chart can resolve to a different (and
+# potentially differently-behaving) release per machine/run depending on the
+# local Helm cache, which is exactly the class of bug that motivated pinning
+# the Traefik chart (see kubernetes/traefik/kustomization.yaml). Bump
+# deliberately and re-verify the rendered output when upgrading.
+helmCharts:
+  - name: crowdsec
+    repo: https://crowdsecurity.github.io/helm-charts
+    version: 0.24.2
+    releaseName: crowdsec
+    namespace: crowdsec
+    valuesFile: crowdsec-values.yaml

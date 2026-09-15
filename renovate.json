@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["kustomize"],
+  "packageRules": [
+    {
+      "description": "Automerge Kustomize helmCharts (kubernetes/*/kustomization.yaml helmCharts: version bumps) since Dependabot cannot update them.",
+      "matchManagers": ["kustomize"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    }
+  ]
+}
