@@ -1,20 +1,5 @@
-# Loads the CrowdSec bouncer plugin so it can be referenced by the
-# crowdsec-bouncer Middleware (kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
-# Requires the CrowdSec LAPI + agent to be deployed first (kubernetes/crowdsec/).
-experimental:
-  plugins:
-    crowdsec-bouncer:
-      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
-      version: v1.7.1
-
-# Mounts the bouncer API key (reflected from the crowdsec namespace, see
-# kubernetes/crowdsec/kustomization.yaml) as a file the plugin can read. The
-# reflected crowdsec-secrets Secret also carries the agent/console keys
-# (unused here) since it's a single Secret shared with the crowdsec namespace.
-volumes:
-  - name: crowdsec-secrets
-    mountPath: "/etc/traefik/crowdsec"
-    type: secret
+globalArguments:
+  - "--global.sendanonymoususage"
 
 log:
   level: INFO
@@ -32,10 +17,7 @@ accessLog:
 
 deployment:
   enabled: true
-  # Must equal the current control-plane node count (manta, skidbladnir, william):
-  # the affinity rules below require one pod per control-plane node, so a mismatch
-  # leaves surplus pods permanently Pending. Update this if control-plane nodes are
-  # added/removed.
+  # Must equal the current control-plane node count
   replicas: 3
 
 # traefik-kubevip uses externalTrafficPolicy: Local (see traefik-service.yaml) so
@@ -117,7 +99,6 @@ ports:
       # entrypoint middleware references (unresolved Middleware CRDs) until it
       # is restarted or the config is reloaded.
       middlewares:
-        - traefik-crowdsec-bouncer@kubernetescrd
         - traefik-secureheaders@kubernetescrd
         - traefik-ratelimit@kubernetescrd
   metrics:
@@ -176,3 +157,21 @@ rbac:
 # Will define my own services because I want to expose traefik both through tailscale and through kube-vip
 service:
   enabled: false
+
+# Loads the CrowdSec bouncer plugin so it can be referenced by the
+# crowdsec-bouncer Middleware (kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
+# Requires the CrowdSec LAPI + agent to be deployed first (kubernetes/crowdsec/).
+experimental:
+  plugins:
+    crowdsec-bouncer:
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.7.1
+
+# Mounts the bouncer API key (reflected from the crowdsec namespace, see
+# kubernetes/crowdsec/kustomization.yaml) as a file the plugin can read. The
+# reflected crowdsec-secrets Secret also carries the agent/console keys
+# (unused here) since it's a single Secret shared with the crowdsec namespace.
+volumes:
+  - name: crowdsec-secrets
+    mountPath: "/etc/traefik/crowdsec"
+    type: secret
