@@ -38,3 +38,25 @@ helmCharts:
     releaseName: crowdsec
     namespace: crowdsec
     valuesFile: crowdsec-values.yaml
+
+# The chart hardcodes CUSTOM_HOSTNAME from the pod's own name (fieldRef),
+# which changes every redeploy and makes CrowdSec report a brand new
+# security-engine identity to the console each time.
+patches:
+  - target:
+      kind: Deployment
+      name: crowdsec-lapi
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: crowdsec-lapi
+      spec:
+        template:
+          spec:
+            containers:
+              - name: crowdsec-lapi
+                env:
+                  - name: CUSTOM_HOSTNAME
+                    value: crowdsec-lapi
+                    valueFrom: null

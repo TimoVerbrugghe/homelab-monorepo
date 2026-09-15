@@ -7,6 +7,12 @@
 # docker JSON log driver format this chart defaults to.
 container_runtime: containerd
 
+# Required by the chart schema; empty maps retain the chart defaults.
+config: {}
+image:
+  repository: crowdsecurity/crowdsec
+  pullPolicy: IfNotPresent
+
 lapi:
   # No public exposure: only the in-cluster bouncer plugin needs to reach the
   # LAPI, via the ClusterIP `crowdsec-service` Service (default service type).
@@ -90,7 +96,7 @@ lapi:
           name: crowdsec-secrets
           key: agent-password
     # Optional console enrollment (separate from CAPI registration above):
-    # associates this LAPI with a CrowdSec account at app.crowdsec.net
+    # associates this LAPI with a CrowdSec account at app.crowdsec.net.
     - name: ENROLL_KEY
       valueFrom:
         secretKeyRef:
