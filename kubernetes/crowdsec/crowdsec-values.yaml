@@ -93,12 +93,16 @@ lapi:
           name: crowdsec-secrets
           key: agent-password
     # Optional console enrollment (separate from CAPI registration above):
-    # associates this LAPI with a CrowdSec account at app.crowdsec.net
+    # associates this LAPI with a CrowdSec account at app.crowdsec.net.
+    # Leaving enroll-key blank is a safe opt-out; `cscli console enroll` only
+    # runs for a non-empty key and is idempotent on repeated starts.
     - name: ENROLL_KEY
       valueFrom:
         secretKeyRef:
           name: crowdsec-secrets
           key: enroll-key
+          # The secretGenerator always produces this key, so optional only
+          # guards against out-of-band Secret deletion or renaming.
           optional: true
     - name: ENROLL_INSTANCE_NAME
       value: "sectorfive"

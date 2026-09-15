@@ -30,7 +30,8 @@ generatorOptions:
 
 # version is pinned: an unpinned chart can resolve to a different (and
 # potentially differently-behaving) release per machine/run depending on the
-# local Helm cache
+# local Helm cache. Bump deliberately and re-verify the rendered output when
+# upgrading.
 helmCharts:
   - name: crowdsec
     repo: https://crowdsecurity.github.io/helm-charts
