@@ -41,7 +41,8 @@ spec:
   forwardAuth:
     # If traefik-forward-auth is deployed in different namespace, it would be traefik-forward-auth.<namespace>:4181
     address: http://traefik-forward-auth:4181
-    trustForwardHeader: true
     authResponseHeaders:
       - X-Forwarded-User
     headerField: X-Forwarded-User
+    maxResponseBodySize: 65536
+    trustForwardHeader: true
