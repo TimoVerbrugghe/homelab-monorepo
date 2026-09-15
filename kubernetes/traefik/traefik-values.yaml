@@ -17,10 +17,7 @@ accessLog:
 
 deployment:
   enabled: true
-  # Must equal the current control-plane node count (manta, skidbladnir, william):
-  # the affinity rules below require one pod per control-plane node, so a mismatch
-  # leaves surplus pods permanently Pending. Update this if control-plane nodes are
-  # added/removed.
+  # Must equal the current control-plane node count
   replicas: 3
 
 # traefik-kubevip uses externalTrafficPolicy: Local (see traefik-service.yaml) so
@@ -102,7 +99,6 @@ ports:
       # entrypoint middleware references (unresolved Middleware CRDs) until it
       # is restarted or the config is reloaded.
       middlewares:
-        - traefik-crowdsec-bouncer@kubernetescrd
         - traefik-secureheaders@kubernetescrd
         - traefik-ratelimit@kubernetescrd
   metrics:
