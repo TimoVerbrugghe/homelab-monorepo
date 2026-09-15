@@ -33,7 +33,7 @@ lapi:
   # No dynamic StorageClass provisioned, so persistence must be disabled
   # explicitly. The decisions DB is lost on every restart (bans re-derive from
   # live traffic); bouncer/agent credentials are re-registered on every start
-  # instead (see env/lifecycle below)
+  # instead (see env/lifecycle below), so this needs no manual action.
   persistentVolume:
     data:
       enabled: false
@@ -136,6 +136,9 @@ agent:
       program: traefik
 
   env:
+    # Collections from hub.crowdsec.net: Traefik parsers/scenarios, HTTP CVE
+    # exploits, generic HTTP brute-force/probing, HTTP(S) flood/DoS. See
+    # README.md for others considered but not installed.
     - name: COLLECTIONS
       value: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/http-dos"
     # Agent runs with DISABLE_LOCAL_API=true and authenticates to LAPI as a
