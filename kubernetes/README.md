@@ -197,11 +197,8 @@ and it keeps working once the volumes become ordinary CSI-backed PVC references.
 `kubernetes/crowdsec/` deploys the official `crowdsecurity/crowdsec` Helm chart
 alongside Traefik, and Traefik enforces its ban decisions via the
 [Traefik CrowdSec bouncer plugin](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin)
-on the `websecure` and `jellyfin` entrypoints. See the inline comments in
-`kubernetes/crowdsec/crowdsec-values.yaml`,
-`kubernetes/crowdsec/kustomization.yaml`, and
-`kubernetes/crowdsec/crowdsec-secrets.env.template` for the full architecture,
-the bouncer API key setup, and collections notes.
+on the `websecure` and `jellyfin` entrypoints. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md)
+for the full architecture, the bouncer API key setup, and collections notes.
 
 > [!IMPORTANT]
 > Deploy `kubernetes/crowdsec/` and create the bouncer secret **before** the
@@ -269,12 +266,13 @@ kubectl kustomize --enable-helm kubernetes/democratic-csi/ | \
 
 `crowdsec-secrets` must be reflected into `traefik` before the
 `crowdsec-bouncer` middleware is referenced on Traefik's entrypoints, so the
-`traefik` namespace must exist first.
+`traefik` namespace must exist first. See [`kubernetes/crowdsec/README.md`](crowdsec/README.md).
 
 ```bash
 kubectl apply -f kubernetes/traefik/traefik-namespace.yaml
 
-# populate kubernetes/crowdsec/crowdsec-secrets.env from crowdsec-secrets.env.template first, then:
+# populate kubernetes/crowdsec/crowdsec-secrets.env from crowdsec-secrets.env.template first
+# (see kubernetes/crowdsec/README.md), then:
 kubectl kustomize --enable-helm kubernetes/crowdsec/ | \
   kubectl apply -n crowdsec -f -
 

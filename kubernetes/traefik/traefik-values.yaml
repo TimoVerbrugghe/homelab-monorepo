@@ -99,6 +99,7 @@ ports:
       # entrypoint middleware references (unresolved Middleware CRDs) until it
       # is restarted or the config is reloaded.
       middlewares:
+        - traefik-crowdsec-bouncer@kubernetescrd
         - traefik-secureheaders@kubernetescrd
         - traefik-ratelimit@kubernetescrd
   metrics:

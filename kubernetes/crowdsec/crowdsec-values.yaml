@@ -22,6 +22,9 @@ lapi:
     capabilities:
       drop:
         - ALL
+    # readOnlyRootFilesystem/runAsNonRoot left at image defaults: crowdsec
+    # writes its SQLite DB/state under /etc/crowdsec and /var/lib/crowdsec
+    # at runtime, and the image ships no non-root user.
 
   podLabels:
     app.kubernetes.io/name: crowdsec-lapi
@@ -112,6 +115,9 @@ agent:
     capabilities:
       drop:
         - ALL
+    # readOnlyRootFilesystem/runAsNonRoot left at image defaults (see lapi
+    # note above). Also needs hostPath /var/log to tail Traefik's logs, hence
+    # the `privileged` Pod Security Standard on this namespace (namespace.yaml).
 
   podLabels:
     app.kubernetes.io/name: crowdsec-agent
