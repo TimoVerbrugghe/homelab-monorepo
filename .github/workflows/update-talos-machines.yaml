@@ -54,7 +54,7 @@ jobs:
       - name: Extract schematic ID from base-config.yaml
         id: schematic
         run: |
-          SCHEMATIC_ID=$(grep -oP 'factory\.talos\.dev/installer/\K[^:]+' kubernetes/talos/base-config.yaml)
+          SCHEMATIC_ID=$(grep -oP '^\s*image:\s*factory\.talos\.dev/(?:metal-)?installer/\K[^:]+' kubernetes/talos/base-config.yaml)
           echo "id=$SCHEMATIC_ID" >> $GITHUB_OUTPUT
           echo "Schematic ID: $SCHEMATIC_ID"
 
