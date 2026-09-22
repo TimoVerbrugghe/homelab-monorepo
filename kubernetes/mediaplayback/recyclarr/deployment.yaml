@@ -85,8 +85,8 @@ spec:
             failureThreshold: 30
           resources:
             requests:
-              cpu: "50m"
-              memory: "64Mi"
+              cpu: "75m"
+              memory: "32Mi"
             limits:
               cpu: "500m"
               memory: "256Mi"

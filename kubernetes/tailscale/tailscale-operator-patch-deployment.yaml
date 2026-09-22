@@ -19,3 +19,11 @@ spec:
           env:
             - name: APISERVER_PROXY
               value: "true"
+          # Upstream applies no default resources; sized from observed usage.
+          resources:
+            requests:
+              cpu: "20m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"

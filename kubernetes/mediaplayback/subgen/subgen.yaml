@@ -109,8 +109,8 @@ spec:
             memory: "2Gi"
             cpu: "3500m"
           requests:
-            memory: "1Gi"
-            cpu: "1000m"
+            memory: "512Mi"
+            cpu: "300m"
         volumeMounts:
         - name: tv
           mountPath: /tv

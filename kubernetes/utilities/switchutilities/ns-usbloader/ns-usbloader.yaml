@@ -43,8 +43,8 @@ spec:
             memory: "1Gi"
             cpu: "1000m"
           requests:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "384Mi"
+            cpu: "100m"
         
         startupProbe:
           httpGet:

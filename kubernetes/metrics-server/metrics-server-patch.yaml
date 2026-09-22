@@ -7,3 +7,17 @@ metadata:
     keel.sh/policy: all
     keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
+spec:
+  template:
+    spec:
+      containers:
+        - name: metrics-server
+          # Upstream default (100m/200Mi) is sized for clusters up to 100 nodes;
+          # docs say it's safe to scale down for smaller clusters like this one.
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"

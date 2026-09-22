@@ -78,3 +78,38 @@ node:
         value: chroot
       - name: ISCSIADM_HOST_PATH
         value: /usr/local/sbin/iscsiadm
+    # Chart ships no default resources for any node container; sized from
+    # observed usage (all four containers combined run ~190-205Mi / 7-27m).
+    resources:
+      requests:
+        cpu: "20m"
+        memory: "64Mi"
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+  driverRegistrar:
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "50m"
+        memory: "64Mi"
+  cleanup:
+    resources:
+      requests:
+        cpu: "5m"
+        memory: "16Mi"
+      limits:
+        cpu: "50m"
+        memory: "32Mi"
+
+csiProxy:
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "64Mi"
+

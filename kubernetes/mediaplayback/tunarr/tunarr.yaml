@@ -58,10 +58,12 @@ spec:
         - name: MEILI_LOG_LEVEL
           value: "OFF"
 
+        # Actual steady-state usage runs ~1.4Gi (embedded MeiliSearch); request
+        # raised so this isn't the first pod evicted under memory pressure.
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "1536Mi"
+            cpu: "150m"
             gpu.intel.com/i915: "1"
           limits:
             memory: "4Gi"

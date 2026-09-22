@@ -7,3 +7,16 @@ metadata:
     keel.sh/policy: all
     keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
+spec:
+  template:
+    spec:
+      containers:
+        - name: reflector
+          # Chart ships no default resources; observed usage runs ~234Mi already.
+          resources:
+            requests:
+              cpu: "20m"
+              memory: "256Mi"
+            limits:
+              cpu: "100m"
+              memory: "512Mi"

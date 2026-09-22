@@ -48,10 +48,12 @@ spec:
         - name: http
           containerPort: 8191
           protocol: TCP
+        # Actual steady-state usage runs ~1.3Gi; request raised so this isn't
+        # the first pod evicted under memory pressure.
         resources:
           requests:
-            cpu: "500m"
-            memory: "512Mi"
+            cpu: "100m"
+            memory: "1536Mi"
           limits:
             cpu: "2000m"
             memory: "3Gi"
