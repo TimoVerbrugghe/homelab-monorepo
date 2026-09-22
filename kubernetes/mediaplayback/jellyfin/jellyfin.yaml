@@ -72,7 +72,7 @@ spec:
         resources:
           requests:
             memory: "1Gi"
-            cpu: "500m"
+            cpu: "300m"
             gpu.intel.com/i915: "1"
           limits:
             memory: "8Gi"

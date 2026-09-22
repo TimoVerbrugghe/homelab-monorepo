@@ -54,8 +54,8 @@ spec:
         # Only schedule on nodes that have an Intel GPU available
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "500m"
+            memory: "512Mi"
+            cpu: "250m"
             gpu.intel.com/i915: "1"
           limits:
             memory: "8Gi"

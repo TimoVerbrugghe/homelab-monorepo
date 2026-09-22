@@ -49,8 +49,8 @@ spec:
               name: webui
           resources:
             requests:
-              cpu: 250m
-              memory: 256Mi
+              cpu: 50m
+              memory: 192Mi
             limits:
               cpu: 500m
               memory: 512Mi

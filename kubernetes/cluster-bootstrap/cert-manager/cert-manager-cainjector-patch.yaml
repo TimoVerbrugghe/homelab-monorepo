@@ -7,3 +7,16 @@ metadata:
     keel.sh/policy: all
     keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
+spec:
+  template:
+    spec:
+      containers:
+        - name: cert-manager-cainjector
+          # Chart ships no default resources; sized from observed usage.
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"

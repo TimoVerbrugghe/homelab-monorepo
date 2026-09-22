@@ -5,6 +5,7 @@ metadata:
   name: tailscale-services
 spec:
   type: ingress
+  proxyClass: default-resources
 ---
 # A proxyGroup to access the Kubernetes API server through Tailscale
 apiVersion: tailscale.com/v1alpha1
@@ -15,5 +16,6 @@ spec:
   type: kube-apiserver
   replicas: 3
   tags: ["tag:k8s-api"]
+  proxyClass: default-resources
   kubeAPIServer:
     mode: auth

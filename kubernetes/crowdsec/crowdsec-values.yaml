@@ -33,6 +33,16 @@ lapi:
     app.kubernetes.io/name: crowdsec-lapi
     app.kubernetes.io/instance: crowdsec-lapi
 
+  # Chart default (500m/unset) was far above the ~3m cpu / ~260Mi mem this
+  # single-node LAPI actually uses.
+  resources:
+    requests:
+      cpu: "150m"
+      memory: "384Mi"
+    limits:
+      cpu: "1000m"
+      memory: "768Mi"
+
   # No dynamic StorageClass provisioned, so persistence must be disabled
   # explicitly. The decisions DB is lost on every restart (bans re-derive from
   # live traffic); bouncer/agent credentials are re-registered on every start
@@ -122,6 +132,16 @@ agent:
   podLabels:
     app.kubernetes.io/name: crowdsec-agent
     app.kubernetes.io/instance: crowdsec-agent
+
+  # Chart default (500m/unset) was far above the ~2m cpu / ~50Mi mem this
+  # log-tailing agent actually uses.
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "384Mi"
 
   # Read Traefik's JSON access logs (kubernetes/traefik) for the
   # crowdsecurity/traefik parsers below. Requires accessLog.format: json in

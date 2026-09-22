@@ -1,0 +1,17 @@
+# Sets container resources for ProxyGroup-managed proxy pods. The operator applies
+# no default resources; sized from observed usage of the existing proxies.
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: default-resources
+spec:
+  statefulSet:
+    pod:
+      tailscaleContainer:
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "32Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"

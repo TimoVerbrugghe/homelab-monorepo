@@ -55,7 +55,7 @@ spec:
               memory: 100M
             requests:
               cpu: 50m
-              memory: 30M
+              memory: 64M
           
           startupProbe:
             httpGet:
