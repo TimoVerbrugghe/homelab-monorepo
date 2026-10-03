@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: cloudflared-kubernetes
+  namespace: utilities
+  labels:
+    app.kubernetes.io/name: cloudflared-kubernetes
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cloudflared-kubernetes

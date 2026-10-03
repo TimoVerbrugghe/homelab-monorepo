@@ -22,6 +22,13 @@ spec:
         pod: cloudflared-kubernetes
         app.kubernetes.io/name: cloudflared-kubernetes
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudflared-kubernetes
       securityContext:
         sysctls:
         # Allows ICMP traffic (ping, traceroute) to resources behind cloudflared.

@@ -27,6 +27,13 @@ spec:
       automountServiceAccountToken: true
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: homepage
       securityContext:
         seccompProfile:
           type: RuntimeDefault

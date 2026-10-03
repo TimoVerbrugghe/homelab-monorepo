@@ -22,6 +22,13 @@ spec:
         pod: cloudflared-homelab
         app.kubernetes.io/name: cloudflared-homelab
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudflared-homelab
       securityContext:
         sysctls:
         # Allows ICMP traffic (ping, traceroute) to resources behind cloudflared.
