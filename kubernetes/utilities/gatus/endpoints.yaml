@@ -341,7 +341,7 @@ endpoints:
     <<: [*defaults-http, *defaults-alerts]
 
   - name: "Homepage"
-    url: "https://homepage.timo.be"
+    url: "http://homepage.utilities.svc.cluster.local:3000"
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
