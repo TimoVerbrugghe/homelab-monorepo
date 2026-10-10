@@ -1,0 +1,83 @@
+{
+  "mcpServers": {
+    "cloudflare": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp",
+      "tools": ["*"]
+    },
+    "homeAssistant": {
+      "type": "http",
+      "url": "http://10.10.10.28:8123/api/webhook/mcp_100d2242e491e35d6076635a52461fa3",
+      "headers": {
+        "Authorization": "Bearer $COPILOT_MCP_HA_TOKEN"
+      },
+      "tools": ["*"]
+    },
+    "kubernetes": {
+      "type": "local",
+      "command": "npx",
+      "args": ["mcp-server-kubernetes"],
+      "tools": ["*"]
+    },
+    "portainer": {
+      "type": "local",
+      "command": "uvx",
+      "args": ["mcp-portainer"],
+      "env": {
+        "PORTAINER_URL": "https://portainer.kubernetes.timo.be",
+        "PORTAINER_API_KEY": "$COPILOT_MCP_PORTAINER_TOKEN"
+      },
+      "tools": ["*"]
+    },
+    "proxmox": {
+      "type": "local",
+      "command": "uvx",
+      "args": ["proxmox-mcp-plus"],
+      "env": {
+        "PROXMOX_HOST": "proxmox.kubernetes.timo.be",
+        "PROXMOX_USER": "root@pam",
+        "PROXMOX_TOKEN_NAME": "mcp-token",
+        "PROXMOX_TOKEN_VALUE": "$COPILOT_MCP_PROXMOX_TOKEN_VALUE",
+        "PROXMOX_PORT": "443",
+        "PROXMOX_VERIFY_SSL": "true"
+      },
+      "tools": ["*"]
+    },
+    "shelly-api-docs": {
+      "type": "http",
+      "url": "https://shelly-api-docs.mcp.shelly.link/mcp",
+      "tools": ["*"]
+    },
+    "siderolabs-docs": {
+      "type": "http",
+      "url": "https://docs.siderolabs.com/mcp",
+      "tools": ["*"]
+    },
+    "tailscale": {
+      "type": "local",
+      "command": "npx",
+      "args": [
+        "--package=@hexsleeves/tailscale-mcp-server",
+        "tailscale-mcp-server"
+      ],
+      "env": {
+        "TAILSCALE_OAUTH_CLIENT_ID": "$COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID",
+        "TAILSCALE_OAUTH_CLIENT_SECRET": "$COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET",
+        "TAILSCALE_TAILNET": "pony-godzilla.ts.net"
+      },
+      "tools": ["*"]
+    },
+    "unifi-network": {
+      "type": "local",
+      "command": "uvx",
+      "args": ["unifi-network-mcp@latest"],
+      "env": {
+        "UNIFI_HOST": "unifi.local.timo.be",
+        "UNIFI_USERNAME": "unifimcp",
+        "UNIFI_PASSWORD": "$COPILOT_MCP_UNIFI_PASSWORD",
+        "UNIFI_VERIFY_SSL": "true"
+      },
+      "tools": ["*"]
+    }
+  }
+}
