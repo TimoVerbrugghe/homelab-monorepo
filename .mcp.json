@@ -1,0 +1,28 @@
+{
+	"mcpServers": {
+		"cloudflare": {
+			"type": "http",
+			"url": "https://mcp.cloudflare.com/mcp",
+			"tools": [
+				"*"
+			]
+		},
+		"kubernetes": {
+			"type": "local",
+			"command": "npx",
+			"args": [
+				"mcp-server-kubernetes"
+			],
+			"tools": [
+				"*"
+			]
+		},
+		"siderolabs-docs": {
+			"type": "http",
+			"url": "https://docs.siderolabs.com/mcp",
+			"tools": [
+				"*"
+			]
+		}
+	}
+}

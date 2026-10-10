@@ -45,14 +45,6 @@
         "Authorization": "Bearer ${input:ha-token}"
       }
     },
-    "kubernetes": {
-      "command": "npx",
-      "args": ["mcp-server-kubernetes"]
-    },
-    "siderolabs-docs": {
-      "type": "http",
-      "url": "https://docs.siderolabs.com/mcp"
-    },
     "tailscale": {
       "command": "npx",
       "args": [
@@ -94,10 +86,6 @@
         "PROXMOX_PORT": "443",
         "PROXMOX_VERIFY_SSL": "true"
       }
-    },
-    "cloudflare": {
-      "type": "http",
-      "url": "https://mcp.cloudflare.com/mcp"
     }
   }
 }
