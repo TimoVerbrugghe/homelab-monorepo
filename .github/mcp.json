@@ -8,23 +8,22 @@
 // "MCP configuration" box in the repo settings UI, then click
 // "Save MCP configuration".
 //
-// How this differs from .vscode/mcp.json:
-// - .vscode/mcp.json runs MCP servers locally inside VS Code, using
-//   "${input:...}" prompts to collect secrets interactively from you at
-//   runtime.
+// How this differs from .mcp.json:
+// - .mcp.json is the portable workspace-level MCP configuration read by the
+//   Copilot Agent Host. It references secrets with "$COPILOT_MCP_*" variables,
+//   which must be available in the Agent Host environment.
 // - This file runs MCP servers inside GitHub's cloud agent sandbox. It has no
-//   access to your local machine, your VS Code prompts, or your LAN/tailnet by
-//   default. "${input:...}" placeholders are replaced with "COPILOT_MCP_*"
-//   Agents secrets/variables (configured separately under Settings > Copilot >
-//   Coding agent > Secrets and variables), substituted at run time.
+//   access to your local machine or LAN/tailnet by default. Secret references
+//   use "COPILOT_MCP_*" Agents secrets/variables (configured separately under
+//   Settings > Copilot > Coding agent > Secrets and variables), substituted at
+//   run time.
 // - Network access to homelab services (Kubernetes API, Home Assistant, etc.)
 //   is only possible because .github/workflows/copilot-setup-steps.yaml joins
 //   the tailnet (tailscale/github-action) and writes a kubeconfig before the
 //   agent's tools are started, with "accept-routes: true" so LAN-advertised
 //   subnet routes (e.g. 10.10.10.0/24) are reachable too.
 // - "siderolabs-docs" and "cloudflare" are plain remote HTTP MCP servers and
-//   need no secrets or network setup, so they work unchanged from the VS Code
-//   config.
+//   need no secrets or network setup, so they work unchanged from .mcp.json.
 // - "unifi-network" and "proxmox" use "uvx" from Python's "uv" toolchain,
 //   which is installed by copilot-setup-steps.yaml. UniFi is reached through
 //   the propagated LAN address 10.10.10.1; Proxmox is reached through its

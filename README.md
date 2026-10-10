@@ -65,6 +65,59 @@ Several services are not running in this cluster and remain on separate NixOS VM
   Plex & Jellyfin in the kubernetes cluster, I'm using iSCSI backed storage.
 - Services that I want HA and do need local storage (portainer, bitwarden, etc...) are running in the Yumi kubernetes node that is HA-enabled in proxmox & can be live migrated.
 
+## MCP Servers
+
+Copilot MCP servers are configured in the portable workspace-root
+[`.mcp.json`](.mcp.json) file. The configuration includes Home Assistant,
+Kubernetes, Portainer, Proxmox, UniFi, Tailscale, Cloudflare, Shelly API docs,
+and SideroLabs docs.
+
+The configuration references secrets through environment variables; provide
+these in the environment where the Copilot Agent Host runs. Do not put secret
+values in `.mcp.json`:
+
+- `COPILOT_MCP_HA_TOKEN`
+- `COPILOT_MCP_PORTAINER_TOKEN`
+- `COPILOT_MCP_PROXMOX_TOKEN_VALUE`
+- `COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID`
+- `COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET`
+- `COPILOT_MCP_UNIFI_PASSWORD`
+
+### Local env file
+
+The portable MCP format does not load `envFile` directly. Use the launcher
+[`scripts/with-mcp-env.sh`](scripts/with-mcp-env.sh) to export a local,
+gitignored `mvp.env` before starting the client:
+
+```bash
+cp mvp.env.template mvp.env
+chmod 600 mvp.env
+# Fill in the six secrets in mvp.env, keeping each value shell-quoted.
+bash scripts/with-mcp-env.sh
+# Or start Copilot CLI with the same environment:
+bash scripts/with-mcp-env.sh copilot
+```
+
+The launcher sources `mvp.env` as Bash, so treat it as a trusted local file:
+use assignments only, not commands. It refuses to launch if any of the six
+secrets is empty and reports names only, never their values.
+
+For VS Code, fully quit the existing application first (on macOS, use
+**Code > Quit Visual Studio Code**). Opening a new window in an already-running
+instance does not reliably replace its inherited environment. Start VS Code
+through the launcher afterward so the Agent Host can resolve both stdio server
+variables and Home Assistant's HTTP authorization header. A normal Dock launch
+does not load `mvp.env`. Remote Agent Hosts need the file and environment on the
+remote machine instead.
+
+The old `${input:...}` values live in encrypted VS Code secret storage, not in
+the legacy JSON file. There is no documented secret-export interface for these
+inputs. Fill `mvp.env` from your password manager or service credentials; do not
+copy the VS Code storage database into the repository.
+
+See the [VS Code migration guidance](https://code.visualstudio.com/docs/agent-customization/migrate-customizations)
+for the portable environment-variable format.
+
 ## Future Plans
 
 - Nothing right now. Feel free to suggest other things I might want to do in this setup!
