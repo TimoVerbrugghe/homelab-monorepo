@@ -106,7 +106,8 @@
     },
     "shelly-api-docs": {
       "type": "http",
-      "url": "https://shelly-api-docs.mcp.shelly.link/mcp"
+      "url": "https://shelly-api-docs.mcp.shelly.link/mcp",
+      "tools": ["*"]
     }
   }
 }
