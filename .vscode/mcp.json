@@ -98,6 +98,10 @@
     "cloudflare": {
       "type": "http",
       "url": "https://mcp.cloudflare.com/mcp"
+    },
+    "shelly-api-docs": {
+      "type": "http",
+      "url": "https://shelly-api-docs.mcp.shelly.link/mcp"
     }
   }
 }
