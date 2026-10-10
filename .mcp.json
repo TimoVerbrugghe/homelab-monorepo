@@ -1,0 +1,35 @@
+{
+	"mcpServers": {
+		"cloudflare": {
+			"type": "http",
+			"url": "https://mcp.cloudflare.com/mcp",
+			"tools": [
+				"*"
+			]
+		},
+		"kubernetes": {
+			"type": "local",
+			"command": "npx",
+			"args": [
+				"mcp-server-kubernetes"
+			],
+			"tools": [
+				"*"
+			]
+		},
+		"shelly-api-docs": {
+			"type": "http",
+			"url": "https://shelly-api-docs.mcp.shelly.link/mcp",
+			"tools": [
+				"*"
+			]
+		},
+		"siderolabs-docs": {
+			"type": "http",
+			"url": "https://docs.siderolabs.com/mcp",
+			"tools": [
+				"*"
+			]
+		}
+	}
+}
