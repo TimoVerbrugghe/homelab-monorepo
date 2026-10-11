@@ -1,0 +1,107 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "ha-token",
+      "description": "Home Assistant long-lived access token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "portainer-token",
+      "description": "Portainer administrator API token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "tailscale-oauth-client-id",
+      "description": "Tailscale OAuth client ID",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "tailscale-oauth-client-secret",
+      "description": "Tailscale OAuth client secret",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "unifi-password",
+      "description": "UniFi local admin password",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "proxmox-token-value",
+      "description": "Proxmox API token value",
+      "password": true
+    }
+  ],
+  "servers": {
+    "homeAssistant": {
+      "type": "http",
+      "url": "http://10.10.10.28:8123/api/webhook/mcp_100d2242e491e35d6076635a52461fa3",
+      "headers": {
+        "Authorization": "Bearer ${input:ha-token}"
+      }
+    },
+    "kubernetes": {
+      "command": "npx",
+      "args": ["mcp-server-kubernetes"]
+    },
+    "siderolabs-docs": {
+      "type": "http",
+      "url": "https://docs.siderolabs.com/mcp"
+    },
+    "tailscale": {
+      "command": "npx",
+      "args": [
+        "--package=@hexsleeves/tailscale-mcp-server",
+        "tailscale-mcp-server"
+      ],
+      "env": {
+        "TAILSCALE_OAUTH_CLIENT_ID": "${input:tailscale-oauth-client-id}",
+        "TAILSCALE_OAUTH_CLIENT_SECRET": "${input:tailscale-oauth-client-secret}",
+        "TAILSCALE_TAILNET": "pony-godzilla.ts.net"
+      }
+    },
+    "portainer": {
+      "command": "uvx",
+      "args": ["mcp-portainer"],
+      "env": {
+        "PORTAINER_URL": "https://portainer.kubernetes.timo.be",
+        "PORTAINER_API_KEY": "${input:portainer-token}"
+      }
+    },
+    "unifi-network": {
+      "command": "uvx",
+      "args": ["unifi-network-mcp@latest"],
+      "env": {
+        "UNIFI_HOST": "unifi.local.timo.be",
+        "UNIFI_USERNAME": "unifimcp",
+        "UNIFI_PASSWORD": "${input:unifi-password}",
+        "UNIFI_VERIFY_SSL": "true"
+      }
+    },
+    "proxmox": {
+      "command": "uvx",
+      "args": ["proxmox-mcp-plus"],
+      "env": {
+        "PROXMOX_HOST": "proxmox.kubernetes.timo.be",
+        "PROXMOX_USER": "root@pam",
+        "PROXMOX_TOKEN_NAME": "mcp-token",
+        "PROXMOX_TOKEN_VALUE": "${input:proxmox-token-value}",
+        "PROXMOX_PORT": "443",
+        "PROXMOX_VERIFY_SSL": "true"
+      }
+    },
+    "cloudflare": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
+    "shelly-api-docs": {
+      "type": "http",
+      "url": "https://shelly-api-docs.mcp.shelly.link/mcp"
+    }
+  }
+}
