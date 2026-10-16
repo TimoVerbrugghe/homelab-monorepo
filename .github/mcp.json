@@ -42,7 +42,7 @@
 // Note: the Kubernetes MCP server needs no COPILOT_MCP_* secret -- it reads
 // the kubeconfig written to $HOME/.kube/config by copilot-setup-steps.yaml
 // (sourced from the repository's KUBECONFIG Actions secret).
-// TrueNAS uses the pinned binary and trust bundle installed by setup steps.
+// TrueNAS uses the latest release binary and trust bundle installed by setup steps.
 // Optional Actions secret TRUENAS_TLS_CA_PEM adds a trusted PEM certificate.
 // For the setup's authenticated smoke test, also supply the TrueNAS API key
 // as an Actions secret; an Agents secret alone is only used by MCP startup.

@@ -51,24 +51,17 @@ jobs:
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Install TrueNAS MCP
-        env:
-          TRUENAS_MCP_SHA256: 920a1042763f2ed31937c5cf3072fbd2defdd863dbfb3e1078aeed0275f5fa1d
-          TRUENAS_MCP_VERSION: v0.0.6
         run: |
           set -euo pipefail
           workdir="$(mktemp -d)"
           trap 'rm -rf "$workdir"' EXIT
           archive=truenas-mcp-linux-amd64.tar.gz
           curl --fail --silent --show-error --location --retry 3 \
-            "https://github.com/truenas/truenas-mcp/releases/download/${TRUENAS_MCP_VERSION}/${archive}" \
+            "https://github.com/truenas/truenas-mcp/releases/latest/download/${archive}" \
             --output "$workdir/$archive"
-          (
-            cd "$workdir"
-            printf '%s  %s\n' "$TRUENAS_MCP_SHA256" "$archive" | sha256sum --check --strict
-            tar --extract --gzip --file "$archive" truenas-mcp-linux-amd64
-          )
+          tar --extract --gzip --file "$workdir/$archive" --directory "$workdir" truenas-mcp-linux-amd64
           sudo install -m 0755 "$workdir/truenas-mcp-linux-amd64" /usr/local/bin/truenas-mcp
-          test "$(truenas-mcp --version)" = "truenas-mcp version ${TRUENAS_MCP_VERSION#v}"
+          truenas-mcp --version
 
       - name: Provision TrueNAS MCP trust bundle
         env:
