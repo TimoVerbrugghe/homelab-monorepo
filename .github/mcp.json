@@ -44,8 +44,9 @@
 // (sourced from the repository's KUBECONFIG Actions secret).
 // TrueNAS uses the latest release binary installed by setup steps.
 // Certificate verification is disabled for this tailnet connection; wss encryption remains enabled.
-// For the setup's authenticated smoke test, also supply the TrueNAS API key
-// as an Actions secret; an Agents secret alone is only used by MCP startup.
+// The TrueNAS MCP server exposes all available tools, including write
+// operations. Its API key must have the TrueNAS permissions needed for those
+// operations; enabling the tools here does not grant backend permissions.
 {
   "mcpServers": {
     "homeAssistant": {
@@ -107,7 +108,7 @@
       "type": "local",
       "command": "/usr/local/bin/truenas-mcp",
       "args": [],
-      "tools": ["system_info", "system_health", "query_pools"],
+      "tools": ["*"],
       "env": {
         "TRUENAS_API_KEY": "$COPILOT_MCP_TRUENAS_API_KEY",
         "TRUENAS_INSECURE": "1",
