@@ -50,6 +50,41 @@ jobs:
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
+      - name: Install TrueNAS MCP
+        env:
+          TRUENAS_MCP_SHA256: 920a1042763f2ed31937c5cf3072fbd2defdd863dbfb3e1078aeed0275f5fa1d
+          TRUENAS_MCP_VERSION: v0.0.6
+        run: |
+          set -euo pipefail
+          workdir="$(mktemp -d)"
+          trap 'rm -rf "$workdir"' EXIT
+          archive=truenas-mcp-linux-amd64.tar.gz
+          curl --fail --silent --show-error --location --retry 3 \
+            "https://github.com/truenas/truenas-mcp/releases/download/${TRUENAS_MCP_VERSION}/${archive}" \
+            --output "$workdir/$archive"
+          (
+            cd "$workdir"
+            printf '%s  %s\n' "$TRUENAS_MCP_SHA256" "$archive" | sha256sum --check --strict
+            tar --extract --gzip --file "$archive" truenas-mcp-linux-amd64
+          )
+          sudo install -m 0755 "$workdir/truenas-mcp-linux-amd64" /usr/local/bin/truenas-mcp
+          test "$(truenas-mcp --version)" = "truenas-mcp version ${TRUENAS_MCP_VERSION#v}"
+
+      - name: Provision TrueNAS MCP trust bundle
+        env:
+          TRUENAS_TLS_CA_PEM: ${{ secrets.TRUENAS_TLS_CA_PEM }}
+        run: |
+          set -euo pipefail
+          workdir="$(mktemp -d)"
+          trap 'rm -rf "$workdir"' EXIT
+          cp /etc/ssl/certs/ca-certificates.crt "$workdir/ca.pem"
+          if [ -n "$TRUENAS_TLS_CA_PEM" ]; then
+            printf '%s\n' "$TRUENAS_TLS_CA_PEM" > "$workdir/custom-ca.pem"
+            openssl x509 -in "$workdir/custom-ca.pem" -noout
+            cat "$workdir/custom-ca.pem" >> "$workdir/ca.pem"
+          fi
+          sudo install -D -m 0644 "$workdir/ca.pem" /usr/local/share/truenas-mcp/ca.pem
+
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
         with:
@@ -91,4 +126,78 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           "$HOME/.local/bin/uv" --version
           "$HOME/.local/bin/uvx" --version
+          truenas-mcp --version
           tailscale status
+
+      - name: Verify TrueNAS secure WebSocket and read-only MCP query
+        timeout-minutes: 2
+        env:
+          TRUENAS_API_KEY: ${{ secrets.COPILOT_MCP_TRUENAS_API_KEY }}
+          TRUENAS_INSECURE: "false"
+          TRUENAS_TLS_CA: /usr/local/share/truenas-mcp/ca.pem
+          TRUENAS_URL: wss://truenas.pony-godzilla.ts.net:443/websocket
+        run: |
+          python3 - <<'PY'
+          import base64
+          import hashlib
+          import http.client
+          import json
+          import os
+          import ssl
+          import subprocess
+          from urllib.parse import urlsplit
+
+          url = urlsplit(os.environ["TRUENAS_URL"])
+          context = ssl.create_default_context(cafile=os.environ["TRUENAS_TLS_CA"])
+          key = base64.b64encode(os.urandom(16)).decode()
+          connection = http.client.HTTPSConnection(url.hostname, url.port, context=context, timeout=15)
+          try:
+              connection.request("GET", url.path, headers={
+                  "Connection": "Upgrade",
+                  "Upgrade": "websocket",
+                  "Sec-WebSocket-Key": key,
+                  "Sec-WebSocket-Version": "13",
+              })
+              response = connection.getresponse()
+              expected = base64.b64encode(hashlib.sha1(
+                  (key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").encode()
+              ).digest()).decode()
+              if response.status != 101 or response.getheader("Sec-WebSocket-Accept") != expected:
+                  raise SystemExit("TrueNAS did not accept the secure WebSocket upgrade")
+          except (OSError, http.client.HTTPException) as error:
+              raise SystemExit(f"TrueNAS TLS/WebSocket check failed; verify DNS, ACLs and certificates: {error}")
+          finally:
+              connection.close()
+          print("TrueNAS TLS and WebSocket upgrade verified on port 443")
+
+          if not os.environ.get("TRUENAS_API_KEY"):
+              print("::warning::MCP query skipped: add COPILOT_MCP_TRUENAS_API_KEY as an Actions secret for setup validation")
+              raise SystemExit(0)
+          requests = [
+              {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {
+                  "protocolVersion": "2024-11-05", "capabilities": {},
+                  "clientInfo": {"name": "copilot-setup", "version": "1"},
+              }},
+              {"jsonrpc": "2.0", "method": "notifications/initialized"},
+              {"jsonrpc": "2.0", "id": 2, "method": "tools/call",
+               "params": {"name": "system_info", "arguments": {}}},
+          ]
+          process = subprocess.Popen(
+              ["/usr/local/bin/truenas-mcp"], stdin=subprocess.PIPE,
+              stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True,
+          )
+          try:
+              output, _ = process.communicate(
+                  "".join(json.dumps(request) + "\n" for request in requests), timeout=60,
+              )
+          except subprocess.TimeoutExpired:
+              process.kill()
+              process.communicate()
+              raise SystemExit("TrueNAS MCP startup/query timed out")
+          responses = [json.loads(line) for line in output.splitlines()]
+          if process.returncode or [item.get("id") for item in responses] != [1, 2]:
+              raise SystemExit("TrueNAS MCP startup/query failed")
+          if any("error" in item or item.get("result", {}).get("isError") for item in responses):
+              raise SystemExit("TrueNAS MCP initialization or system_info returned an error")
+          print("TrueNAS MCP initialized and system_info succeeded (response not logged)")
+          PY

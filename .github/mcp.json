@@ -35,12 +35,17 @@
 //   COPILOT_MCP_PORTAINER_TOKEN                 Portainer administrator API token
 //   COPILOT_MCP_UNIFI_PASSWORD                  UniFi local admin password
 //   COPILOT_MCP_PROXMOX_TOKEN_VALUE             Proxmox API token value
+//   COPILOT_MCP_TRUENAS_API_KEY                 Least-privilege TrueNAS API key
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID        Tailscale OAuth client ID for the MCP server's own tailnet API access (separate from the Actions-level TAILSCALE_OAUTH_CLIENT_ID secret used by copilot-setup-steps.yaml to join the tailnet)
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET    Tailscale OAuth client secret (see above)
 //
 // Note: the Kubernetes MCP server needs no COPILOT_MCP_* secret -- it reads
 // the kubeconfig written to $HOME/.kube/config by copilot-setup-steps.yaml
 // (sourced from the repository's KUBECONFIG Actions secret).
+// TrueNAS uses the pinned binary and trust bundle installed by setup steps.
+// Optional Actions secret TRUENAS_TLS_CA_PEM adds a trusted PEM certificate.
+// For the setup's authenticated smoke test, also supply the TrueNAS API key
+// as an Actions secret; an Agents secret alone is only used by MCP startup.
 {
   "mcpServers": {
     "homeAssistant": {
@@ -96,6 +101,18 @@
         "PROXMOX_TOKEN_VALUE": "$COPILOT_MCP_PROXMOX_TOKEN_VALUE",
         "PROXMOX_PORT": "443",
         "PROXMOX_VERIFY_SSL": "true"
+      }
+    },
+    "truenas": {
+      "type": "local",
+      "command": "/usr/local/bin/truenas-mcp",
+      "args": [],
+      "tools": ["system_info", "system_health", "query_pools"],
+      "env": {
+        "TRUENAS_API_KEY": "$COPILOT_MCP_TRUENAS_API_KEY",
+        "TRUENAS_INSECURE": "false",
+        "TRUENAS_TLS_CA": "/usr/local/share/truenas-mcp/ca.pem",
+        "TRUENAS_URL": "wss://truenas.pony-godzilla.ts.net:443/websocket"
       }
     },
     "cloudflare": {
