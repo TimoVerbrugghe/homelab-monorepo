@@ -111,7 +111,7 @@
       "env": {
         "TRUENAS_API_KEY": "$COPILOT_MCP_TRUENAS_API_KEY",
         "TRUENAS_INSECURE": "1",
-        "TRUENAS_URL": "wss://truenas.pony-godzilla.ts.net:443/websocket"
+        "TRUENAS_URL": "wss://thefactory.pony-godzilla.ts.net:443/websocket"
       }
     },
     "cloudflare": {
