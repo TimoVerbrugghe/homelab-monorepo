@@ -166,40 +166,6 @@ services:
     extra_hosts:
       - "trawl.kubernetes.timo.be:10.10.10.34"
 
-  questarr:
-    <<: [*hardening-defaults, *limits-medium]
-    container_name: questarr
-    image: ghcr.io/doezer/questarr:latest
-    # Entrypoint needs root and writable /etc to set PUID/PGID, then drops privileges.
-    user: "0:0"
-    read_only: false
-    # Required only for startup ownership changes and su-exec privilege dropping.
-    cap_add:
-      - CHOWN
-      - SETUID
-      - SETGID
-    tmpfs:
-      - /tmp:rw,noexec,nosuid,nodev,size=512m
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=${PUID:-3000}
-      - PGID=${PGID:-3000}
-      - TZ=Europe/Brussels
-    volumes:
-      - questarr:/app/data
-      - downloads:/downloads
-      - games:/games
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:5000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    ports:
-      - 14015:5000
-
   audiobookshelf:
     <<: [*hardening-defaults, *limits-medium]
     container_name: audiobookshelf
@@ -279,12 +245,6 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/downloads"
-  games:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/X.A.N.A./media/games"
   movies:
     driver: local
     driver_opts:
@@ -297,14 +257,6 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/prowlarr"
-  questarr:
-    # Create this directory owned by PUID:PGID (default 3000:3000) before deploying.
-    # The image's BusyBox find cannot repair ownership with its current entrypoint.
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/questarr"
   radarr:
     driver: local
     driver_opts:
