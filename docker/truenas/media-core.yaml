@@ -190,6 +190,7 @@ services:
     volumes:
       - questarr:/app/data
       - downloads:/downloads
+      - games:/games
     healthcheck:
       test: ["CMD", "curl", "--fail", "--silent", "http://localhost:5000/api/health"]
       interval: 30s
@@ -278,6 +279,12 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/downloads"
+  games:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/mnt/X.A.N.A./media/games"
   movies:
     driver: local
     driver_opts:
