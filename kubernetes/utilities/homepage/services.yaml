@@ -82,16 +82,6 @@
             type: overseerr
             url: http://thefactory.local.timo.be:14003
             key: "{{HOMEPAGE_VAR_OVERSEERR_KEY}}"
-    - Mealie:
-        icon: mealie.svg
-        href: https://mealie.timo.be
-        namespace: utilities-priv
-        app: mealie
-        widget:
-            type: mealie
-            url: http://mealie.utilities-priv.svc.cluster.local:9000
-            key: "{{HOMEPAGE_VAR_MEALIE_KEY}}"
-            version: 2
     - Sonarr:
         icon: sonarr.svg
         href: https://sonarr.timo.be
