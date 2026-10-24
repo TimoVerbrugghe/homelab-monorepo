@@ -42,7 +42,6 @@ I have the following machines & VMs with a brief overview of services they run. 
   - Forest Sector
     - Yumi (kubernetes node with local storage, HA, can be live migrated)
       - Bitwarden
-      - Mealie
       - Portainer
     - William (kubernetes node)
   - Ice Sector

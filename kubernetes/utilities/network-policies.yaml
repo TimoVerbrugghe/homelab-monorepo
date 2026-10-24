@@ -93,7 +93,7 @@ spec:
   policyTypes:
     - Ingress
 ---
-# Allow ingress from Traefik (Bitwarden web UI, Mealie web UI).
+# Allow ingress from Traefik (Bitwarden web UI).
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -126,7 +126,7 @@ spec:
               kubernetes.io/metadata.name: tailscale
 ---
 # Allow ingress from utilities namespace so Homepage and Gatus can reach
-# Bitwarden and Mealie service endpoints for widgets and health checks.
+# Bitwarden service endpoints for widgets and health checks.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

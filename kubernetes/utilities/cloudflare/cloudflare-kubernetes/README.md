@@ -14,6 +14,5 @@ Example services include:
 
 - Bitwarden
 - Portainer
-- Mealie
 
 - Any service under the traefik/ingress folder
