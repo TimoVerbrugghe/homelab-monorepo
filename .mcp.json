@@ -1,5 +1,12 @@
 {
   "mcpServers": {
+    "homeAssistant": {
+      "type": "http",
+      "url": "http://10.10.10.28:8123/api/webhook/mcp_100d2242e491e35d6076635a52461fa3",
+      "tools": [
+        "*"
+      ]
+    },
     "cloudflare": {
       "type": "http",
       "url": "https://mcp.cloudflare.com/mcp",
