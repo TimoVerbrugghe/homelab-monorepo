@@ -1,37 +1,19 @@
 // This file is a copy-paste source for the GitHub Copilot cloud coding agent's
 // repository-level MCP configuration (repo Settings > Copilot > MCP servers).
-// GitHub does not read this file automatically -- there is no repo-file
-// convention for cloud agent MCP config (unlike Actions workflows). Copy the
-// "mcpServers" JSON object below (everything from the outer "{" onward, minus
-// these "//" comments, which are not valid JSON and must be removed before
-// pasting -- this matches GitHub's own documented example format) into the
-// "MCP configuration" box in the repo settings UI, then click
-// "Save MCP configuration".
 //
 // How this differs from .mcp.json:
 // - .mcp.json is the portable workspace-level MCP configuration read by the
 //   Copilot Agent Host. Local stdio servers load mcp-secrets.env via dotenv-cli.
-// - This file runs MCP servers inside GitHub's cloud agent sandbox. It has no
-//   access to your local machine or LAN/tailnet by default. Secret references
+// - This file runs MCP servers inside GitHub's cloud agent sandbox. Secret references
 //   use "COPILOT_MCP_*" Agents secrets/variables (configured separately under
-//   Settings > Copilot > Coding agent > Secrets and variables), substituted at
-//   run time.
+//   Settings > Copilot > Coding agent > Secrets and variables)
 // - Network access to homelab services (Kubernetes API, Home Assistant, etc.)
 //   is only possible because .github/workflows/copilot-setup-steps.yaml joins
 //   the tailnet (tailscale/github-action) and writes a kubeconfig before the
 //   agent's tools are started, with "accept-routes: true" so LAN-advertised
 //   subnet routes (e.g. 10.10.10.0/24) are reachable too.
-// - "siderolabs-docs" and "cloudflare" are plain remote HTTP MCP servers and
-//   need no secrets or network setup, so they work unchanged from .mcp.json.
 // - "unifi-network" and "proxmox" use "uvx" from Python's "uv" toolchain,
-//   which is installed by copilot-setup-steps.yaml. UniFi is reached through
-//   the propagated LAN address 10.10.10.1; Proxmox is reached through its
-//   tailnet MagicDNS name proxmox.pony-godzilla.ts.net.
-// - "truenas" uses the pinned native truenas-mcp binary installed by
-//   copilot-setup-steps.yaml. Its wss:// endpoint must resolve on the tailnet
-//   through the existing /websocket URL (v0.0.7 rewrites it to /api/current).
-//   TRUENAS_INSECURE=1 preserves the owner's working tailnet configuration:
-//   traffic is encrypted, but the server certificate is not verified.
+//   which is installed by copilot-setup-steps.yaml.
 //
 // Required Agents secrets (repo Settings > Copilot > Coding agent > Secrets
 // and variables > New secret) -- names MUST start with "COPILOT_MCP_":
@@ -43,15 +25,6 @@
 //   COPILOT_MCP_TRUENAS_API_USER                TrueNAS username that owns the API key
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID        Tailscale OAuth client ID for the MCP server's own tailnet API access (separate from the Actions-level TAILSCALE_OAUTH_CLIENT_ID secret used by copilot-setup-steps.yaml to join the tailnet)
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET    Tailscale OAuth client secret (see above)
-//
-// Note: the Kubernetes MCP server needs no COPILOT_MCP_* secret -- it reads
-// the kubeconfig written to $HOME/.kube/config by copilot-setup-steps.yaml
-// (sourced from the repository's KUBECONFIG Actions secret).
-// TrueNAS uses the latest release binary installed by setup steps.
-// Certificate verification is disabled for this tailnet connection; wss encryption remains enabled.
-// The TrueNAS MCP server exposes all available tools, including write
-// operations. Its API key must have the TrueNAS permissions needed for those
-// operations; enabling the tools here does not grant backend permissions.
 {
   "mcpServers": {
     "homeAssistant": {
