@@ -50,15 +50,20 @@ jobs:
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
-      - name: Install TrueNAS MCP
+      - name: Install TrueNAS MCP connector
+        env:
+          TRUENAS_MCP_SHA256: 884af2c2871122cab8f4d8ec295f1a6b85e6cfb32799c21f74cd39446302ec2a
+          TRUENAS_MCP_VERSION: v0.0.7
         run: |
           set -euo pipefail
           workdir="$(mktemp -d)"
           trap 'rm -rf "$workdir"' EXIT
-          archive=truenas-mcp-linux-amd64.tar.gz
+          archive="truenas-mcp-linux-amd64.tar.gz"
+          base="https://github.com/truenas/truenas-mcp/releases/download"
           curl --fail --silent --show-error --location --retry 3 \
-            "https://github.com/truenas/truenas-mcp/releases/latest/download/${archive}" \
+            "$base/$TRUENAS_MCP_VERSION/$archive" \
             --output "$workdir/$archive"
+          printf '%s  %s\n' "$TRUENAS_MCP_SHA256" "$workdir/$archive" | sha256sum --check -
           tar --extract --gzip --file "$workdir/$archive" --directory "$workdir" truenas-mcp-linux-amd64
           sudo install -m 0755 "$workdir/truenas-mcp-linux-amd64" /usr/local/bin/truenas-mcp
           truenas-mcp --version
