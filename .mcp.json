@@ -1,0 +1,144 @@
+{
+  "mcpServers": {
+    "homeAssistant": {
+      "type": "http",
+      "url": "http://10.10.10.28:8123/api/webhook/mcp_100d2242e491e35d6076635a52461fa3",
+      "tools": [
+        "*"
+      ]
+    },
+    "cloudflare": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp",
+      "tools": [
+        "*"
+      ]
+    },
+    "kubernetes": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "mcp-server-kubernetes"
+      ],
+      "tools": [
+        "*"
+      ]
+    },
+    "shelly-api-docs": {
+      "type": "http",
+      "url": "https://shelly-api-docs.mcp.shelly.link/mcp",
+      "tools": [
+        "*"
+      ]
+    },
+    "siderolabs-docs": {
+      "type": "http",
+      "url": "https://docs.siderolabs.com/mcp",
+      "tools": [
+        "*"
+      ]
+    },
+    "unifi-network": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=dotenv-cli@11.0.0",
+        "dotenv",
+        "-e",
+        "./mcp-secrets.env",
+        "--",
+        "uvx",
+        "--with",
+        "unifi-mcp-shared==0.6.7",
+        "unifi-network-mcp==0.29.3"
+      ],
+      "env": {
+        "UNIFI_HOST": "unifi.local.timo.be",
+        "UNIFI_USERNAME": "unifimcp",
+        "UNIFI_VERIFY_SSL": "true"
+      },
+      "tools": [
+        "*"
+      ]
+    },
+    "portainer": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=dotenv-cli@11.0.0",
+        "dotenv",
+        "-e",
+        "./mcp-secrets.env",
+        "--",
+        "uvx",
+        "mcp-portainer"
+      ],
+      "env": {
+        "PORTAINER_URL": "https://portainer.kubernetes.timo.be"
+      },
+      "tools": [
+        "*"
+      ]
+    },
+    "proxmox": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=dotenv-cli@11.0.0",
+        "dotenv",
+        "-e",
+        "./mcp-secrets.env",
+        "--",
+        "uvx",
+        "proxmox-mcp-plus"
+      ],
+      "env": {
+        "PROXMOX_HOST": "proxmox.kubernetes.timo.be",
+        "PROXMOX_PORT": "443",
+        "PROXMOX_TOKEN_NAME": "mcp-token",
+        "PROXMOX_USER": "root@pam",
+        "PROXMOX_VERIFY_SSL": "true"
+      },
+      "tools": [
+        "*"
+      ]
+    },
+    "truenas": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=dotenv-cli@11.0.0",
+        "dotenv",
+        "-e",
+        "./mcp-secrets.env",
+        "--",
+        "truenas-mcp"
+      ],
+      "env": {
+        "TRUENAS_URL": "wss://truenas.local.timo.be/api/current"
+      },
+      "tools": ["*"]
+    },
+    "tailscale": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=dotenv-cli@11.0.0",
+        "dotenv",
+        "-e",
+        "./mcp-secrets.env",
+        "--",
+        "npx",
+        "--yes",
+        "--package=@hexsleeves/tailscale-mcp-server",
+        "tailscale-mcp-server"
+      ],
+      "env": {
+        "TAILSCALE_TAILNET": "pony-godzilla.ts.net"
+      },
+      "tools": [
+        "*"
+      ]
+    }
+  }
+}

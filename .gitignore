@@ -3,13 +3,13 @@
 **/.vscode
 !/.vscode/
 .vscode/*
-!.vscode/mcp.json
 **/terraform.tfstate*
 **/*auto.pkrvars.hcl
 **/downloaded_**
 ansible/inventory/group_vars/*.yaml
 .sfdx/**
 **.env
+/mcp-secrets.env
 terraform/environments/proxmox.tfvars
 *.rom
 nixos/variables.nix
