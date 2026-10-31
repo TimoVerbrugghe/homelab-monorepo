@@ -50,6 +50,23 @@ jobs:
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
+      - name: Install TrueNAS MCP connector
+        env:
+          TRUENAS_MCP_SHA256: 884af2c2871122cab8f4d8ec295f1a6b85e6cfb32799c21f74cd39446302ec2a
+          TRUENAS_MCP_VERSION: v0.0.7
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/truenas-mcp"
+          cd "$RUNNER_TEMP/truenas-mcp"
+          archive="truenas-mcp-linux-amd64.tar.gz"
+          base="https://github.com/truenas/truenas-mcp/releases/download"
+          curl --fail --location --silent --show-error \
+            --output "$archive" "$base/$TRUENAS_MCP_VERSION/$archive"
+          printf '%s  %s\n' "$TRUENAS_MCP_SHA256" "$archive" | sha256sum --check -
+          tar -xzf "$archive" truenas-mcp-linux-amd64
+          sudo install -m 0755 truenas-mcp-linux-amd64 /usr/local/bin/truenas-mcp
+          truenas-mcp --version
+
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
         with:

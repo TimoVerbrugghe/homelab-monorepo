@@ -103,6 +103,22 @@
         "*"
       ]
     },
+    "truenas": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=dotenv-cli@11.0.0",
+        "dotenv",
+        "-e",
+        "./mcp-secrets.env",
+        "--",
+        "truenas-mcp"
+      ],
+      "env": {
+        "TRUENAS_URL": "wss://truenas.local.timo.be/api/current"
+      },
+      "tools": ["*"]
+    },
     "tailscale": {
       "command": "npx",
       "args": [

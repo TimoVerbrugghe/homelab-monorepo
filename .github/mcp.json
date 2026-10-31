@@ -10,8 +10,7 @@
 //
 // How this differs from .mcp.json:
 // - .mcp.json is the portable workspace-level MCP configuration read by the
-//   Copilot Agent Host. It references secrets with "$COPILOT_MCP_*" variables,
-//   which must be available in the Agent Host environment.
+//   Copilot Agent Host. Local stdio servers load mcp-secrets.env via dotenv-cli.
 // - This file runs MCP servers inside GitHub's cloud agent sandbox. It has no
 //   access to your local machine or LAN/tailnet by default. Secret references
 //   use "COPILOT_MCP_*" Agents secrets/variables (configured separately under
@@ -28,6 +27,10 @@
 //   which is installed by copilot-setup-steps.yaml. UniFi is reached through
 //   the propagated LAN address 10.10.10.1; Proxmox is reached through its
 //   tailnet MagicDNS name proxmox.pony-godzilla.ts.net.
+// - "truenas" uses the pinned native truenas-mcp binary installed by
+//   copilot-setup-steps.yaml. Its wss:// endpoint must resolve on the tailnet
+//   and present a certificate valid for thefactory.pony-godzilla.ts.net.
+//   Do not disable TLS verification; update the NAS certificate if necessary.
 //
 // Required Agents secrets (repo Settings > Copilot > Coding agent > Secrets
 // and variables > New secret) -- names MUST start with "COPILOT_MCP_":
@@ -35,6 +38,8 @@
 //   COPILOT_MCP_PORTAINER_TOKEN                 Portainer administrator API token
 //   COPILOT_MCP_UNIFI_PASSWORD                  UniFi local admin password
 //   COPILOT_MCP_PROXMOX_TOKEN_VALUE             Proxmox API token value
+//   COPILOT_MCP_TRUENAS_API_KEY                 TrueNAS API key
+//   COPILOT_MCP_TRUENAS_API_USER                TrueNAS username that owns the API key
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID        Tailscale OAuth client ID for the MCP server's own tailnet API access (separate from the Actions-level TAILSCALE_OAUTH_CLIENT_ID secret used by copilot-setup-steps.yaml to join the tailnet)
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET    Tailscale OAuth client secret (see above)
 //
@@ -96,6 +101,17 @@
         "PROXMOX_TOKEN_VALUE": "$COPILOT_MCP_PROXMOX_TOKEN_VALUE",
         "PROXMOX_PORT": "443",
         "PROXMOX_VERIFY_SSL": "true"
+      }
+    },
+    "truenas": {
+      "type": "local",
+      "command": "truenas-mcp",
+      "args": [],
+      "tools": ["*"],
+      "env": {
+        "TRUENAS_API_KEY": "$COPILOT_MCP_TRUENAS_API_KEY",
+        "TRUENAS_API_USER": "$COPILOT_MCP_TRUENAS_API_USER",
+        "TRUENAS_URL": "wss://thefactory.pony-godzilla.ts.net/api/current"
       }
     },
     "cloudflare": {
