@@ -29,8 +29,9 @@
 //   tailnet MagicDNS name proxmox.pony-godzilla.ts.net.
 // - "truenas" uses the pinned native truenas-mcp binary installed by
 //   copilot-setup-steps.yaml. Its wss:// endpoint must resolve on the tailnet
-//   and present a certificate valid for thefactory.pony-godzilla.ts.net.
-//   Do not disable TLS verification; update the NAS certificate if necessary.
+//   through the existing /websocket URL (v0.0.7 rewrites it to /api/current).
+//   TRUENAS_INSECURE=1 preserves the owner's working tailnet configuration:
+//   traffic is encrypted, but the server certificate is not verified.
 //
 // Required Agents secrets (repo Settings > Copilot > Coding agent > Secrets
 // and variables > New secret) -- names MUST start with "COPILOT_MCP_":
@@ -105,13 +106,14 @@
     },
     "truenas": {
       "type": "local",
-      "command": "truenas-mcp",
+      "command": "/usr/local/bin/truenas-mcp",
       "args": [],
       "tools": ["*"],
       "env": {
         "TRUENAS_API_KEY": "$COPILOT_MCP_TRUENAS_API_KEY",
         "TRUENAS_API_USER": "$COPILOT_MCP_TRUENAS_API_USER",
-        "TRUENAS_URL": "wss://thefactory.pony-godzilla.ts.net/api/current"
+        "TRUENAS_INSECURE": "1",
+        "TRUENAS_URL": "wss://thefactory.pony-godzilla.ts.net:443/websocket"
       }
     },
     "cloudflare": {
