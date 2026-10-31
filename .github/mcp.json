@@ -39,7 +39,7 @@
 //   COPILOT_MCP_PORTAINER_TOKEN                 Portainer administrator API token
 //   COPILOT_MCP_UNIFI_PASSWORD                  UniFi local admin password
 //   COPILOT_MCP_PROXMOX_TOKEN_VALUE             Proxmox API token value
-//   COPILOT_MCP_TRUENAS_API_KEY                 TrueNAS API key
+//   COPILOT_MCP_TRUENAS_API_KEY                 Least-privilege TrueNAS API key
 //   COPILOT_MCP_TRUENAS_API_USER                TrueNAS username that owns the API key
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID        Tailscale OAuth client ID for the MCP server's own tailnet API access (separate from the Actions-level TAILSCALE_OAUTH_CLIENT_ID secret used by copilot-setup-steps.yaml to join the tailnet)
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET    Tailscale OAuth client secret (see above)
@@ -47,6 +47,11 @@
 // Note: the Kubernetes MCP server needs no COPILOT_MCP_* secret -- it reads
 // the kubeconfig written to $HOME/.kube/config by copilot-setup-steps.yaml
 // (sourced from the repository's KUBECONFIG Actions secret).
+// TrueNAS uses the latest release binary installed by setup steps.
+// Certificate verification is disabled for this tailnet connection; wss encryption remains enabled.
+// The TrueNAS MCP server exposes all available tools, including write
+// operations. Its API key must have the TrueNAS permissions needed for those
+// operations; enabling the tools here does not grant backend permissions.
 {
   "mcpServers": {
     "homeAssistant": {
