@@ -1,5 +1,5 @@
 ---
-# Service to be used by Traefik and Tailscale Ingress to access the Themarr Web UI
+# Service for the Themarr Web UI, API and MCP server
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,8 +24,18 @@ spec:
   entryPoints:
     - websecure
   routes:
+    # Automation authenticates with Themarr's API key, not the UI login.
+    - match: >-
+        (Host(`themarr.kubernetes.timo.be`) || Host(`themarr.timo.be`)) &&
+        (Path(`/api`) || PathPrefix(`/api/`) || Path(`/mcp`) || Path(`/mcp/`))
+      kind: Rule
+      priority: 100
+      services:
+        - name: themarr
+          port: 8080
     - match: Host(`themarr.kubernetes.timo.be`) || Host(`themarr.timo.be`)
       kind: Rule
+      priority: 10
       services:
         - name: themarr
           port: 8080
