@@ -295,37 +295,3 @@ OR
 kubectl kustomize --enable-helm kubernetes/<resource>/ | \
   kubectl apply -f -
 ```
-
-## Subgen agent API and MCP
-
-Subgen's agent REST API is available at
-`https://subgen.timo.be/api/agent/batches`, and its Streamable HTTP MCP server
-at `https://subgen.timo.be/mcp/`. Both also work on
-`subgen.kubernetes.timo.be`. Clients must send the `X-API-Key` header.
-
-Set `AGENT_API_KEY` in the local, gitignored
-`mediaplayback/subgen/subgen-secrets.env`, using
-`mediaplayback/subgen/subgen-secrets.env.template` as the list of required keys.
-Generate a unique key with `openssl rand -hex 32`; never commit it.
-Kustomize puts it in `subgen-secrets`, and the Deployment reads it from that
-Secret. After applying a key rotation, restart the Deployment because the
-Secret name is stable and environment variables do not hot-reload:
-
-```bash
-kubectl apply -k kubernetes/mediaplayback/subgen/
-kubectl rollout restart deployment/subgen -n mediaplayback
-kubectl rollout status deployment/subgen -n mediaplayback
-```
-
-Only `/api/agent/batches` (and its subpaths) and `/mcp` (and its subpaths)
-bypass Traefik's web UI authentication. Subgen itself rejects missing or invalid
-keys with HTTP 401; an unset or too-short key disables the interfaces with
-HTTP 503. All other paths, including the existing UI `/api` endpoints, retain
-Traefik authentication. Entrypoint-level security headers and rate limiting
-still apply to the agent routes.
-
-For an MCP client, configure the server URL above and an `X-API-Key` header
-loaded securely from the generated key. Available tools are
-`submit_transcription_batch`, `list_active_batches`, `get_batch_status`, and
-`cancel_batch`. Use `list_active_batches` for a read-only connectivity test;
-submitting a batch starts Azure work.
