@@ -1,3 +1,10 @@
+## TrueNAS rsync task usage (SSH / Push)
+# Place this file at /mnt/X.A.N.A./media/other/rsync.rules on the source TrueNAS host.
+# Add the following as ONE Auxiliary Parameters entry, with no spaces or quotes:
+# --filter=merge_/mnt/X.A.N.A./media/other/rsync.rules
+# "_" is rsync's rule/filename separator, equivalent to "merge <path>".
+# Spaces create separate arguments in the Truenas UI
+
 ## Allow Rsync to traverse subdirectories (needed if you want to include certain subdirectories but not all, otherwise the exclude everything rule will apply to everything)
 + */
 
