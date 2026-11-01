@@ -60,6 +60,11 @@ spec:
           value: "en-US,nl-NL,es-ES,fr-FR"
 
         # Secret environment variables
+        - name: AGENT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: AGENT_API_KEY
         - name: AZURE_SPEECH_KEY
           valueFrom:
             secretKeyRef:
