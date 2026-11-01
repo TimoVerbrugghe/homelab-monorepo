@@ -4,37 +4,6 @@
 This folder contains the configuration and resources for managing my personal homelab's Kubernetes cluster, which is deployed on Talos Linux.
 Talos Linux is a secure, immutable, and minimal operating system designed specifically for running Kubernetes.
 
-## Themarr API and MCP access
-
-Themarr serves its API at `https://themarr.timo.be/api/` and Streamable HTTP MCP
-at `https://themarr.timo.be/mcp` on the same port as the Web UI. The
-`themarr.kubernetes.timo.be` hostname supports the same routes.
-Only these paths bypass Traefik's Web UI authentication; Themarr requires
-`Authorization: Bearer <key>` or `X-Themarr-Api-Key: <key>` for automation.
-The Web UI and other paths retain the `traefik/auth` middleware.
-
-Store the key as `THEMARR_API_KEY` in the local, uncommitted
-`mediaplayback/subgen/subgen-secrets.env` file. Themarr's `API_KEY` environment
-variable references that key in `subgen-secrets`; its other credentials remain
-in `themarr-secrets`. Preserve all existing Subgen credentials when updating
-the shared Secret. Real env files must exist locally before Kustomize builds.
-
-Apply Subgen's Secret before deploying Themarr:
-
-```bash
-kubectl apply -k kubernetes/mediaplayback/subgen/
-kubectl apply -k kubernetes/mediaplayback/themarr/
-kubectl rollout status deployment/themarr -n mediaplayback
-```
-
-For later key rotations, update the shared Secret and run
-`kubectl rollout restart deployment/themarr -n mediaplayback`, because the
-Secret name is stable and environment variables do not hot-reload.
-An MCP client should use the `/mcp` URL with the API key in the Bearer header.
-Read-only smoke tests are `initialize`, `tools/list`, and `tools/call` with
-`get_capabilities`; the REST equivalent is `/api/agent/v1/capabilities`.
-Requests without a valid key should return HTTP 401, not a UI login redirect.
-
 ## Installing Talos Linux
 
 Replace IP address below with the IP address of your first node
