@@ -53,6 +53,11 @@ spec:
           value: "list"
         - name: DISABLE_AUTH
           value: "true"
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: THEMARR_API_KEY
         - name: PLEX_TOKEN
           valueFrom:
             secretKeyRef:
