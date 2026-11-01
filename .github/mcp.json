@@ -27,6 +27,7 @@
 //   COPILOT_MCP_TRUENAS_API_USER                TrueNAS username that owns the API key
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID        Tailscale OAuth client ID for the MCP server's own tailnet API access (separate from the Actions-level TAILSCALE_OAUTH_CLIENT_ID secret used by copilot-setup-steps.yml to join the tailnet)
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET    Tailscale OAuth client secret (see above)
+//   COPILOT_MCP_CLOUDFLARE_API_TOKEN             Cloudflare API token for the Cloudflare MCP server
 {
   "mcpServers": {
     "homeAssistant": {
@@ -99,6 +100,9 @@
     "cloudflare": {
       "type": "http",
       "url": "https://mcp.cloudflare.com/mcp",
+      "headers": {
+        "Authorization": "Bearer $COPILOT_MCP_CLOUDFLARE_API_TOKEN"
+      },
       "tools": ["*"]
     },
     "shelly-api-docs": {
