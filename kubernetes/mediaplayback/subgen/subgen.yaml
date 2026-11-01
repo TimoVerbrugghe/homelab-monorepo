@@ -54,6 +54,8 @@ spec:
           value: "25"
         - name: MAX_CONCURRENT_EXTRACTIONS
           value: "3"
+        - name: NOTIFY_ON_SUCCESS
+          value: "true"
         - name: UVICORN_TIMEOUT_KEEP_ALIVE
           value: "300"
         - name: LANGUAGE_DETECTION_CANDIDATES
