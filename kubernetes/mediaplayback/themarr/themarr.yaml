@@ -56,8 +56,8 @@ spec:
         - name: API_KEY
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
-              key: THEMARR_API_KEY
+              name: themarr-secrets
+              key: API_KEY
         - name: PLEX_TOKEN
           valueFrom:
             secretKeyRef:
