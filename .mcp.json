@@ -7,7 +7,7 @@
         "--package=dotenv-cli@11.0.0",
         "dotenv",
         "-e",
-        "./mcp-secrets.env",
+        "./kubernetes/mediaplayback/themarr/themarr-secrets.env",
         "--",
         "npx",
         "--yes",
@@ -17,7 +17,7 @@
         "--transport",
         "http-only",
         "--header",
-        "X-Themarr-Api-Key:${THEMARR_API_KEY}"
+        "X-Themarr-Api-Key:${API_KEY}"
       ],
       "tools": ["*"]
     },
