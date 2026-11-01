@@ -1,5 +1,26 @@
 {
   "mcpServers": {
+    "themarr": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=dotenv-cli@11.0.0",
+        "dotenv",
+        "-e",
+        "./mcp-secrets.env",
+        "--",
+        "npx",
+        "--yes",
+        "--package=mcp-remote@0.15.2",
+        "mcp-remote",
+        "https://themarr.kubernetes.timo.be/mcp",
+        "--transport",
+        "http-only",
+        "--header",
+        "X-Themarr-Api-Key:${THEMARR_API_KEY}"
+      ],
+      "tools": ["*"]
+    },
     "subgen": {
       "command": "npx",
       "args": [

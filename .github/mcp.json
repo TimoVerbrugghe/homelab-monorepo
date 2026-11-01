@@ -29,8 +29,17 @@
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET    Tailscale OAuth client secret (see above)
 //   COPILOT_MCP_CLOUDFLARE_API_TOKEN             Cloudflare API token for the Cloudflare MCP server
 //   COPILOT_MCP_SUBGEN_API_KEY                  Subgen AGENT_API_KEY (same value as the local subgen-secrets.env)
+//   COPILOT_MCP_THEMARR_API_KEY                 Themarr API key (same as subgen-secrets/THEMARR_API_KEY)
 {
   "mcpServers": {
+    "themarr": {
+      "type": "http",
+      "url": "https://themarr.kubernetes.timo.be/mcp",
+      "headers": {
+        "X-Themarr-Api-Key": "$COPILOT_MCP_THEMARR_API_KEY"
+      },
+      "tools": ["*"]
+    },
     "subgen": {
       "type": "http",
       "url": "https://subgen.timo.be/mcp/",
