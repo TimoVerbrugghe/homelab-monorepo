@@ -28,8 +28,17 @@
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID        Tailscale OAuth client ID for the MCP server's own tailnet API access (separate from the Actions-level TAILSCALE_OAUTH_CLIENT_ID secret used by copilot-setup-steps.yml to join the tailnet)
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET    Tailscale OAuth client secret (see above)
 //   COPILOT_MCP_CLOUDFLARE_API_TOKEN             Cloudflare API token for the Cloudflare MCP server
+//   COPILOT_MCP_SUBGEN_API_KEY                  Subgen AGENT_API_KEY (same value as the local subgen-secrets.env)
 {
   "mcpServers": {
+    "subgen": {
+      "type": "http",
+      "url": "https://subgen.timo.be/mcp/",
+      "headers": {
+        "X-API-Key": "$COPILOT_MCP_SUBGEN_API_KEY"
+      },
+      "tools": ["*"]
+    },
     "homeAssistant": {
       "type": "http",
       "url": "http://homeassistant.pony-godzilla.ts.net:8123/api/webhook/mcp_100d2242e491e35d6076635a52461fa3",

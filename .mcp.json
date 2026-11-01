@@ -1,5 +1,26 @@
 {
   "mcpServers": {
+    "subgen": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=dotenv-cli@11.0.0",
+        "dotenv",
+        "-e",
+        "./kubernetes/mediaplayback/subgen/subgen-secrets.env",
+        "--",
+        "npx",
+        "--yes",
+        "--package=mcp-remote@0.15.2",
+        "mcp-remote",
+        "https://subgen.timo.be/mcp/",
+        "--transport",
+        "http-only",
+        "--header",
+        "X-API-Key:${AGENT_API_KEY}"
+      ],
+      "tools": ["*"]
+    },
     "homeAssistant": {
       "type": "http",
       "url": "http://10.10.10.28:8123/api/webhook/mcp_100d2242e491e35d6076635a52461fa3",
