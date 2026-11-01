@@ -1,5 +1,6 @@
 name: Copilot Setup Steps
 
+# These triggers validate setup changes; Copilot runs the job separately at startup.
 on:
   pull_request:
     paths:
@@ -22,9 +23,9 @@ jobs:
         uses: actions/checkout@v7.0.1
 
       - name: Connect to Tailscale
+        # The action already enables --accept-routes; duplicating it fails.
         uses: tailscale/github-action@064b10558093f38325e838ddea35486bdc6b1d5c # v4
         with:
-          args: --accept-routes
           oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
           tags: tag:github-cicd
