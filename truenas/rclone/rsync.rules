@@ -3,9 +3,7 @@
 # Add the following as ONE Auxiliary Parameters entry, with no spaces or quotes:
 # --filter=merge_/mnt/X.A.N.A./media/other/rsync.rules
 # "_" is rsync's rule/filename separator, equivalent to "merge <path>".
-# Spaces create separate arguments in the UI; quotes reach rsync literally.
-# Use -m to prune empty directories and optionally -vv for verbose logging.
-# If Delete is enabled, test with --dry-run and review deletions before a real run.
+# Spaces create separate arguments in the Truenas UI
 
 ## Allow Rsync to traverse subdirectories (needed if you want to include certain subdirectories but not all, otherwise the exclude everything rule will apply to everything)
 + */
