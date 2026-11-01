@@ -4,16 +4,18 @@
 // How this differs from .mcp.json:
 // - .mcp.json is the portable workspace-level MCP configuration read by the
 //   Copilot Agent Host. Local stdio servers load mcp-secrets.env via dotenv-cli.
-// - This file runs MCP servers inside GitHub's cloud agent sandbox. Secret references
+// - Paste this configuration into repository settings; this file is not auto-loaded.
+//   Private homelab servers require an Actions session with the setup workflow.
+//   Cloud sandbox sessions do not run that workflow. Secret references
 //   use "COPILOT_MCP_*" Agents secrets/variables (configured separately under
 //   Settings > Copilot > Coding agent > Secrets and variables)
 // - Network access to homelab services (Kubernetes API, Home Assistant, etc.)
-//   is only possible because .github/workflows/copilot-setup-steps.yaml joins
+//   is only possible because .github/workflows/copilot-setup-steps.yml joins
 //   the tailnet (tailscale/github-action) and writes a kubeconfig before the
-//   agent's tools are started, with "accept-routes: true" so LAN-advertised
+//   agent's tools are started, with "args: --accept-routes" so LAN-advertised
 //   subnet routes (e.g. 10.10.10.0/24) are reachable too.
 // - "unifi-network" and "proxmox" use "uvx" from Python's "uv" toolchain,
-//   which is installed by copilot-setup-steps.yaml.
+//   which is installed by copilot-setup-steps.yml.
 //
 // Required Agents secrets (repo Settings > Copilot > Coding agent > Secrets
 // and variables > New secret) -- names MUST start with "COPILOT_MCP_":
@@ -23,7 +25,7 @@
 //   COPILOT_MCP_PROXMOX_TOKEN_VALUE             Proxmox API token value
 //   COPILOT_MCP_TRUENAS_API_KEY                 Least-privilege TrueNAS API key
 //   COPILOT_MCP_TRUENAS_API_USER                TrueNAS username that owns the API key
-//   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID        Tailscale OAuth client ID for the MCP server's own tailnet API access (separate from the Actions-level TAILSCALE_OAUTH_CLIENT_ID secret used by copilot-setup-steps.yaml to join the tailnet)
+//   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_ID        Tailscale OAuth client ID for the MCP server's own tailnet API access (separate from the Actions-level TAILSCALE_OAUTH_CLIENT_ID secret used by copilot-setup-steps.yml to join the tailnet)
 //   COPILOT_MCP_TAILSCALE_OAUTH_CLIENT_SECRET    Tailscale OAuth client secret (see above)
 {
   "mcpServers": {

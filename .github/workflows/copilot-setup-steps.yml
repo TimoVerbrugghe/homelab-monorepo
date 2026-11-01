@@ -1,6 +1,14 @@
 name: Copilot Setup Steps
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/copilot-setup-steps.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/copilot-setup-steps.yml'
   workflow_dispatch:
 
 jobs:
@@ -12,6 +20,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@064b10558093f38325e838ddea35486bdc6b1d5c # v4
+        with:
+          args: --accept-routes
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          tags: tag:github-cicd
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -62,13 +78,6 @@ jobs:
           tar --extract --gzip --file "$workdir/$archive" --directory "$workdir" truenas-mcp-linux-amd64
           sudo install -m 0755 "$workdir/truenas-mcp-linux-amd64" /usr/local/bin/truenas-mcp
           truenas-mcp --version
-
-      - name: Connect to Tailscale
-        uses: tailscale/github-action@v4
-        with:
-          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
-          tags: tag:github-cicd
 
       # Both configs come from the repository Actions secrets (rotated by
       # rotate-cluster-credentials.yaml).
