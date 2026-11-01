@@ -178,7 +178,8 @@ provide it before generating any manifests.
 
 ## YAML Conventions
 
-- Always use the `.yaml` extension — never `.yml`.
+- Use the `.yaml` extension, except `.github/workflows/copilot-setup-steps.yml`,
+  which must use GitHub's documented special filename.
 - Indent with **2 spaces** — never tabs.
 - Multi-line strings use `|` (literal block) or `>` (folded block) — never inline newlines.
 - All YAML files must pass `yamllint` as configured in `.github/workflows/lint-yaml-json.yaml`.
@@ -380,6 +381,7 @@ labels:
 | `build-nixos-isos.yaml` | tag push `v*`, release | Build NixOS ISOs and attach to release |
 | `dependabot-auto-merge.yaml` | `pull_request` from dependabot | Auto-approve and squash-merge Dependabot PRs |
 | `check-broken-links.yaml` | push/PR on `*.md` | Check markdown links |
+| `copilot-setup-steps.yml` | Actions-based Copilot startup, push/PR on the workflow, `workflow_dispatch` | Join Tailscale and provision tools/configs; not used by Cloud sandbox sessions |
 | `deploy-k8s-resource.yaml` | `workflow_dispatch` | Apply/delete a Kubernetes service |
 | `drawio-export.yaml` | push on `*.drawio` | Export draw.io diagrams to PNG |
 | `iscsi-kubernetes.yaml` | `workflow_dispatch` | iSCSI volume management |
@@ -424,7 +426,7 @@ When you change a file in column A, you must also review/update the files in col
 | `.github/workflows/update-badges.yaml` | `README.md` badge section (auto-generated, but verify count patterns still match) |
 | `internal_ips.md` | Kubernetes manifests or Docker Compose files that reference those IPs by hostname/IP |
 | `.vscode/mcp.json` | `README.md` MCP Servers section; `.github/mcp.json` (cloud agent equivalent) if servers were added/removed/renamed |
-| `.github/mcp.json` | `.github/workflows/copilot-setup-steps.yaml` (tool installs/auth needed by any new server); required `COPILOT_MCP_*` Agents secrets documented in the file's header comment |
+| `.github/mcp.json` | `.github/workflows/copilot-setup-steps.yml` (tool installs/auth needed by any new server); required `COPILOT_MCP_*` Agents secrets documented in the file's header comment |
 | `recyclarr/recyclarr.yaml` | `recyclarr/secrets.yaml.template` (if new secret keys are referenced) |
 | Talos machine configs (`kubernetes/talos/`) | `ansible/playbooks/bootstrap-talos-k8s-cluster.yaml`; `ansible/scripts/bootstrap-talos-cluster.sh` |
 | Add/rename a NixOS ISO definition | `.github/workflows/build-nixos-isos.yaml` matrix list; `nixos/isos/` directory |

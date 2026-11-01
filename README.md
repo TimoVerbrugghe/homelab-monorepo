@@ -68,6 +68,35 @@ Several services are not running in this cluster and remain on separate NixOS VM
 
 - Nothing right now. Feel free to suggest other things I might want to do in this setup!
 
+## Copilot environments and MCP access
+
+Private homelab MCP servers need Tailscale connectivity. For those tasks, use an
+**Actions** session: [.github/workflows/copilot-setup-steps.yml](.github/workflows/copilot-setup-steps.yml)
+joins the tailnet with subnet routes enabled before installing tools and provisioning
+cluster configs. GitHub discovers this special workflow on the default branch;
+its `.yml` extension is an exception to this repository's `.yaml` convention.
+Standalone validation runs also trigger on workflow pull requests and pushes to
+`main`, or via `workflow_dispatch`. They require the existing Tailscale and cluster
+secrets; fork pull requests do not receive those secrets.
+
+[.github/mcp.json](.github/mcp.json) is a copy-paste reference for repository
+**Settings > Copilot > MCP servers**, not an automatically loaded configuration.
+
+**Cloud** sandbox sessions, including sessions started with a Cloud-only mobile
+environment picker, do not run this setup workflow. Adding a private hostname to
+the firewall allowlist does not establish a Tailscale connection.
+[Cloud personalization](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/personalize-cloud-sessions)
+is useful for cross-repository instructions, skills, and agents, but dotfiles
+installation scripts are not executed, so it is not a replacement for this setup.
+The repository already supplies homelab-specific instructions and skills; no
+additional dotfiles configuration is needed for ordinary repository editing.
+
+If Mobile offers only Cloud, use a client that offers Actions, or assign an issue
+to Copilot from Mobile (an Actions-backed entry point). The environment cannot be
+changed after a session starts. See GitHub's
+[environment guide](https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/about-cloud-sandboxes#choosing-where-copilot-runs)
+and [Mobile guide](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-mobile).
+
 ## Contributing
 
 Suggestions, ideas, and improvements are welcome! See [.github/copilot-instructions.md](.github/copilot-instructions.md) for the full guide on how this repo is structured and how to make changes.
