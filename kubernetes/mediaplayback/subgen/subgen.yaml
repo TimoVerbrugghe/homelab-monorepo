@@ -6,7 +6,7 @@ metadata:
   namespace: mediaplayback
   annotations:
     keel.sh/policy: force
-    keel.sh/trigger: poll            
+    keel.sh/trigger: poll
     keel.sh/pollSchedule: "@every 24h"
     keel.sh/match-tag: "true"
 spec:
@@ -48,6 +48,8 @@ spec:
           value: "http://thefactory.local.timo.be:14002"
         - name: PLEX_SERVER
           value: "http://plex.local.timo.be:32400"
+        - name: JELLYFIN_SERVER
+          value: "http://jellyfin.mediaplayback.svc.cluster.local:8096"
         - name: DEFAULT_THEME
           value: "dark"
         - name: CONCURRENT_TRANSCRIPTIONS
@@ -92,6 +94,11 @@ spec:
             secretKeyRef:
               name: subgen-secrets
               key: BAZARR_API_KEY
+        - name: JELLYFIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: subgen-secrets
+              key: JELLYFIN_TOKEN
         - name: PLEX_TOKEN
           valueFrom:
             secretKeyRef:
