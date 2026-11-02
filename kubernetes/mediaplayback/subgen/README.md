@@ -20,6 +20,16 @@ Webhooks are not required for post-save refresh. To additionally trigger subtitl
 generation from Jellyfin events, configure its optional Webhook plugin to send
 JSON to `/webhook/jellyfin` and enable the corresponding Subgen processing flags.
 
+## Temporary uploads
+
+`TMPDIR=/transcode` directs Python temporary files, including Starlette multipart
+uploads that exceed its 1 MiB in-memory spool threshold, to the existing
+disk-backed `emptyDir`. Audio extraction already uses `/transcode`. This avoids
+upload failures on the read-only root filesystem without adding a memory-backed
+`/tmp` volume that would count large uploads against the container's memory limit.
+The volume is ephemeral and must have sufficient node disk space for concurrent
+uploads and extractions.
+
 ## Deploy and verify
 
 After merging manifest changes:

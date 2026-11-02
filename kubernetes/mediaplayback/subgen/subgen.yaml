@@ -44,6 +44,8 @@ spec:
           value: "/tv,/movies,/music"
         - name: SUBTITLE_LANGUAGE_NAMING_TYPE
           value: "ISO_639_1"
+        - name: TMPDIR
+          value: "/transcode"
         - name: BAZARR_URL
           value: "http://thefactory.local.timo.be:14002"
         - name: PLEX_SERVER
