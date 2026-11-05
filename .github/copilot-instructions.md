@@ -121,6 +121,27 @@ find . -name "*.sh" -exec shellcheck {} \;
 find . -name "*.json" -exec jsonlint -q {} \;
 ```
 
+### TrueNAS iSCSI lifecycle hooks
+
+- Keep the TrueNAS startup command at **POSTINIT**, not PREINIT (DNS may not yet
+  work), and the shutdown command at **SHUTDOWN**. Both dispatch
+  `.github/workflows/iscsi-kubernetes.yaml` on `main`.
+- Use curl's `--retry 3 --retry-all-errors --retry-delay 5 --retry-max-time 180 --connect-timeout 10 --max-time 20 --fail-with-body`
+  with a 240-second TrueNAS task timeout. This permits three retries after the
+  initial attempt, including DNS and HTTP failures. Keep each command on one line
+  without literal backslash-space continuations. Tasks use type **COMMAND**;
+  any saved script path is ignored.
+- Treat dispatch success as GitHub accepting the request, not workflow completion.
+  A lost response can cause duplicate dispatches, so preserve same-action
+  idempotency: skip already-zero workloads during scale-down without changing
+  `homelab.io/iscsi-original-replicas`; restore that saved count during scale-up.
+- Keep both scaling actions and all branches in the same concurrency group without
+  cancelling an active run. GitHub does not guarantee FIFO ordering and replaces
+  an older pending run when a newer one arrives; avoid dispatching opposite actions
+  until the previous action completes.
+- Fail the workflow on Kubernetes read, annotation or scaling errors rather than
+  masking failures.
+
 ## Common Change Tasks
 
 ### Adding a New Kubernetes Service

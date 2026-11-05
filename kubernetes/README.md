@@ -192,23 +192,6 @@ label, so they can be scaled down cleanly before a TrueNAS restart and scaled ba
 afterwards. Opting a workload in or out is a matter of adding or removing the label —
 and it keeps working once the volumes become ordinary CSI-backed PVC references.
 
-The scaling workflow serializes runs across both actions and all branches without
-cancelling an active run. Repeated scale-downs leave an already-zero workload's
-`homelab.io/iscsi-original-replicas` annotation untouched; repeated scale-ups restore
-the same saved count. Kubernetes read, annotation and scaling errors fail the run
-rather than reporting success. GitHub concurrency does not guarantee FIFO ordering
-and replaces an older pending run when a newer one arrives, so avoid dispatching
-opposite actions until the previous action has completed.
-
-On TrueNAS, the startup command runs at **POSTINIT** and the shutdown command at
-**SHUTDOWN**. Both use curl's `--retry 3 --retry-all-errors --retry-delay 5
---retry-max-time 180 --connect-timeout 10 --max-time 20 --fail-with-body` with a
-240-second TrueNAS task timeout. This allows up to three retries after the initial
-attempt, including DNS and HTTP failures. Keep the command on one line (without
-literal backslash-space continuations). A successful dispatch only confirms GitHub
-accepted the request, not that the workflow completed; a lost response can cause
-duplicate dispatches, which the same-action scaling logic tolerates.
-
 ## CrowdSec
 
 `kubernetes/crowdsec/` deploys the official `crowdsecurity/crowdsec` Helm chart
