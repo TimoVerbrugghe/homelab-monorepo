@@ -16,6 +16,10 @@ on:
         type: string
         default: ""
 
+concurrency:
+  cancel-in-progress: false
+  group: iscsi-kubernetes-scale
+
 jobs:
   kubernetes-scale:
     runs-on: ubuntu-latest
@@ -105,12 +109,19 @@ jobs:
             TYPE=$(cut -d'/' -f2 <<< "$workload")
             NAME=$(cut -d'/' -f3 <<< "$workload")
 
-            CURRENT_REPLICAS=$(kubectl get "$TYPE" "$NAME" -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "1")
-            [[ -z "$CURRENT_REPLICAS" ]] && CURRENT_REPLICAS="1"
+            CURRENT_REPLICAS=$(kubectl get "$TYPE" "$NAME" -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
+            if [[ ! "$CURRENT_REPLICAS" =~ ^[0-9]+$ ]]; then
+              echo "::error::Invalid replica count for $NAMESPACE/$NAME: $CURRENT_REPLICAS"
+              exit 1
+            fi
+            if [[ "$CURRENT_REPLICAS" -eq 0 ]]; then
+              echo "$TYPE $NAMESPACE/$NAME is already scaled down; preserving saved replica count"
+              continue
+            fi
 
-            kubectl annotate "$TYPE" "$NAME" -n "$NAMESPACE" homelab.io/iscsi-original-replicas="$CURRENT_REPLICAS" --overwrite >/dev/null || true
+            kubectl annotate "$TYPE" "$NAME" -n "$NAMESPACE" homelab.io/iscsi-original-replicas="$CURRENT_REPLICAS" --overwrite >/dev/null
             echo "Scaling down $TYPE $NAMESPACE/$NAME"
-            kubectl scale "$TYPE" "$NAME" -n "$NAMESPACE" --replicas=0 || echo "WARNING: Failed to scale down $NAMESPACE/$NAME"
+            kubectl scale "$TYPE" "$NAME" -n "$NAMESPACE" --replicas=0
           done <<< "$WORKLOAD_LIST"
 
       - name: Scale Up selected workloads
@@ -138,12 +149,12 @@ jobs:
                 REPLICAS=1
               fi
             else
-              REPLICAS=$(kubectl get "$TYPE" "$NAME" -n "$NAMESPACE" -o jsonpath='{.metadata.annotations.homelab\.io/iscsi-original-replicas}' 2>/dev/null || true)
+              REPLICAS=$(kubectl get "$TYPE" "$NAME" -n "$NAMESPACE" -o jsonpath='{.metadata.annotations.homelab\.io/iscsi-original-replicas}')
               if [[ ! "$REPLICAS" =~ ^[0-9]+$ ]] || [[ "$REPLICAS" -le 0 ]]; then
                 REPLICAS=1
               fi
             fi
 
             echo "Scaling up $TYPE $NAMESPACE/$NAME to $REPLICAS"
-            kubectl scale "$TYPE" "$NAME" -n "$NAMESPACE" --replicas="$REPLICAS" || echo "WARNING: Failed to scale up $NAMESPACE/$NAME"
+            kubectl scale "$TYPE" "$NAME" -n "$NAMESPACE" --replicas="$REPLICAS"
           done <<< "$WORKLOAD_LIST"
