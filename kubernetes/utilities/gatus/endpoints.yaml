@@ -345,8 +345,8 @@ endpoints:
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "PDU"
-    url: "icmp://pdu.local.timo.be"
+  - name: "UniFi UPS 2U Pro"
+    url: "icmp://10.10.10.17"
     group: Utilities
     <<: [*defaults-ping, *defaults-alerts]
     
