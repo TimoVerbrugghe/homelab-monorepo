@@ -128,16 +128,13 @@ find . -name "*.json" -exec jsonlint -q {} \;
   `.github/workflows/iscsi-kubernetes.yaml` on `main`.
 - For startup, use curl's `--retry 60 --retry-all-errors --retry-delay 10 --retry-max-time 900 --connect-timeout 10 --max-time 20 --fail-with-body`
   with a 960-second TrueNAS task timeout. POSTINIT does not guarantee that external
-  DNS/network dependencies are ready. The retry count and retry time limit are
+  dependencies are ready. The retry count and retry time limit are
   separate: three retries can finish in about 55 seconds despite a 180-second
   ceiling.
 - For shutdown, retain `--retry 3 --retry-all-errors --retry-delay 5 --retry-max-time 180 --connect-timeout 10 --max-time 20 --fail-with-body`
   with a 240-second task timeout. Keep each command on one line without literal
   backslash-space continuations. Tasks use type **COMMAND**; any saved script
   path is ignored.
-- Configure TrueNAS DNS as `10.10.10.21`, `10.10.10.22`, then `10.10.10.35`.
-  The standalone resolvers precede Kubernetes DNS; `10.10.10.20` is obsolete.
-  See [TrueNAS lifecycle hook diagnostics](../truenas/README.md).
 - Treat dispatch success as GitHub accepting the request, not workflow completion.
   A lost response can cause duplicate dispatches, so preserve same-action
   idempotency: skip already-zero workloads during scale-down without changing
