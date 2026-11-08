@@ -345,11 +345,6 @@ endpoints:
     group: Utilities
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "UniFi UPS 2U Pro"
-    url: "icmp://10.10.10.17"
-    group: Utilities
-    <<: [*defaults-ping, *defaults-alerts]
-
   - name: "UniFi UPS 2U Pro - NUT"
     url: "tcp://10.10.10.17:3493"
     group: Utilities
