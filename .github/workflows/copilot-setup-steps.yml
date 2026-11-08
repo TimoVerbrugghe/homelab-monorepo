@@ -85,10 +85,10 @@ jobs:
       - name: Provision kubeconfig for kubernetes MCP server
         run: |
           mkdir -p "$HOME/.kube"
-          echo "${{ secrets.KUBECONFIG }}" > "$HOME/.kube/config"
+          echo "${{ secrets.KUBECONFIG_FILE }}" > "$HOME/.kube/config"
           chmod 600 "$HOME/.kube/config"
           if ! kubectl config view --minify > /dev/null 2>&1; then
-            echo "::error::KUBECONFIG secret is missing or not a valid kubeconfig"
+            echo "::error::KUBECONFIG_FILE secret is missing or not a valid kubeconfig"
             exit 1
           fi
           kubectl cluster-info || echo "::warning::Cluster not reachable yet"

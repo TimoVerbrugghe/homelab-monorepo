@@ -37,7 +37,7 @@ jobs:
       - name: Set up kubeconfig
         run: |
           mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+          echo "${{ secrets.KUBECONFIG_FILE }}" > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
       # Only runs when a manual workloads input is provided. If workloads is empty, discovery step below is used instead.
