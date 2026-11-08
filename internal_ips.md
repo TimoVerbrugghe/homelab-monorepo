@@ -13,7 +13,7 @@
 | 10.10.10.9    | Odd                                         |
 | 10.10.10.10   | Zigbee SLZB-06 PoE Coordinator              |
 | 10.10.10.11   | Unifi - 1st Floor AP                        |
-| 10.10.10.12   | PDU                                         |
+| 10.10.10.17   | UniFi UPS 2U Pro                            |
 | 10.10.10.13   | Unifi - Living AP                           |
 | 10.10.10.14   | Unifi - Guest Bedroom AP                    |
 | 10.10.10.15   | Unifi - Garden AP                           |
