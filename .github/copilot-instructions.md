@@ -123,9 +123,9 @@ find . -name "*.json" -exec jsonlint -q {} \;
 
 ### TrueNAS iSCSI lifecycle hooks
 
-- Both dispatch commands are saved in `truenas/iscsi-kubernetes.sh`. Invoke it
-  with `'Scale Up'` or `'Scale Down'` and supply `GITHUB_TOKEN` through the
-  environment; never commit the token.
+- Both dispatch commands are saved in `truenas/iscsi-kubernetes.sh` for copying
+  individually into TrueNAS. Replace the token placeholder locally; never commit
+  the token or execute both commands together.
 - Keep the TrueNAS startup command at **POSTINIT**, not PREINIT (DNS may not yet
   work), and the shutdown command at **SHUTDOWN**. Both dispatch
   `.github/workflows/iscsi-kubernetes.yaml` on `main`.
