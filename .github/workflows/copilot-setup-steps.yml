@@ -80,12 +80,13 @@ jobs:
           sudo install -m 0755 "$workdir/truenas-mcp-linux-amd64" /usr/local/bin/truenas-mcp
           truenas-mcp --version
 
-      # Both configs come from the repository Actions secrets (rotated by
-      # rotate-cluster-credentials.yaml).
+      # Both configs are rotated by rotate-cluster-credentials.yaml.
       - name: Provision kubeconfig for kubernetes MCP server
+        env:
+          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_FILE }}
         run: |
           mkdir -p "$HOME/.kube"
-          echo "${{ secrets.KUBECONFIG_FILE }}" > "$HOME/.kube/config"
+          printf '%s\n' "$KUBECONFIG_CONTENT" > "$HOME/.kube/config"
           chmod 600 "$HOME/.kube/config"
           if ! kubectl config view --minify > /dev/null 2>&1; then
             echo "::error::KUBECONFIG_FILE secret is missing or not a valid kubeconfig"
@@ -94,12 +95,14 @@ jobs:
           kubectl cluster-info || echo "::warning::Cluster not reachable yet"
 
       - name: Provision talosconfig
+        env:
+          TALOSCONFIG_CONTENT: ${{ secrets.TALOSCONFIG_FILE }}
         run: |
           mkdir -p "$HOME/.talos"
-          echo "${{ secrets.TALOSCONFIG }}" > "$HOME/.talos/config"
+          printf '%s\n' "$TALOSCONFIG_CONTENT" > "$HOME/.talos/config"
           chmod 600 "$HOME/.talos/config"
           if ! talosctl config info > /dev/null 2>&1; then
-            echo "::error::TALOSCONFIG secret is missing or not a valid talosconfig"
+            echo "::error::TALOSCONFIG_FILE secret is missing or not a valid talosconfig"
             exit 1
           fi
 

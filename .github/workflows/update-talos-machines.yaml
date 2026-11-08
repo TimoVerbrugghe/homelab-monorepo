@@ -63,12 +63,13 @@ jobs:
           echo "Schematic ID: $SCHEMATIC_ID"
 
       - name: Setup Talos config
-        run: |
-          mkdir -p ~/.talos
-          echo "${{ secrets.TALOSCONFIG }}" > ~/.talos/config
-          chmod 600 ~/.talos/config
         env:
           TALOSCONFIG: ~/.talos/config
+          TALOSCONFIG_CONTENT: ${{ secrets.TALOSCONFIG_FILE }}
+        run: |
+          mkdir -p ~/.talos
+          printf '%s\n' "$TALOSCONFIG_CONTENT" > ~/.talos/config
+          chmod 600 ~/.talos/config
 
       - name: Install talosctl
         run: |
