@@ -162,6 +162,8 @@ service:
 # crowdsec-bouncer Middleware (kubernetes/traefik/middlewares/crowdsec-bouncer.yaml).
 # Requires the CrowdSec LAPI + agent to be deployed first (kubernetes/crowdsec/).
 experimental:
+  # Exit on plugin setup failure so Kubernetes retries instead of serving without Jellyfin's router.
+  abortOnPluginFailure: true
   plugins:
     crowdsec-bouncer:
       moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
