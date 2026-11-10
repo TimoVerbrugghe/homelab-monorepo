@@ -283,6 +283,14 @@ kubectl kustomize --enable-helm kubernetes/traefik/ | \
 kubectl apply -k kubernetes/traefik/middlewares/
 ```
 
+Traefik sets `experimental.abortOnPluginFailure: true`: if the CrowdSec plugin
+cannot be downloaded or loaded at startup, Traefik exits and Kubernetes restarts
+the container with backoff until startup succeeds. This prevents a healthy-looking
+Traefik pod from rejecting the Jellyfin router because its plugin is missing.
+The setting affects all ingress served by that replica, not just Jellyfin, and
+does not restart Traefik for subsequent CrowdSec LAPI outages. Cluster DNS is
+retained so the bouncer can resolve the internal CrowdSec service.
+
 ### Deploy other resources
 
 ```bash
