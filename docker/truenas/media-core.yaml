@@ -41,6 +41,11 @@ services:
       - dockerproxy
     environment:
       - TZ=Europe/Brussels
+      # Hostnames used by Traefik, Tailscale, local clients, and Docker integrations.
+      - >-
+        SONARR__SERVER__ALLOWEDHOSTS=sonarr.timo.be,sonarr.kubernetes.timo.be,
+        sonarr.pony-godzilla.ts.net,thefactory.local.timo.be,truenas.local.timo.be,
+        10.10.10.2,sonarr
     volumes:
       - sonarr:/config
       - tvshows:/tv
