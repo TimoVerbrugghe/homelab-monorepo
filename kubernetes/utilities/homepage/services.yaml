@@ -148,6 +148,9 @@
         href: https://subgen.timo.be
         namespace: mediaplayback
         app: subgen
+    - Watchstate:
+        icon: mdi-eye
+        href: https://watchstate.timo.be
 
 - Downloaders:
     - Qbittorrent:
