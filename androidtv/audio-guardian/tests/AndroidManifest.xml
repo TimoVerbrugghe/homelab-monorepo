@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="be.timo.audioguardian.setup">
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34" />
+    <application android:allowBackup="false" android:label="Audio Guardian Setup" />
+    <instrumentation
+        android:name="be.timo.audioguardian.SetupInstrumentation"
+        android:targetPackage="be.timo.audioguardian" />
+</manifest>

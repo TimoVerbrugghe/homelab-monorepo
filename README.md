@@ -64,6 +64,12 @@ Several services are not running in this cluster and remain on separate NixOS VM
   Plex & Jellyfin in the kubernetes cluster, I'm using iSCSI backed storage.
 - Services that I want HA and do need local storage (portainer, bitwarden, etc...) are running in the Yumi kubernetes node that is HA-enabled in proxmox & can be live migrated.
 
+## Android TV utilities
+
+[Audio Guardian](androidtv/audio-guardian/) is a TV-local Sony BRAVIA foreground
+service for automatically reselecting HDMI audio after speaker fallback, with boot
+startup, standby-aware monitoring, and on-TV pause/disable controls.
+
 ## Future Plans
 
 - Nothing right now. Feel free to suggest other things I might want to do in this setup!
