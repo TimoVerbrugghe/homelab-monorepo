@@ -19,7 +19,8 @@ sonarr:
         allowed: true
         until_quality: WEB 2160p
         until_score: 2500
-      min_format_score: 10
+      # Allow neutral releases; negative custom format scores remain blocked.
+      min_format_score: 0
       quality_sort: top
       qualities:
         - name: Bluray-2160p Remux
