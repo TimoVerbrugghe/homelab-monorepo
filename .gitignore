@@ -32,6 +32,6 @@ dhi-registry-secret.json
 .venv/**
 kubernetes/security-hardening-non-utilities-audit.md
 proxmox-jobs*
-/tmp/seerr-migration/
+/tmp/**
 flake.lock
 **/flake.lock
