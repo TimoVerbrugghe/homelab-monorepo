@@ -15,11 +15,9 @@ resources:
   - traefik-radarr.yaml
   - traefik-bazarr.yaml
   - traefik-prowlarr.yaml
-  - traefik-yamtrack.yaml
   - traefik-dispatcharr.yaml
-  - traefik-tautulli.yaml
-  - traefik-wrapperr.yaml
-  - traefik-obzorarr.yaml
+  - traefik-tracearr.yaml
+  - traefik-rewindarr.yaml
   - traefik-houndarr.yaml
   - traefik-watchstate.yaml
   - traefik-epicgames-freegames.yaml

@@ -118,20 +118,16 @@
             type: prowlarr
             url: http://thefactory.local.timo.be:14004
             key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
-    - Tautulli:
-        icon: tautulli.svg
-        href: https://tautulli.timo.be
+    - Tracearr:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/tracearr.svg
+        href: https://tracearr.timo.be
         server: thefactory
-        container: tautulli
-        widget:
-            type: tautulli
-            url: http://thefactory.local.timo.be:14009
-            key: "{{HOMEPAGE_VAR_TAUTULLI_KEY}}"
-    - Yamtrack:
-        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/yamtrack.svg
-        href: https://yamtrack.timo.be
+        container: tracearr
+    - Rewindarr:
+        icon: mdi-rewind
+        href: https://rewindarr.timo.be
         server: thefactory
-        container: yamtrack
+        container: rewindarr
     - Audiobookshelf:
         icon: audiobookshelf.svg
         href: https://audiobookshelf.timo.be
@@ -142,16 +138,6 @@
         href: https://dispatcharr.timo.be
         server: thefactory
         container: dispatcharr
-    - Wrapperr:
-        icon: https://raw.githubusercontent.com/aunefyren/wrapperr/main/web/assets/logos/logo.svg
-        href: https://wrapperr.timo.be
-        server: thefactory
-        container: wrapperr
-    - Obzorarr:
-        icon: https://github.com/engels74/obzorarr/raw/main/src/lib/assets/obzorarr-icon.svg
-        href: https://obzorarr.timo.be
-        server: thefactory
-        container: obzorarr
     - Tunarr:
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/tunarr.webp
         href: https://tunarr.timo.be

@@ -1,0 +1,84 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/instance: tracearr
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: tracearr
+    app.kubernetes.io/part-of: homelab
+    app.kubernetes.io/version: "1"
+  name: tracearr
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  ingressClassName: traefik
+  routes:
+    # Integration APIs bypass SSO but require Authorization: Bearer <API key>.
+    - kind: Rule
+      match: >-
+        (Host(`tracearr.kubernetes.timo.be`) || Host(`tracearr.timo.be`)) &&
+        (PathPrefix(`/api/v1/public/`) || PathPrefix(`/api/v2/public/`))
+      priority: 100
+      services:
+        - name: tracearr-svc
+          port: 14015
+    # Anyone with a complete image URL can fetch artwork without authentication.
+    - kind: Rule
+      match: >-
+        (Host(`tracearr.kubernetes.timo.be`) || Host(`tracearr.timo.be`)) &&
+        Path(`/api/v1/images/proxy`) && (Method(`GET`) || Method(`HEAD`))
+      priority: 100
+      services:
+        - name: tracearr-svc
+          port: 14015
+    - kind: Rule
+      match: Host(`tracearr.kubernetes.timo.be`) || Host(`tracearr.timo.be`)
+      middlewares:
+        - name: auth
+          namespace: traefik
+      priority: 10
+      services:
+        - name: tracearr-svc
+          port: 14015
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/instance: tracearr
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: tracearr
+    app.kubernetes.io/part-of: homelab
+    app.kubernetes.io/version: "1"
+  name: tracearr-svc
+  namespace: traefik
+spec:
+  clusterIP: None
+  ports:
+    - port: 14015
+      targetPort: 14015
+---
+addressType: IPv4
+apiVersion: discovery.k8s.io/v1
+endpoints:
+  - addresses:
+      - "10.10.10.2"
+    conditions:
+      ready: true
+kind: EndpointSlice
+metadata:
+  labels:
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/instance: tracearr
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: tracearr
+    app.kubernetes.io/part-of: homelab
+    app.kubernetes.io/version: "1"
+    kubernetes.io/service-name: tracearr-svc
+  name: tracearr-svc-1
+  namespace: traefik
+ports:
+  - port: 14015

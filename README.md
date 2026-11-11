@@ -70,6 +70,10 @@ Several services are not running in this cluster and remain on separate NixOS VM
 service for automatically reselecting HDMI audio after speaker fallback, with boot
 startup, standby-aware monitoring, and on-TV pause/disable controls.
 
+## Media History
+
+Tracearr records Plex and Jellyfin playback, and Rewindarr provides yearly recaps.
+
 ## Future Plans
 
 - Nothing right now. Feel free to suggest other things I might want to do in this setup!
