@@ -210,10 +210,6 @@
             url: https://unifi.local.timo.be
             username: "{{HOMEPAGE_VAR_UNIFI_USERNAME}}"
             password: "{{HOMEPAGE_VAR_UNIFI_PASSWORD}}"
-    - UniFi UPS 2U Pro:
-        icon: mdi:battery-charging
-        description: "10.10.10.17"
-        href: https://unifi.ui.com
     - Adguardhome (Odd):
         icon: adguard-home.svg
         description: "10.10.10.22"
