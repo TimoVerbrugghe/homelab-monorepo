@@ -12,11 +12,6 @@ x-hardening-defaults: &hardening-defaults
       max-size: "50m"
       max-file: "5"
 
-x-limits-light: &limits-light
-  pids_limit: 512
-  mem_limit: 512m
-  cpus: 0.50
-
 x-limits-medium: &limits-medium
   pids_limit: 512
   mem_limit: 1g
@@ -187,34 +182,6 @@ services:
     ports:
       - 14007:80
 
-  tautulli:
-    <<: [*hardening-defaults, *limits-light]
-    container_name: tautulli
-    image: tautulli/tautulli:latest
-    cap_add:
-      - CHOWN
-      - FOWNER
-      - DAC_OVERRIDE
-      - SETUID
-      - SETGID
-    restart: unless-stopped
-    networks:
-      - dockerproxy
-    environment:
-      - PUID=${PUID:-3000}
-      - PGID=${PGID:-3000}
-      - TZ=Europe/Brussels
-    volumes:
-      - tautulli:/config
-    healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:8181 || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 60s
-    ports:
-      - 14009:8181
-
 networks:
   dockerproxy:
     external: true
@@ -280,12 +247,6 @@ volumes:
       type: "none"
       o: "bind"
       device: "/mnt/FranzHopper/appdata/sonarr"
-  tautulli:
-    driver: local
-    driver_opts:
-      type: "none"
-      o: "bind"
-      device: "/mnt/FranzHopper/appdata/tautulli"
   tvshows:
     driver: local
     driver_opts:

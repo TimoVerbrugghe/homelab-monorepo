@@ -1,0 +1,67 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/instance: rewindarr
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: rewindarr
+    app.kubernetes.io/part-of: homelab
+    app.kubernetes.io/version: "1"
+  name: rewindarr
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  ingressClassName: traefik
+  routes:
+    - kind: Rule
+      match: >-
+        Host(`rewindarr.kubernetes.timo.be`) || Host(`rewindarr.timo.be`) ||
+        Host(`wrapped.timo.be`)
+      middlewares:
+        - name: auth
+          namespace: traefik
+      services:
+        - name: rewindarr-svc
+          port: 14016
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/instance: rewindarr
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: rewindarr
+    app.kubernetes.io/part-of: homelab
+    app.kubernetes.io/version: "1"
+  name: rewindarr-svc
+  namespace: traefik
+spec:
+  clusterIP: None
+  ports:
+    - port: 14016
+      targetPort: 14016
+---
+addressType: IPv4
+apiVersion: discovery.k8s.io/v1
+endpoints:
+  - addresses:
+      - "10.10.10.2"
+    conditions:
+      ready: true
+kind: EndpointSlice
+metadata:
+  labels:
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/instance: rewindarr
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: rewindarr
+    app.kubernetes.io/part-of: homelab
+    app.kubernetes.io/version: "1"
+    kubernetes.io/service-name: rewindarr-svc
+  name: rewindarr-svc-1
+  namespace: traefik
+ports:
+  - port: 14016

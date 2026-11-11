@@ -1,0 +1,191 @@
+x-hardening-defaults: &hardening-defaults
+  cap_drop:
+    - ALL
+  logging:
+    driver: json-file
+    options:
+      max-file: "5"
+      max-size: "50m"
+  read_only: true
+  security_opt:
+    - no-new-privileges=true
+  stdin_open: false
+  tty: false
+
+x-limits-medium: &limits-medium
+  cpus: 1.00
+  mem_limit: 1g
+  pids_limit: 512
+
+services:
+  # Native backups: daily 03:30 Europe/Brussels, seven retained; also back up off-host.
+  # Private migration archive: /mnt/FranzHopper/appdata/tracearr/archive/2026-11-11/
+  # It contains credentials, provenance and excluded bulk marks; retain source data.
+  tracearr:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: tracearr
+    depends_on:
+      tracearr-db:
+        condition: service_healthy
+      tracearr-redis:
+        condition: service_healthy
+    environment:
+      COOKIE_SECRET: ${TRACEARR_COOKIE_SECRET:?Set TRACEARR_COOKIE_SECRET}
+      CORS_ORIGIN: https://tracearr.timo.be,https://tracearr.kubernetes.timo.be
+      DATABASE_URL: postgres://tracearr:${TRACEARR_DB_PASSWORD:?Set TRACEARR_DB_PASSWORD}@tracearr-db:5432/tracearr
+      HOST: 0.0.0.0
+      JWT_SECRET: ${TRACEARR_JWT_SECRET:?Set TRACEARR_JWT_SECRET}
+      NODE_ENV: production
+      REDIS_URL: redis://tracearr-redis:6379
+      TRUST_PROXY: "true"
+      TZ: Europe/Brussels
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 120s
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/health"]
+      timeout: 10s
+    image: ghcr.io/connorgallopo/tracearr:latest
+    networks:
+      - dockerproxy
+      - history
+    ports:
+      - "14015:3000"
+    restart: unless-stopped
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=512m,uid=1001,gid=1001
+    user: "1001:1001"
+    volumes:
+      - tracearr-backups:/data/backup
+      - tracearr-images:/data/tracearr/image-cache
+
+  tracearr-db:
+    <<: [*hardening-defaults, *limits-medium]
+    # Keep the database major/extension version stable; upgrade with a verified backup.
+    image: timescale/timescaledb-ha:pg18.4-ts2.29.1
+    command:
+      - postgres
+      - -c
+      - timescaledb.license=timescale
+      - -c
+      - timescaledb.max_tuples_decompressed_per_dml_transaction=100000
+      - -c
+      - max_locks_per_transaction=4096
+      - -c
+      - timescaledb.telemetry_level=off
+      - -c
+      - max_connections=150
+    container_name: tracearr-db
+    environment:
+      POSTGRES_DB: tracearr
+      POSTGRES_PASSWORD: ${TRACEARR_DB_PASSWORD:?Set TRACEARR_DB_PASSWORD}
+      POSTGRES_USER: tracearr
+      TZ: Europe/Brussels
+    healthcheck:
+      interval: 10s
+      retries: 10
+      test: ["CMD", "pg_isready", "-U", "tracearr", "-d", "tracearr"]
+      timeout: 5s
+    mem_limit: 2g
+    networks:
+      - history
+    restart: unless-stopped
+    shm_size: 512m
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=256m,uid=1000,gid=1000
+      - /var/run/postgresql:rw,noexec,nosuid,nodev,size=16m,uid=1000,gid=1000
+    ulimits:
+      nofile:
+        hard: 65536
+        soft: 65536
+    user: "1000:1000"
+    volumes:
+      - tracearr-db:/home/postgres/pgdata/data
+
+  tracearr-redis:
+    <<: [*hardening-defaults, *limits-medium]
+    command: ["redis-server", "--appendonly", "yes"]
+    container_name: tracearr-redis
+    healthcheck:
+      interval: 10s
+      retries: 5
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 5s
+    image: redis:8-alpine
+    mem_limit: 256m
+    networks:
+      - history
+    restart: unless-stopped
+    user: "999:999"
+    volumes:
+      - tracearr-redis:/data
+
+  # Rewindarr selects Jellyfin in Tracearr: migrated Plex history is included,
+  # but future Plex plays are not. Some historical durations are estimates.
+  # Back up /app/config; play-history.json.gz is a rebuildable cache.
+  rewindarr:
+    <<: [*hardening-defaults, *limits-medium]
+    container_name: rewindarr
+    environment:
+      NEXT_PUBLIC_SITE_URL: https://rewindarr.timo.be
+      TZ: Europe/Brussels
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8383/api/health"]
+      timeout: 5s
+    image: ghcr.io/raunot/rewindarr:latest
+    networks:
+      - dockerproxy
+    ports:
+      - "14016:8383"
+    restart: unless-stopped
+    tmpfs:
+      - /app/.next/cache:rw,noexec,nosuid,nodev,size=256m,uid=1000,gid=1000
+      - /tmp:rw,noexec,nosuid,nodev,size=256m,uid=1000,gid=1000
+    user: "1000:1000"
+    # Create bind directories before deployment, mode 0700:
+    # rewindarr 1000:1000; tracearr database 1000:1000, redis 999:999,
+    # backups/images 1001:1001; private archive root:root.
+    volumes:
+      - rewindarr:/app/config
+
+networks:
+  dockerproxy:
+    external: true
+  history:
+    driver: bridge
+    internal: true
+
+volumes:
+  rewindarr:
+    driver: local
+    driver_opts:
+      device: /mnt/FranzHopper/appdata/rewindarr
+      o: bind
+      type: none
+  tracearr-backups:
+    driver: local
+    driver_opts:
+      device: /mnt/FranzHopper/appdata/tracearr/backups
+      o: bind
+      type: none
+  tracearr-db:
+    driver: local
+    driver_opts:
+      device: /mnt/FranzHopper/appdata/tracearr/database
+      o: bind
+      type: none
+  tracearr-images:
+    driver: local
+    driver_opts:
+      device: /mnt/FranzHopper/appdata/tracearr/images
+      o: bind
+      type: none
+  tracearr-redis:
+    driver: local
+    driver_opts:
+      device: /mnt/FranzHopper/appdata/tracearr/redis
+      o: bind
+      type: none

@@ -143,15 +143,24 @@ endpoints:
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
-  - name: "Tautulli"
-    url: "http://thefactory.local.timo.be:14009"
+  - name: "Tracearr"
+    url: "http://thefactory.local.timo.be:14015/health"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].status == ok"
+      - "[BODY].mode == ready"
+      - "[BODY].db == true"
+      - "[BODY].redis == true"
 
-  - name: "Yamtrack"
-    url: "http://thefactory.local.timo.be:14006"
+  - name: "Rewindarr"
+    url: "http://thefactory.local.timo.be:14016/api/health"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].status == ok"
 
   - name: "Audiobookshelf"
     url: "http://thefactory.local.timo.be:14007"
@@ -160,16 +169,6 @@ endpoints:
 
   - name: "Dispatcharr"
     url: "http://thefactory.local.timo.be:14008"
-    group: Media
-    <<: [*defaults-http, *defaults-alerts]
-
-  - name: "Wrapperr"
-    url: "http://thefactory.local.timo.be:14010"
-    group: Media
-    <<: [*defaults-http, *defaults-alerts]
-
-  - name: "Obzorarr"
-    url: "http://thefactory.local.timo.be:14011"
     group: Media
     <<: [*defaults-http, *defaults-alerts]
 
