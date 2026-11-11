@@ -73,9 +73,6 @@
             enableBlocks: true
             enableNowPlaying: true
             version: 2
-    - Watchstate:
-        icon: mdi-eye
-        href: https://watchstate.timo.be
     - Overseerr:
         icon: overseerr.svg
         href: https://request.timo.be
@@ -151,6 +148,9 @@
         href: https://subgen.timo.be
         namespace: mediaplayback
         app: subgen
+    - Watchstate:
+        icon: mdi-eye
+        href: https://watchstate.timo.be
 
 - Downloaders:
     - Qbittorrent:
