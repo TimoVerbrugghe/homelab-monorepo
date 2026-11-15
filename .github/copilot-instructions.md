@@ -425,7 +425,7 @@ labels:
 ## Documentation
 
 - Architecture diagram: `diagrams/homelab.drawio` (auto-exported to PNG)
-- Internal IPs reference: `internal_ips.md`
+- Internal IPs reference: `network/ip-mapping.md`
 - Per-service notes: `kubernetes/README.md`
 - Steam Deck setup: `steamdeck/`
 - Home Assistant scripts: `homeassistant/scripts/README.md`
@@ -452,7 +452,7 @@ When you change a file in column A, you must also review/update the files in col
 | Add a new Docker Compose stack | Companion `.env.template`; the `Common Change Tasks` -> `Adding a Docker Compose Service` section in this file |
 | `.github/workflows/*.yaml` (new workflow) | `README.md` GitHub Workflows Status badge section; the `CI Workflows Summary` section in this file; `update-badges.yaml` if badge count changes |
 | `.github/workflows/update-badges.yaml` | `README.md` badge section (auto-generated, but verify count patterns still match) |
-| `internal_ips.md` | Kubernetes manifests or Docker Compose files that reference those IPs by hostname/IP |
+| `network/ip-mapping.md` | Kubernetes manifests or Docker Compose files that reference those IPs by hostname/IP |
 | `.vscode/mcp.json` | `README.md` MCP Servers section; `.github/mcp.json` (cloud agent equivalent) if servers were added/removed/renamed |
 | `.github/mcp.json` | `.github/workflows/copilot-setup-steps.yml` (tool installs/auth needed by any new server); required `COPILOT_MCP_*` Agents secrets documented in the file's header comment |
 | `recyclarr/recyclarr.yaml` | `recyclarr/secrets.yaml.template` (if new secret keys are referenced) |
