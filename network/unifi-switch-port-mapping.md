@@ -1,7 +1,5 @@
 # UniFi Switch Port Mapping
 
-Patch panel to switch mapping for the rack after the move to the **UniFi Switch Enterprise 24 PoE** (USW-Enterprise-24-PoE).
-
 ## Switch overview
 
 - **Ports 1–12:** 1 GbE RJ45, PoE+
@@ -53,8 +51,3 @@ Patch panel position N connects to switch port N (positions 6–22).
 ## Uplink
 
 - Switch **SFP+ 2** to Dream Machine SE **SFP+ LAN** with a 10G DAC cable.
-
-## Notes
-
-- Living (16) was placed by elimination during the rewire. Verify in the UniFi controller that port 16 is the living room, and that Living AP is on port 6 and 1st Floor AP on port 7.
-- Ports 1–5 have no keystone above them but are usable with a longer patch cable.
