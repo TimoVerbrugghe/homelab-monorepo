@@ -13,7 +13,7 @@
         "--yes",
         "--package=mcp-remote@0.15.2",
         "mcp-remote",
-        "https://themarr.kubernetes.timo.be/mcp",
+        "https://themarr.timo.be/mcp",
         "--transport",
         "http-only",
         "--header",
@@ -157,7 +157,7 @@
         "truenas-mcp"
       ],
       "env": {
-        "TRUENAS_URL": "wss://truenas.local.timo.be/api/current"
+        "TRUENAS_URL": "wss://truenas.timo.be/api/current"
       },
       "tools": ["*"]
     },
