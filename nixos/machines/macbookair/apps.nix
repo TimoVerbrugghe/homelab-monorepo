@@ -65,7 +65,6 @@
       "handbrake-app"
       "visual-studio-code"
       "spotify"
-      "gimp"
       "google-chrome"
       "monitorcontrol"
       "moonlight"
