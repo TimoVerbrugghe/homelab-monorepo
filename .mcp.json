@@ -1,5 +1,22 @@
 {
   "mcpServers": {
+    "bitwarden": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=dotenv-cli",
+        "dotenv",
+        "-e",
+        "./mcp-secrets.env",
+        "--",
+        "npx",
+        "--yes",
+        "--package=@bitwarden/cli",
+        "--package=@bitwarden/mcp-server",
+        "mcp-server-bitwarden"
+      ],
+      "tools": ["*"]
+    },
     "themarr": {
       "command": "npx",
       "args": [

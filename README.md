@@ -74,6 +74,27 @@ startup, standby-aware monitoring, and on-TV pause/disable controls.
 
 Tracearr records Plex and Jellyfin playback, and Rewindarr provides yearly recaps.
 
+## MCP Servers
+
+The local Bitwarden MCP server uses the Bitwarden CLI to access Vaultwarden.
+Its CLI and server packages are downloaded by `npx`; Node.js 22+ is
+required. Configure and log in to the CLI locally before connecting:
+
+```bash
+npx --yes --package=@bitwarden/cli bw config server https://bitwarden.timo.be
+npx --yes --package=@bitwarden/cli bw login
+```
+
+The MCP server must run as the same user and use the same CLI data directory.
+Put the session key from
+`npx --yes --package=@bitwarden/cli bw unlock --raw` in the ignored
+`mcp-secrets.env` as `BW_SESSION` and protect the file
+(`chmod 600 mcp-secrets.env`). Never share the key. Alternatively, use the
+MCP server's interactive unlock tool when a desktop session is available.
+The AI client can read and modify vault contents; run the server locally only,
+not as a cloud coding agent. Vaultwarden does not fully support the organization
+administration API.
+
 ## Future Plans
 
 - Nothing right now. Feel free to suggest other things I might want to do in this setup!
