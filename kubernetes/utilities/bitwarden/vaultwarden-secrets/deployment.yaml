@@ -1,0 +1,170 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden-secrets
+  namespace: utilities
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vaultwarden-secrets
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vaultwarden-secrets
+    spec:
+      initContainers:
+        - name: init-data
+          # The upstream image runs mkdir before writing its config and SQLite data.
+          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets:2.2.0
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - |
+              if [ -z "$VAULTWARDEN__FOLDERID" ]; then
+                echo "VAULTWARDEN__FOLDERID must not be empty" >&2
+                exit 1
+              fi
+              mkdir -p /data/home/.config
+          env:
+            - name: VAULTWARDEN__FOLDERID
+              valueFrom:
+                secretKeyRef:
+                  key: VAULTWARDEN__FOLDERID
+                  name: vaultwarden-secrets-bootstrap
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      containers:
+        - name: sync
+          command: ["dotnet", "VaultwardenK8sSync.dll", "sync"]
+          env:
+            - name: DATABASE_PATH
+              value: /data/sync.db
+            - name: HOME
+              value: /data/home
+            - name: KUBERNETES__DEFAULTNAMESPACE
+              value: mediaplayback
+            - name: KUBERNETES__INCLUSTER
+              value: "true"
+            # No API or dashboard is deployed; skip their unused auth-token bootstrap.
+            - name: LOGINLESS_MODE
+              value: "true"
+            - name: LOG_LEVEL
+              value: Information
+            - name: METRICS__ENABLED
+              value: "true"
+            - name: METRICS__PORT
+              value: "9090"
+            - name: SYNC__CONTEXTNAME
+              value: sectorfive
+            - name: SYNC__CONTINUOUSSYNC
+              value: "true"
+            - name: SYNC__DELETEORPHANS
+              value: "false"
+            - name: SYNC__DRYRUN
+              value: "false"
+            - name: SYNC__SYNCINTERVALSECONDS
+              value: "300"
+            - name: VAULTWARDEN__SERVERURL
+              value: https://bitwarden.timo.be
+            - name: XDG_CONFIG_HOME
+              value: /data/home/.config
+            - name: BW_CLIENTID
+              valueFrom:
+                secretKeyRef:
+                  key: BW_CLIENTID
+                  name: vaultwarden-secrets-bootstrap
+            - name: BW_CLIENTSECRET
+              valueFrom:
+                secretKeyRef:
+                  key: BW_CLIENTSECRET
+                  name: vaultwarden-secrets-bootstrap
+            - name: VAULTWARDEN__MASTERPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: VAULTWARDEN__MASTERPASSWORD
+                  name: vaultwarden-secrets-bootstrap
+            - name: VAULTWARDEN__FOLDERID
+              valueFrom:
+                secretKeyRef:
+                  key: VAULTWARDEN__FOLDERID
+                  name: vaultwarden-secrets-bootstrap
+          # Hold the pilot on the reviewed release until live migration is verified.
+          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets:2.2.0
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 30
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 9090
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: metrics
+            periodSeconds: 30
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+            timeoutSeconds: 5
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /tmp
+              name: tmp
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: vaultwarden-secrets
+      volumes:
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 128Mi
+          name: data
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
+          name: tmp
