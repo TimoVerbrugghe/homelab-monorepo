@@ -77,23 +77,22 @@ Tracearr records Plex and Jellyfin playback, and Rewindarr provides yearly recap
 ## MCP Servers
 
 The local Bitwarden MCP server uses the Bitwarden CLI to access Vaultwarden.
-Its CLI and server packages are downloaded by `npx`; Node.js 22+ is
-required. Configure and log in to the CLI locally before connecting:
+Node.js 22+ and the Bitwarden CLI on `PATH` are required; the MCP server is
+downloaded by `npx`. Install the CLI (for example, `brew install
+bitwarden-cli` on macOS), then configure and log in locally:
 
 ```bash
-npx --yes --package=@bitwarden/cli bw config server https://bitwarden.timo.be
-npx --yes --package=@bitwarden/cli bw login
+bw config server https://bitwarden.timo.be
+bw login
 ```
 
 The MCP server must run as the same user and use the same CLI data directory.
-Put the session key from
-`npx --yes --package=@bitwarden/cli bw unlock --raw` in the ignored
-`mcp-secrets.env` as `BW_SESSION` and protect the file
-(`chmod 600 mcp-secrets.env`). Never share the key. Alternatively, use the
-MCP server's interactive unlock tool when a desktop session is available.
-The AI client can read and modify vault contents; run the server locally only,
-not as a cloud coding agent. Vaultwarden does not fully support the organization
-administration API.
+After connecting the MCP server, ask the assistant to use the `unlock` tool
+and enter the master password in the native password dialog. The session key
+is kept in the server process, not in `mcp-secrets.env`. If the server restarts
+or the session becomes invalid, unlock again. The AI client can read and modify
+vault contents; run the server locally only, not as a cloud coding agent.
+Vaultwarden does not fully support the organization administration API.
 
 ## Future Plans
 
