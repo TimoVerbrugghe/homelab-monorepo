@@ -34,6 +34,7 @@ public final class GuardianService extends Service {
     private HandlerThread thread;
     private Handler worker;
     private RecoveryPolicy policy;
+    private AuthorizationRecovery.Store authorizationStore;
     private volatile boolean destroyed;
     private volatile long checks;
     private volatile long recoveries;
@@ -82,6 +83,20 @@ public final class GuardianService extends Service {
     public void onCreate() {
         super.onCreate();
         preferences = getSharedPreferences("guardian", MODE_PRIVATE);
+        authorizationStore = new AuthorizationRecovery.Store() {
+            @Override
+            public int state() {
+                return preferences.getInt("renewal_state", AuthorizationRecovery.READY);
+            }
+
+            @Override
+            public void save(int state) throws IOException {
+                if (!preferences.edit().putInt("renewal_state", state)
+                        .commit()) {
+                    throw new IOException("Unable to save authorization recovery state");
+                }
+            }
+        };
         sony = new SonyClient(this);
         power = getSystemService(PowerManager.class);
         audio = getSystemService(AudioManager.class);
@@ -144,6 +159,11 @@ public final class GuardianService extends Service {
             schedule();
             return;
         }
+        if (authorizationStore.state() == AuthorizationRecovery.BLOCKED) {
+            status("ERROR: Sony pairing required; pair again using the setup helper");
+            schedule();
+            return;
+        }
         boolean writeAttempted = false;
         try {
             checks++;
@@ -184,6 +204,9 @@ public final class GuardianService extends Service {
                     status("Recovery requested: selecting audio system");
                     sony.selectAudioSystem();
                     policy.accepted(SystemClock.elapsedRealtime());
+                    if (authorizationStore.state() != AuthorizationRecovery.READY) {
+                        authorizationStore.save(AuthorizationRecovery.READY);
+                    }
                     status("Verifying audio-system selection and ARC availability");
                     break;
                 case RECOVERED:
@@ -206,7 +229,24 @@ public final class GuardianService extends Service {
             if (writeAttempted) {
                 policy.failed(SystemClock.elapsedRealtime());
             }
-            status("ERROR: Sony pairing required; disable and pair again");
+            if (destroyed || !power.isInteractive()
+                    || !preferences.getBoolean("enabled", false)
+                    || System.currentTimeMillis()
+                            < preferences.getLong("paused_until", 0)) {
+                policy.reset();
+            } else {
+                try {
+                    AuthorizationRecovery.Result result = AuthorizationRecovery.renew(
+                            authorizationStore, sony::renewRegistration);
+                    if (result == AuthorizationRecovery.Result.RENEWED) {
+                        status("Sony registration renewed; verifying on next recovery");
+                    } else {
+                        status("ERROR: Sony pairing required; pair again using the setup helper");
+                    }
+                } catch (IOException renewalError) {
+                    status("ERROR: Sony registration renewal: " + renewalError.getMessage());
+                }
+            }
         } catch (IOException error) {
             if (writeAttempted) {
                 policy.failed(SystemClock.elapsedRealtime());
