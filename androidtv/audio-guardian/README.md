@@ -24,12 +24,19 @@ configuration; its build uses the Android SDK directly without Gradle dependenci
 - After an accepted write, suppress further writes for 5 seconds and require a
   1-second stable healthy state before declaring success. This prevents a transient
   healthy reading during HDMI renegotiation from triggering overlapping recoveries.
-  Rejected writes always become eligible for retry 1 second after the failure,
-  without exponential backoff. Polling and API response time can add latency.
+  Writes rejected for reasons other than authorization become eligible for retry
+  1 second after the failure, without exponential backoff. Polling and API response
+  time can add latency.
   Accepted writes retain their 5-second settling window even if Sony subsequently
   reverts to speakers. HDMI handshaking itself can still delay audible recovery.
   Failures appear in the notification, app status, and bounded local diagnostic log.
 - Never change volume, eARC settings, inputs, or firmware.
+- If Sony rejects authorization, attempt to renew the existing registration once.
+  The renewed credential is confirmed on the next successful audio-system write.
+  If renewal fails, is interrupted, or the renewed credential is rejected,
+  stop automatic attempts and display an error; pair manually using the setup
+  helper. This limit persists across restarts to avoid repeated pairing prompts.
+  Sony may display a PIN prompt even during the automatic attempt.
 
 ARC availability and Sony's selected output are useful recovery signals, **not proof
 of audible playback**. A genuine spontaneous-dropout test remains necessary.
@@ -91,11 +98,11 @@ adb -s 10.10.10.185:5555 shell am start -n be.timo.audioguardian/.MainActivity
 ```
 
 Choose **Enable / resume recovery**. Pairing cookies stay only in the main app's
-private storage with backups disabled. No PIN or cookie is logged. If Sony revokes
-authorization, disable recovery and rerun pairing. Reinstall upgrades with `adb install -r`;
-uninstalling the main app deletes its pairing and settings. Sony's registered-device
-list may retain the Audio Guardian entry after uninstall; remove it from TV settings
-if no longer needed.
+private storage with backups disabled. No PIN or cookie is logged. If automatic
+renewal fails, rerun pairing and enable recovery. Reinstall upgrades with
+`adb install -r`; uninstalling the main app deletes its pairing and settings.
+Sony's registered-device list may retain the Audio Guardian entry after uninstall;
+remove it from TV settings if no longer needed.
 
 ## TV controls and diagnostics
 

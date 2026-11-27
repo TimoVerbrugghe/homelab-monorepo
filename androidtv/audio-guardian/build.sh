@@ -8,8 +8,11 @@ fi
 
 mkdir -p build/tests
 javac --release 8 -Xlint:all -Werror -d build/tests \
+  src/be/timo/audioguardian/AuthorizationRecovery.java \
   src/be/timo/audioguardian/RecoveryPolicy.java \
+  tests/be/timo/audioguardian/AuthorizationRecoveryTest.java \
   tests/be/timo/audioguardian/RecoveryPolicyTest.java
+java -cp build/tests be.timo.audioguardian.AuthorizationRecoveryTest
 java -cp build/tests be.timo.audioguardian.RecoveryPolicyTest
 if [[ "${1:-}" == "test" ]]; then
   exit 0

@@ -64,6 +64,22 @@ final class SonyClient {
                 throw new IOException("Unable to save pairing identity");
             }
         }
+        register(clientId, pin);
+        if (!preferences.edit().putInt("renewal_state", AuthorizationRecovery.READY)
+                .commit()) {
+            throw new IOException("Unable to save pairing state");
+        }
+    }
+
+    void renewRegistration() throws IOException {
+        String clientId = preferences.getString("client_id", "");
+        if (clientId.isEmpty()) {
+            throw new IOException("Sony pairing identity is missing; pair again");
+        }
+        register(clientId, "0000");
+    }
+
+    private void register(String clientId, String pin) throws IOException {
         try {
             request("accessControl", "actRegister", new JSONArray()
                     .put(new JSONObject().put("clientid", clientId)
@@ -157,11 +173,11 @@ final class SonyClient {
         }
     }
 
-    static final class AuthorizationException extends IOException {
+    static final class AuthorizationException extends AuthorizationRecovery.AuthorizationException {
         private static final long serialVersionUID = 1L;
 
         AuthorizationException(int status) {
-            super("Sony authorization required (" + status + ")");
+            super(status);
         }
     }
 }
