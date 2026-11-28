@@ -29,13 +29,13 @@
 | 10.10.10.35   | Adguardhome (Kubernetes)                    |
 | 10.10.10.36   | Adguardhome (home assistant connection)     |
 | 10.10.10.37   | NetbootXYZ PXE Server                       |
-| 10.10.10.38   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.38   | Reserved for a future Kubernetes VIP        |
 | 10.10.10.39   | Plex (Kubernetes)                           |
 | 10.10.10.40   | Jellyfin (Kubernetes)                       |
 | 10.10.10.41   | Subgen                                      |
 | 10.10.10.42   | NS-USBloader                                |
 | 10.10.10.43   | Bootimus PXE Server                         |
-| 10.10.10.44   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.44   | Reserved for a future Kubernetes VIP        |
 | 10.10.10.45   | Living Camera                               |
 | 10.10.10.46   | G4 Doorbell Pro PoE                         |
 | 10.10.10.47   | Garden Camera                               |
