@@ -29,17 +29,17 @@
 | 10.10.10.35   | Adguardhome (Kubernetes)                    |
 | 10.10.10.36   | Adguardhome (home assistant connection)     |
 | 10.10.10.37   | NetbootXYZ PXE Server                       |
+| 10.10.10.38   | Reserved by kubevip for kubernetes cluster  |
 | 10.10.10.39   | Plex (Kubernetes)                           |
 | 10.10.10.40   | Jellyfin (Kubernetes)                       |
 | 10.10.10.41   | Subgen                                      |
 | 10.10.10.42   | NS-USBloader                                |
 | 10.10.10.43   | Bootimus PXE Server                         |
 | 10.10.10.44   | Reserved by kubevip for kubernetes cluster  |
-| 10.10.10.45   | Reserved by kubevip for kubernetes cluster  |
-| 10.10.10.46   | Reserved by kubevip for kubernetes cluster  |
-| 10.10.10.47   | Reserved by kubevip for kubernetes cluster  |
-| 10.10.10.48   | Reserved by kubevip for kubernetes cluster  |
-| 10.10.10.49   | Reserved by kubevip for kubernetes cluster  |
+| 10.10.10.45   | Living Camera                               |
+| 10.10.10.46   | G4 Doorbell Pro PoE                         |
+| 10.10.10.47   | Garden Camera                               |
+| 10.10.10.48   | Coffee Corner Camera                        |
 | 10.10.10.50   | Shelly Plug Freezer                         |
 | 10.10.10.52   | Shelly Plug Server Rack                     |
 | 10.10.10.53   | Shelly Plug Living Room 1                   |
