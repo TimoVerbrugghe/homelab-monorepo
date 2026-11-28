@@ -106,7 +106,10 @@
     "truenas": {
       "type": "local",
       "command": "/usr/local/bin/truenas-mcp",
-      "args": ["--allow-tools=system_info", "--debug"],
+      "args": [
+        "--allow-tools=analyze_capacity,check_updates,get_app_catalog_details,get_app_config,get_arc_metrics,get_current_boot_environment,get_directory_service_status,get_disk_metrics,get_network_metrics,get_pool_capacity_details,get_scrub_status,get_system_metrics,get_ups_metrics,list_alerts,list_directory_certificates,query_apps,query_boot_environments,query_datasets,query_directory_services,query_jobs,query_pools,query_replications,query_scrub_schedules,query_shares,query_snapshot_tasks,query_snapshots,query_vms,search_app_catalog,system_health,system_info,tasks_get,tasks_list,update_status",
+        "--debug"
+      ],
       "tools": ["*"],
       "env": {
         "TRUENAS_API_KEY": "$COPILOT_MCP_TRUENAS_API_KEY",
