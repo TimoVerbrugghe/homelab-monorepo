@@ -94,11 +94,6 @@ or the session becomes invalid, unlock again. The AI client can read and modify
 vault contents; run the server locally only, not as a cloud coding agent.
 Vaultwarden does not fully support the organization administration API.
 
-The local Proxmox MCP launcher stores its job database in the operating
-system's temporary directory, including on Windows. Temporary files can be
-removed by the OS, so job history is not guaranteed to survive cleanup.
-Restart the MCP server after changing its configuration.
-
 ## Future Plans
 
 - Nothing right now. Feel free to suggest other things I might want to do in this setup!

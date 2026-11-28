@@ -8,3 +8,4 @@ resources:
   - reflector
   - kube-vip
   - cert-manager
+  - secret-bootstrap

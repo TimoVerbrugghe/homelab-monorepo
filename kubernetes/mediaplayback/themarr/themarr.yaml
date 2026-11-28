@@ -56,22 +56,22 @@ spec:
         - name: API_KEY
           valueFrom:
             secretKeyRef:
-              name: themarr-private-secrets
+              name: themarr-secrets
               key: API_KEY
         - name: PLEX_TOKEN
           valueFrom:
             secretKeyRef:
               name: plex-token
-              key: api-key
+              key: token
         - name: JELLYFIN_API_KEY
           valueFrom:
             secretKeyRef:
-              name: themarr-private-secrets
+              name: themarr-secrets
               key: JELLYFIN_API_KEY
         - name: PUSHOVER_APP_TOKEN
           valueFrom:
             secretKeyRef:
-              name: themarr-private-secrets
+              name: themarr-secrets
               key: PUSHOVER_APP_TOKEN
         - name: PUSHOVER_USER_KEY
           valueFrom:

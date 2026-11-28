@@ -114,12 +114,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: plex-token
-                  key: api-key
+                  key: token
             - name: HOMEPAGE_VAR_ADGUARDHOME_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: adguardhome-password
-                  key: api-key
+                  key: password
             - name: HOMEPAGE_VAR_QBITTORRENT_USERNAME
               valueFrom:
                 secretKeyRef:

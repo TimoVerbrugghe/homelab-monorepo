@@ -9,7 +9,7 @@ Talos Linux is a secure, immutable, and minimal operating system designed specif
 `utilities/bitwarden/vaultwarden-secrets/` syncs Vaultwarden Logins into
 `shared-credentials`; Reflector copies them to allowed namespaces. See the
 [operating notes](utilities/bitwarden/vaultwarden-secrets/README.md) and
-[bootstrap recovery instructions](secret-bootstrap/README.md).
+[bootstrap recovery instructions](cluster-bootstrap/secret-bootstrap/README.md).
 
 ## Installing Talos Linux
 
@@ -207,13 +207,13 @@ alongside Traefik, and Traefik enforces its ban decisions via the
 on the `websecure` and `jellyfin` entrypoints. See the inline comments in
 `kubernetes/crowdsec/crowdsec-values.yaml`,
 `kubernetes/crowdsec/kustomization.yaml`, and
-`kubernetes/secret-bootstrap/crowdsec-secrets.env.template` for the full architecture,
+`kubernetes/cluster-bootstrap/secret-bootstrap/crowdsec-secrets.env.template` for the full architecture,
 the bouncer API key setup, and collections notes.
 
 > [!IMPORTANT]
 > Ensure `crowdsec-secrets` is reflected to `crowdsec` and `traefik` before
 > enabling the `crowdsec-bouncer` middleware. See
-> [bootstrap recovery instructions](secret-bootstrap/README.md) if needed.
+> [bootstrap recovery instructions](cluster-bootstrap/secret-bootstrap/README.md) if needed.
 
 ## Jellyfin external access (isolated entrypoint)
 
@@ -242,18 +242,13 @@ With Helm 4, use standalone `kustomize build --enable-helm` if
 
 ### Bootstrap cluster
 
+Restore the ignored inputs described in the
+[bootstrap recovery instructions](cluster-bootstrap/secret-bootstrap/README.md)
+first. Apply individual components for routine updates.
+
 ```bash
 kubectl kustomize --enable-helm kubernetes/cluster-bootstrap/ | \
   kubectl apply -f -
-```
-
-### Bootstrap or recover Secret sources
-
-Restore the protected inputs and follow the
-[bootstrap recovery instructions](secret-bootstrap/README.md) before applying:
-
-```bash
-kubectl apply -k kubernetes/secret-bootstrap/
 ```
 
 ### Generate certificates

@@ -69,27 +69,27 @@ spec:
         - name: AGENT_API_KEY
           valueFrom:
             secretKeyRef:
-              name: subgen-private-secrets
+              name: subgen-secrets
               key: AGENT_API_KEY
         - name: AZURE_SPEECH_KEY
           valueFrom:
             secretKeyRef:
-              name: subgen-private-secrets
+              name: subgen-secrets
               key: AZURE_SPEECH_KEY
         - name: AZURE_SPEECH_REGION
           valueFrom:
             secretKeyRef:
-              name: subgen-private-secrets
+              name: subgen-secrets
               key: AZURE_SPEECH_REGION
         - name: AZURE_STORAGE_CONNECTION_STRING
           valueFrom:
             secretKeyRef:
-              name: subgen-private-secrets
+              name: subgen-secrets
               key: AZURE_STORAGE_CONNECTION_STRING
         - name: AZURE_STORAGE_CONTAINER
           valueFrom:
             secretKeyRef:
-              name: subgen-private-secrets
+              name: subgen-secrets
               key: AZURE_STORAGE_CONTAINER
         - name: BAZARR_API_KEY
           valueFrom:
@@ -99,13 +99,13 @@ spec:
         - name: JELLYFIN_TOKEN
           valueFrom:
             secretKeyRef:
-              name: subgen-private-secrets
+              name: subgen-secrets
               key: JELLYFIN_TOKEN
         - name: PLEX_TOKEN
           valueFrom:
             secretKeyRef:
               name: plex-token
-              key: api-key
+              key: token
         - name: PUSHOVER_USER_KEY
           valueFrom:
             secretKeyRef:
@@ -114,7 +114,7 @@ spec:
         - name: PUSHOVER_API_TOKEN
           valueFrom:
             secretKeyRef:
-              name: subgen-private-secrets
+              name: subgen-secrets
               key: PUSHOVER_API_TOKEN
         ports:
           - containerPort: 9000

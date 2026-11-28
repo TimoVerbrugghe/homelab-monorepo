@@ -140,8 +140,8 @@
         "-e",
         "./mcp-secrets.env",
         "--",
-        "node",
-        "mcp/proxmox-launcher.cjs"
+        "uvx",
+        "proxmox-mcp-plus"
       ],
       "env": {
         "PROXMOX_HOST": "proxmox.kubernetes.timo.be",

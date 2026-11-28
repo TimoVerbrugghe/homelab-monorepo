@@ -77,7 +77,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: plex-token
-              key: api-key
+              key: token
         - name: TZ
           value: "Europe/Brussels"
         volumeMounts:
