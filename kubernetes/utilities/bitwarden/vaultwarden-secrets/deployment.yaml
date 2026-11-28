@@ -3,22 +3,32 @@ kind: Deployment
 metadata:
   name: vaultwarden-secrets
   namespace: utilities
+  labels:
+    app.kubernetes.io/instance: vaultwarden-secrets
+    app.kubernetes.io/name: vaultwarden-secrets
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
 spec:
   replicas: 1
   selector:
     matchLabels:
+      app.kubernetes.io/instance: vaultwarden-secrets
       app.kubernetes.io/name: vaultwarden-secrets
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
+        app.kubernetes.io/instance: vaultwarden-secrets
         app.kubernetes.io/name: vaultwarden-secrets
     spec:
       initContainers:
         - name: init-data
-          # The upstream image runs mkdir before writing its config and SQLite data.
-          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets:2.2.0
+          # The upstream chart's init container prepares this writable directory.
+          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets:latest
           imagePullPolicy: Always
           command:
             - sh
@@ -61,10 +71,10 @@ spec:
             - name: HOME
               value: /data/home
             - name: KUBERNETES__DEFAULTNAMESPACE
-              value: mediaplayback
+              value: shared-credentials
             - name: KUBERNETES__INCLUSTER
               value: "true"
-            # No API or dashboard is deployed; skip their unused auth-token bootstrap.
+            # The API uses a separately provisioned token, not the sync token bootstrap.
             - name: LOGINLESS_MODE
               value: "true"
             - name: LOG_LEVEL
@@ -107,8 +117,12 @@ spec:
                 secretKeyRef:
                   key: VAULTWARDEN__FOLDERID
                   name: vaultwarden-secrets-bootstrap
-          # Hold the pilot on the reviewed release until live migration is verified.
-          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets:2.2.0
+            - name: VAULTWARDEN__DEVICEID
+              valueFrom:
+                secretKeyRef:
+                  key: VAULTWARDEN__DEVICEID
+                  name: vaultwarden-secrets-bootstrap
+          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets:latest
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -144,6 +158,66 @@ spec:
               port: metrics
             periodSeconds: 10
             timeoutSeconds: 5
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /tmp
+              name: tmp
+        - name: api
+          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets-api:latest
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -ec
+            - |
+              if [ -z "$AuthToken" ]; then
+                echo "API authentication token must not be empty" >&2
+                exit 1
+              fi
+              exec dotnet VaultwardenK8sSync.Api.dll
+          env:
+            - name: AuthToken
+              valueFrom:
+                secretKeyRef:
+                  name: vaultwarden-secrets-bootstrap
+                  key: API_AUTH_TOKEN
+            - name: DatabasePath
+              value: /data/sync.db
+            - name: LoginlessMode
+              value: "false"
+          ports:
+            - containerPort: 8080
+              name: api
+          startupProbe:
+            httpGet:
+              path: /health
+              port: api
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: api
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: api
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
           stdin: false
           tty: false
           volumeMounts:

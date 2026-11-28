@@ -81,8 +81,8 @@ spec:
         - name: ORIGIN_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: adguardhome-sync-secrets
-              key: origin-password
+              name: adguardhome-password
+              key: api-key
         - name: REPLICA1_URL
           value: http://adguardhome-1.adguardhome.adguardhome.svc.cluster.local
         - name: REPLICA1_USERNAME
@@ -90,8 +90,8 @@ spec:
         - name: REPLICA1_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: adguardhome-sync-secrets
-              key: replica1-password
+              name: adguardhome-password
+              key: api-key
         - name: REPLICA2_URL
           value: http://adguardhome-2.adguardhome.adguardhome.svc.cluster.local
         - name: REPLICA2_USERNAME
@@ -99,8 +99,8 @@ spec:
         - name: REPLICA2_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: adguardhome-sync-secrets
-              key: replica2-password
+              name: adguardhome-password
+              key: api-key
         - name: REPLICA3_URL
           value: http://10.10.10.21
         - name: REPLICA3_USERNAME
@@ -108,8 +108,8 @@ spec:
         - name: REPLICA3_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: adguardhome-sync-secrets
-              key: replica1-password
+              name: adguardhome-password
+              key: api-key
         - name: REPLICA4_URL
           value: http://10.10.10.22
         - name: REPLICA4_USERNAME
@@ -117,8 +117,8 @@ spec:
         - name: REPLICA4_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: adguardhome-sync-secrets
-              key: replica2-password
+              name: adguardhome-password
+              key: api-key
         - name: CRON
           value: "*/1 * * * *" # run every 1 minute
         - name: RUN_ON_START

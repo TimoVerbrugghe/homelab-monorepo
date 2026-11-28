@@ -69,52 +69,52 @@ spec:
         - name: AGENT_API_KEY
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
+              name: subgen-private-secrets
               key: AGENT_API_KEY
         - name: AZURE_SPEECH_KEY
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
+              name: subgen-private-secrets
               key: AZURE_SPEECH_KEY
         - name: AZURE_SPEECH_REGION
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
+              name: subgen-private-secrets
               key: AZURE_SPEECH_REGION
         - name: AZURE_STORAGE_CONNECTION_STRING
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
+              name: subgen-private-secrets
               key: AZURE_STORAGE_CONNECTION_STRING
         - name: AZURE_STORAGE_CONTAINER
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
+              name: subgen-private-secrets
               key: AZURE_STORAGE_CONTAINER
         - name: BAZARR_API_KEY
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
-              key: BAZARR_API_KEY
+              name: bazarr-api-key
+              key: api-key
         - name: JELLYFIN_TOKEN
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
+              name: subgen-private-secrets
               key: JELLYFIN_TOKEN
         - name: PLEX_TOKEN
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
-              key: PLEX_TOKEN
+              name: plex-token
+              key: api-key
         - name: PUSHOVER_USER_KEY
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
-              key: PUSHOVER_USER_KEY
+              name: pushover-user-key
+              key: api-key
         - name: PUSHOVER_API_TOKEN
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
+              name: subgen-private-secrets
               key: PUSHOVER_API_TOKEN
         ports:
           - containerPort: 9000

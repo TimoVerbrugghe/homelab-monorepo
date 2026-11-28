@@ -4,11 +4,12 @@
 This folder contains the configuration and resources for managing my personal homelab's Kubernetes cluster, which is deployed on Talos Linux.
 Talos Linux is a secure, immutable, and minimal operating system designed specifically for running Kubernetes.
 
-## Vaultwarden Secrets Pilot
+## Vaultwarden Secret Management
 
-`utilities/bitwarden/vaultwarden-secrets/` syncs Recyclarr's Secret from
-Vaultwarden using plain Kustomize, without Helm, CRDs, a dashboard, or persistent
-volumes. See the [operating notes](utilities/bitwarden/vaultwarden-secrets/README.md).
+`utilities/bitwarden/vaultwarden-secrets/` syncs Vaultwarden Logins into
+`shared-credentials`; Reflector copies them to allowed namespaces. See the
+[operating notes](utilities/bitwarden/vaultwarden-secrets/README.md) and
+[bootstrap recovery instructions](secret-bootstrap/README.md).
 
 ## Installing Talos Linux
 
@@ -206,13 +207,13 @@ alongside Traefik, and Traefik enforces its ban decisions via the
 on the `websecure` and `jellyfin` entrypoints. See the inline comments in
 `kubernetes/crowdsec/crowdsec-values.yaml`,
 `kubernetes/crowdsec/kustomization.yaml`, and
-`kubernetes/crowdsec/crowdsec-secrets.env.template` for the full architecture,
+`kubernetes/secret-bootstrap/crowdsec-secrets.env.template` for the full architecture,
 the bouncer API key setup, and collections notes.
 
 > [!IMPORTANT]
-> Deploy `kubernetes/crowdsec/` and create the bouncer secret **before** the
-> `crowdsec-bouncer` middleware is referenced on Traefik's `websecure`/`jellyfin`
-> entrypoints — see [Order of deployment](#order-of-deployment).
+> Ensure `crowdsec-secrets` is reflected to `crowdsec` and `traefik` before
+> enabling the `crowdsec-bouncer` middleware. See
+> [bootstrap recovery instructions](secret-bootstrap/README.md) if needed.
 
 ## Jellyfin external access (isolated entrypoint)
 
@@ -236,17 +237,23 @@ middlewares, so it keeps the same protections as `websecure`.
 
 ## Order of deployment
 
-### Secrets (cloudflare token, tailscale auth token, etc...)
-
-```bash
-kubectl apply -k kubernetes/secrets/
-```
+With Helm 4, use standalone `kustomize build --enable-helm` if
+`kubectl kustomize` fails on `helm version -c` (verified with Kustomize 5.8.1).
 
 ### Bootstrap cluster
 
 ```bash
 kubectl kustomize --enable-helm kubernetes/cluster-bootstrap/ | \
   kubectl apply -f -
+```
+
+### Bootstrap or recover Secret sources
+
+Restore the protected inputs and follow the
+[bootstrap recovery instructions](secret-bootstrap/README.md) before applying:
+
+```bash
+kubectl apply -k kubernetes/secret-bootstrap/
 ```
 
 ### Generate certificates
@@ -273,14 +280,14 @@ kubectl kustomize --enable-helm kubernetes/democratic-csi/ | \
 
 ### Deploy CrowdSec (after Traefik's namespace exists)
 
-`crowdsec-secrets` must be reflected into `traefik` before the
-`crowdsec-bouncer` middleware is referenced on Traefik's entrypoints, so the
-`traefik` namespace must exist first.
+The `crowdsec-secrets` source is in `shared-credentials` and is reflected to
+both `crowdsec` and `traefik`. Ensure those namespaces exist and the reflected
+Secrets are ready before the `crowdsec-bouncer` middleware is referenced on
+Traefik's entrypoints.
 
 ```bash
 kubectl apply -f kubernetes/traefik/traefik-namespace.yaml
 
-# populate kubernetes/crowdsec/crowdsec-secrets.env from crowdsec-secrets.env.template first, then:
 kubectl kustomize --enable-helm kubernetes/crowdsec/ | \
   kubectl apply -n crowdsec -f -
 

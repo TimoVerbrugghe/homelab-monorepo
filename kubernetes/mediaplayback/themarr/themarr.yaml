@@ -56,28 +56,28 @@ spec:
         - name: API_KEY
           valueFrom:
             secretKeyRef:
-              name: themarr-secrets
+              name: themarr-private-secrets
               key: API_KEY
         - name: PLEX_TOKEN
           valueFrom:
             secretKeyRef:
-              name: themarr-secrets
-              key: PLEX_TOKEN
+              name: plex-token
+              key: api-key
         - name: JELLYFIN_API_KEY
           valueFrom:
             secretKeyRef:
-              name: themarr-secrets
+              name: themarr-private-secrets
               key: JELLYFIN_API_KEY
         - name: PUSHOVER_APP_TOKEN
           valueFrom:
             secretKeyRef:
-              name: themarr-secrets
+              name: themarr-private-secrets
               key: PUSHOVER_APP_TOKEN
         - name: PUSHOVER_USER_KEY
           valueFrom:
             secretKeyRef:
-              name: themarr-secrets
-              key: PUSHOVER_USER_KEY
+              name: pushover-user-key
+              key: api-key
         ports:
         - name: http
           containerPort: 8080

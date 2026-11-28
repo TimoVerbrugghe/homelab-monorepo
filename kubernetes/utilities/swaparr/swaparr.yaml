@@ -46,8 +46,8 @@ spec:
             - name: APIKEY
               valueFrom:
                 secretKeyRef:
-                  name: swaparr-secrets
-                  key: RADARR_API_KEY
+                  name: radarr-api-key
+                  key: api-key
             - name: PLATFORM
               value: "radarr"
             - name: MAX_DOWNLOAD_TIME
@@ -120,8 +120,8 @@ spec:
             - name: APIKEY
               valueFrom:
                 secretKeyRef:
-                  name: swaparr-secrets
-                  key: SONARR_API_KEY
+                  name: sonarr-api-key
+                  key: api-key
             - name: MAX_DOWNLOAD_TIME
               value: "1d"
             - name: PLATFORM

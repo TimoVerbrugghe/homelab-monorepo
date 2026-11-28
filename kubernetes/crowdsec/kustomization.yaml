@@ -13,21 +13,6 @@ labels:
 resources:
   - namespace.yaml
 
-# The whole secret is reflected into traefik for the bouncer plugin's mounted key file.
-secretGenerator:
-  - name: crowdsec-secrets
-    envs:
-      - crowdsec-secrets.env
-    type: Opaque
-    options:
-      annotations:
-        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "traefik"
-
-generatorOptions:
-  disableNameSuffixHash: true
-
 # version is pinned: an unpinned chart can resolve to a different (and
 # potentially differently-behaving) release per machine/run depending on the
 # local Helm cache

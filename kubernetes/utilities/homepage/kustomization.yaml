@@ -21,17 +21,6 @@ configMapGenerator:
       labels:
         app.kubernetes.io/name: homepage
 
-# Secret with the necessary environment variables for homepage
-secretGenerator:
-  - name: homepage-secrets
-    namespace: utilities
-    envs:
-      - homepage-secrets.env
-    type: Opaque
-    options:
-      labels:
-        app.kubernetes.io/name: homepage
-
 generatorOptions:
   disableNameSuffixHash: true
 

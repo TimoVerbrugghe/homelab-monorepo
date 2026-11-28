@@ -95,9 +95,44 @@ spec:
             # Only putting log in stdout, not in a log file so that I can mount configmap without using subpath, which allows instant updating of configfiles
             - name: LOG_TARGETS
               value: stdout
+            - name: HOMEPAGE_VAR_RADARR_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: radarr-api-key
+                  key: api-key
+            - name: HOMEPAGE_VAR_SONARR_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sonarr-api-key
+                  key: api-key
+            - name: HOMEPAGE_VAR_BAZARR_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bazarr-api-key
+                  key: api-key
+            - name: HOMEPAGE_VAR_PLEX_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: plex-token
+                  key: api-key
+            - name: HOMEPAGE_VAR_ADGUARDHOME_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: adguardhome-password
+                  key: api-key
+            - name: HOMEPAGE_VAR_QBITTORRENT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: keel-qbittorrent-credential
+                  key: credential
+            - name: HOMEPAGE_VAR_QBITTORRENT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keel-qbittorrent-credential
+                  key: credential
           envFrom:
             - secretRef:
-                name: homepage-secrets
+                name: homepage-private-secrets
           volumeMounts:
             - mountPath: /app/config
               name: homepage-config

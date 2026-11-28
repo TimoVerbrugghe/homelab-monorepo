@@ -36,13 +36,13 @@ spec:
                 - name: PUSHOVER_USER_KEY
                   valueFrom:
                     secretKeyRef:
-                      name: pushover-secret
-                      key: user_key
+                      name: pushover-user-key
+                      key: api-key
                 - name: PUSHOVER_API_TOKEN
                   valueFrom:
                     secretKeyRef:
-                      name: pushover-secret
-                      key: api_token
+                      name: upgrade-notification-app-token
+                      key: api-key
               volumeMounts:
                 - name: talosconfig
                   mountPath: /talosconfig

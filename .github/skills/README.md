@@ -1,8 +1,12 @@
 # External Skills
 
-This folder vendors external skills that are synced automatically.
+This folder contains project skills and vendored external skills.
 
-## Managed skills
+## Project skills
+
+- `vaultwarden-kubernetes-secrets` for Kubernetes Secret migrations and deployments.
+
+## Managed external skills
 
 - `portainer-mcp-hygiene` from `https://raw.githubusercontent.com/portainer/portainer-mcp/main/skills/portainer-mcp-hygiene/SKILL.md`
 - `siderolabs` from `https://docs.siderolabs.com/skill.md`

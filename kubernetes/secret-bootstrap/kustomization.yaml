@@ -1,0 +1,77 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: shared-credentials
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+labels:
+  - includeSelectors: false
+    pairs:
+      app.kubernetes.io/part-of: homelab
+
+resources:
+  - namespace.yaml
+
+secretGenerator:
+  - name: cloudflare-token-secret
+    envs:
+      - cloudflare-token-secret.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "cert-manager,traefik,utilities"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager,traefik,utilities"
+  - name: cloudflare-tunnel-token-homelab
+    envs:
+      - cloudflare-tunnel-token-homelab.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "utilities"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "utilities"
+  - name: cloudflare-tunnel-token-kubernetes
+    envs:
+      - cloudflare-tunnel-token-kubernetes.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "utilities"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "utilities"
+  - name: crowdsec-secrets
+    envs:
+      - crowdsec-secrets.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "crowdsec,traefik"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "crowdsec,traefik"
+  - name: operator-oauth
+    envs:
+      - operator-oauth.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "cert-manager,tailscale"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager,tailscale"
+  - name: traefik-forward-auth-secrets
+    envs:
+      - traefik-forward-auth-secrets.env
+    type: Opaque
+    options:
+      annotations:
+        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+        reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "cert-manager,traefik"
+        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager,traefik"
