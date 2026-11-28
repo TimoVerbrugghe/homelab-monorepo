@@ -106,7 +106,7 @@
     "truenas": {
       "type": "local",
       "command": "/usr/local/bin/truenas-mcp",
-      "args": [],
+      "args": ["--allow-tools=system_info", "--debug"],
       "tools": ["*"],
       "env": {
         "TRUENAS_API_KEY": "$COPILOT_MCP_TRUENAS_API_KEY",
