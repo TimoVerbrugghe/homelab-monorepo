@@ -74,6 +74,13 @@ startup, standby-aware monitoring, and on-TV pause/disable controls.
 
 Tracearr records Plex and Jellyfin playback, and Rewindarr provides yearly recaps.
 
+## MCP Servers
+
+The local Proxmox MCP launcher stores its job database in the operating
+system's temporary directory, including on Windows. Temporary files can be
+removed by the OS, so job history is not guaranteed to survive cleanup.
+Restart the MCP server after changing its configuration.
+
 ## Future Plans
 
 - Nothing right now. Feel free to suggest other things I might want to do in this setup!
