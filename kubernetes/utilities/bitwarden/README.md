@@ -8,6 +8,8 @@ This folder contains resources for deploying **Vaultwarden** in your Kubernetes 
 - **bitwarden-backup.yaml**: A Kubernetes CronJob manifest for automated backups to NFS storage.
 - **bitwarden-export.yaml**: A Kubernetes CronJob manifest for exporting Vaultwarden data.
 - **bitwarden-restore.yaml**: A Kubernetes Job manifest to restore Vaultwarden data from a backup stored in NFS storage.
+- **vaultwarden-secrets/**: A stateless Vaultwarden-to-Kubernetes Secret sync pilot
+  for Recyclarr. See its [operating notes](vaultwarden-secrets/README.md).
 
 ## Backup & Restore Strategy
 

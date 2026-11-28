@@ -3,14 +3,3 @@ kind: Kustomization
 
 resources:
   - swaparr.yaml
-secretGenerator:
-  - name: swaparr-secrets
-    namespace: utilities
-    envs:
-      - swaparr-secrets.env
-    options:
-      labels:
-        app.kubernetes.io/name: swaparr
-
-generatorOptions:
-  disableNameSuffixHash: true

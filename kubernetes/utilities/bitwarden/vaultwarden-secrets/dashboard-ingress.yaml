@@ -1,0 +1,18 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: vaultwarden-secrets-dashboard
+  namespace: utilities
+spec:
+  ingressClassName: traefik
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`vaultwarden-secrets.kubernetes.timo.be`) || Host(`vaultwarden-secrets.timo.be`)
+      kind: Rule
+      middlewares:
+        - name: auth
+          namespace: traefik
+      services:
+        - name: vaultwarden-secrets-dashboard
+          port: 80

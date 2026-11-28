@@ -94,8 +94,8 @@ spec:
         - name: BAZARR_API_KEY
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
-              key: BAZARR_API_KEY
+              name: bazarr-api-key
+              key: api-key
         - name: JELLYFIN_TOKEN
           valueFrom:
             secretKeyRef:
@@ -104,13 +104,13 @@ spec:
         - name: PLEX_TOKEN
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
-              key: PLEX_TOKEN
+              name: plex-token
+              key: token
         - name: PUSHOVER_USER_KEY
           valueFrom:
             secretKeyRef:
-              name: subgen-secrets
-              key: PUSHOVER_USER_KEY
+              name: pushover-user-key
+              key: api-key
         - name: PUSHOVER_API_TOKEN
           valueFrom:
             secretKeyRef:

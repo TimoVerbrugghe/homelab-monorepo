@@ -2,27 +2,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-generatorOptions:
-  disableNameSuffixHash: true
-
 resources:
   - https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/cmd/k8s-operator/deploy/manifests/operator.yaml
   - https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/cmd/k8s-operator/deploy/manifests/authproxy-rbac.yaml
   - tailscale-proxygroup.yaml
   - tailscale-proxyclass.yaml
   - tailscale-clusterrolebinding.yaml
-
-secretGenerator:
-  - name: operator-oauth
-    namespace: cert-manager
-    envs:
-      - tailscale.env
-    type: Opaque
-    options:
-      annotations:
-        reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-        reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "tailscale"
 
 patches:
   # Add autoupdate through keel & enable apiserver proxy for tailscale-operator

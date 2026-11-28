@@ -15,16 +15,6 @@ configMapGenerator:
       labels:
         app.kubernetes.io/name: gatus
 
-secretGenerator:
-  - name: gatus-secrets
-    namespace: utilities-priv
-    envs:
-      - gatus-secrets.env
-    type: Opaque
-    options:
-      labels:
-        app.kubernetes.io/name: gatus
-
 generatorOptions:
   disableNameSuffixHash: true
 

@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden-secrets-dashboard
+  namespace: utilities
+  labels:
+    app.kubernetes.io/instance: vaultwarden-secrets
+    app.kubernetes.io/name: vaultwarden-secrets-dashboard
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: vaultwarden-secrets
+      app.kubernetes.io/name: vaultwarden-secrets-dashboard
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: vaultwarden-secrets
+        app.kubernetes.io/name: vaultwarden-secrets-dashboard
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 101
+        runAsGroup: 101
+        runAsNonRoot: true
+        runAsUser: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: dashboard
+          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets-dashboard:latest
+          imagePullPolicy: Always
+          env:
+            - name: API_HOST
+              value: vaultwarden-secrets-api
+            - name: API_PORT
+              value: "8080"
+          ports:
+            - containerPort: 80
+              name: http
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d
+              name: nginx-conf
+            - mountPath: /var/cache/nginx
+              name: nginx-cache
+            - mountPath: /var/run
+              name: nginx-run
+      volumes:
+        - name: nginx-conf
+          emptyDir:
+            medium: Memory
+            sizeLimit: 4Mi
+        - name: nginx-cache
+          emptyDir:
+            medium: Memory
+            sizeLimit: 32Mi
+        - name: nginx-run
+          emptyDir:
+            medium: Memory
+            sizeLimit: 4Mi
