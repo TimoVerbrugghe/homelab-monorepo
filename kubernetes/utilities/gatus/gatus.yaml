@@ -46,9 +46,16 @@ spec:
           env:
             - name: GATUS_CONFIG_PATH
               value: /config
-          envFrom:
-            - secretRef:
-                name: gatus-secrets
+            - name: PUSHOVER_APPLICATION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gatus-private-secrets
+                  key: api-key
+            - name: PUSHOVER_USER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: pushover-user-key
+                  key: api-key
           resources:
             limits:
               cpu: 250m

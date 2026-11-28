@@ -48,8 +48,8 @@ spec:
         - name: PLEX_CLAIM
           valueFrom:
             secretKeyRef:
-              name: plex-secrets
-              key: plex_claim_token
+              name: plex-claim-token
+              key: api-key
         
         # Only schedule on nodes that have an Intel GPU available
         resources:

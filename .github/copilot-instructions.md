@@ -167,10 +167,14 @@ find . -name "*.json" -exec jsonlint -q {} \;
      - service.yaml
    ```
 
-   If the service needs secrets, add a committed `<service>-secrets.env.template`
-   file with placeholder values, keep the real `<service>-secrets.env` local and
-   uncommitted, and generate the Kubernetes Secret via `secretGenerator` in
-   `kustomization.yaml`.
+   If the service needs secrets, invoke the `vaultwarden-kubernetes-secrets`
+   skill and follow the
+   [Vaultwarden Login mapping](../kubernetes/utilities/bitwarden/vaultwarden-secrets/README.md)
+   to reuse or create a Login in `kubernetes-secrets`. The controller syncs
+   sources to `shared-credentials`; Reflector copies them to explicitly allowed
+   consumer namespaces. Do not generate the same Secret with Kustomize and the
+   controller. Keep bootstrap credentials independently recoverable; never
+   reapply the credential-bearing cluster bootstrap for routine changes.
 
 5. Apply with `kubectl apply -k kubernetes/<service-name>/`.
 6. The `deploy-k8s-resource.yaml` workflow can deploy it via `workflow_dispatch`.
@@ -395,10 +399,10 @@ labels:
   automatically.
 - **NixOS flake inputs**: always run `nix flake update` in `nixos/` after changing inputs; keep the lock file committed.
 - **Docker Compose env files**: `*.env` files are gitignored — only commit `*.env.template` files with `VARIABLE_NAME=` placeholders.
-- **Kubernetes secret files**: follow the existing repo pattern of
-  `<service>-secrets.env.template` plus a local uncommitted
-  `<service>-secrets.env`, referenced from `secretGenerator` in
-  `kustomization.yaml`.
+- **Kubernetes secrets**: prefer Vaultwarden for eligible application Secrets;
+  follow the Vaultwarden skill and avoid competing Secret generators. Bootstrap
+  and non-migrated Secrets may use `<service>-secrets.env.template` plus a local
+  uncommitted `<service>-secrets.env` referenced by `secretGenerator`.
 - **iSCSI storage**: Plex and Jellyfin use iSCSI-backed PersistentVolumes. Do not change their storage class to NFS-backed — there are known sqlite corruption issues.
 - **Host networking**: the `pxeboot` and discovery-relay workloads use `hostNetwork: true` for L2/multicast access. This is intentional and documented.
 

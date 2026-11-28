@@ -1,0 +1,244 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden-secrets
+  namespace: utilities
+  labels:
+    app.kubernetes.io/instance: vaultwarden-secrets
+    app.kubernetes.io/name: vaultwarden-secrets
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@every 24h"
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: vaultwarden-secrets
+      app.kubernetes.io/name: vaultwarden-secrets
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: vaultwarden-secrets
+        app.kubernetes.io/name: vaultwarden-secrets
+    spec:
+      initContainers:
+        - name: init-data
+          # The upstream chart's init container prepares this writable directory.
+          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets:latest
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - |
+              if [ -z "$VAULTWARDEN__FOLDERID" ]; then
+                echo "VAULTWARDEN__FOLDERID must not be empty" >&2
+                exit 1
+              fi
+              mkdir -p /data/home/.config
+          env:
+            - name: VAULTWARDEN__FOLDERID
+              valueFrom:
+                secretKeyRef:
+                  key: VAULTWARDEN__FOLDERID
+                  name: vaultwarden-secrets-bootstrap
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      containers:
+        - name: sync
+          command: ["dotnet", "VaultwardenK8sSync.dll", "sync"]
+          env:
+            - name: DATABASE_PATH
+              value: /data/sync.db
+            - name: HOME
+              value: /data/home
+            - name: KUBERNETES__DEFAULTNAMESPACE
+              value: shared-credentials
+            - name: KUBERNETES__INCLUSTER
+              value: "true"
+            # The API uses a separately provisioned token, not the sync token bootstrap.
+            - name: LOGINLESS_MODE
+              value: "true"
+            - name: LOG_LEVEL
+              value: Information
+            - name: METRICS__ENABLED
+              value: "true"
+            - name: METRICS__PORT
+              value: "9090"
+            - name: SYNC__CONTEXTNAME
+              value: sectorfive
+            - name: SYNC__CONTINUOUSSYNC
+              value: "true"
+            - name: SYNC__DELETEORPHANS
+              value: "false"
+            - name: SYNC__DRYRUN
+              value: "false"
+            - name: SYNC__SYNCINTERVALSECONDS
+              value: "300"
+            - name: VAULTWARDEN__SERVERURL
+              value: https://bitwarden.timo.be
+            - name: XDG_CONFIG_HOME
+              value: /data/home/.config
+            - name: BW_CLIENTID
+              valueFrom:
+                secretKeyRef:
+                  key: BW_CLIENTID
+                  name: vaultwarden-secrets-bootstrap
+            - name: BW_CLIENTSECRET
+              valueFrom:
+                secretKeyRef:
+                  key: BW_CLIENTSECRET
+                  name: vaultwarden-secrets-bootstrap
+            - name: VAULTWARDEN__MASTERPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: VAULTWARDEN__MASTERPASSWORD
+                  name: vaultwarden-secrets-bootstrap
+            - name: VAULTWARDEN__FOLDERID
+              valueFrom:
+                secretKeyRef:
+                  key: VAULTWARDEN__FOLDERID
+                  name: vaultwarden-secrets-bootstrap
+            - name: VAULTWARDEN__DEVICEID
+              valueFrom:
+                secretKeyRef:
+                  key: VAULTWARDEN__DEVICEID
+                  name: vaultwarden-secrets-bootstrap
+          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 30
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 9090
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: metrics
+            periodSeconds: 30
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+            timeoutSeconds: 5
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /tmp
+              name: tmp
+        - name: api
+          image: ghcr.io/antoniolago/vaultwarden-kubernetes-secrets-api:latest
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -ec
+            - |
+              if [ -z "$AuthToken" ]; then
+                echo "API authentication token must not be empty" >&2
+                exit 1
+              fi
+              exec dotnet VaultwardenK8sSync.Api.dll
+          env:
+            - name: AuthToken
+              valueFrom:
+                secretKeyRef:
+                  name: vaultwarden-secrets-bootstrap
+                  key: API_AUTH_TOKEN
+            - name: DatabasePath
+              value: /data/sync.db
+            - name: LoginlessMode
+              value: "false"
+          ports:
+            - containerPort: 8080
+              name: api
+          startupProbe:
+            httpGet:
+              path: /health
+              port: api
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: api
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: api
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /tmp
+              name: tmp
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: vaultwarden-secrets
+      volumes:
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 128Mi
+          name: data
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
+          name: tmp

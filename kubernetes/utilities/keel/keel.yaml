@@ -44,13 +44,13 @@ spec:
         - name: BASIC_AUTH_USER
           valueFrom:
             secretKeyRef:
-              name: keel-basic-auth
-              key: username
+              name: keel-qbittorrent-credential
+              key: credential
         - name: BASIC_AUTH_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: keel-basic-auth
-              key: password
+              name: keel-qbittorrent-credential
+              key: credential
         - name: AUTHENTICATED_WEBHOOKS
           value: "false"
         - name: HELM3_PROVIDER

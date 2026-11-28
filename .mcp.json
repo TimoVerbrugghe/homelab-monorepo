@@ -1,5 +1,14 @@
 {
   "mcpServers": {
+    "bitwarden": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=@bitwarden/mcp-server",
+        "mcp-server-bitwarden"
+      ],
+      "tools": ["*"]
+    },
     "themarr": {
       "command": "npx",
       "args": [

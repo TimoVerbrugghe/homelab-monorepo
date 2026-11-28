@@ -1,0 +1,46 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vaultwarden-secrets-namespace-reader
+rules:
+  - apiGroups: [""]
+    # The upstream readiness check lists all namespace metadata.
+    resources: ["namespaces"]
+    verbs: ["list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vaultwarden-secrets-namespace-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vaultwarden-secrets-namespace-reader
+subjects:
+  - kind: ServiceAccount
+    name: vaultwarden-secrets
+    namespace: utilities
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: vaultwarden-secrets
+  namespace: shared-credentials
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create", "get", "list", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: vaultwarden-secrets
+  namespace: shared-credentials
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vaultwarden-secrets
+subjects:
+  - kind: ServiceAccount
+    name: vaultwarden-secrets
+    namespace: utilities
