@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: kubevip
   namespace: kube-system
-data:
-  cidr-global: 10.10.10.34-10.10.10.44
+# Services explicitly request their VIPs; no automatic allocation pool is configured.
+data: {}
